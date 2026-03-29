@@ -39,10 +39,14 @@ export default async function handler(req, res) {
   }
 
   // ── 2. Claude Haiku로 영양 데이터 생성 ───────────────────────────────────
-  const prompt = `You are a food science database. Generate accurate nutritional data for: "${name}"
+  const prompt = `You are a food science database. First verify if "${name}" is a real, known food ingredient eaten by humans.
 
-Return ONLY valid JSON (no markdown, no explanation):
+If it is NOT a real food ingredient, return ONLY:
+{"exists": false}
+
+If it IS a real food ingredient, return ONLY valid JSON (no markdown, no explanation):
 {
+  "exists": true,
   "name": "${name}",
   "cat": "<meat|seafood|veg|fruit|grain|dairy|egg|nut|mushroom|legume|herb|sauce|oil|beverage|processed>",
   "emoji": "<single emoji>",
@@ -84,6 +88,9 @@ Use USDA FoodData Central values. All macros per 100g.`;
     const jsonMatch = claudeText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('JSON not found');
     ingredient = JSON.parse(jsonMatch[0]);
+    if (ingredient.exists === false) {
+      return res.status(404).json({ error: `'${name}'은(는) 실존하는 식재료가 아닙니다.` });
+    }
     if (!CATEGORY_KEYS.includes(ingredient.cat)) ingredient.cat = 'processed';
     ingredient.name = name;
   } catch (e) {
