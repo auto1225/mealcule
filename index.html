@@ -1052,7 +1052,7 @@ async function checkDailyLimit(type = 'analysis') {
   const limit = getPlanLimit(type);
   if (limit === -1) return true; // unlimited
 
-  if (supabase && authSession) {
+  if (sbClient && authSession) {
     // DB 기반 사용량 체크
     const result = await dbRPC('increment_usage', { usage_type: type });
     if (result) {
@@ -1131,10 +1131,10 @@ async function handleLoginSubmit() {
   btn.disabled = true;
 
   try {
-    if (supabase) {
+    if (sbClient) {
       // ── Supabase Auth ──
       if (loginMode === 'signup') {
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await sbClient.auth.signUp({
           email,
           password: pw,
           options: { data: { name: name, full_name: name } }
@@ -1148,7 +1148,7 @@ async function handleLoginSubmit() {
         authSession = data.session;
         await loadUserProfile();
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password: pw });
+        const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pw });
         if (error) throw error;
         authSession = data.session;
         await loadUserProfile();
@@ -1177,12 +1177,12 @@ async function handleLoginSubmit() {
 }
 
 async function handleLoginGoogle() {
-  if (!supabase) {
+  if (!sbClient) {
     showLoginError('Supabase 연결이 필요합니다');
     return;
   }
   try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await sbClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: window.location.origin,
@@ -1209,9 +1209,9 @@ async function handleForgotPw() {
   const email = document.getElementById('loginEmail').value.trim();
   if (!email) { showLoginError('이메일을 먼저 입력해주세요'); return; }
 
-  if (supabase) {
+  if (sbClient) {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { error } = await sbClient.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin + '?type=recovery'
       });
       if (error) throw error;
@@ -1226,7 +1226,7 @@ async function handleForgotPw() {
 
 // ── DB에서 유저 프로필 로드 ──
 async function loadUserProfile() {
-  if (!supabase || !authSession) return;
+  if (!sbClient || !authSession) return;
 
   const user = authSession.user;
   currentUser = {
@@ -1257,7 +1257,7 @@ async function loadUserProfile() {
 
 // ── 멤버 프로필 DB 로드 ──
 async function loadMemberProfiles() {
-  if (!supabase || !currentUser?.id || isGuest) return;
+  if (!sbClient || !currentUser?.id || isGuest) return;
 
   const data = await dbQuery('member_profiles', 'select', {
     eq: { user_id: currentUser.id },
@@ -1287,7 +1287,7 @@ async function loadMemberProfiles() {
 
 // ── 멤버 프로필 DB 저장 ──
 async function saveMemberToDB(member) {
-  if (!supabase || !currentUser?.id || isGuest) return;
+  if (!sbClient || !currentUser?.id || isGuest) return;
 
   const data = {
     user_id: currentUser.id,
@@ -1315,7 +1315,7 @@ async function saveMemberToDB(member) {
 
 // ── 세션 초기화 (OAuth 리다이렉트 및 저장된 세션) ──
 async function initAuth() {
-  if (!supabase) {
+  if (!sbClient) {
     // 폴백: localStorage
     const saved = localStorage.getItem('mc_user');
     const guest = localStorage.getItem('mc_guest');
@@ -1335,7 +1335,7 @@ async function initAuth() {
 
   // Supabase 세션 체크
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sbClient.auth.getSession();
     if (session) {
       authSession = session;
       await loadUserProfile();
@@ -1350,7 +1350,7 @@ async function initAuth() {
   }
 
   // Auth 상태 변경 리스너
-  supabase.auth.onAuthStateChange(async (event, session) => {
+  sbClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session) {
       authSession = session;
       await loadUserProfile();
@@ -1405,8 +1405,8 @@ function updateUserUI() {
 
 async function openUserMenu() {
   if (confirm('로그아웃 하시겠습니까?')) {
-    if (supabase) {
-      await supabase.auth.signOut();
+    if (sbClient) {
+      await sbClient.auth.signOut();
     }
     currentUser = null; userProfile = null; userPlan = 'free'; proMode = false;
     authSession = null; isGuest = false;
@@ -1421,7 +1421,7 @@ async function openUserMenu() {
 async function selectPlan(plan) {
   if (!currentUser) { openAuthModal(); return; }
 
-  if (supabase && authSession) {
+  if (sbClient && authSession) {
     // DB에 구독 정보 저장
     const subData = {
       user_id: currentUser.id,
@@ -1517,9 +1517,9 @@ const SUPABASE_KEY = 'sb_publishable_6c8GjizbhYKUBzQywsoUhA_3KYN25-2';
 const USE_SUPABASE = SUPABASE_URL && SUPABASE_KEY;
 
 // Supabase Client (supabase-js v2)
-let supabase = null;
+var sbClient = null;
 if (SUPABASE_URL && SUPABASE_KEY && typeof window.supabase !== 'undefined') {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
       autoRefreshToken: true,
       persistSession: true,
@@ -1533,9 +1533,9 @@ if (SUPABASE_URL && SUPABASE_KEY && typeof window.supabase !== 'undefined') {
 
 // ── DB Helper: Supabase RPC/Query Wrapper ──
 async function dbQuery(table, method = 'select', params = {}) {
-  if (!supabase) return null;
+  if (!sbClient) return null;
   try {
-    let query = supabase.from(table);
+    let query = sbClient.from(table);
     if (method === 'select') {
       query = query.select(params.select || '*');
       if (params.eq) Object.entries(params.eq).forEach(([k,v]) => query = query.eq(k,v));
@@ -1561,9 +1561,9 @@ async function dbQuery(table, method = 'select', params = {}) {
 }
 
 async function dbRPC(fn, params = {}) {
-  if (!supabase) return null;
+  if (!sbClient) return null;
   try {
-    const { data, error } = await supabase.rpc(fn, params);
+    const { data, error } = await sbClient.rpc(fn, params);
     if (error) { console.warn(`RPC ${fn}:`, error.message); return null; }
     return data;
   } catch(e) { console.warn('RPC error:', e); return null; }
@@ -1593,7 +1593,7 @@ function selCount() { return selNames().length; }
 
 // Supabase에서 카테고리 로드
 async function loadCategories() {
-  if (!supabase) return;
+  if (!sbClient) return;
   const data = await dbQuery('categories', 'select', {
     order: { col: 'sort_order', asc: true },
     eq: { is_active: true }
@@ -1606,7 +1606,7 @@ async function loadCategories() {
 
 // Supabase 재료 검색
 async function searchIngredientsAPI(query, category) {
-  if (!supabase) return null;
+  if (!sbClient) return null;
   const cacheKey = `${category}:${query}`;
   if (apiCache[cacheKey]) return apiCache[cacheKey];
 
@@ -1651,14 +1651,14 @@ async function searchIngredientsAPI(query, category) {
 
 // 카테고리별 총 개수 조회
 async function getCategoryCount() {
-  if (!supabase) return Object.keys(DB).length;
-  const { count, error } = await supabase.from('ingredients').select('id', { count: 'exact', head: true }).eq('is_active', true);
+  if (!sbClient) return Object.keys(DB).length;
+  const { count, error } = await sbClient.from('ingredients').select('id', { count: 'exact', head: true }).eq('is_active', true);
   return error ? Object.keys(DB).length : (count || Object.keys(DB).length);
 }
 
 // ── 분석 히스토리 DB 저장 ──
 async function saveAnalysisToHistory(analysisResult) {
-  if (!supabase || !currentUser?.id || isGuest) return null;
+  if (!sbClient || !currentUser?.id || isGuest) return null;
 
   const temp = parseInt(document.getElementById('tempSlider')?.value || 180);
   const time = parseInt(document.getElementById('timeSlider')?.value || 10);
@@ -1684,7 +1684,7 @@ async function saveAnalysisToHistory(analysisResult) {
 
 // ── 분석 히스토리 조회 ──
 async function loadAnalysisHistory(limit = 20) {
-  if (!supabase || !currentUser?.id) return [];
+  if (!sbClient || !currentUser?.id) return [];
   const data = await dbQuery('analysis_history', 'select', {
     eq: { user_id: currentUser.id },
     order: { col: 'created_at', asc: false },
@@ -1695,7 +1695,7 @@ async function loadAnalysisHistory(limit = 20) {
 
 // ── 북마크 토글 ──
 async function toggleBookmark(analysisId) {
-  if (!supabase) return;
+  if (!sbClient) return;
   const current = await dbQuery('analysis_history', 'select', { eq: { id: analysisId } });
   if (current && current[0]) {
     await dbQuery('analysis_history', 'update', {
@@ -1707,7 +1707,7 @@ async function toggleBookmark(analysisId) {
 
 // ── 피드백 전송 ──
 async function sendFeedback(type, message) {
-  if (!supabase || !currentUser?.id) return false;
+  if (!sbClient || !currentUser?.id) return false;
   const result = await dbQuery('feedback', 'insert', {
     data: { user_id: currentUser.id, type, message }
   });
@@ -1717,14 +1717,14 @@ async function sendFeedback(type, message) {
 // 검색 디바운스
 function onSearchInput() {
   clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => filterIngredients(), !!supabase ? 300 : 50);
+  searchTimeout = setTimeout(() => filterIngredients(), !!sbClient ? 300 : 50);
 }
 
 // ── Init ──
 async function init() {
   const statusEl = document.getElementById('dbStatus');
 
-  if (supabase) {
+  if (sbClient) {
     statusEl.textContent = '🔄 DB 연결 중...';
     try {
       await loadCategories();
@@ -2374,16 +2374,16 @@ function renderIngredients(filter = "") {
 
   const count = renderIngredientsFromData(localItems, grid);
 
-  if (count === 0 && !!!supabase) {
+  if (count === 0 && !!!sbClient) {
     grid.innerHTML = `<div style="width:100%;text-align:center;padding:16px;color:#737373;font-size:13px">검색 결과 없음</div>`;
   }
-  if (count === 0 && !!supabase && lower) {
+  if (count === 0 && !!sbClient && lower) {
     grid.innerHTML = `<div style="width:100%;text-align:center;padding:12px;color:#737373;font-size:13px">🔍 DB에서 검색 중...</div>`;
   }
 }
 
 async function renderIngredientsAPI(filter) {
-  if (!!!supabase || !filter) return;
+  if (!!!sbClient || !filter) return;
   const apiResults = await searchIngredientsAPI(filter, activeCategory);
   if (!apiResults) return;
 
@@ -2487,7 +2487,7 @@ async function filterIngredients() {
   const query = document.getElementById("searchInput").value;
   renderIngredients(query);
   // 로컬에 결과 부족하면 API 검색
-  if (!!supabase && query.length >= 1) {
+  if (!!sbClient && query.length >= 1) {
     await renderIngredientsAPI(query);
   }
 }
@@ -3050,7 +3050,7 @@ async function renderHistory() {
 
 async function replayAnalysis(id) {
   // 히스토리에서 분석을 다시 로드
-  if (!supabase || !currentUser?.id) return;
+  if (!sbClient || !currentUser?.id) return;
   const data = await dbQuery('analysis_history', 'select', { eq: { id } });
   if (!data || !data[0]) return;
 
