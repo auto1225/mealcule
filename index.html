@@ -834,25 +834,97 @@ const DB = {
   "카놀라유":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:15.4,K:145},compounds:["올레산","리놀레산"],flavor:{umami:0,sweet:0,salty:0,sour:0,bitter:0}},
   "버터":{cat:"oil",emoji:"🧈",defaultG:15,comp:{protein:0.9,fat:81,carbs:0.1,water:18,fiber:0},amino:[],vit:{A:684,D:0.6,E:2.3},compounds:["부티르산","디아세틸","카세인","유당"],flavor:{umami:5,sweet:10,salty:10,sour:5,bitter:0}},
 
-  // ── Meat parents (부위 선택용 상위 항목) ─────────────────────────────────
+  // ── Meat parents (부위·그룹 선택용) ─────────────────────────────────────
   "닭고기":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:27,fat:6,carbs:0,water:66,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.7,niacin:9.5,selenium:26},compounds:["카르노신","미오글로빈"],flavor:{umami:62,sweet:6,salty:5,sour:0,bitter:4}},
+  "내장육":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:17,fat:7,carbs:2,water:73,fiber:0},amino:["글루탐산","글리신"],vit:{B12:20,iron:7},compounds:["헤민","콜라겐"],flavor:{umami:65,sweet:8,salty:5,sour:3,bitter:12}},
+  "가공육류":{cat:"meat",emoji:"🥩",defaultG:50,comp:{protein:14,fat:28,carbs:2,water:54,fiber:0},amino:["류신"],vit:{sodium:1200},compounds:["니트라이트","훈연"],flavor:{umami:70,sweet:8,salty:75,sour:5,bitter:5}},
 
-  // ── Meat (추가 부위) ─────────────────────────────────────────────────────
+  // ── 소고기 부위 ─────────────────────────────────────────────────────────
   "소고기 등심":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:22,fat:22,carbs:0,water:55,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.4,zinc:4.5,iron:2.4},compounds:["미오글로빈","콜라겐","크레아틴"],flavor:{umami:82,sweet:10,salty:5,sour:0,bitter:5}},
   "소고기 안심":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:22,fat:8,carbs:0,water:69,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.4,zinc:3.8,iron:2.1},compounds:["미오글로빈","크레아틴"],flavor:{umami:75,sweet:8,salty:5,sour:0,bitter:5}},
+  "꽃등심(립아이)":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:20,fat:25,carbs:0,water:54,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.1,zinc:4.5,iron:2.1},compounds:["미오글로빈","마블링"],flavor:{umami:88,sweet:10,salty:5,sour:0,bitter:4}},
+  "채끝(서로인)":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:21,fat:18,carbs:0,water:60,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.3,zinc:4.3},compounds:["미오글로빈"],flavor:{umami:82,sweet:8,salty:5,sour:0,bitter:4}},
+  "갈비(소)":{cat:"meat",emoji:"🍖",defaultG:200,comp:{protein:18,fat:22,carbs:0,water:59,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.2,zinc:4.2,iron:2.0},compounds:["콜라겐","미오글로빈"],flavor:{umami:80,sweet:8,salty:5,sour:0,bitter:5}},
+  "양지(브리스킷)":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:18,fat:20,carbs:0,water:61,fiber:0},amino:["글루탐산","글리신"],vit:{B12:2.0,zinc:4.0,iron:2.0},compounds:["콜라겐","미오글로빈"],flavor:{umami:78,sweet:8,salty:5,sour:0,bitter:5}},
+  "우둔(라운드)":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:22,fat:10,carbs:0,water:67,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.5,zinc:4.1,iron:2.3},compounds:["미오글로빈"],flavor:{umami:75,sweet:7,salty:5,sour:0,bitter:5}},
+  "부채살(플랫아이언)":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:23,fat:9,carbs:0,water:67,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.3,zinc:4.2},compounds:["미오글로빈"],flavor:{umami:80,sweet:8,salty:5,sour:0,bitter:4}},
+  "업진살(스커트)":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:19,fat:20,carbs:0,water:60,fiber:0},amino:["글루탐산"],vit:{B12:2.1,zinc:3.9},compounds:["미오글로빈","콜라겐"],flavor:{umami:80,sweet:7,salty:5,sour:0,bitter:5}},
+  "홍두깨살":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:22,fat:4.5,carbs:0,water:73,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.2,zinc:4.0},compounds:["미오글로빈"],flavor:{umami:74,sweet:7,salty:5,sour:0,bitter:4}},
+  "비프 패티":{cat:"meat",emoji:"🍔",defaultG:100,comp:{protein:17,fat:15,carbs:0,water:67,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.1,zinc:4.2,iron:2.2},compounds:["미오글로빈"],flavor:{umami:78,sweet:8,salty:5,sour:0,bitter:5}},
+  "사골":{cat:"meat",emoji:"🦴",defaultG:200,comp:{protein:6,fat:3,carbs:0,water:91,fiber:0},amino:["글리신","프롤린"],vit:{calcium:15,phosphorus:20},compounds:["콜라겐","젤라틴"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+
+  // ── 돼지고기 부위 ────────────────────────────────────────────────────────
   "삼겹살":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:14,fat:34,carbs:0,water:51,fiber:0},amino:["류신","리신"],vit:{B1:0.5,B6:0.4,niacin:5},compounds:["미오글로빈","콜라겐"],flavor:{umami:70,sweet:8,salty:5,sour:0,bitter:5}},
   "목살(돼지)":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:16,fat:25,carbs:0,water:58,fiber:0},amino:["류신","리신"],vit:{B1:0.55,B6:0.45},compounds:["미오글로빈","콜라겐"],flavor:{umami:72,sweet:8,salty:5,sour:0,bitter:5}},
-  "닭날개":{cat:"meat",emoji:"🍗",defaultG:100,comp:{protein:18,fat:12,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B6:0.35,niacin:5.5},compounds:["콜라겐","카르노신"],flavor:{umami:62,sweet:6,salty:5,sour:0,bitter:5}},
-  "닭 안심":{cat:"meat",emoji:"🍗",defaultG:100,comp:{protein:23,fat:1.5,carbs:0,water:75,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.9,niacin:10},compounds:["카르노신"],flavor:{umami:55,sweet:5,salty:5,sour:0,bitter:3}},
-  "훈제오리":{cat:"meat",emoji:"🦆",defaultG:100,comp:{protein:15,fat:19,carbs:1,water:62,fiber:0},amino:["글루탐산"],vit:{B12:1.2,iron:2.5},compounds:["스모크 화합물","미오글로빈"],flavor:{umami:75,sweet:10,salty:50,sour:5,bitter:8}},
-  "곱창":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:15,fat:12,carbs:1.5,water:70,fiber:0},amino:["글루탐산","글리신"],vit:{B12:4.5,iron:4.2},compounds:["콜라겐","뮤신"],flavor:{umami:65,sweet:5,salty:5,sour:0,bitter:10}},
-  "사골":{cat:"meat",emoji:"🦴",defaultG:200,comp:{protein:6,fat:3,carbs:0,water:91,fiber:0},amino:["글리신","프롤린"],vit:{calcium:15,phosphorus:20},compounds:["콜라겐","젤라틴"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
-  "간(소고기)":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:20,fat:5,carbs:5,water:69,fiber:0},amino:["류신","리신"],vit:{A:4968,B12:59.3,iron:6.2,folate:290},compounds:["헤민","글리코겐"],flavor:{umami:70,sweet:10,salty:5,sour:5,bitter:15}},
-  "닭 모래집":{cat:"meat",emoji:"🍗",defaultG:100,comp:{protein:18,fat:2.7,carbs:0,water:78,fiber:0},amino:["류신","글리신"],vit:{B12:1.8,iron:3.8},compounds:["콜라겐"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
-  "비프 패티":{cat:"meat",emoji:"🍔",defaultG:100,comp:{protein:17,fat:15,carbs:0,water:67,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.1,zinc:4.2,iron:2.2},compounds:["미오글로빈"],flavor:{umami:78,sweet:8,salty:5,sour:0,bitter:5}},
-  "칠면조":{cat:"meat",emoji:"🦃",defaultG:200,comp:{protein:29,fat:1.9,carbs:0,water:69,fiber:0},amino:["류신","리신","트립토판"],vit:{B6:0.9,niacin:7.5,selenium:26},compounds:["카르노신"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+  "등심(돼지)":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:22,fat:8,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B1:0.7,B6:0.5,niacin:6.5},compounds:["미오글로빈"],flavor:{umami:65,sweet:8,salty:5,sour:0,bitter:4}},
+  "안심(돼지)":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:23,fat:3.5,carbs:0,water:73,fiber:0},amino:["류신","리신"],vit:{B1:0.8,B6:0.6,niacin:7},compounds:["미오글로빈"],flavor:{umami:60,sweet:7,salty:5,sour:0,bitter:4}},
+  "갈비(돼지)":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:17,fat:28,carbs:0,water:54,fiber:0},amino:["류신","리신"],vit:{B1:0.5,B6:0.4},compounds:["콜라겐","미오글로빈"],flavor:{umami:72,sweet:8,salty:5,sour:0,bitter:5}},
+  "항정살":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:15,fat:30,carbs:0,water:54,fiber:0},amino:["류신"],vit:{B1:0.45,B6:0.38},compounds:["근내지방","콜라겐"],flavor:{umami:73,sweet:8,salty:5,sour:0,bitter:5}},
+  "족발":{cat:"meat",emoji:"🍖",defaultG:100,comp:{protein:22,fat:15,carbs:0.5,water:62,fiber:0},amino:["글리신","프롤린","류신"],vit:{B12:0.8,calcium:15},compounds:["콜라겐","젤라틴"],flavor:{umami:65,sweet:8,salty:5,sour:0,bitter:5}},
+  "돼지껍데기":{cat:"meat",emoji:"🐷",defaultG:50,comp:{protein:29,fat:26,carbs:0,water:44,fiber:0},amino:["글리신","프롤린"],vit:{B12:0.2},compounds:["콜라겐"],flavor:{umami:50,sweet:5,salty:5,sour:0,bitter:3}},
+  "순대":{cat:"meat",emoji:"🌭",defaultG:100,comp:{protein:10,fat:12,carbs:22,water:55,fiber:1},amino:["글루탐산"],vit:{iron:3,B12:0.9},compounds:["선지","당면"],flavor:{umami:55,sweet:10,salty:35,sour:5,bitter:5}},
+  "베이컨":{cat:"meat",emoji:"🥓",defaultG:30,comp:{protein:37,fat:61,carbs:0,water:1,fiber:0},amino:["류신","리신"],vit:{B1:0.62,B6:0.5,niacin:6.8},compounds:["니트로사민","스모키 향료"],flavor:{umami:85,sweet:5,salty:85,sour:0,bitter:5}},
+  "소시지":{cat:"meat",emoji:"🌭",defaultG:50,comp:{protein:12,fat:28,carbs:4,water:55,fiber:0},amino:["류신","리신"],vit:{sodium:1100,iron:0.9},compounds:["니트라이트","타우린"],flavor:{umami:75,sweet:10,salty:75,sour:5,bitter:5}},
+  "햄":{cat:"meat",emoji:"🍖",defaultG:50,comp:{protein:13,fat:6.5,carbs:1.5,water:79,fiber:0},amino:["류신","리신"],vit:{B1:0.53,iron:0.8},compounds:["니트라이트","글루탐산"],flavor:{umami:70,sweet:8,salty:70,sour:3,bitter:5}},
   "스팸":{cat:"meat",emoji:"🥫",defaultG:50,comp:{protein:12,fat:24,carbs:4,water:57,fiber:0},amino:["류신"],vit:{sodium:1600,B1:0.3},compounds:["니트라이트","카세이네이트"],flavor:{umami:70,sweet:8,salty:80,sour:3,bitter:3}},
   "비엔나소시지":{cat:"meat",emoji:"🌭",defaultG:30,comp:{protein:9,fat:24,carbs:4,water:61,fiber:0},amino:["류신"],vit:{sodium:900,B1:0.2},compounds:["니트라이트"],flavor:{umami:70,sweet:10,salty:70,sour:3,bitter:3}},
+
+  // ── 닭고기 부위 ─────────────────────────────────────────────────────────
+  "닭가슴살":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:31,fat:3.6,carbs:0,water:65,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.88,niacin:9.9,selenium:27.4},compounds:["미오글로빈","카르노신","안세린"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+  "닭다리":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:26,fat:8,carbs:0,water:65,fiber:0},amino:["류신","리신"],vit:{B6:0.4,niacin:6.2,iron:1.4,zinc:2.8},compounds:["미오글로빈","콜라겐"],flavor:{umami:65,sweet:6,salty:5,sour:0,bitter:5}},
+  "닭날개":{cat:"meat",emoji:"🍗",defaultG:100,comp:{protein:18,fat:12,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B6:0.35,niacin:5.5},compounds:["콜라겐","카르노신"],flavor:{umami:62,sweet:6,salty:5,sour:0,bitter:5}},
+  "닭 안심":{cat:"meat",emoji:"🍗",defaultG:100,comp:{protein:23,fat:1.5,carbs:0,water:75,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.9,niacin:10},compounds:["카르노신"],flavor:{umami:55,sweet:5,salty:5,sour:0,bitter:3}},
+  "닭 모래집":{cat:"meat",emoji:"🍗",defaultG:100,comp:{protein:18,fat:2.7,carbs:0,water:78,fiber:0},amino:["류신","글리신"],vit:{B12:1.8,iron:3.8},compounds:["콜라겐"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+
+  // ── 오리·가금류 ──────────────────────────────────────────────────────────
+  "훈제오리":{cat:"meat",emoji:"🦆",defaultG:100,comp:{protein:15,fat:19,carbs:1,water:62,fiber:0},amino:["글루탐산"],vit:{B12:1.2,iron:2.5},compounds:["스모크 화합물","미오글로빈"],flavor:{umami:75,sweet:10,salty:50,sour:5,bitter:8}},
+  "거위":{cat:"meat",emoji:"🪿",defaultG:200,comp:{protein:23,fat:33,carbs:0,water:43,fiber:0},amino:["류신","리신"],vit:{B12:2.8,iron:3.3,selenium:17},compounds:["미오글로빈","불포화지방산"],flavor:{umami:72,sweet:8,salty:5,sour:0,bitter:8}},
+  "푸아그라":{cat:"meat",emoji:"🫀",defaultG:50,comp:{protein:9,fat:44,carbs:4.7,water:41,fiber:0},amino:["글루탐산"],vit:{A:11000,B12:17.3,iron:9.3},compounds:["레시틴","팔미트산"],flavor:{umami:80,sweet:15,salty:10,sour:5,bitter:5}},
+  "메추리":{cat:"meat",emoji:"🐦",defaultG:100,comp:{protein:22,fat:5,carbs:0,water:72,fiber:0},amino:["류신","리신"],vit:{B12:0.35,iron:4.5,zinc:3.8},compounds:["카르노신","미오글로빈"],flavor:{umami:65,sweet:6,salty:5,sour:0,bitter:5}},
+  "꿩":{cat:"meat",emoji:"🐦",defaultG:200,comp:{protein:26,fat:4,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B12:0.46,iron:1.4,selenium:21},compounds:["미오글로빈"],flavor:{umami:65,sweet:5,salty:5,sour:0,bitter:5}},
+  "칠면조":{cat:"meat",emoji:"🦃",defaultG:200,comp:{protein:29,fat:1.9,carbs:0,water:69,fiber:0},amino:["류신","리신","트립토판"],vit:{B6:0.9,niacin:7.5,selenium:26},compounds:["카르노신"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+
+  // ── 글로벌 특수 육류 ───────────────────────────────────────────────────────
+  "송아지고기":{cat:"meat",emoji:"🐄",defaultG:200,comp:{protein:19,fat:2.9,carbs:0,water:77,fiber:0},amino:["류신","리신"],vit:{B12:1.4,zinc:3.4,iron:1.0},compounds:["미오글로빈","콜라겐"],flavor:{umami:65,sweet:7,salty:5,sour:0,bitter:3}},
+  "염소고기":{cat:"meat",emoji:"🐐",defaultG:200,comp:{protein:27,fat:3.6,carbs:0,water:69,fiber:0},amino:["글루탐산","류신"],vit:{B12:1.7,iron:3.7,zinc:4.0},compounds:["미오글로빈","카르니틴"],flavor:{umami:70,sweet:6,salty:5,sour:0,bitter:8}},
+  "토끼고기":{cat:"meat",emoji:"🐇",defaultG:200,comp:{protein:33,fat:8,carbs:0,water:58,fiber:0},amino:["류신","리신","메티오닌"],vit:{B12:7.2,selenium:38,phosphorus:263},compounds:["미오글로빈"],flavor:{umami:68,sweet:5,salty:5,sour:0,bitter:5}},
+  "사슴고기":{cat:"meat",emoji:"🦌",defaultG:200,comp:{protein:30,fat:2.4,carbs:0,water:67,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.8,iron:3.8,zinc:3.4},compounds:["미오글로빈","카르니틴"],flavor:{umami:75,sweet:6,salty:5,sour:0,bitter:8}},
+  "말고기":{cat:"meat",emoji:"🐎",defaultG:200,comp:{protein:21,fat:2.5,carbs:0.6,water:75,fiber:0},amino:["글루탐산","류신"],vit:{B12:3.5,iron:4.9,zinc:3.4},compounds:["미오글로빈","글리코겐"],flavor:{umami:75,sweet:8,salty:5,sour:0,bitter:5}},
+  "타조고기":{cat:"meat",emoji:"🦤",defaultG:200,comp:{protein:29,fat:3,carbs:0,water:67,fiber:0},amino:["류신","리신"],vit:{B12:3.7,iron:2.7,zinc:3.4},compounds:["미오글로빈"],flavor:{umami:70,sweet:6,salty:5,sour:0,bitter:5}},
+  "들소고기":{cat:"meat",emoji:"🦬",defaultG:200,comp:{protein:28,fat:2.4,carbs:0,water:70,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.4,iron:3.2,zinc:4.3,selenium:26},compounds:["미오글로빈","CLA"],flavor:{umami:78,sweet:7,salty:5,sour:0,bitter:5}},
+  "멧돼지":{cat:"meat",emoji:"🐗",defaultG:200,comp:{protein:28,fat:5.2,carbs:0,water:67,fiber:0},amino:["류신","리신"],vit:{B1:0.6,B6:0.6,niacin:7.5},compounds:["미오글로빈"],flavor:{umami:78,sweet:7,salty:5,sour:0,bitter:6}},
+  "악어고기":{cat:"meat",emoji:"🐊",defaultG:200,comp:{protein:22,fat:3,carbs:0,water:74,fiber:0},amino:["류신","리신"],vit:{B12:1.8,selenium:19},compounds:["미오글로빈"],flavor:{umami:60,sweet:7,salty:5,sour:0,bitter:3}},
+  "캥거루고기":{cat:"meat",emoji:"🦘",defaultG:200,comp:{protein:23,fat:2,carbs:0,water:74,fiber:0},amino:["류신","리신"],vit:{B12:2.3,iron:4.0,zinc:3.2},compounds:["CLA","카르니틴"],flavor:{umami:72,sweet:6,salty:5,sour:0,bitter:6}},
+  "라마고기":{cat:"meat",emoji:"🦙",defaultG:200,comp:{protein:26,fat:4,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B12:2.0,iron:3.5,zinc:3.0},compounds:["미오글로빈","오메가-3"],flavor:{umami:70,sweet:6,salty:5,sour:0,bitter:6}},
+  "멧돼지(야생)":{cat:"meat",emoji:"🐗",defaultG:200,comp:{protein:28,fat:4.5,carbs:0,water:68,fiber:0},amino:["류신","리신"],vit:{B1:0.65,niacin:8},compounds:["미오글로빈"],flavor:{umami:80,sweet:7,salty:5,sour:0,bitter:6}},
+
+  // ── 내장육 ────────────────────────────────────────────────────────────────
+  "간(소고기)":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:20,fat:5,carbs:5,water:69,fiber:0},amino:["류신","리신"],vit:{A:4968,B12:59.3,iron:6.2,folate:290},compounds:["헤민","글리코겐"],flavor:{umami:70,sweet:10,salty:5,sour:5,bitter:15}},
+  "닭 간":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:17,fat:5.5,carbs:0.9,water:75,fiber:0},amino:["류신","리신"],vit:{A:3296,B12:16.6,folate:590,iron:8.9},compounds:["헤민","레티놀","철분"],flavor:{umami:65,sweet:8,salty:5,sour:5,bitter:15}},
+  "돼지 간":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:21,fat:3.7,carbs:2.5,water:71,fiber:0},amino:["리신","류신"],vit:{A:6502,B12:26,folate:212,iron:18},compounds:["헤민","레티놀"],flavor:{umami:68,sweet:10,salty:5,sour:5,bitter:15}},
+  "곱창":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:15,fat:12,carbs:1.5,water:70,fiber:0},amino:["글루탐산","글리신"],vit:{B12:4.5,iron:4.2},compounds:["콜라겐","뮤신"],flavor:{umami:65,sweet:5,salty:5,sour:0,bitter:10}},
+  "대창":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:12,fat:18,carbs:1,water:68,fiber:0},amino:["글리신","프롤린"],vit:{B12:3.8,iron:3.5},compounds:["콜라겐","지방"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:8}},
+  "막창":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:11,fat:16,carbs:1.2,water:70,fiber:0},amino:["글리신","알라닌"],vit:{B12:3.5,iron:3.2},compounds:["콜라겐","뮤신"],flavor:{umami:58,sweet:5,salty:5,sour:0,bitter:8}},
+  "양(소)":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:14,fat:2.5,carbs:1.7,water:80,fiber:0},amino:["글리신","알라닌"],vit:{B12:1.3,iron:1.8},compounds:["뮤신","콜라겐"],flavor:{umami:60,sweet:5,salty:5,sour:5,bitter:10}},
+  "혀(소)":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:16,fat:22,carbs:0.4,water:61,fiber:0},amino:["글루탐산","글리신"],vit:{B12:5.8,zinc:4.0,iron:2.5},compounds:["미오글로빈","콜라겐"],flavor:{umami:72,sweet:8,salty:5,sour:0,bitter:5}},
+  "심장(소)":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:17,fat:5,carbs:0.2,water:77,fiber:0},amino:["글루탐산","류신"],vit:{B12:10.5,CoQ10:113,iron:4.3},compounds:["코엔자임Q10","미오글로빈"],flavor:{umami:68,sweet:5,salty:5,sour:0,bitter:10}},
+  "신장(소)":{cat:"meat",emoji:"🫀",defaultG:100,comp:{protein:17,fat:3.1,carbs:0.8,water:78,fiber:0},amino:["류신","리신"],vit:{B12:36,B2:2.8,selenium:141},compounds:["헴철","요소"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:15}},
+
+  // ── 글로벌 가공육 ──────────────────────────────────────────────────────────
+  "프로슈토":{cat:"meat",emoji:"🍖",defaultG:30,comp:{protein:28,fat:7,carbs:0.3,water:62,fiber:0},amino:["글루탐산","류신"],vit:{B1:0.64,sodium:1870},compounds:["올레산","티라민"],flavor:{umami:80,sweet:5,salty:80,sour:5,bitter:5}},
+  "살라미":{cat:"meat",emoji:"🥓",defaultG:30,comp:{protein:22,fat:36,carbs:1.4,water:38,fiber:0},amino:["류신"],vit:{B12:1.2,sodium:1740},compounds:["티라민","니트라이트","발효"],flavor:{umami:75,sweet:5,salty:80,sour:15,bitter:5}},
+  "초리조":{cat:"meat",emoji:"🌶️",defaultG:30,comp:{protein:23,fat:39,carbs:2.2,water:33,fiber:0},amino:["류신"],vit:{B1:0.4,sodium:1237},compounds:["캡사이신","파프리카","니트라이트"],flavor:{umami:70,sweet:10,salty:70,sour:10,bitter:5}},
+  "페퍼로니":{cat:"meat",emoji:"🍕",defaultG:30,comp:{protein:19,fat:40,carbs:2,water:36,fiber:0},amino:["류신"],vit:{B12:0.8,sodium:1582},compounds:["캡사이신","니트라이트"],flavor:{umami:70,sweet:5,salty:75,sour:8,bitter:5}},
+  "파스트라미":{cat:"meat",emoji:"🥩",defaultG:30,comp:{protein:17,fat:5.5,carbs:0.5,water:74,fiber:0},amino:["글루탐산"],vit:{B12:1.8,sodium:1350},compounds:["코리앤더","후추","니트라이트"],flavor:{umami:72,sweet:5,salty:70,sour:5,bitter:10}},
+  "코른비프":{cat:"meat",emoji:"🥫",defaultG:50,comp:{protein:25,fat:17,carbs:0,water:57,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.0,sodium:1200},compounds:["니트라이트","겨자씨"],flavor:{umami:68,sweet:5,salty:75,sour:5,bitter:5}},
+  "브라트부어스트":{cat:"meat",emoji:"🌭",defaultG:80,comp:{protein:14,fat:27,carbs:2,water:55,fiber:0},amino:["류신"],vit:{B1:0.45,sodium:780},compounds:["넛맥","마조람"],flavor:{umami:65,sweet:10,salty:60,sour:5,bitter:5}},
+  "모르타델라":{cat:"meat",emoji:"🥩",defaultG:30,comp:{protein:15,fat:29,carbs:1.5,water:52,fiber:0},amino:["류신"],vit:{B12:0.7,sodium:1100},compounds:["피스타치오","코리앤더"],flavor:{umami:65,sweet:10,salty:65,sour:5,bitter:3}},
+  "판체타":{cat:"meat",emoji:"🥓",defaultG:30,comp:{protein:14,fat:43,carbs:0,water:42,fiber:0},amino:["류신"],vit:{B1:0.4,sodium:1580},compounds:["주니퍼베리","후추","니트라이트"],flavor:{umami:72,sweet:5,salty:80,sour:5,bitter:5}},
+  "키엘바사":{cat:"meat",emoji:"🌭",defaultG:80,comp:{protein:15,fat:28,carbs:3,water:52,fiber:0},amino:["류신"],vit:{B12:0.8,sodium:920},compounds:["마늘","마조람","니트라이트"],flavor:{umami:70,sweet:10,salty:65,sour:5,bitter:5}},
+  "안두이유소시지":{cat:"meat",emoji:"🌭",defaultG:80,comp:{protein:14,fat:26,carbs:2,water:56,fiber:0},amino:["류신"],vit:{B12:0.7,sodium:1050},compounds:["케이준향신료","니트라이트"],flavor:{umami:68,sweet:10,salty:65,sour:5,bitter:8}},
+  "볼로냐소시지":{cat:"meat",emoji:"🥩",defaultG:30,comp:{protein:12,fat:27,carbs:2.8,water:57,fiber:0},amino:["류신"],vit:{B12:0.7,sodium:1050},compounds:["코리앤더","니트라이트"],flavor:{umami:62,sweet:10,salty:65,sour:5,bitter:3}},
+  "육포(비프저키)":{cat:"meat",emoji:"🥩",defaultG:30,comp:{protein:33,fat:3.3,carbs:11,water:34,fiber:1.8},amino:["글루탐산","류신"],vit:{B12:2.3,zinc:5.4,iron:4.2},compounds:["니트라이트","소르베이트"],flavor:{umami:80,sweet:15,salty:80,sour:5,bitter:10}},
+  "란체온미트":{cat:"meat",emoji:"🥫",defaultG:50,comp:{protein:13,fat:22,carbs:3,water:60,fiber:0},amino:["류신"],vit:{sodium:1450},compounds:["니트라이트"],flavor:{umami:65,sweet:8,salty:75,sour:3,bitter:3}},
 
   // ── Seafood (추가) ────────────────────────────────────────────────────────
   "굴":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:9,fat:2.5,carbs:4.9,water:82,fiber:0},amino:["글루탐산","글리신","타우린"],vit:{B12:16,zinc:78,selenium:63},compounds:["타우린","글리코겐","글리신"],flavor:{umami:85,sweet:20,salty:10,sour:8,bitter:3}},
@@ -1299,10 +1371,17 @@ Object.entries(DB_SCI).forEach(([k,v]) => { if (DB[k]) DB[k].sci = v; });
 
 // ── 부위 계층 구조 (parent → children) ─────────────────────────────────────
 const PARENT_GROUPS = {
-  "소고기":   ["소고기 등심","소고기 안심","비프 패티","사골","곱창","간(소고기)"],
-  "돼지고기": ["삼겹살","목살(돼지)","베이컨","소시지","햄","스팸","비엔나소시지"],
+  // 육류 부위
+  "소고기":   ["꽃등심(립아이)","채끝(서로인)","소고기 등심","소고기 안심","갈비(소)","양지(브리스킷)","우둔(라운드)","부채살(플랫아이언)","업진살(스커트)","홍두깨살","비프 패티","사골"],
+  "돼지고기": ["삼겹살","목살(돼지)","등심(돼지)","안심(돼지)","갈비(돼지)","항정살","족발","돼지껍데기","순대","베이컨","소시지","햄","스팸","비엔나소시지"],
   "닭고기":   ["닭가슴살","닭다리","닭날개","닭 안심","닭 모래집"],
   "오리고기": ["훈제오리"],
+  "거위":     ["푸아그라"],
+  // 내장육
+  "내장육":   ["간(소고기)","닭 간","돼지 간","곱창","대창","막창","양(소)","혀(소)","심장(소)","신장(소)"],
+  // 가공육
+  "가공육류": ["프로슈토","살라미","초리조","페퍼로니","파스트라미","코른비프","브라트부어스트","모르타델라","판체타","키엘바사","안두이유소시지","볼로냐소시지","육포(비프저키)","란체온미트"],
+  // 유제품
   "치즈":     ["모짜렐라","파르메산","크림치즈","체다치즈","그뤼에르","리코타","코티지치즈","고다치즈"],
 };
 const CHILD_SET = new Set(Object.values(PARENT_GROUPS).flat());
