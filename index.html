@@ -20,23 +20,52 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard
 .logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-size:19px;position:relative;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
 .container{max-width:600px;margin:0 auto;padding:20px 16px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
-.card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:none}
+.card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:none;min-width:0;overflow:hidden}
 .section-title{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:15px;font-weight:600;letter-spacing:-0.01em;color:var(--text)}
 .search-wrap{position:relative;margin-bottom:12px}
 .search-wrap input{width:100%;padding:10px 14px 10px 38px;background:#fafafa;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;transition:all .2s}
 .search-wrap input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
 .search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-tertiary)}
-.ing-grid{display:flex;flex-wrap:wrap;gap:7px;max-height:260px;overflow-y:auto;padding:4px 0}
+/* ── Category scroll tabs ──────────────────────────────────────────────── */
+.cat-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;min-width:0}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cat-tab{flex-shrink:0;padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:all .15s;line-height:1.4}
+.cat-tab:hover:not(.active){border-color:#a3a3a3;background:#f5f5f5}
+.cat-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+/* ── Ingredient chip grid ───────────────────────────────────────────────── */
+.ing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:304px;overflow-y:auto;padding:2px 2px 4px 0;scrollbar-width:thin;scrollbar-color:#e5e5e5 transparent}
+.ing-grid::-webkit-scrollbar{width:4px}
+.ing-grid::-webkit-scrollbar-track{background:transparent}
+.ing-grid::-webkit-scrollbar-thumb{background:#e5e5e5;border-radius:4px}
+.ing-chip{padding:10px 4px 8px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;transition:all .15s;min-width:0;user-select:none}
+.ing-chip:hover{border-color:#a3a3a3;background:#fafafa;transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.ing-chip.active{border-color:var(--accent);background:linear-gradient(160deg,#ecfdf5,#d1fae5);box-shadow:0 2px 8px rgba(5,150,105,0.18)}
+.ing-chip .ci-e{font-size:22px;line-height:1}
+.ing-chip .ci-n{font-size:11px;color:#525252;line-height:1.2;word-break:keep-all;max-width:100%}
+.ing-chip.active .ci-n{color:#065f46;font-weight:600}
+/* ── Selected chips bar ─────────────────────────────────────────────────── */
+.sel-bar{margin-top:14px;padding-top:12px;border-top:1.5px solid #f0f0f0}
+.sel-bar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.sel-bar-title{font-size:12px;font-weight:600;color:#404040;display:flex;align-items:center;gap:6px}
+.sel-bar-title .sel-count-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:var(--accent);color:#fff;border-radius:9px;font-size:10px;font-weight:700}
+.sel-bar-clear{font-size:11px;color:#9ca3af;cursor:pointer;padding:3px 8px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;transition:all .15s;font-weight:500}
+.sel-bar-clear:hover{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
+.sel-chips{display:flex;flex-wrap:wrap;gap:5px}
+.sel-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 7px 5px 9px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:20px;transition:border-color .15s}
+.sel-chip:hover{border-color:var(--accent)}
+.sel-chip .sc-e{font-size:14px;line-height:1}
+.sel-chip .sc-n{font-size:12px;color:#065f46;font-weight:500;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sel-chip .sc-g{width:32px;border:none;background:transparent;color:#059669;font-size:12px;font-weight:700;text-align:center;outline:none;padding:0}
+.sel-chip .sc-u{font-size:10px;color:#6ee7b7;margin-right:2px}
+.sel-chip .sc-rm{cursor:pointer;opacity:.45;font-size:15px;line-height:1;color:#374151;padding-left:1px;transition:opacity .15s}
+.sel-chip .sc-rm:hover{opacity:1;color:#dc2626}
+/* ── Legacy compat (hidden) ─────────────────────────────────────────────── */
 .ing-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s}
 .ing-btn:hover{border-color:#a3a3a3;background:#fafafa}
-.ing-btn.active{border-color:transparent;background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(5,150,105,0.3)}
-.sel-tag{padding:5px 11px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;display:inline-flex;align-items:center;gap:6px;margin:3px;font-weight:500}
-.sel-tag .x{cursor:pointer;opacity:.7;font-size:16px;line-height:1;transition:opacity .2s}
-.sel-tag .x:hover{opacity:1}
+.ing-btn.active{border-color:transparent;background:var(--accent);color:#fff}
 .gram-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
 .gram-row:last-child{border-bottom:none}
-.gram-input{width:64px;padding:8px 10px;background:#fafafa;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;text-align:right;outline:none;transition:all .2s}
-.gram-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
+.gram-input{width:64px;padding:8px 10px;background:#fafafa;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;text-align:right;outline:none}
 .gram-unit{font-size:11px;color:var(--text-tertiary);min-width:14px}
 .method-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
 .method-btn{padding:12px 8px;border-radius:10px;font-size:12px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);cursor:pointer;text-align:center;transition:all .2s}
@@ -92,7 +121,7 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .flavor-bar{height:6px;border-radius:3px;background:#f5f5f5;overflow:hidden;margin-bottom:4px}
 .flavor-fill{height:100%;border-radius:3px;transition:width .5s}
 .flavor-desc{font-size:11px;color:var(--text-tertiary)}
-@media(max-width:768px){.grid2{grid-template-columns:1fr}.method-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){.grid2{grid-template-columns:1fr}.method-grid{grid-template-columns:repeat(4,1fr)}.ing-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){
   .header{padding:12px 14px}
   .header h1{font-size:15px!important}
@@ -489,13 +518,18 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
       <div class="section-title">🥬 재료 선택 <span id="dbStatus" style="font-size:11px;font-weight:400;color:#737373;margin-left:auto"></span></div>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="재료 검색 (1,300+ 식재료 DB)" oninput="onSearchInput()">
+        <input type="text" id="searchInput" placeholder="재료 이름으로 검색..." oninput="onSearchInput()">
       </div>
-      <div id="catTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+      <div class="cat-scroll" id="catTabs"></div>
       <div class="ing-grid" id="ingGrid"></div>
-      <div id="selectedArea" style="margin-top:12px;display:none">
-        <p style="font-size:12px;color:#737373;margin-bottom:6px" id="selCount"></p>
-        <div id="selTags"></div>
+      <div id="selectedArea" style="display:none">
+        <div class="sel-bar">
+          <div class="sel-bar-head">
+            <span class="sel-bar-title">선택된 재료 <span id="selCount" class="sel-count-badge"></span></span>
+            <button class="sel-bar-clear" onclick="clearAllIngredients()">전체 해제</button>
+          </div>
+          <div class="sel-chips" id="selTags"></div>
+        </div>
       </div>
     </div>
 
@@ -2534,8 +2568,8 @@ function renderIngredientsFromData(items, grid) {
   Object.entries(items).forEach(([name, data]) => {
     count++;
     const btn = document.createElement("button");
-    btn.className = "ing-btn" + (name in selected ? " active" : "");
-    btn.innerHTML = `<span>${data.emoji}</span><span>${name}</span>`;
+    btn.className = "ing-chip" + (name in selected ? " active" : "");
+    btn.innerHTML = `<span class="ci-e">${data.emoji}</span><span class="ci-n">${name}</span>`;
     btn.onclick = () => toggleIngredient(name);
     grid.appendChild(btn);
   });
@@ -2598,19 +2632,15 @@ function renderCategoryTabs() {
   const container = document.getElementById("catTabs");
   container.innerHTML = "";
   const cats = dbCategories || CATEGORIES;
-  // "전체" 탭 추가
   const allBtn = document.createElement("button");
-  allBtn.className = "ing-btn" + (activeCategory === "all" ? " active" : "");
-  allBtn.style.cssText = "font-size:12px;padding:5px 10px";
-  allBtn.innerHTML = `<span>📋</span><span>전체</span>`;
+  allBtn.className = "cat-tab" + (activeCategory === "all" ? " active" : "");
+  allBtn.innerHTML = `<span>🍽️</span><span>전체</span>`;
   allBtn.onclick = () => { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
   container.appendChild(allBtn);
-  // 나머지 카테고리
   Object.entries(cats).forEach(([key, c]) => {
     if (key === 'all') return;
     const btn = document.createElement("button");
-    btn.className = "ing-btn" + (activeCategory === key ? " active" : "");
-    btn.style.cssText = "font-size:12px;padding:5px 10px";
+    btn.className = "cat-tab" + (activeCategory === key ? " active" : "");
     btn.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
     btn.onclick = () => { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
     container.appendChild(btn);
@@ -2636,8 +2666,12 @@ function renderMethods() {
 
 function toggleIngredient(name) {
   if (name in selected) delete selected[name];
-  else selected[name] = DB[name].defaultG || 100;
-  renderIngredients(document.getElementById("searchInput").value);
+  else selected[name] = DB[name]?.defaultG || 100;
+  // Fast active toggle without full re-render
+  document.querySelectorAll(".ing-chip").forEach(btn => {
+    const n = btn.querySelector(".ci-n")?.textContent;
+    if (n === name) btn.classList.toggle("active", name in selected);
+  });
   renderSelected();
   document.getElementById("analyzeBtn").disabled = selCount() === 0;
 }
@@ -2650,20 +2684,28 @@ function updateGrams(name, val) {
 function renderSelected() {
   const area = document.getElementById("selectedArea");
   const tags = document.getElementById("selTags");
-  const count = document.getElementById("selCount");
+  const badge = document.getElementById("selCount");
   if (selCount() === 0) { area.style.display = "none"; return; }
   area.style.display = "block";
-  const totalG = Object.values(selected).reduce((a,b)=>a+b, 0);
-  count.textContent = `선택됨 ${selCount()}개 · 총 ${totalG}g`;
-  tags.innerHTML = selNames().map(n =>
-    `<div class="gram-row">
-      <span style="font-size:16px">${DB[n].emoji}</span>
-      <span style="flex:1;color:#525252;font-size:13px">${n}</span>
-      <input type="number" class="gram-input" value="${selected[n]}" min="1" max="9999" onchange="updateGrams('${n}',this.value)" onkeyup="updateGrams('${n}',this.value)">
-      <span class="gram-unit">g</span>
-      <span class="x" style="cursor:pointer;opacity:.6;font-size:16px;color:#525252" onclick="toggleIngredient('${n}')">&times;</span>
-    </div>`
-  ).join("");
+  badge.textContent = selCount();
+  tags.innerHTML = selNames().map(n => {
+    const d = DB[n]; if (!d) return '';
+    return `<div class="sel-chip">
+      <span class="sc-e">${d.emoji}</span>
+      <span class="sc-n">${n}</span>
+      <input type="number" class="sc-g" value="${selected[n]}" min="1" max="9999"
+        onchange="updateGrams('${n}',this.value)" onkeyup="updateGrams('${n}',this.value)">
+      <span class="sc-u">g</span>
+      <span class="sc-rm" onclick="toggleIngredient('${n}')" title="제거">×</span>
+    </div>`;
+  }).join("");
+}
+
+function clearAllIngredients() {
+  Object.keys(selected).forEach(k => delete selected[k]);
+  renderIngredients(document.getElementById("searchInput").value);
+  renderSelected();
+  document.getElementById("analyzeBtn").disabled = true;
 }
 
 async function filterIngredients() {
