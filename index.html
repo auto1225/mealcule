@@ -945,6 +945,77 @@ const DB = {
   "해파리":{cat:"seafood",emoji:"🪼",defaultG:100,comp:{protein:7,fat:0.1,carbs:0,water:95,fiber:0},amino:["글리신","알라닌"],vit:{calcium:50},compounds:["콜라겐"],flavor:{umami:40,sweet:5,salty:5,sour:5,bitter:3}},
   "꼬막":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:11,fat:1.8,carbs:2.7,water:83,fiber:0},amino:["글루탐산","타우린"],vit:{B12:8.2,iron:16.1},compounds:["타우린","헤모글로빈"],flavor:{umami:80,sweet:12,salty:8,sour:5,bitter:3}},
 
+  // ── 해산물 추가 어류 ──────────────────────────────────────────────────────
+  "도미":{cat:"seafood",emoji:"🐠",defaultG:150,comp:{protein:20,fat:3.4,carbs:0,water:75,fiber:0},amino:["글루탐산","라이신","알라닌"],vit:{D:3.5,B12:2.1,B6:0.4},compounds:["오메가-3","DHA","셀레늄"],flavor:{umami:75,sweet:12,salty:5,sour:3,bitter:2}},
+  "삼치":{cat:"seafood",emoji:"🐡",defaultG:150,comp:{protein:19,fat:5.5,carbs:0,water:73,fiber:0},amino:["류신","라이신","글루탐산"],vit:{D:4.8,B12:4.2,niacin:7.8},compounds:["오메가-3","EPA","DHA"],flavor:{umami:70,sweet:8,salty:5,sour:3,bitter:3}},
+  "갈치":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:18,fat:4.6,carbs:0,water:76,fiber:0},amino:["글루탐산","알라닌","글리신"],vit:{D:5.2,B12:3.8,calcium:45},compounds:["오메가-3","비타민D"],flavor:{umami:72,sweet:9,salty:5,sour:3,bitter:2}},
+  "우럭":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:19,fat:2.8,carbs:0,water:76,fiber:0},amino:["글루탐산","라이신","발린"],vit:{D:3.2,B12:2.5,selenium:28},compounds:["셀레늄","오메가-3"],flavor:{umami:73,sweet:10,salty:5,sour:3,bitter:2}},
+  "볼락":{cat:"seafood",emoji:"🐟",defaultG:120,comp:{protein:18,fat:2.2,carbs:0,water:77,fiber:0},amino:["글루탐산","알라닌","라이신"],vit:{D:2.8,B12:2.1},compounds:["오메가-3","칼슘"],flavor:{umami:68,sweet:10,salty:5,sour:3,bitter:2}},
+  "농어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:2.0,carbs:0,water:76,fiber:0},amino:["글루탐산","라이신","이소류신"],vit:{D:3.8,B12:2.8,selenium:32},compounds:["셀레늄","오메가-3"],flavor:{umami:71,sweet:11,salty:5,sour:3,bitter:2}},
+  "가자미":{cat:"seafood",emoji:"🐠",defaultG:150,comp:{protein:19,fat:1.8,carbs:0,water:77,fiber:0},amino:["글루탐산","알라닌","글리신"],vit:{D:2.5,B12:1.9,B6:0.3},compounds:["오메가-3","저지방"],flavor:{umami:65,sweet:9,salty:5,sour:3,bitter:2}},
+  "송어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:7.0,carbs:0,water:71,fiber:0},amino:["류신","라이신","발린"],vit:{D:9.5,B12:4.8,B6:0.6},compounds:["오메가-3","DHA","EPA","아스타잔틴"],flavor:{umami:70,sweet:10,salty:5,sour:3,bitter:2}},
+  "무지개송어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:21,fat:6.2,carbs:0,water:70,fiber:0},amino:["류신","라이신","트립토판"],vit:{D:11.5,B12:5.2,B6:0.7},compounds:["오메가-3","아스타잔틴","셀레늄"],flavor:{umami:72,sweet:10,salty:5,sour:3,bitter:2}},
+  "틸라피아":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:2.7,carbs:0,water:76,fiber:0},amino:["라이신","류신","발린"],vit:{B12:1.8,B6:0.4,niacin:5.1},compounds:["셀레늄","저지방"],flavor:{umami:55,sweet:7,salty:4,sour:3,bitter:2}},
+  "바라문디":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:19,fat:2.0,carbs:0,water:77,fiber:0},amino:["글루탐산","라이신","알라닌"],vit:{D:3.1,B12:2.2,selenium:30},compounds:["오메가-3","셀레늄"],flavor:{umami:65,sweet:10,salty:5,sour:3,bitter:2}},
+  "황새치":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:5.0,carbs:0,water:73,fiber:0},amino:["류신","라이신","이소류신"],vit:{D:6.8,B12:2.4,selenium:40},compounds:["오메가-3","셀레늄"],flavor:{umami:68,sweet:7,salty:5,sour:3,bitter:3}},
+  "복어":{cat:"seafood",emoji:"🐡",defaultG:120,comp:{protein:18,fat:0.3,carbs:0,water:80,fiber:0},amino:["글루탐산","알라닌","글리신"],vit:{B12:1.5,B6:0.3},compounds:["테트로도톡신(독소)","저지방"],flavor:{umami:65,sweet:10,salty:4,sour:3,bitter:2}},
+  "빙어":{cat:"seafood",emoji:"🐟",defaultG:80,comp:{protein:16,fat:2.5,carbs:0,water:80,fiber:0},amino:["글루탐산","알라닌"],vit:{D:2.1,calcium:55},compounds:["오메가-3","칼슘"],flavor:{umami:60,sweet:8,salty:4,sour:3,bitter:2}},
+  "은어":{cat:"seafood",emoji:"🐟",defaultG:100,comp:{protein:17,fat:3.8,carbs:0,water:77,fiber:0},amino:["글루탐산","알라닌","글리신"],vit:{D:3.5,B12:2.0},compounds:["오메가-3","비타민D"],flavor:{umami:65,sweet:12,salty:5,sour:4,bitter:3}},
+  "잉어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:17,fat:5.6,carbs:0,water:76,fiber:0},amino:["글루탐산","라이신"],vit:{B12:1.6,B6:0.3,calcium:50},compounds:["오메가-3","철분"],flavor:{umami:60,sweet:8,salty:5,sour:3,bitter:3}},
+  "민어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:18,fat:2.2,carbs:0,water:78,fiber:0},amino:["글루탐산","알라닌","라이신"],vit:{D:2.8,B12:2.0,selenium:25},compounds:["오메가-3","셀레늄"],flavor:{umami:68,sweet:10,salty:5,sour:3,bitter:2}},
+  "숭어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:19,fat:3.8,carbs:0,water:75,fiber:0},amino:["글루탐산","알라닌","라이신"],vit:{D:4.2,B12:3.1},compounds:["오메가-3","비타민D"],flavor:{umami:67,sweet:9,salty:5,sour:3,bitter:3}},
+  "부시리":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:21,fat:7.5,carbs:0,water:70,fiber:0},amino:["류신","라이신","글루탐산"],vit:{D:5.5,B12:4.2},compounds:["오메가-3","DHA","EPA"],flavor:{umami:75,sweet:9,salty:5,sour:3,bitter:2}},
+  "블루핀참치(혼마구로)":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:26,fat:21,carbs:0,water:51,fiber:0},amino:["류신","라이신","발린"],vit:{D:12.5,B12:9.4,niacin:8.9},compounds:["오메가-3","DHA","EPA","아스타잔틴"],flavor:{umami:90,sweet:10,salty:5,sour:3,bitter:2}},
+
+  // ── 해산물 조개류 ────────────────────────────────────────────────────────
+  "조개류":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:10,fat:1,carbs:3,water:84,fiber:0},amino:["타우린","글루탐산"],vit:{B12:5,iron:8},compounds:["타우린","철분"],flavor:{umami:78,sweet:10,salty:7,sour:4,bitter:3}},
+  "바지락":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:9,fat:1.0,carbs:3.0,water:85,fiber:0},amino:["타우린","글루탐산","글리신"],vit:{B12:6.8,iron:12.5,calcium:66},compounds:["타우린","철분","베타인"],flavor:{umami:82,sweet:10,salty:8,sour:4,bitter:3}},
+  "동죽":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:8,fat:0.8,carbs:3.5,water:86,fiber:0},amino:["타우린","글루탐산"],vit:{B12:5.5,iron:10.2},compounds:["타우린","철분"],flavor:{umami:75,sweet:9,salty:8,sour:4,bitter:3}},
+  "백합":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:11,fat:1.2,carbs:4.0,water:82,fiber:0},amino:["타우린","글루탐산","글리신"],vit:{B12:8.5,iron:14.3,zinc:2.5},compounds:["타우린","아연","글리코겐"],flavor:{umami:85,sweet:12,salty:8,sour:4,bitter:2}},
+  "키조개":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:13,fat:0.8,carbs:3.0,water:81,fiber:0},amino:["글루탐산","알라닌","타우린"],vit:{B12:7.2,iron:11.8,zinc:3.1},compounds:["타우린","철분","아연"],flavor:{umami:80,sweet:13,salty:6,sour:3,bitter:2}},
+  "피조개":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:13,fat:1.5,carbs:4.0,water:79,fiber:0},amino:["헤모글로빈","타우린","글루탐산"],vit:{B12:9.8,iron:22.5},compounds:["헤모글로빈","타우린","철분"],flavor:{umami:78,sweet:10,salty:7,sour:4,bitter:4}},
+  "소라":{cat:"seafood",emoji:"🐚",defaultG:100,comp:{protein:14,fat:1.0,carbs:3.0,water:80,fiber:0},amino:["타우린","글루탐산","알라닌"],vit:{B12:4.8,iron:5.2,magnesium:35},compounds:["타우린","마그네슘"],flavor:{umami:72,sweet:10,salty:7,sour:4,bitter:4}},
+
+  // ── 해산물 게류 ──────────────────────────────────────────────────────────
+  "게류":{cat:"seafood",emoji:"🦀",defaultG:150,comp:{protein:16,fat:1,carbs:0,water:82,fiber:0},amino:["글루탐산","글리신","알라닌"],vit:{B12:3.5,zinc:4},compounds:["타우린","아연"],flavor:{umami:80,sweet:14,salty:7,sour:3,bitter:2}},
+  "꽃게":{cat:"seafood",emoji:"🦀",defaultG:200,comp:{protein:14,fat:1.2,carbs:0,water:83,fiber:0},amino:["글루탐산","글리신","알라닌"],vit:{B12:3.8,zinc:3.8,calcium:72},compounds:["타우린","키토산"],flavor:{umami:82,sweet:14,salty:7,sour:3,bitter:2}},
+  "대게":{cat:"seafood",emoji:"🦀",defaultG:300,comp:{protein:16,fat:0.8,carbs:0,water:81,fiber:0},amino:["글루탐산","알라닌","글리신"],vit:{B12:4.2,zinc:4.5,selenium:35},compounds:["셀레늄","아연"],flavor:{umami:85,sweet:15,salty:6,sour:3,bitter:2}},
+  "킹크랩":{cat:"seafood",emoji:"🦀",defaultG:300,comp:{protein:19,fat:1.5,carbs:0,water:77,fiber:0},amino:["글루탐산","알라닌","류신"],vit:{B12:5.1,zinc:6.5,selenium:38},compounds:["셀레늄","아연","오메가-3"],flavor:{umami:88,sweet:15,salty:6,sour:3,bitter:2}},
+  "홍게":{cat:"seafood",emoji:"🦀",defaultG:200,comp:{protein:15,fat:0.6,carbs:0,water:82,fiber:0},amino:["글루탐산","글리신"],vit:{B12:3.5,calcium:68},compounds:["타우린","칼슘"],flavor:{umami:78,sweet:13,salty:7,sour:3,bitter:2}},
+  "털게":{cat:"seafood",emoji:"🦀",defaultG:200,comp:{protein:17,fat:1.8,carbs:0,water:78,fiber:0},amino:["글루탐산","알라닌","글리신"],vit:{B12:4.8,zinc:5.2},compounds:["타우린","아연","오메가-3"],flavor:{umami:86,sweet:15,salty:6,sour:3,bitter:2}},
+
+  // ── 해산물 새우류 ────────────────────────────────────────────────────────
+  "새우류":{cat:"seafood",emoji:"🦐",defaultG:100,comp:{protein:18,fat:1.2,carbs:0,water:79,fiber:0},amino:["글루탐산","글리신","알라닌"],vit:{B12:1.8,selenium:30,iodine:35},compounds:["타우린","셀레늄"],flavor:{umami:75,sweet:12,salty:7,sour:3,bitter:2}},
+  "대하":{cat:"seafood",emoji:"🦐",defaultG:100,comp:{protein:18,fat:1.1,carbs:0,water:79,fiber:0},amino:["글루탐산","글리신","알라닌"],vit:{B12:2.1,selenium:32,iodine:40},compounds:["타우린","셀레늄","아스타잔틴"],flavor:{umami:78,sweet:12,salty:7,sour:3,bitter:2}},
+  "랍스터":{cat:"seafood",emoji:"🦞",defaultG:200,comp:{protein:19,fat:1.9,carbs:0,water:77,fiber:0},amino:["글루탐산","알라닌","아르기닌"],vit:{B12:2.5,zinc:3.7,selenium:42},compounds:["셀레늄","아연","오메가-3"],flavor:{umami:82,sweet:15,salty:6,sour:3,bitter:2}},
+  "닭새우":{cat:"seafood",emoji:"🦞",defaultG:200,comp:{protein:20,fat:1.4,carbs:0,water:77,fiber:0},amino:["글루탐산","알라닌","아르기닌"],vit:{B12:2.8,selenium:40,zinc:3.5},compounds:["셀레늄","타우린"],flavor:{umami:80,sweet:13,salty:6,sour:3,bitter:2}},
+
+  // ── 해산물 오징어류 ──────────────────────────────────────────────────────
+  "오징어류":{cat:"seafood",emoji:"🦑",defaultG:100,comp:{protein:15,fat:1,carbs:1.5,water:81,fiber:0},amino:["타우린","글루탐산","알라닌"],vit:{B12:1.5,selenium:25,iodine:20},compounds:["타우린","묵물안토시아닌"],flavor:{umami:72,sweet:8,salty:6,sour:3,bitter:2}},
+  "한치":{cat:"seafood",emoji:"🦑",defaultG:100,comp:{protein:15,fat:1.2,carbs:2.0,water:80,fiber:0},amino:["타우린","글루탐산","알라닌"],vit:{B12:1.8,selenium:28},compounds:["타우린","오메가-3"],flavor:{umami:73,sweet:9,salty:6,sour:3,bitter:2}},
+  "갑오징어":{cat:"seafood",emoji:"🦑",defaultG:100,comp:{protein:16,fat:0.7,carbs:1.5,water:80,fiber:0},amino:["타우린","글루탐산","글리신"],vit:{B12:2.1,selenium:30,copper:2.1},compounds:["타우린","구리"],flavor:{umami:70,sweet:8,salty:6,sour:3,bitter:2}},
+  "주꾸미":{cat:"seafood",emoji:"🐙",defaultG:100,comp:{protein:13,fat:0.7,carbs:0.5,water:84,fiber:0},amino:["타우린","글루탐산","글리신"],vit:{B12:1.2,iron:3.8,selenium:22},compounds:["타우린","철분"],flavor:{umami:68,sweet:8,salty:6,sour:3,bitter:3}},
+  "대문어":{cat:"seafood",emoji:"🐙",defaultG:150,comp:{protein:15,fat:1.2,carbs:1.0,water:82,fiber:0},amino:["타우린","글루탐산","알라닌"],vit:{B12:2.2,selenium:35},compounds:["타우린","오메가-3"],flavor:{umami:72,sweet:9,salty:6,sour:3,bitter:3}},
+
+  // ── 해산물 해조류 ────────────────────────────────────────────────────────
+  "해조류":{cat:"seafood",emoji:"🌿",defaultG:30,comp:{protein:3,fat:0.3,carbs:9,water:85,fiber:3},amino:["글루탐산","알라닌"],vit:{iodine:150,calcium:80,B12:0.3},compounds:["아이오딘","알긴산","푸코이단"],flavor:{umami:65,sweet:5,salty:12,sour:4,bitter:5}},
+  "톳":{cat:"seafood",emoji:"🌿",defaultG:30,comp:{protein:2,fat:0.2,carbs:12,water:83,fiber:5},amino:["글루탐산","알라닌"],vit:{calcium:140,iron:9.5,iodine:42},compounds:["푸코이단","알긴산","철분"],flavor:{umami:55,sweet:4,salty:12,sour:5,bitter:6}},
+  "파래":{cat:"seafood",emoji:"🌿",defaultG:30,comp:{protein:5,fat:0.5,carbs:7,water:85,fiber:4},amino:["글루탐산","알라닌"],vit:{A:120,C:15,calcium:90,iodine:35},compounds:["클로로필","베타카로텐","아이오딘"],flavor:{umami:58,sweet:5,salty:10,sour:4,bitter:5}},
+  "청각":{cat:"seafood",emoji:"🌿",defaultG:30,comp:{protein:3,fat:0.3,carbs:8,water:86,fiber:3},amino:["글루탐산"],vit:{iodine:45,calcium:75},compounds:["아이오딘","알긴산"],flavor:{umami:52,sweet:4,salty:11,sour:4,bitter:6}},
+  "우뭇가사리":{cat:"seafood",emoji:"🌿",defaultG:20,comp:{protein:2,fat:0.1,carbs:10,water:86,fiber:8},amino:["알라닌"],vit:{calcium:55,iodine:25},compounds:["아가로스","아가로펙틴","식이섬유"],flavor:{umami:30,sweet:3,salty:8,sour:3,bitter:4}},
+
+  // ── 해산물 어란류 ────────────────────────────────────────────────────────
+  "어란류":{cat:"seafood",emoji:"🫧",defaultG:30,comp:{protein:26,fat:14,carbs:3,water:53,fiber:0},amino:["류신","라이신","발린"],vit:{D:8,B12:10,A:180,E:2.5},compounds:["오메가-3","DHA","레시틴","아스타잔틴"],flavor:{umami:90,sweet:8,salty:12,sour:4,bitter:4}},
+  "연어알":{cat:"seafood",emoji:"🫧",defaultG:30,comp:{protein:29,fat:15,carbs:4,water:48,fiber:0},amino:["류신","라이신","발린"],vit:{D:10.5,B12:12.5,A:200,E:3.2},compounds:["아스타잔틴","오메가-3","DHA","레시틴"],flavor:{umami:88,sweet:10,salty:13,sour:5,bitter:4}},
+  "명란":{cat:"seafood",emoji:"🫧",defaultG:50,comp:{protein:22,fat:4.5,carbs:2,water:69,fiber:0},amino:["글루탐산","라이신","알라닌"],vit:{B12:8.8,A:85,D:4.2},compounds:["EPA","DHA","타우린"],flavor:{umami:82,sweet:7,salty:15,sour:5,bitter:3}},
+  "날치알":{cat:"seafood",emoji:"🫧",defaultG:30,comp:{protein:28,fat:6,carbs:5,water:58,fiber:0},amino:["류신","라이신","글루탐산"],vit:{B12:7.5,D:3.8},compounds:["오메가-3","DHA"],flavor:{umami:75,sweet:8,salty:12,sour:4,bitter:3}},
+  "캐비어":{cat:"seafood",emoji:"🫧",defaultG:20,comp:{protein:25,fat:18,carbs:4,water:49,fiber:0},amino:["라이신","류신","아르기닌"],vit:{D:18.5,B12:20.2,A:250,E:4.5},compounds:["오메가-3","DHA","EPA","레시틴","아스타잔틴"],flavor:{umami:92,sweet:8,salty:14,sour:5,bitter:5}},
+  "청어알":{cat:"seafood",emoji:"🫧",defaultG:30,comp:{protein:22,fat:8,carbs:2,water:65,fiber:0},amino:["류신","라이신","발린"],vit:{D:12.5,B12:9.2,E:2.8},compounds:["오메가-3","DHA","비타민D"],flavor:{umami:80,sweet:7,salty:13,sour:4,bitter:4}},
+
+  // ── 해산물 기타 ──────────────────────────────────────────────────────────
+  "멍게":{cat:"seafood",emoji:"🪸",defaultG:100,comp:{protein:7,fat:0.5,carbs:4,water:87,fiber:0},amino:["타우린","글리신","글루탐산"],vit:{B12:1.5,iodine:120,vanadium:2},compounds:["신티아올","타우린","바나듐","아이오딘"],flavor:{umami:65,sweet:8,salty:9,sour:7,bitter:8}},
+  "미더덕":{cat:"seafood",emoji:"🪸",defaultG:100,comp:{protein:8,fat:0.6,carbs:3,water:86,fiber:0},amino:["타우린","글루탐산","글리신"],vit:{B12:1.2,iodine:95,calcium:45},compounds:["타우린","아이오딘","신티아올"],flavor:{umami:62,sweet:7,salty:9,sour:6,bitter:7}},
+
   // ── Vegetable (추가) ──────────────────────────────────────────────────────
   "연근":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.6,fat:0.1,carbs:17,water:79,fiber:4.9},amino:[],vit:{C:44,B6:0.17,potassium:556},compounds:["무신","탄닌","폴리페놀"],flavor:{umami:10,sweet:20,salty:0,sour:5,bitter:5}},
   "우엉":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.5,fat:0.1,carbs:17.3,water:80,fiber:3.3},amino:[],vit:{B6:0.24,folate:21,potassium:308},compounds:["이눌린","리그닌","사포닌"],flavor:{umami:10,sweet:15,salty:0,sour:10,bitter:15}},
@@ -1383,6 +1454,13 @@ const PARENT_GROUPS = {
   "가공육류": ["프로슈토","살라미","초리조","페퍼로니","파스트라미","코른비프","브라트부어스트","모르타델라","판체타","키엘바사","안두이유소시지","볼로냐소시지","육포(비프저키)","란체온미트"],
   // 유제품
   "치즈":     ["모짜렐라","파르메산","크림치즈","체다치즈","그뤼에르","리코타","코티지치즈","고다치즈"],
+  // 해산물 그룹
+  "조개류":   ["굴","가리비","홍합","꼬막","전복","바지락","동죽","백합","키조개","피조개","소라"],
+  "게류":     ["게","꽃게","대게","킹크랩","홍게","털게"],
+  "새우류":   ["새우","건새우","대하","랍스터","닭새우"],
+  "오징어류": ["오징어","문어","낙지","한치","갑오징어","주꾸미","대문어"],
+  "해조류":   ["미역","다시마","김","톳","파래","청각","우뭇가사리"],
+  "어란류":   ["연어알","명란","날치알","캐비어","청어알"],
 };
 const CHILD_SET = new Set(Object.values(PARENT_GROUPS).flat());
 
