@@ -785,6 +785,163 @@ const DB = {
   "버터":{cat:"oil",emoji:"🧈",defaultG:15,comp:{protein:0.9,fat:81,carbs:0.1,water:18,fiber:0},amino:[],vit:{A:684,D:0.6,E:2.3},compounds:["부티르산","디아세틸","카세인","유당"],flavor:{umami:5,sweet:10,salty:10,sour:5,bitter:0}},
 };
 
+// ── Quantitative Scientific Data Patch (USDA FoodData Central SR28 / Peer-reviewed sources) ──
+// glu: glutamic acid g/100g (bound+free) | imp: IMP mg/100g (Yamaguchi & Ninomiya 1998)
+// gmp: GMP mg/100g | allicin: mg/100g fresh (Miron et al. 2000) | capsaicin: mg/100g
+// lycopene: μg/100g | asparagine: g/100g | lecithin: mg/100g | free_glu: free glutamate mg/100g
+const DB_SCI = {
+  // ── Meats ──────────────────────────────────────────────────────────────────
+  "소고기":       {glu:3.04, imp:450},
+  "돼지고기":     {glu:2.78, imp:430},
+  "닭가슴살":     {glu:3.28, imp:350},
+  "닭다리":       {glu:2.80, imp:310},
+  "양고기":       {glu:2.90, imp:380},
+  "오리고기":     {glu:2.64, imp:290},
+  "베이컨":       {glu:4.23, imp:180},
+  "소시지":       {glu:1.80, imp:120},
+  "햄":           {glu:1.95, imp:150},
+  // ── Seafood ────────────────────────────────────────────────────────────────
+  "연어":         {glu:2.81, imp:280},
+  "참치":         {glu:3.21, imp:450},
+  "새우":         {glu:1.74, imp:250, gmp:40},
+  "고등어":       {glu:2.68, imp:380},
+  "오징어":       {glu:1.38, imp:180, gmp:35},
+  "조개":         {glu:1.02, imp:30,  gmp:150},
+  "게":           {glu:1.50, imp:60,  gmp:80},
+  "문어":         {glu:1.72, imp:25,  gmp:60},
+  "꽁치":         {glu:2.54, imp:370},
+  "대구":         {glu:2.21, imp:210},
+  "광어":         {glu:2.48, imp:245},
+  "멸치":         {glu:3.24, imp:380},
+  "전복":         {glu:1.45, imp:30,  gmp:20},
+  // ── Vegetables ────────────────────────────────────────────────────────────
+  "양파":         {glu:0.05, allicin:0.2,  quercetin:38.6},
+  "마늘":         {glu:0.81, allicin:3.7,  alliin:6.5, quercetin:47.2},
+  "감자":         {glu:0.42, asparagine:0.16, chlorogenic:130},
+  "토마토":       {glu:0.26, lycopene:2573},
+  "고추":         {glu:0.09, capsaicin:0.15, lycopene:48},
+  "브로콜리":     {glu:0.17, sulforaphane:0.45},
+  "당근":         {glu:0.09, betacarotene:8285},
+  "시금치":       {glu:0.19, lutein:12198, oxalate:970},
+  "양배추":       {glu:0.12, sulforaphane:0.30},
+  "오이":         {glu:0.07},
+  "호박":         {glu:0.08, betacarotene:426},
+  "가지":         {glu:0.09},
+  "셀러리":       {glu:0.10},
+  "아스파라거스": {glu:0.17, asparagine:0.38},
+  "무":           {glu:0.05, glucosinolate:35},
+  "콩나물":       {glu:0.10},
+  "부추":         {glu:0.14, allicin:0.5},
+  "파":           {glu:0.12, allicin:0.3,  quercetin:32},
+  "미나리":       {glu:0.12},
+  "피망":         {glu:0.08, betacarotene:208},
+  "비트":         {glu:0.16, betaine:127},
+  "케일":         {glu:0.21, sulforaphane:0.65, betacarotene:478},
+  "고구마":       {glu:0.13, betacarotene:961},
+  "옥수수":       {glu:0.27, lutein:202},
+  // ── Fruits ────────────────────────────────────────────────────────────────
+  "사과":         {glu:0.04, quercetin:4.4,  chlorogenic:28},
+  "바나나":       {glu:0.09},
+  "딸기":         {glu:0.05, ellagic:15,     anthocyanin:20},
+  "블루베리":     {glu:0.07, anthocyanin:165},
+  "아보카도":     {glu:0.22, glutathione:27},
+  "포도":         {glu:0.07, resveratrol:0.36, tannin:180},
+  "수박":         {glu:0.06, lycopene:4532},
+  "키위":         {glu:0.08, actinidin:30},
+  "레몬":         {glu:0.05, limonene:500,   citric:5700},
+  "오렌지":       {glu:0.07, hesperidin:71},
+  "자몽":         {glu:0.06, naringin:85},
+  "망고":         {glu:0.07, mangiferin:28},
+  "파인애플":     {glu:0.06, bromelain_iu:500},
+  "복숭아":       {glu:0.07, chlorogenic:40},
+  "배":           {glu:0.05, arbutin:17},
+  "감":           {glu:0.06, tannin:200},
+  // ── Grains ────────────────────────────────────────────────────────────────
+  "밀가루":       {glu:3.64, asparagine:0.34},
+  "파스타":       {glu:4.39},
+  "귀리":         {glu:2.74, betaglucan_g:4.5},
+  "메밀":         {glu:2.45, rutin:30},
+  "현미":         {glu:1.37, gammaoryzanol:45},
+  "쌀":           {glu:1.33},
+  "식빵":         {glu:3.33, asparagine:0.28},
+  "우동면":       {glu:2.97},
+  "라면(건면)":   {glu:3.00},
+  // ── Dairy ─────────────────────────────────────────────────────────────────
+  "우유":         {glu:0.68, lecithin:100},
+  "치즈":         {glu:4.65, free_glu:800},
+  "크림":         {glu:0.52},
+  "요거트":       {glu:0.73},
+  "생크림":       {glu:0.45},
+  "모짜렐라":     {glu:3.89, free_glu:400},
+  "파르메산":     {glu:9.21, free_glu:1200},
+  // ── Eggs ──────────────────────────────────────────────────────────────────
+  "계란":         {glu:1.60, lecithin:4000},
+  "메추리알":     {glu:1.58, lecithin:3800},
+  "오리알":       {glu:1.62, lecithin:3500},
+  // ── Nuts ──────────────────────────────────────────────────────────────────
+  "아몬드":       {glu:5.47, arginine:2.47},
+  "호두":         {glu:2.80, omega3_g:9.08, arginine:2.27},
+  "땅콩":         {glu:6.12, arginine:2.67},
+  "캐슈넛":       {glu:3.97, arginine:2.12},
+  "잣":           {glu:4.04, arginine:2.58},
+  "참깨":         {glu:2.87, sesamin:3300,  sesamol:1300},
+  "들깨":         {glu:2.75, omega3_g:45},
+  "해바라기씨":   {glu:5.48, tocopherol_ug:41100},
+  // ── Mushrooms ─────────────────────────────────────────────────────────────
+  "표고버섯":     {glu:0.67, gmp:150, ergothioneine:4700},
+  "양송이":       {glu:0.42, gmp:40,  ergothioneine:500},
+  "팽이버섯":     {glu:0.35, gmp:60,  ergothioneine:300},
+  "새송이":       {glu:0.55, gmp:80,  ergothioneine:1200},
+  "목이버섯":     {glu:1.10, gmp:35},
+  "느타리":       {glu:0.45, gmp:70,  ergothioneine:700},
+  // ── Legumes ───────────────────────────────────────────────────────────────
+  "검은콩":       {glu:0.71, isoflavone:13000},
+  "렌틸콩":       {glu:0.98},
+  "병아리콩":     {glu:1.04},
+  "팥":           {glu:0.82},
+  "완두콩":       {glu:0.34},
+  "된장(식재료)": {glu:0.87, free_glu:200, gmp:25},
+  "두부":         {glu:0.73, isoflavone:27000, genistein:17000},
+  // ── Herbs & Spices ────────────────────────────────────────────────────────
+  "바질":         {glu:0.43, linalool:50},
+  "로즈마리":     {glu:0.61, carnosol:3300,  ursolic:7000},
+  "타임":         {glu:0.72, thymol:1200,    carvacrol:3000},
+  "민트":         {glu:0.45, menthol:7000},
+  "고수(실란트로)":{glu:0.14, linalool:500},
+  "파슬리":       {glu:0.30, apiol:300},
+  "생강":         {glu:0.16, gingerol:16000, shogaol:8000},
+  "후추":         {glu:1.12, piperine:58000},
+  "시나몬":       {glu:0.46, cinnamaldehyde:14000},
+  "카레가루":     {glu:1.23, curcumin:3200},
+  "강황":         {glu:0.87, curcumin:54000},
+  "와사비":       {glu:0.24, AITC:11000},
+  "산초":         {glu:0.56},
+  // ── Condiments ────────────────────────────────────────────────────────────
+  "소금":         {glu:0},
+  "식초":         {glu:0.05, acetic:5000},
+  "고추장":       {glu:0.89, free_glu:100, capsaicin:1200},
+  "간장":         {glu:0.81, free_glu:1500},
+  "설탕":         {glu:0},
+  "굴소스":       {glu:0.64, free_glu:450},
+  "미림":         {glu:0.10},
+  "물엿":         {glu:0},
+  "케첩":         {glu:0.33, lycopene:6000},
+  "마요네즈":     {glu:0.10, lecithin:2000},
+  "머스타드":     {glu:0.50, AITC:800},
+  "꿀":           {glu:0},
+  // ── Oils ──────────────────────────────────────────────────────────────────
+  "올리브 오일":  {oleic_g:73,  polyphenol:300,  tocopherol_ug:14350},
+  "올리브오일":   {oleic_g:73,  polyphenol:300,  tocopherol_ug:14350},
+  "참기름":       {sesamin:3800, sesamol:1300},
+  "들기름":       {omega3_g:53},
+  "포도씨유":     {linoleic_g:69, polyphenol:350},
+  "코코넛오일":   {lauric_g:47},
+  "카놀라유":     {oleic_g:63, omega3_g:9.3},
+  "버터":         {butyric_g:3.6, SFA_g:51, lecithin:300, diacetyl:2300},
+};
+// Merge quantitative sci data into DB at runtime
+Object.entries(DB_SCI).forEach(([k,v]) => { if (DB[k]) DB[k].sci = v; });
+
 const METHODS = {
   pan_fry:{label:"팬 프라이",emoji:"🍳",range:[150,220]},
   boil:{label:"끓이기",emoji:"🍲",range:[95,100]},
@@ -2650,14 +2807,28 @@ function analyze(ingMap, method, temp, time) {
   const totalFat = totalComp("fat");
   const totalCarbs = totalComp("carbs");
   const has = fn => ings.some(i => DB[i] && fn(DB[i]));
+  // ── Quantitative sci totals (per actual gram input) ──────────────────
+  const sciTotal = (field) => ings.reduce((s,n) => s + (DB[n]?.sci?.[field] ?? 0) * (ingMap[n]||0) / 100, 0);
+  const totalGlu       = sciTotal("glu");        // g glutamic acid
+  const totalIMP       = sciTotal("imp");        // mg inosinate (IMP)
+  const totalGMP       = sciTotal("gmp");        // mg guanylate (GMP)
+  const totalFreeGlu   = sciTotal("free_glu");   // mg free glutamate
+  const totalAllicin   = sciTotal("allicin");    // mg allicin
+  const totalCapsaicin = sciTotal("capsaicin");  // mg capsaicin
+  const totalAsparagine= sciTotal("asparagine"); // g asparagine (acrylamide precursor)
+  const totalLecithin  = sciTotal("lecithin");   // mg lecithin
+  // Fallback: if no sci.glu, estimate from protein×0.16 (average glutamate fraction)
+  const totalGluEst = totalGlu > 0 ? totalGlu :
+    ings.reduce((s,n) => s + (DB[n]?.amino?.includes?.('글루탐산') ? (DB[n]?.comp?.protein||0)*0.16*(ingMap[n]||0)/100 : 0), 0);
+
   const hasProt = totalProtein > 3;
   const hasSugar = totalCarbs > 5 || ings.includes("설탕");
-  const hasAmino = has(d => d.amino.includes("글루탐산") || d.amino.includes("리신"));
+  const hasAmino = totalGluEst > 0.3; // >0.3g glutamate = meaningful Maillard substrate
   const hasAcid = has(d => d.compounds.some(c => c.includes("시트르산")));
   const hasFat = totalFat > 3;
   const hasStarch = has(d => d.compounds.some(c => c.includes("전분") || c.includes("아밀로")));
-  const hasCap = has(d => d.compounds.some(c => c.includes("캡사이신")));
-  const hasAllicin = has(d => d.compounds.some(c => c.includes("알리신")));
+  const hasCap = totalCapsaicin > 0.001 || has(d => d.compounds.some(c => c.includes("캡사이신")));
+  const hasAllicin = totalAllicin > 0.05 || has(d => d.compounds.some(c => c.includes("알리신")));
 
   // ── Maillard Reaction: 2nd-order Arrhenius, Ea=100 kJ/mol (Martins, Jongen & van Boekel 2001) ──
   if (hasAmino && hasSugar && temp >= 140) {
@@ -2667,7 +2838,7 @@ function analyze(ingMap, method, temp, time) {
     const k = 1e10 * Math.exp(-100000/(SCI.R*T));
     const halfLife = Math.round(Math.log(2)/k/60 * 10)/10;
     rxns.push({name:"마이야르 반응 (Maillard Reaction)",key:"maillard",icon:"🔬",intensity:int,
-      desc:`단백질 ${totalProtein.toFixed(1)}g + 탄수화물 ${totalCarbs.toFixed(1)}g이 ${temp}°C에서 반응 → 반응 진행률 ${int}%`,
+      desc:`글루탐산 ${totalGluEst.toFixed(2)}g + 탄수화물 ${totalCarbs.toFixed(1)}g이 ${temp}°C에서 반응 → 진행률 ${int}%`,
       effects:["갈색 색상 발현","고소한 풍미 생성","향기 화합물 다양화"],
       science:`k(T) = A·exp(-Ea/RT) | Ea=100 kJ/mol, A=10¹⁰ s⁻¹ | k(${temp}°C)=${k.toExponential(2)} s⁻¹`,
       proDetail:`Martins, Jongen & van Boekel (2001) Food Chem 74:403. 2차 반응속도론: d[M]/dt = k[AA][RS]. Ea=100 kJ/mol, A=10¹⁰ s⁻¹. k(${temp}°C)=${k.toExponential(3)} s⁻¹, t½=${halfLife}분. 반응 진행률 ${int}% (Hodge 3단계: 아마도리 전위 → 스트레커 분해 → 중합). 주요 생성물: 피라진류, 퓨란류, 멜라노이딘. AGEs(최종당화산물) 과도생성 임계: 진행률 >70%.`,
@@ -2750,11 +2921,12 @@ function analyze(ingMap, method, temp, time) {
   }
 
   // ── Acrylamide: bell-curve formation (Mottram 2002, Nature) ──
-  if (temp >= 120 && hasSugar && hasAmino) {
-    const raw = SCI.acrylamide(temp, time);
-    const int = Math.min(100, Math.round(Math.min(1, raw*1e5) * 100));
+  if (temp >= 120 && hasSugar && (totalAsparagine > 0.05 || hasAmino)) {
+    const rawAcr = SCI.acrylamide(temp, time);
+    const int = Math.min(100, Math.round(Math.min(1, rawAcr*1e5) * 100));
     if (int > 3) {
-      warns.push({type:"주의",msg:`${temp}°C 고온+환원당+아스파라긴 → 아크릴아마이드 생성 (Mottram 2002, Ea=87kJ/mol) — 진행률 ${int}%`});
+      const asnInfo = totalAsparagine > 0.05 ? ` (아스파라긴 ${(totalAsparagine*1000).toFixed(0)}mg)` : '';
+      warns.push({type:"주의",msg:`${temp}°C 고온+환원당+아스파라긴${asnInfo} → 아크릴아마이드 생성 (Mottram 2002, Ea=87kJ/mol) — 진행률 ${int}%`});
     }
   }
 
@@ -2762,11 +2934,13 @@ function analyze(ingMap, method, temp, time) {
   if (hasAllicin && temp >= 60) {
     const ret = SCI.allicinRetention(temp, time);
     const p = Math.round(ret*100);
+    const initMg = totalAllicin > 0.05 ? totalAllicin.toFixed(2) : '추정치';
+    const retMg  = totalAllicin > 0.05 ? (totalAllicin * ret).toFixed(3) : '—';
     rxns.push({name:"알리신 열변환",key:"allicin",icon:"🧄",intensity:100-p,
-      desc:`마늘/양파 알리신의 ${100-p}% 분해 → 아조엔·다이알릴설파이드 등으로 변환`,
+      desc:`초기 알리신 ${initMg}mg → ${retMg}mg 잔존 (${p}% 보존, ${100-p}% 분해·변환)`,
       effects:["매운향 감소","단맛 증가","항산화 화합물 변환"],
       science:`1차 반응: Ea=92kJ/mol (Lawson & Wang 2001) | 잔존율=${p}%`,
-      proDetail:`Lawson & Wang (2001) J Agric Food Chem 49:2911. 알리신 분해: 1차 반응 k=A·exp(-Ea/RT), Ea=92kJ/mol. 잔존율=${p}%. 생성물: 아조엔(항혈전, 항암), 다이알릴디설파이드(항균). 알리신 잔존→항균 활성. 낮은 온도(<60°C) 단시간 조리 또는 조리 직전 첨가 권장.`,
+      proDetail:`Lawson & Wang (2001) J Agric Food Chem 49:2911. 알리신 분해: 1차 반응 k=A·exp(-Ea/RT), Ea=92kJ/mol. 초기 투입량=${initMg}mg, 잔존=${retMg}mg(${p}%). 생성물: 아조엔(항혈전, 항암), 다이알릴디설파이드(항균). 알리신 잔존→항균 활성. 낮은 온도(<60°C) 단시간 조리 또는 조리 직전 첨가 권장.`,
       health:`항균·항산화 활성 약 ${p}% 잔존 — 생마늘 또는 조리 직전 첨가로 보존`});
   }
 
@@ -2774,8 +2948,9 @@ function analyze(ingMap, method, temp, time) {
   if (hasCap && hasFat) {
     const logP = 3.04;
     const partCoeff = Math.pow(10, logP);
+    const capMg = totalCapsaicin > 0.001 ? totalCapsaicin.toFixed(3) : '미량';
     rxns.push({name:"캡사이신 지용성 추출",key:"capsaicin",icon:"🌶️",intensity:72,
-      desc:`캡사이신 LogP=${logP} → 지질 용매에서 분배계수 ${partCoeff.toExponential(1)} 배, 매운맛 극대화`,
+      desc:`캡사이신 ${capMg}mg, LogP=${logP} → 지방상 농축도 ${partCoeff.toExponential(1)}× 증가`,
       effects:["매운맛 강화","기름에 색소 추출","풍미 분산"],
       science:`Nernst 분배법칙: LogP=3.04, Kow≈${partCoeff.toExponential(1)} | 지방상 농축`,
       proDetail:`Appendino et al. (2008) Angew Chem. Nernst 분배법칙: [cap]_지방/[cap]_물 = Kow = 10^LogP = ${partCoeff.toFixed(0)}. 지방 존재시 수상 대비 ${partCoeff.toFixed(0)}배 농축. TRPV1 수용체 결합 활성화 임계농도: ~1μM. 오일에 용해된 캡사이신은 구강 내 분포 균일화 → 지속적 매운맛.`,
@@ -2783,9 +2958,10 @@ function analyze(ingMap, method, temp, time) {
   }
 
   // ── Lecithin Emulsification (hydrophilic-lipophilic balance) ──
-  if (hasFat && has(d => d.compounds.some(c => c.includes("레시틴")))) {
+  if (hasFat && (totalLecithin > 100 || has(d => d.compounds.some(c => c.includes("레시틴"))))) {
+    const lecMg = totalLecithin > 0 ? totalLecithin.toFixed(0) : '추정';
     rxns.push({name:"유화 (Emulsification)",key:"emulsification",icon:"🔄",intensity:60,
-      desc:"포스파티딜콜린(레시틴) HLB≈8 → O/W 에멀전 안정화",
+      desc:`레시틴 ${lecMg}mg (포스파티딜콜린 HLB≈8) → O/W 에멀전 안정화`,
       effects:["크리미한 질감","소스 안정화","풍미 균일 분배"],
       science:"HLB=8 (Griffin 1954) → O/W 에멀전 | 임계미셀농도(CMC) 의존",
       proDetail:`Griffin (1954) J Soc Cosmet Chem. 레시틴(포스파티딜콜린) HLB≈8, O/W 에멀전 형성. CMC≈0.2mg/mL. 에멀전 안정성: ζ-전위 |>30mV| 조건. 온도↑ → HLB 감소 → 에멀전 불안정화 경향. 계란 레시틴 2-3% wt 기준 안정적 에멀전.`,
@@ -2857,24 +3033,31 @@ function predictFlavor(ingMap, method, temp, time) {
   const ings = Object.keys(ingMap);
   const raw = {umami:0, sweet:0, salty:0, sour:0, bitter:0};
   let totalG = 0;
-  // Accumulate gram-weighted glutamate and inosinate for umami synergy
-  let totalGlutamate = 0, totalInosinate = 0;
+  // ── Accumulate sci-sourced glutamate, IMP, GMP for umami synergy ────
   ings.forEach(name => {
     const d = DB[name]; if (!d) return;
     const g = ingMap[name] || 100;
     totalG += g;
     Object.keys(raw).forEach(t => { raw[t] += (d.flavor[t]||0) * g; });
-    // Glutamic acid content proxy (umami synergy)
-    const glu = d.amino?.includes("글루탐산") ? (d.comp?.protein||0) * 0.18 * g / 100 : 0;
-    totalGlutamate += glu;
-    // Inosinate (IMP) proxy: muscle meats ~0.3mg/g
-    const hasIMP = ["닭가슴살","소고기","돼지고기","연어","참치","닭고기"].some(m => name.includes(m.slice(0,2)));
-    totalInosinate += hasIMP ? 0.3 * g / 100 : 0;
   });
   if (totalG > 0) Object.keys(raw).forEach(t => { raw[t] /= totalG; });
 
+  // Use sci quantitative data (USDA FoodData Central) for umami synergy
+  // Glutamate in g/serving; IMP+GMP in mg/serving converted to relative units
+  const totalGlutamate = ings.reduce((s,n) => {
+    const d = DB[n]; if (!d) return s;
+    const g = ingMap[n] || 0;
+    // sci.glu preferred; fallback: free_glu (mg→g) + protein-fraction estimate
+    const glu = d.sci?.glu ?? (d.sci?.free_glu ? d.sci.free_glu/1000 : (d.amino?.includes?.('글루탐산') ? (d.comp?.protein||0)*0.16 : 0));
+    return s + glu * g / 100;
+  }, 0);
+  const totalInosinate = ings.reduce((s,n) => s + (DB[n]?.sci?.imp ?? 0) * (ingMap[n]||0) / 100, 0); // mg
+  const totalGuanylate = ings.reduce((s,n) => s + (DB[n]?.sci?.gmp ?? 0) * (ingMap[n]||0) / 100, 0); // mg
+  // Combined nucleotide (IMP + GMP additive for synergy, Yamaguchi 1991)
+  const totalNucleotide = totalInosinate + totalGuanylate; // mg
+
   // Umami synergy: MSG+IMP multiplier up to 8× (Yamaguchi & Ninomiya 1998, J Nutr)
-  const synergy = SCI.umamiSynergy(totalGlutamate, totalInosinate);
+  const synergy = SCI.umamiSynergy(totalGlutamate, totalNucleotide / 10); // convert mg→relative scale
   raw.umami = Math.min(100, raw.umami * synergy);
 
   // Maillard/Caramelization boost to umami and sweet (from reaction extents)
