@@ -9,6 +9,7 @@
 <meta name="description" content="Mealcule - 논문 기반 분자 요리 과학 플랫폼. 음식의 화학 반응, 영양소 변화, 건강 영향을 실시간 분석합니다.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#fafafa;--card:#ffffff;--card-dark:#059669;--border:#e5e5e5;--text:#171717;--text-secondary:#525252;--text-tertiary:#737373;--text-on-dark:#ffffff;--accent:#059669;--accent-hover:#047857;--accent-light:#ecfdf5;--accent-50:#f0fdf4;--green:#059669;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;--purple:#7c3aed;--orange:#f97316}
@@ -132,6 +133,9 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .add-member-btn{padding:8px 16px;border-radius:10px;border:1px dashed #d4d4d4;background:transparent;font-size:13px;cursor:pointer;color:var(--text-tertiary);transition:all .2s}
 .add-member-btn:hover{border-color:var(--accent);color:var(--accent)}
 .substance-category{font-size:11px;color:var(--text-tertiary);width:100%;padding:6px 0 2px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+/* ═══ Modal ═══ */
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-content{background:#fff;border-radius:16px;padding:24px;max-width:400px;width:100%;box-shadow:0 25px 50px rgba(0,0,0,0.25);animation:fadeInUp .3s ease}
 /* ═══ Login Page ═══ */
 .login-page{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;display:flex;background:#fafafa;transition:opacity .5s,transform .5s}
 .login-page.hidden{opacity:0;pointer-events:none;transform:scale(1.02)}
@@ -561,6 +565,35 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
     <div class="big-icon">👨‍🍳</div>
     <h3 style="color:#737373;font-weight:500;font-size:18px;margin-bottom:8px">재료를 선택하고 조리 조건을 설정해보세요</h3>
     <p style="color:#737373;font-size:14px">화학 반응 · 영양소 변화 · 맛 프로파일을 과학적으로 분석합니다</p>
+  </div>
+
+  <!-- Analysis History Panel -->
+  <div id="historyPanel" style="display:none">
+    <div class="card" style="margin-top:16px">
+      <div class="section-title">📋 분석 기록 <span id="historyCount" style="font-size:12px;color:#737373;font-weight:400"></span></div>
+      <div id="historyList" style="max-height:400px;overflow-y:auto"></div>
+      <div id="historyEmpty" style="text-align:center;padding:24px;color:#737373;font-size:13px;display:none">
+        분석 기록이 없습니다. 분석을 실행하면 자동으로 저장됩니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal" style="display:none">
+    <div class="modal-content" style="max-width:400px;padding:24px;border-radius:16px;background:#fff">
+      <h3 style="margin-bottom:12px;font-size:17px">💬 피드백 보내기</h3>
+      <select id="feedbackType" style="width:100%;padding:10px;border:1px solid #e5e5e5;border-radius:8px;margin-bottom:10px;font-size:14px">
+        <option value="general">일반 피드백</option>
+        <option value="bug">버그 리포트</option>
+        <option value="feature">기능 요청</option>
+        <option value="data_correction">데이터 수정 요청</option>
+      </select>
+      <textarea id="feedbackMsg" placeholder="의견을 자유롭게 적어주세요..." style="width:100%;height:120px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;resize:vertical;font-size:14px;font-family:inherit"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="closeFeedbackModal()" style="flex:1;padding:10px;border:1px solid #e5e5e5;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">취소</button>
+        <button onclick="submitFeedback()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;cursor:pointer;font-size:14px;font-weight:600">보내기</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -994,30 +1027,53 @@ const RXN_REF_MAP = {
 };
 
 // ══════════════════════════════════════════════════
-// COMMERCIAL STATE
+// COMMERCIAL STATE (DB 중심)
 // ══════════════════════════════════════════════════
-let currentUser = null;
-let userPlan = 'free'; // 'free', 'pro', 'enterprise'
+let currentUser = null;      // { id, email, name, avatar_url }
+let userProfile = null;      // DB profiles row
+let userPlan = 'free';       // 'free', 'pro', 'enterprise'
 let proMode = false;
-let dailyAnalysisCount = parseInt(localStorage.getItem('mc_daily_count') || '0');
-let dailyCountDate = localStorage.getItem('mc_daily_date') || '';
+let dailyUsage = { analysis_count: 0, search_count: 0, export_count: 0 };
+let isGuest = false;
+let authSession = null;      // Supabase auth session
 
-function checkDailyLimit() {
+// 플랜별 제한
+const PLAN_LIMITS = {
+  free:       { analysis: 5,  export: 0,  history: 10, members: 1 },
+  pro:        { analysis: 100, export: 50, history: 1000, members: 10 },
+  enterprise: { analysis: 10000, export: 10000, history: -1, members: -1 }
+};
+
+function getPlanLimit(type) {
+  return PLAN_LIMITS[userPlan]?.[type] ?? PLAN_LIMITS.free[type];
+}
+
+async function checkDailyLimit(type = 'analysis') {
+  const limit = getPlanLimit(type);
+  if (limit === -1) return true; // unlimited
+
+  if (supabase && authSession) {
+    // DB 기반 사용량 체크
+    const result = await dbRPC('increment_usage', { usage_type: type });
+    if (result) {
+      dailyUsage[type + '_count'] = result.current;
+      return result.allowed;
+    }
+  }
+  // 폴백: localStorage
   const today = new Date().toISOString().split('T')[0];
-  if (dailyCountDate !== today) { dailyAnalysisCount = 0; dailyCountDate = today; }
-  if (userPlan === 'free' && dailyAnalysisCount >= 5) return false;
+  const key = `mc_${type}_${today}`;
+  const count = parseInt(localStorage.getItem(key) || '0');
+  if (count >= limit) return false;
+  localStorage.setItem(key, count + 1);
+  dailyUsage[type + '_count'] = count + 1;
   return true;
 }
-function incrementDailyCount() {
-  dailyAnalysisCount++;
-  localStorage.setItem('mc_daily_count', dailyAnalysisCount);
-  localStorage.setItem('mc_daily_date', dailyCountDate);
-}
 
 // ══════════════════════════════════════════════════
-// LOGIN PAGE LOGIC
+// LOGIN PAGE LOGIC (Supabase Auth 연동)
 // ══════════════════════════════════════════════════
-let loginMode = 'login'; // 'login' or 'signup'
+let loginMode = 'login';
 
 function showLoginPage() {
   document.getElementById('loginPage').classList.remove('hidden');
@@ -1074,19 +1130,46 @@ async function handleLoginSubmit() {
   btn.textContent = loginMode === 'login' ? '로그인 중...' : '가입 중...';
   btn.disabled = true;
 
-  // Supabase Auth integration point
-  // For now: demo auth (save to localStorage)
   try {
-    const userName = loginMode === 'signup' ? name : email.split('@')[0];
-    currentUser = { email, name: userName };
-    userPlan = 'free';
-    localStorage.setItem('mc_user', JSON.stringify(currentUser));
-    localStorage.setItem('mc_plan', userPlan);
+    if (supabase) {
+      // ── Supabase Auth ──
+      if (loginMode === 'signup') {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password: pw,
+          options: { data: { name: name, full_name: name } }
+        });
+        if (error) throw error;
+        if (data.user && !data.session) {
+          showLoginError('인증 이메일을 확인해주세요!');
+          btn.textContent = '가입하기'; btn.disabled = false;
+          return;
+        }
+        authSession = data.session;
+        await loadUserProfile();
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password: pw });
+        if (error) throw error;
+        authSession = data.session;
+        await loadUserProfile();
+      }
+    } else {
+      // ── 폴백: localStorage 데모 모드 ──
+      const userName = loginMode === 'signup' ? name : email.split('@')[0];
+      currentUser = { id: 'local_' + Date.now(), email, name: userName };
+      userPlan = 'free';
+      localStorage.setItem('mc_user', JSON.stringify(currentUser));
+      localStorage.setItem('mc_plan', userPlan);
+    }
 
+    isGuest = false;
     updateUserUI();
     hideLoginPage();
   } catch (e) {
-    showLoginError('인증 오류: ' + e.message);
+    const msg = e.message || '인증 오류';
+    if (msg.includes('Invalid login')) showLoginError('이메일 또는 비밀번호가 올바르지 않습니다');
+    else if (msg.includes('already registered')) showLoginError('이미 등록된 이메일입니다');
+    else showLoginError(msg);
   } finally {
     btn.textContent = loginMode === 'login' ? '로그인' : '가입하기';
     btn.disabled = false;
@@ -1094,38 +1177,195 @@ async function handleLoginSubmit() {
 }
 
 async function handleLoginGoogle() {
-  // Google OAuth — Supabase integration point
-  showLoginError('Google 로그인은 Supabase 프로젝트 설정 후 활성화됩니다');
+  if (!supabase) {
+    showLoginError('Supabase 연결이 필요합니다');
+    return;
+  }
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+        queryParams: { access_type: 'offline', prompt: 'consent' }
+      }
+    });
+    if (error) throw error;
+    // OAuth는 리다이렉트 방식이므로 여기서 추가 처리 불필요
+  } catch (e) {
+    showLoginError('Google 로그인 오류: ' + e.message);
+  }
 }
 
 function handleGuestEntry() {
   currentUser = null;
   userPlan = 'free';
+  isGuest = true;
   localStorage.setItem('mc_guest', 'true');
   updateUserUI();
   hideLoginPage();
 }
 
-function handleForgotPw() {
+async function handleForgotPw() {
   const email = document.getElementById('loginEmail').value.trim();
   if (!email) { showLoginError('이메일을 먼저 입력해주세요'); return; }
-  alert(`${email}로 비밀번호 재설정 링크를 보냈습니다. (데모)`);
+
+  if (supabase) {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '?type=recovery'
+      });
+      if (error) throw error;
+      alert(`${email}로 비밀번호 재설정 링크를 보냈습니다.`);
+    } catch(e) {
+      showLoginError('비밀번호 재설정 오류: ' + e.message);
+    }
+  } else {
+    alert(`${email}로 비밀번호 재설정 링크를 보냈습니다. (데모)`);
+  }
 }
 
-// Check saved session on load
-function checkSavedSession() {
-  const saved = localStorage.getItem('mc_user');
-  const guest = localStorage.getItem('mc_guest');
-  if (saved) {
-    try {
-      currentUser = JSON.parse(saved);
-      userPlan = localStorage.getItem('mc_plan') || 'free';
+// ── DB에서 유저 프로필 로드 ──
+async function loadUserProfile() {
+  if (!supabase || !authSession) return;
+
+  const user = authSession.user;
+  currentUser = {
+    id: user.id,
+    email: user.email,
+    name: user.user_metadata?.name || user.user_metadata?.full_name || user.email.split('@')[0],
+    avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null
+  };
+
+  // 프로필 조회 (trigger가 자동 생성)
+  const profiles = await dbQuery('profiles', 'select', { eq: { id: user.id } });
+  if (profiles && profiles.length > 0) {
+    userProfile = profiles[0];
+    userPlan = userProfile.plan || 'free';
+    proMode = userProfile.pro_mode || false;
+  }
+
+  // 오늘 사용량 로드
+  const today = new Date().toISOString().split('T')[0];
+  const usage = await dbQuery('daily_usage', 'select', { eq: { user_id: user.id, usage_date: today } });
+  if (usage && usage.length > 0) {
+    dailyUsage = { analysis_count: usage[0].analysis_count, search_count: usage[0].search_count, export_count: usage[0].export_count };
+  }
+
+  // 멤버 프로필 로드
+  await loadMemberProfiles();
+}
+
+// ── 멤버 프로필 DB 로드 ──
+async function loadMemberProfiles() {
+  if (!supabase || !currentUser?.id || isGuest) return;
+
+  const data = await dbQuery('member_profiles', 'select', {
+    eq: { user_id: currentUser.id },
+    order: { col: 'sort_order', asc: true }
+  });
+
+  if (data && data.length > 0) {
+    members = data.map((m, i) => ({
+      id: i + 1,
+      dbId: m.id,
+      name: m.name,
+      age: m.age,
+      gender: m.gender,
+      height: m.height,
+      weight: m.weight,
+      ethnicity: m.ethnicity,
+      activity: m.activity,
+      traits: m.traits || [],
+      familyHx: m.family_history || [],
+      conditions: m.conditions || [],
+      substances: m.substances || []
+    }));
+    activeMemberId = 1;
+    nextMemberId = members.length + 1;
+  }
+}
+
+// ── 멤버 프로필 DB 저장 ──
+async function saveMemberToDB(member) {
+  if (!supabase || !currentUser?.id || isGuest) return;
+
+  const data = {
+    user_id: currentUser.id,
+    name: member.name,
+    age: member.age,
+    gender: member.gender,
+    height: member.height,
+    weight: member.weight,
+    ethnicity: member.ethnicity,
+    activity: member.activity,
+    traits: JSON.stringify(member.traits || []),
+    family_history: JSON.stringify(member.familyHx || []),
+    conditions: JSON.stringify(member.conditions || []),
+    substances: JSON.stringify(member.substances || []),
+    sort_order: member.id
+  };
+
+  if (member.dbId) {
+    await dbQuery('member_profiles', 'update', { data, eq: { id: member.dbId } });
+  } else {
+    const result = await dbQuery('member_profiles', 'insert', { data });
+    if (result && result[0]) member.dbId = result[0].id;
+  }
+}
+
+// ── 세션 초기화 (OAuth 리다이렉트 및 저장된 세션) ──
+async function initAuth() {
+  if (!supabase) {
+    // 폴백: localStorage
+    const saved = localStorage.getItem('mc_user');
+    const guest = localStorage.getItem('mc_guest');
+    if (saved) {
+      try {
+        currentUser = JSON.parse(saved);
+        userPlan = localStorage.getItem('mc_plan') || 'free';
+        updateUserUI();
+        hideLoginPage();
+      } catch(e) { /* ignore */ }
+    } else if (guest) {
+      isGuest = true;
+      hideLoginPage();
+    }
+    return;
+  }
+
+  // Supabase 세션 체크
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      authSession = session;
+      await loadUserProfile();
       updateUserUI();
       hideLoginPage();
-    } catch(e) { /* ignore */ }
-  } else if (guest) {
-    hideLoginPage();
+    } else {
+      const guest = localStorage.getItem('mc_guest');
+      if (guest) { isGuest = true; hideLoginPage(); }
+    }
+  } catch(e) {
+    console.warn('Auth init error:', e);
   }
+
+  // Auth 상태 변경 리스너
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      authSession = session;
+      await loadUserProfile();
+      updateUserUI();
+      hideLoginPage();
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null; userProfile = null; userPlan = 'free';
+      proMode = false; authSession = null; isGuest = false;
+      dailyUsage = { analysis_count: 0, search_count: 0, export_count: 0 };
+      updateUserUI(); updateModeUI();
+      showLoginPage();
+    } else if (event === 'TOKEN_REFRESHED' && session) {
+      authSession = session;
+    }
+  });
 }
 
 // Enter key handler for login form
@@ -1134,7 +1374,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') handleLoginSubmit(); });
   });
-  checkSavedSession();
+  initAuth();
 });
 
 // ── Auth Functions (header buttons) ──
@@ -1149,17 +1389,27 @@ function updateUserUI() {
   if (currentUser) {
     authBtn.style.display = 'none';
     avatar.style.display = 'flex';
-    document.getElementById('avatarInitial').textContent = currentUser.name[0].toUpperCase();
-    document.getElementById('avatarName').textContent = currentUser.name;
+    document.getElementById('avatarInitial').textContent = (currentUser.name || 'U')[0].toUpperCase();
+    document.getElementById('avatarName').textContent = currentUser.name || '사용자';
+    // 플랜 배지 표시
+    const badge = document.getElementById('planBadge');
+    if (badge) {
+      badge.textContent = userPlan === 'free' ? '' : userPlan.toUpperCase();
+      badge.style.display = userPlan === 'free' ? 'none' : 'inline';
+    }
   } else {
     authBtn.style.display = '';
     avatar.style.display = 'none';
   }
 }
 
-function openUserMenu() {
+async function openUserMenu() {
   if (confirm('로그아웃 하시겠습니까?')) {
-    currentUser = null; userPlan = 'free'; proMode = false;
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    currentUser = null; userProfile = null; userPlan = 'free'; proMode = false;
+    authSession = null; isGuest = false;
     localStorage.removeItem('mc_user');
     localStorage.removeItem('mc_plan');
     localStorage.removeItem('mc_guest');
@@ -1168,10 +1418,28 @@ function openUserMenu() {
   }
 }
 
-function selectPlan(plan) {
+async function selectPlan(plan) {
   if (!currentUser) { openAuthModal(); return; }
+
+  if (supabase && authSession) {
+    // DB에 구독 정보 저장
+    const subData = {
+      user_id: currentUser.id,
+      plan: plan,
+      status: plan === 'free' ? 'active' : 'trial',
+      amount: plan === 'pro' ? 9900 : plan === 'enterprise' ? 49900 : 0,
+      currency: 'KRW',
+      interval: 'monthly',
+      trial_ends_at: plan !== 'free' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() : null
+    };
+    await dbQuery('subscriptions', 'insert', { data: subData });
+    // 프로필 플랜 업데이트 (trigger가 자동으로 하지만 UI 즉시 반영)
+    await dbQuery('profiles', 'update', { data: { plan }, eq: { id: currentUser.id } });
+  }
+
   userPlan = plan;
-  alert(plan === 'pro' ? '프로 플랜이 활성화되었습니다! (데모)' : '엔터프라이즈 플랜 문의가 접수되었습니다');
+  localStorage.setItem('mc_plan', plan);
+  alert(plan === 'pro' ? '프로 플랜 7일 무료 체험이 시작되었습니다!' : plan === 'enterprise' ? '엔터프라이즈 플랜 문의가 접수되었습니다' : '무료 플랜으로 변경되었습니다');
   closePricingModal();
 }
 function contactSales() { window.open('mailto:contact@mealcule.com?subject=엔터프라이즈 플랜 문의'); }
@@ -1205,8 +1473,10 @@ function toggleRef(id) {
 }
 
 // ── Export Report ──
-function exportReport() {
+async function exportReport() {
   if (userPlan === 'free') { openPricingModal(); return; }
+  const exportAllowed = await checkDailyLimit('export');
+  if (!exportAllowed) { alert('오늘의 보고서 다운로드 횟수를 초과했습니다.'); return; }
   const results = document.getElementById('results');
   if (!results || !results.innerHTML.trim()) { alert('먼저 분석을 실행해주세요'); return; }
   // Generate text report
@@ -1246,6 +1516,59 @@ const SUPABASE_URL = 'https://ojtgkvtzmedsbhqkbhwe.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_6c8GjizbhYKUBzQywsoUhA_3KYN25-2';
 const USE_SUPABASE = SUPABASE_URL && SUPABASE_KEY;
 
+// Supabase Client (supabase-js v2)
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY && typeof window.supabase !== 'undefined') {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      storage: window.localStorage,
+      storageKey: 'mc_auth',
+      flowType: 'pkce'
+    }
+  });
+}
+
+// ── DB Helper: Supabase RPC/Query Wrapper ──
+async function dbQuery(table, method = 'select', params = {}) {
+  if (!supabase) return null;
+  try {
+    let query = supabase.from(table);
+    if (method === 'select') {
+      query = query.select(params.select || '*');
+      if (params.eq) Object.entries(params.eq).forEach(([k,v]) => query = query.eq(k,v));
+      if (params.ilike) Object.entries(params.ilike).forEach(([k,v]) => query = query.ilike(k,v));
+      if (params.order) query = query.order(params.order.col, { ascending: params.order.asc !== false });
+      if (params.limit) query = query.limit(params.limit);
+      if (params.range) query = query.range(params.range[0], params.range[1]);
+    } else if (method === 'insert') {
+      query = query.insert(params.data);
+    } else if (method === 'update') {
+      query = query.update(params.data);
+      if (params.eq) Object.entries(params.eq).forEach(([k,v]) => query = query.eq(k,v));
+    } else if (method === 'upsert') {
+      query = query.upsert(params.data);
+    } else if (method === 'delete') {
+      if (params.eq) Object.entries(params.eq).forEach(([k,v]) => query = query.eq(k,v));
+      query = query.delete();
+    }
+    const { data, error } = await query;
+    if (error) { console.warn(`DB ${method} ${table}:`, error.message); return null; }
+    return data;
+  } catch(e) { console.warn('DB error:', e); return null; }
+}
+
+async function dbRPC(fn, params = {}) {
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.rpc(fn, params);
+    if (error) { console.warn(`RPC ${fn}:`, error.message); return null; }
+    return data;
+  } catch(e) { console.warn('RPC error:', e); return null; }
+}
+
 // ── State ──
 let selected = {};  // {name: grams}
 let activeCategory = "all";
@@ -1266,32 +1589,15 @@ function activeMember() {
 function selNames() { return Object.keys(selected); }
 function selCount() { return selNames().length; }
 
-// ── Supabase API 헬퍼 ──
-async function supabaseQuery(table, params = {}) {
-  if (!USE_SUPABASE) return null;
-  const url = new URL(`${SUPABASE_URL}/rest/v1/${table}`);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  try {
-    const res = await fetch(url.toString(), {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      }
-    });
-    if (!res.ok) throw new Error(res.statusText);
-    return await res.json();
-  } catch (e) {
-    console.warn('Supabase query failed:', e);
-    return null;
-  }
-}
+// ── Supabase DB 헬퍼 (supabase-js 기반) ──
 
 // Supabase에서 카테고리 로드
 async function loadCategories() {
-  if (!USE_SUPABASE) return;
-  const data = await supabaseQuery('categories', { order: 'sort_order', select: '*' });
+  if (!supabase) return;
+  const data = await dbQuery('categories', 'select', {
+    order: { col: 'sort_order', asc: true },
+    eq: { is_active: true }
+  });
   if (data) {
     dbCategories = {};
     data.forEach(c => { dbCategories[c.id] = { label: c.label, emoji: c.emoji }; });
@@ -1300,16 +1606,20 @@ async function loadCategories() {
 
 // Supabase 재료 검색
 async function searchIngredientsAPI(query, category) {
+  if (!supabase) return null;
   const cacheKey = `${category}:${query}`;
   if (apiCache[cacheKey]) return apiCache[cacheKey];
 
-  const params = { select: '*', order: 'name', limit: '50' };
-  if (category && category !== 'all') params.cat = `eq.${category}`;
-  if (query) params.name = `ilike.*${query}*`;
+  const params = { select: '*', limit: 50, order: { col: 'name', asc: true } };
+  const eqParams = { is_active: true };
+  const ilikeParams = {};
+  if (category && category !== 'all') eqParams.cat = category;
+  if (query) ilikeParams.name = `%${query}%`;
+  params.eq = eqParams;
+  if (Object.keys(ilikeParams).length) params.ilike = ilikeParams;
 
-  const data = await supabaseQuery('ingredients', params);
+  const data = await dbQuery('ingredients', 'select', params);
   if (data) {
-    // Supabase 결과를 로컬 DB 포맷으로 변환
     const results = {};
     data.forEach(row => {
       results[row.name] = {
@@ -1317,21 +1627,20 @@ async function searchIngredientsAPI(query, category) {
         emoji: row.emoji,
         defaultG: row.default_g,
         comp: { protein: row.protein, fat: row.fat, carbs: row.carbs, water: row.water, fiber: row.fiber },
-        amino: JSON.parse(row.amino_acids || '[]'),
+        amino: typeof row.amino_acids === 'string' ? JSON.parse(row.amino_acids || '[]') : (row.amino_acids || []),
         vit: {
           A: row.vit_a, C: row.vit_c, D: row.vit_d, E: row.vit_e, K: row.vit_k,
           B1: row.vit_b1, B2: row.vit_b2, B6: row.vit_b6, B12: row.vit_b12,
           folate: row.folate, niacin: row.niacin,
           sodium: row.sodium, potassium: row.potassium, calcium: row.calcium, iron: row.iron
         },
-        compounds: JSON.parse(row.compounds || '[]'),
+        compounds: typeof row.compounds === 'string' ? JSON.parse(row.compounds || '[]') : (row.compounds || []),
         flavor: {
           umami: row.flavor_umami, sweet: row.flavor_sweet, salty: row.flavor_salty,
           sour: row.flavor_sour, bitter: row.flavor_bitter
         },
         _fromAPI: true
       };
-      // API 결과를 로컬 DB에도 병합 (오프라인 대비)
       if (!DB[row.name]) DB[row.name] = results[row.name];
     });
     apiCache[cacheKey] = results;
@@ -1342,28 +1651,93 @@ async function searchIngredientsAPI(query, category) {
 
 // 카테고리별 총 개수 조회
 async function getCategoryCount() {
-  if (!USE_SUPABASE) return Object.keys(DB).length;
-  const data = await supabaseQuery('ingredients', { select: 'id', limit: '1', head: 'true' });
-  return data ? data.length : Object.keys(DB).length;
+  if (!supabase) return Object.keys(DB).length;
+  const { count, error } = await supabase.from('ingredients').select('id', { count: 'exact', head: true }).eq('is_active', true);
+  return error ? Object.keys(DB).length : (count || Object.keys(DB).length);
+}
+
+// ── 분석 히스토리 DB 저장 ──
+async function saveAnalysisToHistory(analysisResult) {
+  if (!supabase || !currentUser?.id || isGuest) return null;
+
+  const temp = parseInt(document.getElementById('tempSlider')?.value || 180);
+  const time = parseInt(document.getElementById('timeSlider')?.value || 10);
+  const oil = parseInt(document.getElementById('oilSlider')?.value || 0);
+
+  const data = {
+    user_id: currentUser.id,
+    ingredients: selected,
+    method: method,
+    temperature: temp,
+    duration: time,
+    oil_amount: oil,
+    member_profiles: members.map(m => ({ name: m.name, age: m.age, gender: m.gender, conditions: m.conditions })),
+    reactions: analysisResult.reactions || null,
+    nutrition: analysisResult.nutrition || null,
+    flavor: analysisResult.flavor || null,
+    health: analysisResult.health || null
+  };
+
+  const result = await dbQuery('analysis_history', 'insert', { data });
+  return result?.[0]?.id || null;
+}
+
+// ── 분석 히스토리 조회 ──
+async function loadAnalysisHistory(limit = 20) {
+  if (!supabase || !currentUser?.id) return [];
+  const data = await dbQuery('analysis_history', 'select', {
+    eq: { user_id: currentUser.id },
+    order: { col: 'created_at', asc: false },
+    limit: limit
+  });
+  return data || [];
+}
+
+// ── 북마크 토글 ──
+async function toggleBookmark(analysisId) {
+  if (!supabase) return;
+  const current = await dbQuery('analysis_history', 'select', { eq: { id: analysisId } });
+  if (current && current[0]) {
+    await dbQuery('analysis_history', 'update', {
+      data: { is_bookmarked: !current[0].is_bookmarked },
+      eq: { id: analysisId }
+    });
+  }
+}
+
+// ── 피드백 전송 ──
+async function sendFeedback(type, message) {
+  if (!supabase || !currentUser?.id) return false;
+  const result = await dbQuery('feedback', 'insert', {
+    data: { user_id: currentUser.id, type, message }
+  });
+  return !!result;
 }
 
 // 검색 디바운스
 function onSearchInput() {
   clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => filterIngredients(), USE_SUPABASE ? 300 : 50);
+  searchTimeout = setTimeout(() => filterIngredients(), !!supabase ? 300 : 50);
 }
 
 // ── Init ──
 async function init() {
-  // Supabase 연결 상태 표시
   const statusEl = document.getElementById('dbStatus');
-  if (USE_SUPABASE) {
+
+  if (supabase) {
     statusEl.textContent = '🔄 DB 연결 중...';
-    await loadCategories();
-    statusEl.innerHTML = '<span style="color:#059669">● 온라인</span> · 1,300+ 식재료';
+    try {
+      await loadCategories();
+      const count = await getCategoryCount();
+      statusEl.innerHTML = `<span style="color:#059669">● 온라인</span> · ${count.toLocaleString()}+ 식재료`;
+    } catch(e) {
+      statusEl.innerHTML = '<span style="color:#f97316">● 재연결</span> · 로컬 모드';
+      console.warn('DB 연결 실패, 로컬 모드:', e);
+    }
   } else {
     statusEl.innerHTML = '<span style="color:#737373">○ 로컬</span> · ' + Object.keys(DB).length + '개';
   }
+
   renderCategoryTabs();
   renderIngredients();
   renderMethods();
@@ -2000,16 +2374,16 @@ function renderIngredients(filter = "") {
 
   const count = renderIngredientsFromData(localItems, grid);
 
-  if (count === 0 && !USE_SUPABASE) {
+  if (count === 0 && !!!supabase) {
     grid.innerHTML = `<div style="width:100%;text-align:center;padding:16px;color:#737373;font-size:13px">검색 결과 없음</div>`;
   }
-  if (count === 0 && USE_SUPABASE && lower) {
+  if (count === 0 && !!supabase && lower) {
     grid.innerHTML = `<div style="width:100%;text-align:center;padding:12px;color:#737373;font-size:13px">🔍 DB에서 검색 중...</div>`;
   }
 }
 
 async function renderIngredientsAPI(filter) {
-  if (!USE_SUPABASE || !filter) return;
+  if (!!!supabase || !filter) return;
   const apiResults = await searchIngredientsAPI(filter, activeCategory);
   if (!apiResults) return;
 
@@ -2113,7 +2487,7 @@ async function filterIngredients() {
   const query = document.getElementById("searchInput").value;
   renderIngredients(query);
   // 로컬에 결과 부족하면 API 검색
-  if (USE_SUPABASE && query.length >= 1) {
+  if (!!supabase && query.length >= 1) {
     await renderIngredientsAPI(query);
   }
 }
@@ -2297,20 +2671,23 @@ function predictFlavor(ingMap, method, temp, time) {
 // ── Render Results ──
 let currentTab = "reactions";
 
-function runAnalysis() {
+async function runAnalysis() {
   if (!selCount()) return;
-  // Daily limit check for free users
-  if (!checkDailyLimit()) {
-    alert('무료 플랜의 일일 분석 횟수(5회)를 초과했습니다.\n프로 플랜으로 업그레이드하면 무제한으로 분석할 수 있습니다.');
+  // Daily limit check (DB 또는 localStorage 기반)
+  const allowed = await checkDailyLimit('analysis');
+  if (!allowed) {
+    alert(`무료 플랜의 일일 분석 횟수(${getPlanLimit('analysis')}회)를 초과했습니다.\n프로 플랜으로 업그레이드하면 더 많이 분석할 수 있습니다.`);
     openPricingModal();
     return;
   }
-  incrementDailyCount();
   const temp = +document.getElementById("tempSlider").value;
   const time = +document.getElementById("timeSlider").value;
   const {rxns, warns} = analyze(selected, method, temp, time);
   const nutrition = calcNutrition(selected, method, temp, time);
   const flavor = predictFlavor(selected, method, temp, time);
+
+  // 분석 결과 DB에 저장 (비동기 — UI 블로킹 없음)
+  saveAnalysisToHistory({ reactions: rxns, nutrition, flavor, health: null }).catch(e => console.warn('히스토리 저장 실패:', e));
 
   document.getElementById("emptyState").style.display = "none";
   const res = document.getElementById("results");
@@ -2621,6 +2998,110 @@ function switchTab(tab) {
   });
 }
 
+// ══════════════════════════════════════════════════
+// HISTORY UI (분석 기록 UI)
+// ══════════════════════════════════════════════════
+async function toggleHistory() {
+  const panel = document.getElementById('historyPanel');
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    await renderHistory();
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+async function renderHistory() {
+  const list = document.getElementById('historyList');
+  const empty = document.getElementById('historyEmpty');
+  const countEl = document.getElementById('historyCount');
+  if (!list) return;
+
+  const history = await loadAnalysisHistory(20);
+  if (!history || history.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    countEl.textContent = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  countEl.textContent = `(${history.length}건)`;
+
+  list.innerHTML = history.map(h => {
+    const date = new Date(h.created_at).toLocaleString('ko-KR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    const ings = Object.keys(h.ingredients || {}).slice(0, 3).join(', ');
+    const more = Object.keys(h.ingredients || {}).length > 3 ? ` 외 ${Object.keys(h.ingredients).length - 3}개` : '';
+    const methodEmoji = {'pan_fry':'🍳','grill':'🔥','oven':'♨️','boil':'🫕','steam':'💨','deep_fry':'🛢️','air_fry':'🌀','sous_vide':'🎯','raw':'🥗','microwave':'📡'}[h.method] || '🍳';
+    return `<div class="history-item" style="padding:12px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .2s" onclick="replayAnalysis('${h.id}')" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:14px;font-weight:500">${methodEmoji} ${ings}${more}</div>
+          <div style="font-size:12px;color:#737373;margin-top:2px">${h.temperature}°C · ${h.duration}분 · ${date}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${h.is_bookmarked ? '<span style="color:#eab308">⭐</span>' : ''}
+          <button onclick="event.stopPropagation();toggleBookmark('${h.id}').then(()=>renderHistory())" style="border:none;background:none;cursor:pointer;font-size:14px;opacity:.5" title="북마크">${h.is_bookmarked ? '⭐' : '☆'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function replayAnalysis(id) {
+  // 히스토리에서 분석을 다시 로드
+  if (!supabase || !currentUser?.id) return;
+  const data = await dbQuery('analysis_history', 'select', { eq: { id } });
+  if (!data || !data[0]) return;
+
+  const h = data[0];
+  // 재료 복원
+  selected = h.ingredients || {};
+  method = h.method || 'pan_fry';
+  if (h.temperature) document.getElementById('tempSlider').value = h.temperature;
+  if (h.duration) document.getElementById('timeSlider').value = h.duration;
+
+  // UI 갱신
+  renderIngredients();
+  renderMethods();
+  updateSliderLabels();
+  document.getElementById('historyPanel').style.display = 'none';
+
+  // 분석 재실행
+  runAnalysis();
+}
+
+function updateSliderLabels() {
+  const temp = document.getElementById('tempSlider');
+  const time = document.getElementById('timeSlider');
+  if (temp) { const lbl = document.getElementById('tempVal'); if (lbl) lbl.textContent = temp.value + '°C'; }
+  if (time) { const lbl = document.getElementById('timeVal'); if (lbl) lbl.textContent = time.value + '분'; }
+}
+
+// ══════════════════════════════════════════════════
+// FEEDBACK UI
+// ══════════════════════════════════════════════════
+function openFeedbackModal() {
+  if (!currentUser) { openAuthModal(); return; }
+  document.getElementById('feedbackModal').style.display = 'flex';
+}
+function closeFeedbackModal() {
+  document.getElementById('feedbackModal').style.display = 'none';
+  document.getElementById('feedbackMsg').value = '';
+}
+async function submitFeedback() {
+  const type = document.getElementById('feedbackType').value;
+  const msg = document.getElementById('feedbackMsg').value.trim();
+  if (!msg) { alert('메시지를 입력해주세요'); return; }
+  const success = await sendFeedback(type, msg);
+  if (success) {
+    alert('피드백이 전송되었습니다. 감사합니다!');
+    closeFeedbackModal();
+  } else {
+    alert('전송에 실패했습니다. 다시 시도해주세요.');
+  }
+}
+
 // Boot
 init();
 </script>
@@ -2631,6 +3112,8 @@ init();
   데이터 기준: 2026년 3월 · USDA FoodData Central · 한국영양학회(KNS) · 식약처 KFDA<br>
   <a href="#" onclick="toggleMethodology();window.scrollTo(0,0);return false">과학적 방법론</a> ·
   <a href="#" onclick="openPricingModal();return false">요금제</a> ·
+  <a href="#" onclick="toggleHistory();return false">분석 기록</a> ·
+  <a href="#" onclick="openFeedbackModal();return false">피드백</a> ·
   <a href="mailto:contact@mealcule.com">문의</a> ·
   <a href="#">이용약관</a> ·
   <a href="#">개인정보처리방침</a><br>
