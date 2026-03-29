@@ -1049,6 +1049,103 @@ const DB = {
   "알배추":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.2,fat:0.1,carbs:3,water:95,fiber:0.8},amino:[],vit:{C:22,K:57,folate:36},compounds:["설포라판","클로로필"],flavor:{umami:15,sweet:12,salty:0,sour:5,bitter:8}},
   "브뤼셀새싹":{cat:"vegetable",emoji:"🥦",defaultG:100,comp:{protein:3.4,fat:0.3,carbs:8.9,water:86,fiber:3.8},amino:["글루탐산"],vit:{K:177,C:85,folate:61},compounds:["설포라판","인돌-3-카르비놀"],flavor:{umami:20,sweet:8,salty:0,sour:5,bitter:30}},
 
+  // ── 채소 글로벌 확장 ────────────────────────────────────────────────────
+
+  // 양파/부추류
+  "샬롯":{cat:"vegetable",emoji:"🧅",defaultG:50,comp:{protein:2.5,fat:0.1,carbs:17,water:79,fiber:3.2},amino:["알리신"],vit:{B6:0.34,folate:20,C:8},compounds:["퀘르세틴","알리신","플라보노이드"],flavor:{umami:25,sweet:35,salty:0,sour:5,bitter:10}},
+  "리크":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.5,fat:0.3,carbs:14,water:83,fiber:1.8},amino:[],vit:{K:47,C:12,folate:64,B6:0.23},compounds:["알리신","플라보노이드","카로티노이드"],flavor:{umami:20,sweet:25,salty:0,sour:5,bitter:10}},
+  "골파":{cat:"vegetable",emoji:"🌿",defaultG:20,comp:{protein:3.3,fat:0.7,carbs:4.4,water:90,fiber:2.5},amino:[],vit:{K:212,A:131,C:58},compounds:["알리신","루테인","퀘르세틴"],flavor:{umami:20,sweet:10,salty:0,sour:5,bitter:15}},
+  "적양파":{cat:"vegetable",emoji:"🧅",defaultG:100,comp:{protein:1.1,fat:0.1,carbs:7.6,water:90,fiber:1.4},amino:[],vit:{C:7,B6:0.12,folate:19},compounds:["안토시아닌","퀘르세틴","알리신"],flavor:{umami:20,sweet:35,salty:0,sour:5,bitter:15}},
+  "마늘쫑":{cat:"vegetable",emoji:"🌿",defaultG:50,comp:{protein:1.8,fat:0.2,carbs:5.2,water:91,fiber:1.2},amino:[],vit:{C:14,B6:0.18},compounds:["알리신","알리인","플라보노이드"],flavor:{umami:25,sweet:15,salty:0,sour:5,bitter:15}},
+  "달래":{cat:"vegetable",emoji:"🌿",defaultG:50,comp:{protein:2.1,fat:0.4,carbs:4.8,water:91,fiber:1.8},amino:[],vit:{C:30,K:55,A:95},compounds:["알리신","사포닌","플라보노이드"],flavor:{umami:20,sweet:10,salty:0,sour:5,bitter:20}},
+  "산마늘":{cat:"vegetable",emoji:"🌿",defaultG:50,comp:{protein:2.2,fat:0.3,carbs:5.8,water:90,fiber:2.2},amino:[],vit:{C:60,K:180,A:110},compounds:["알리신","플라보노이드","비타민C"],flavor:{umami:25,sweet:5,salty:0,sour:5,bitter:20}},
+
+  // 잎채소류 (글로벌)
+  "양상추":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:0.9,fat:0.1,carbs:2.9,water:96,fiber:1.3},amino:[],vit:{K:24,A:25,C:2.8,folate:29},compounds:["루테인","클로로필"],flavor:{umami:5,sweet:5,salty:0,sour:3,bitter:5}},
+  "로메인상추":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.2,fat:0.3,carbs:3.3,water:95,fiber:2.1},amino:[],vit:{K:103,A:436,C:4,folate:136},compounds:["루테인","베타카로틴","클로로필"],flavor:{umami:8,sweet:5,salty:0,sour:3,bitter:10}},
+  "상추":{cat:"vegetable",emoji:"🥬",defaultG:50,comp:{protein:1.4,fat:0.2,carbs:2.9,water:95,fiber:1.8},amino:[],vit:{K:130,A:166,C:9.2,folate:68},compounds:["락투신","클로로필","안토시아닌"],flavor:{umami:10,sweet:5,salty:0,sour:3,bitter:15}},
+  "적상추":{cat:"vegetable",emoji:"🥬",defaultG:50,comp:{protein:1.3,fat:0.2,carbs:2.8,water:95,fiber:1.7},amino:[],vit:{K:140,A:180,C:8.5,folate:65},compounds:["안토시아닌","락투신","클로로필"],flavor:{umami:8,sweet:5,salty:0,sour:3,bitter:18}},
+  "근대":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.8,fat:0.2,carbs:3.7,water:93,fiber:1.6},amino:["글루탐산"],vit:{K:830,A:306,C:30,magnesium:81},compounds:["베타인","안토시아닌","베타카로틴"],flavor:{umami:20,sweet:5,salty:3,sour:5,bitter:15}},
+  "물냉이":{cat:"vegetable",emoji:"🌿",defaultG:50,comp:{protein:2.3,fat:0.1,carbs:1.3,water:95,fiber:0.5},amino:[],vit:{K:250,A:160,C:43,calcium:120},compounds:["이소티오시아네이트","글루코나스투르틴","루테인"],flavor:{umami:10,sweet:3,salty:0,sour:5,bitter:25}},
+  "겨자잎":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:2.9,fat:0.4,carbs:4.9,water:90,fiber:3.2},amino:[],vit:{K:593,A:151,C:70,folate:187},compounds:["글루코시놀레이트","이소티오시아네이트","시나피신"],flavor:{umami:10,sweet:3,salty:0,sour:5,bitter:35}},
+  "라디치오":{cat:"vegetable",emoji:"🥬",defaultG:80,comp:{protein:1.4,fat:0.2,carbs:4.5,water:93,fiber:0.9},amino:[],vit:{K:255,C:8,folate:60},compounds:["안토시아닌","락투신","이눌린"],flavor:{umami:8,sweet:5,salty:0,sour:5,bitter:40}},
+  "민들레잎":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.7,fat:0.7,carbs:9.2,water:85,fiber:3.5},amino:[],vit:{K:778,A:508,C:35,calcium:187},compounds:["타락사신","루테올린","클로로겐산"],flavor:{umami:10,sweet:3,salty:0,sour:5,bitter:35}},
+  "소렐":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2,fat:0.7,carbs:3.2,water:93,fiber:0.9},amino:[],vit:{C:48,A:201,K:43,iron:2.4},compounds:["옥살산","안트라퀴논","폴리페놀"],flavor:{umami:8,sweet:3,salty:0,sour:40,bitter:15}},
+  "콜라드그린":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:3,fat:0.4,carbs:5.7,water:89,fiber:3.6},amino:["글루탐산"],vit:{K:623,A:251,C:35,calcium:232},compounds:["설포라판","글루코시놀레이트","클로로필"],flavor:{umami:20,sweet:5,salty:0,sour:5,bitter:20}},
+  "미즈나":{cat:"vegetable",emoji:"🥬",defaultG:80,comp:{protein:2.1,fat:0.3,carbs:4.4,water:92,fiber:1.8},amino:[],vit:{K:257,C:65,A:88,folate:96},compounds:["글루코시놀레이트","이소티오시아네이트"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:15}},
+  "타차이":{cat:"vegetable",emoji:"🥬",defaultG:80,comp:{protein:1.5,fat:0.2,carbs:2.2,water:95,fiber:1},amino:[],vit:{K:60,C:40,A:155},compounds:["클로로필","글루코시놀레이트"],flavor:{umami:12,sweet:8,salty:0,sour:3,bitter:10}},
+  "치커리":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.7,fat:0.3,carbs:8.6,water:88,fiber:4},amino:[],vit:{K:297,A:286,C:24,folate:110},compounds:["이눌린","락투신","에스쿨린"],flavor:{umami:8,sweet:5,salty:0,sour:5,bitter:35}},
+  "토스카나케일":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:4.3,fat:0.9,carbs:5.4,water:83,fiber:2},amino:["글루탐산"],vit:{K:817,A:381,C:93,calcium:268},compounds:["설포라판","이소티오시아네이트","루테인"],flavor:{umami:25,sweet:5,salty:0,sour:5,bitter:30}},
+  "공심채":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.6,fat:0.4,carbs:3.1,water:93,fiber:2.1},amino:[],vit:{K:78,A:380,C:55,iron:1.7},compounds:["클로로필","베타카로틴"],flavor:{umami:15,sweet:8,salty:0,sour:5,bitter:15}},
+  "쑥":{cat:"vegetable",emoji:"🌿",defaultG:50,comp:{protein:3.8,fat:0.6,carbs:7.5,water:85,fiber:3.8},amino:[],vit:{K:1040,A:480,C:35,iron:3.5},compounds:["아르테미시닌","투존","캠퍼","클로로필"],flavor:{umami:15,sweet:3,salty:0,sour:3,bitter:35}},
+  "원추리":{cat:"vegetable",emoji:"🌼",defaultG:100,comp:{protein:2.1,fat:0.3,carbs:7.5,water:88,fiber:2.8},amino:[],vit:{A:250,C:15,B6:0.19},compounds:["베타카로틴","폴리페놀"],flavor:{umami:15,sweet:10,salty:0,sour:5,bitter:15}},
+  "방풍나물":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.3,fat:0.3,carbs:6.2,water:89,fiber:3.1},amino:[],vit:{A:280,C:25,K:95},compounds:["쿠마린","폴리아세틸렌","플라보노이드"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:20}},
+  "돌나물":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.5,fat:0.2,carbs:3.8,water:93,fiber:1.5},amino:[],vit:{C:32,K:45,calcium:35},compounds:["쿼르세틴","클로로필"],flavor:{umami:10,sweet:5,salty:2,sour:15,bitter:10}},
+  "머위":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.8,fat:0.2,carbs:4.9,water:92,fiber:2.6},amino:[],vit:{K:120,A:88,C:15},compounds:["페타신","이소페타신","폴리페놀"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:30}},
+  "아욱":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:3,fat:0.4,carbs:5,water:90,fiber:2.3},amino:[],vit:{K:140,C:31,calcium:170,iron:1.6},compounds:["뮤실라지","플라보노이드"],flavor:{umami:15,sweet:10,salty:0,sour:5,bitter:10}},
+  "비트잎":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:2.2,fat:0.1,carbs:4.3,water:91,fiber:3.7},amino:["글루탐산"],vit:{K:400,A:316,C:30,iron:3.3},compounds:["베타인","베타라닌","옥살산"],flavor:{umami:20,sweet:5,salty:3,sour:5,bitter:20}},
+
+  // 박류/호박류
+  "애호박":{cat:"vegetable",emoji:"🥒",defaultG:150,comp:{protein:1.2,fat:0.1,carbs:3.4,water:94,fiber:1.1},amino:[],vit:{C:17,K:4.3,B6:0.22,folate:24},compounds:["루테인","제아잔틴","클로로필"],flavor:{umami:10,sweet:10,salty:0,sour:3,bitter:5}},
+  "주키니":{cat:"vegetable",emoji:"🥒",defaultG:150,comp:{protein:1.2,fat:0.3,carbs:3.1,water:94,fiber:1},amino:[],vit:{C:17,K:4.3,B6:0.24,folate:24},compounds:["루테인","클로로필"],flavor:{umami:10,sweet:10,salty:0,sour:3,bitter:5}},
+  "여주":{cat:"vegetable",emoji:"🫚",defaultG:100,comp:{protein:1,fat:0.2,carbs:3.7,water:94,fiber:2.8},amino:[],vit:{C:84,K:4.8,folate:72},compounds:["채란틴","모모르디신","폴리펩타이드-P"],flavor:{umami:5,sweet:3,salty:0,sour:5,bitter:55}},
+  "동아":{cat:"vegetable",emoji:"🎃",defaultG:100,comp:{protein:0.4,fat:0.2,carbs:3,water:96,fiber:2.9},amino:[],vit:{C:13,B6:0.04,zinc:0.6},compounds:["아데닌","베타인"],flavor:{umami:5,sweet:5,salty:0,sour:3,bitter:5}},
+  "버터넛스쿼시":{cat:"vegetable",emoji:"🎃",defaultG:150,comp:{protein:1,fat:0.1,carbs:12,water:86,fiber:2},amino:[],vit:{A:532,C:21,B6:0.19,E:1.4},compounds:["베타카로틴","루테인","오메가-3"],flavor:{umami:8,sweet:35,salty:0,sour:3,bitter:3}},
+  "차요테":{cat:"vegetable",emoji:"🥒",defaultG:100,comp:{protein:0.8,fat:0.1,carbs:4.5,water:94,fiber:1.7},amino:[],vit:{C:7.7,folate:93,K:4.5,zinc:0.7},compounds:["폴리페놀","비타민C"],flavor:{umami:5,sweet:10,salty:0,sour:5,bitter:5}},
+  "박":{cat:"vegetable",emoji:"🎃",defaultG:100,comp:{protein:0.6,fat:0.1,carbs:2.9,water:96,fiber:0.5},amino:[],vit:{C:10,B5:0.15},compounds:["식이섬유","폴리페놀"],flavor:{umami:5,sweet:5,salty:0,sour:3,bitter:5}},
+  "스파게티스쿼시":{cat:"vegetable",emoji:"🎃",defaultG:150,comp:{protein:0.7,fat:0.6,carbs:6.9,water:92,fiber:1.5},amino:[],vit:{B6:0.10,B5:0.40,C:5.1},compounds:["베타카로틴","루테인"],flavor:{umami:5,sweet:10,salty:0,sour:3,bitter:5}},
+  "아콘스쿼시":{cat:"vegetable",emoji:"🎃",defaultG:150,comp:{protein:0.8,fat:0.1,carbs:10,water:88,fiber:1.5},amino:[],vit:{A:360,C:11,B6:0.20,potassium:350},compounds:["베타카로틴","루테인"],flavor:{umami:8,sweet:25,salty:0,sour:3,bitter:5}},
+
+  // 고추류 (글로벌)
+  "꽈리고추":{cat:"vegetable",emoji:"🌶️",defaultG:30,comp:{protein:1.8,fat:0.3,carbs:7,water:90,fiber:1.4},amino:[],vit:{C:110,A:20},compounds:["캡사이신","카로티노이드"],flavor:{umami:5,sweet:15,salty:0,sour:5,bitter:8}},
+  "할라피뇨":{cat:"vegetable",emoji:"🌶️",defaultG:15,comp:{protein:0.9,fat:0.4,carbs:6.5,water:92,fiber:2.5},amino:[],vit:{C:119,A:22,B6:0.42},compounds:["캡사이신","디하이드로캡사이신"],flavor:{umami:5,sweet:10,salty:0,sour:5,bitter:8}},
+  "포블라노고추":{cat:"vegetable",emoji:"🫑",defaultG:80,comp:{protein:1.1,fat:0.5,carbs:5,water:92,fiber:1.9},amino:[],vit:{C:95,A:28,B6:0.3},compounds:["캡사이신","카로티노이드"],flavor:{umami:8,sweet:20,salty:0,sour:5,bitter:10}},
+  "아나헤임고추":{cat:"vegetable",emoji:"🫑",defaultG:80,comp:{protein:1,fat:0.2,carbs:6.5,water:91,fiber:2},amino:[],vit:{C:88,A:50},compounds:["캡사이신","카로티노이드"],flavor:{umami:8,sweet:25,salty:0,sour:5,bitter:5}},
+  "토마티요":{cat:"vegetable",emoji:"🍅",defaultG:100,comp:{protein:0.9,fat:1.0,carbs:5.8,water:92,fiber:1.9},amino:[],vit:{C:12,K:10,niacin:1.8},compounds:["위타놀라이드","플라보노이드"],flavor:{umami:15,sweet:10,salty:0,sour:30,bitter:10}},
+  "노란파프리카":{cat:"vegetable",emoji:"🫑",defaultG:100,comp:{protein:1,fat:0.2,carbs:6.3,water:92,fiber:0.9},amino:[],vit:{C:183,A:73,B6:0.17},compounds:["캡산토인","루테인","제아잔틴"],flavor:{umami:12,sweet:50,salty:0,sour:8,bitter:3}},
+  "오렌지파프리카":{cat:"vegetable",emoji:"🫑",defaultG:100,comp:{protein:1,fat:0.3,carbs:6.7,water:91,fiber:2.1},amino:[],vit:{C:158,A:150,B6:0.2},compounds:["베타카로틴","캡산토인","루테인"],flavor:{umami:12,sweet:45,salty:0,sour:8,bitter:3}},
+
+  // 십자화과 추가
+  "콜리플라워":{cat:"vegetable",emoji:"🥦",defaultG:100,comp:{protein:1.9,fat:0.3,carbs:5,water:92,fiber:2},amino:["글루탐산"],vit:{C:48.2,K:15.5,folate:57,B6:0.18},compounds:["설포라판","인돌","글루코시놀레이트"],flavor:{umami:20,sweet:10,salty:0,sour:5,bitter:15}},
+  "로마네스코":{cat:"vegetable",emoji:"🥦",defaultG:100,comp:{protein:2.8,fat:0.4,carbs:4.6,water:90,fiber:3},amino:["글루탐산"],vit:{C:60,K:18,folate:75},compounds:["설포라판","글루코시놀레이트","카로티노이드"],flavor:{umami:22,sweet:10,salty:0,sour:5,bitter:15}},
+  "브로콜리니":{cat:"vegetable",emoji:"🥦",defaultG:100,comp:{protein:3.1,fat:0.4,carbs:5.5,water:89,fiber:2.7},amino:["글루탐산"],vit:{C:93,K:115,A:85,folate:71},compounds:["설포라판","안토시아닌","클로로필"],flavor:{umami:22,sweet:10,salty:0,sour:5,bitter:20}},
+  "카이란":{cat:"vegetable",emoji:"🥦",defaultG:100,comp:{protein:2.2,fat:0.4,carbs:4.2,water:92,fiber:2.8},amino:[],vit:{C:74,K:88,calcium:105,A:96},compounds:["글루코시놀레이트","설포라판","클로로필"],flavor:{umami:18,sweet:8,salty:0,sour:5,bitter:20}},
+  "사보이양배추":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:2,fat:0.1,carbs:6.1,water:91,fiber:3.1},amino:[],vit:{K:68,C:31,folate:80},compounds:["설포라판","인돌","글루코시놀레이트"],flavor:{umami:15,sweet:12,salty:0,sour:5,bitter:15}},
+  "무청":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.5,fat:0.3,carbs:4.8,water:92,fiber:2},amino:[],vit:{K:370,A:280,C:44,calcium:94},compounds:["글루코시놀레이트","베타카로틴"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:20}},
+
+  // 뿌리/구근류 (글로벌)
+  "순무":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:0.9,fat:0.1,carbs:6.4,water:92,fiber:1.8},amino:[],vit:{C:21,K:0.1,folate:15},compounds:["글루코시놀레이트","안토시아닌"],flavor:{umami:5,sweet:15,salty:0,sour:5,bitter:15}},
+  "루타바가":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:1.2,fat:0.2,carbs:8.7,water:89,fiber:2.3},amino:[],vit:{C:25,K:0.3,B6:0.1},compounds:["글루코시놀레이트","안토시아닌"],flavor:{umami:5,sweet:20,salty:0,sour:5,bitter:15}},
+  "셀러리악":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:1.5,fat:0.3,carbs:9.2,water:88,fiber:1.8},amino:[],vit:{K:41,C:8,B6:0.15,phosphorus:115},compounds:["프탈라이드","부타-3-n","폴리아세틸렌"],flavor:{umami:15,sweet:10,salty:0,sour:5,bitter:15}},
+  "토란":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:1.5,fat:0.2,carbs:26,water:72,fiber:4.1},amino:[],vit:{B6:0.33,K:1.1,potassium:591},compounds:["옥살산칼슘","뮤신","갈락탄"],flavor:{umami:10,sweet:15,salty:0,sour:3,bitter:5}},
+  "마":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:1.5,fat:0.1,carbs:17,water:80,fiber:4.1},amino:[],vit:{B6:0.29,C:17.1,potassium:816},compounds:["뮤신","알란토인","디오스게닌","사포닌"],flavor:{umami:10,sweet:20,salty:0,sour:3,bitter:5}},
+  "카사바":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:1.4,fat:0.3,carbs:38,water:60,fiber:1.8},amino:[],vit:{C:20.6,K:1.9,B6:0.09,folate:27},compounds:["전분","식이섬유","폴리페놀"],flavor:{umami:5,sweet:5,salty:0,sour:3,bitter:3}},
+  "자색감자":{cat:"vegetable",emoji:"🥔",defaultG:150,comp:{protein:2.1,fat:0.1,carbs:17,water:79,fiber:2.5},amino:["아스파르트산"],vit:{C:19,B6:0.30,potassium:407},compounds:["안토시아닌","클로로겐산","아스파라긴"],flavor:{umami:10,sweet:12,salty:0,sour:3,bitter:5}},
+  "야콘":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:0.5,fat:0.1,carbs:11,water:88,fiber:0.3},amino:[],vit:{C:13.5,potassium:160,calcium:16},compounds:["프럭토올리고당","이눌린","클로로겐산"],flavor:{umami:5,sweet:30,salty:0,sour:5,bitter:3}},
+  "수박무":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:0.7,fat:0.1,carbs:3.4,water:95,fiber:1.6},amino:[],vit:{C:14.8,folate:25},compounds:["안토시아닌","글루코시놀레이트"],flavor:{umami:5,sweet:8,salty:0,sour:10,bitter:15}},
+  "예루살렘아티초크":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:2,fat:0,carbs:17.4,water:79,fiber:1.6},amino:[],vit:{B1:0.2,iron:3.4,potassium:429},compounds:["이눌린","프럭토올리고당","폴리페놀"],flavor:{umami:8,sweet:20,salty:0,sour:5,bitter:5}},
+
+  // 콩 채소류
+  "에다마메":{cat:"vegetable",emoji:"🫘",defaultG:100,comp:{protein:11,fat:5,carbs:8.9,water:73,fiber:5.2},amino:["라이신","류신","발린"],vit:{K:26.7,folate:311,C:9.7,iron:2.3},compounds:["이소플라본","사포닌","피트산"],flavor:{umami:25,sweet:15,salty:3,sour:3,bitter:5}},
+  "완두콩":{cat:"vegetable",emoji:"🫛",defaultG:80,comp:{protein:5,fat:0.4,carbs:14.5,water:79,fiber:5.5},amino:["라이신","류신"],vit:{K:24.8,C:40,folate:65,B1:0.27},compounds:["루테인","제아잔틴","이소플라본"],flavor:{umami:20,sweet:30,salty:0,sour:3,bitter:5}},
+  "스냅피":{cat:"vegetable",emoji:"🫛",defaultG:80,comp:{protein:2.8,fat:0.2,carbs:7.5,water:89,fiber:2.6},amino:[],vit:{C:60,K:25,folate:42},compounds:["클로로필","루테인","폴리페놀"],flavor:{umami:15,sweet:25,salty:0,sour:3,bitter:5}},
+  "롱빈":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.8,fat:0.2,carbs:8.4,water:88,fiber:3.1},amino:[],vit:{C:18.8,K:47,A:865,folate:62},compounds:["클로로필","베타카로틴","폴리페놀"],flavor:{umami:12,sweet:15,salty:0,sour:3,bitter:8}},
+  "잠두(파바빈)":{cat:"vegetable",emoji:"🫘",defaultG:100,comp:{protein:7.6,fat:0.7,carbs:19,water:72,fiber:5.4},amino:["라이신","류신","이소류신"],vit:{folate:148,C:33,B1:0.25},compounds:["레바도파","폴리페놀","이소플라본"],flavor:{umami:20,sweet:10,salty:0,sour:5,bitter:15}},
+
+  // 기타 글로벌 채소
+  "펜넬":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.2,fat:0.2,carbs:7.3,water:90,fiber:3.1},amino:[],vit:{C:12,K:62,folate:27,potassium:414},compounds:["아네톨","펜촌","에스트라골"],flavor:{umami:8,sweet:20,salty:0,sour:5,bitter:10}},
+  "노팔":{cat:"vegetable",emoji:"🌵",defaultG:100,comp:{protein:1.1,fat:0.1,carbs:5.1,water:92,fiber:3.6},amino:[],vit:{C:9.3,K:0.5,calcium:164,magnesium:52},compounds:["베타인","폴리페놀","뮤실라지"],flavor:{umami:5,sweet:5,salty:2,sour:15,bitter:10}},
+  "하트오브팜":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.7,fat:0.5,carbs:7.8,water:88,fiber:3.5},amino:[],vit:{B6:0.1,folate:30,potassium:177},compounds:["폴리페놀","식이섬유"],flavor:{umami:10,sweet:5,salty:3,sour:10,bitter:10}},
+  "모링가잎":{cat:"vegetable",emoji:"🌿",defaultG:30,comp:{protein:9.4,fat:1.4,carbs:8.3,water:76,fiber:2},amino:["라이신","메티오닌","시스테인"],vit:{C:220,A:378,calcium:185,iron:4},compounds:["이소티오시아네이트","쿼르세틴","클로로겐산"],flavor:{umami:20,sweet:5,salty:3,sour:5,bitter:25}},
+  "쇠비름":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.3,fat:0.4,carbs:3.4,water:93,fiber:0.4},amino:[],vit:{A:26,C:21,E:12.2},compounds:["오메가-3","베탈라인","글루타치온"],flavor:{umami:8,sweet:5,salty:2,sour:15,bitter:10}},
+  "봄동":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.6,fat:0.3,carbs:3.5,water:93,fiber:1.8},amino:[],vit:{C:35,K:80,folate:55,A:180},compounds:["설포라판","클로로필","베타카로틴"],flavor:{umami:18,sweet:15,salty:0,sour:5,bitter:10}},
+  "고수(코리앤더)":{cat:"vegetable",emoji:"🌿",defaultG:10,comp:{protein:2.1,fat:0.5,carbs:3.7,water:93,fiber:2.8},amino:[],vit:{K:310,A:337,C:27,folate:62},compounds:["리날룰","데칸알","리날룰 아세테이트","쿼르세틴"],flavor:{umami:8,sweet:3,salty:0,sour:5,bitter:10}},
+  "라임잎":{cat:"vegetable",emoji:"🌿",defaultG:5,comp:{protein:1.5,fat:0.5,carbs:5,water:92,fiber:3},amino:[],vit:{C:18,K:30},compounds:["시트로넬랄","리날룰","시네올"],flavor:{umami:5,sweet:3,salty:0,sour:8,bitter:15}},
+  "파드득나물":{cat:"vegetable",emoji:"🌿",defaultG:50,comp:{protein:2.5,fat:0.3,carbs:4.5,water:91,fiber:2.8},amino:[],vit:{C:45,K:200,A:250},compounds:["클로로필","루테올린","아피올"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:15}},
+  "토마토(로마)":{cat:"vegetable",emoji:"🍅",defaultG:150,comp:{protein:1.1,fat:0.3,carbs:4.2,water:93,fiber:1.1},amino:["글루탐산"],vit:{C:16,A:50,K:8.3,lycopene:3100},compounds:["리코펜","글루탐산","클로로겐산"],flavor:{umami:65,sweet:20,salty:0,sour:35,bitter:5}},
+  "미니파프리카":{cat:"vegetable",emoji:"🫑",defaultG:80,comp:{protein:1,fat:0.2,carbs:6,water:92,fiber:1.8},amino:[],vit:{C:150,A:220,B6:0.22},compounds:["캡산토인","루테인","안토시아닌"],flavor:{umami:12,sweet:50,salty:0,sour:8,bitter:3}},
+  "자색고구마":{cat:"vegetable",emoji:"🍠",defaultG:100,comp:{protein:1.6,fat:0.1,carbs:21,water:77,fiber:3},amino:[],vit:{A:80,C:7,B6:0.25,potassium:320},compounds:["안토시아닌","베타카로틴","클로로겐산"],flavor:{umami:5,sweet:45,salty:0,sour:3,bitter:3}},
+
   // ── Fruit (추가) ─────────────────────────────────────────────────────────
   "체리":{cat:"fruit",emoji:"🍒",defaultG:100,comp:{protein:1,fat:0.3,carbs:16,water:82,fiber:2.1},amino:[],vit:{C:7,A:30,K:2.1},compounds:["안토시아닌","멜라토닌","퀘르세틴"],flavor:{umami:5,sweet:45,salty:0,sour:20,bitter:5}},
   "자두":{cat:"fruit",emoji:"🍑",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:11,water:87,fiber:1.4},amino:[],vit:{C:9.5,A:17,K:6.4},compounds:["클로로겐산","안토시아닌"],flavor:{umami:5,sweet:40,salty:0,sour:15,bitter:5}},
