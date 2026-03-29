@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#059669">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Mealcule — Molecular Kitchen Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fafafa;--card:#ffffff;--card-dark:#059669;--border:#e5e5e5;--text:#171717;--text-secondary:#525252;--text-tertiary:#737373;--text-on-dark:#ffffff;--accent:#059669;--accent-hover:#047857;--accent-light:#ecfdf5;--accent-50:#f0fdf4;--green:#059669;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;--purple:#7c3aed;--orange:#f97316}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#d4d4d4;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:#a3a3a3}
+.header{background:linear-gradient(135deg,#047857,#059669);padding:22px 24px 26px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.header::after{content:none}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-size:19px;position:relative;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.container{max-width:600px;margin:0 auto;padding:20px 16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:none}
+.section-title{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:15px;font-weight:600;letter-spacing:-0.01em;color:var(--text)}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{width:100%;padding:10px 14px 10px 38px;background:#fafafa;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;transition:all .2s}
+.search-wrap input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-tertiary)}
+.ing-grid{display:flex;flex-wrap:wrap;gap:7px;max-height:260px;overflow-y:auto;padding:4px 0}
+.ing-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s}
+.ing-btn:hover{border-color:#a3a3a3;background:#fafafa}
+.ing-btn.active{border-color:transparent;background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(5,150,105,0.3)}
+.sel-tag{padding:5px 11px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;display:inline-flex;align-items:center;gap:6px;margin:3px;font-weight:500}
+.sel-tag .x{cursor:pointer;opacity:.7;font-size:16px;line-height:1;transition:opacity .2s}
+.sel-tag .x:hover{opacity:1}
+.gram-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
+.gram-row:last-child{border-bottom:none}
+.gram-input{width:64px;padding:8px 10px;background:#fafafa;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;text-align:right;outline:none;transition:all .2s}
+.gram-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
+.gram-unit{font-size:11px;color:var(--text-tertiary);min-width:14px}
+.method-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.method-btn{padding:12px 8px;border-radius:10px;font-size:12px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);cursor:pointer;text-align:center;transition:all .2s}
+.method-btn:hover{border-color:#a3a3a3;background:#fafafa}
+.method-btn.active{border-color:transparent;background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(5,150,105,0.3)}
+.method-btn .emoji{font-size:20px;display:block;margin-bottom:4px}
+.slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.slider-row label{font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;font-weight:500}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:#e5e5e5;outline:none;margin-bottom:8px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(5,150,105,0.3)}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.range-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-tertiary);margin-bottom:16px}
+.analyze-btn{width:100%;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 1px 3px rgba(5,150,105,0.2)}
+.analyze-btn:disabled{background:#e5e5e5;color:#a3a3a3;cursor:not-allowed;box-shadow:none}
+.analyze-btn:not(:disabled):hover{background:var(--accent-hover);box-shadow:0 2px 8px rgba(5,150,105,0.3);transform:translateY(-1px)}
+.warning{padding:12px 16px;border-radius:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;font-size:13px}
+.warning.warn{background:#fefce8;border:1px solid #fde68a;color:#92400e}
+.warning.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.tabs{display:flex;margin-bottom:16px;background:#f5f5f5;border-radius:10px;padding:3px;position:relative;border:1px solid var(--border)}
+.tab-btn{flex:1;padding:9px;border-radius:8px;border:none;background:transparent;color:var(--text-tertiary);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;position:relative;z-index:1}
+.tab-btn.active{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 1px 3px rgba(5,150,105,0.2)}
+.rxn-card{background:#fff;border-radius:12px;padding:18px;margin-bottom:12px;transition:all .2s;border:1px solid var(--border)}
+.rxn-card:hover{border-color:#a3a3a3;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.rxn-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.rxn-icon{font-size:26px}
+.rxn-name{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
+.intensity-bar{height:5px;border-radius:3px;background:#f5f5f5;overflow:hidden;width:80px}
+.intensity-fill{height:100%;border-radius:3px;transition:width .5s}
+.effect-tag{padding:4px 10px;border-radius:6px;background:var(--accent-light);border:1px solid #a7f3d0;color:#047857;font-size:11px;display:inline-block;margin:3px}
+.science-box{background:#fafafa;border-radius:10px;padding:12px;margin:8px 0;border:1px solid #e5e5e5}
+.science-box h4{font-size:11px;color:var(--text-tertiary);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.science-box p{font-size:12px;color:var(--text-secondary);font-family:'SF Mono','Geist Mono',monospace}
+.health-box{background:#f0fdf4;border-radius:10px;padding:12px;border:1px solid #bbf7d0}
+.health-box h4{font-size:11px;color:#059669;margin-bottom:4px;font-weight:600}
+.health-box p{font-size:12px;color:#166534}
+.chart-wrap{position:relative;width:100%;max-width:100%}
+.chart-wrap canvas{width:100%!important}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 12px;color:var(--text-tertiary);border-bottom:1px solid #e5e5e5;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
+.ret-bar{height:6px;border-radius:3px;background:#f5f5f5;overflow:hidden}
+.ret-fill{height:100%;border-radius:3px;transition:width .5s}
+.compound-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.compound-card{background:#fafafa;border-radius:10px;padding:14px;border:1px solid #e5e5e5}
+.compound-tag{padding:4px 10px;border-radius:6px;background:var(--accent-light);border:1px solid #a7f3d0;color:#047857;font-size:11px;display:inline-block;margin:2px}
+.empty-state{text-align:center;padding:60px 20px;background:#fff;border-radius:12px;border:1px solid var(--border)}
+.empty-state .big-icon{font-size:56px;opacity:.5;margin-bottom:16px}
+.fade-in{animation:fadeInUp .4s ease}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.flavor-detail{margin-bottom:16px}
+.flavor-label{display:flex;justify-content:space-between;margin-bottom:4px;color:var(--text-secondary);font-size:12px}
+.flavor-bar{height:6px;border-radius:3px;background:#f5f5f5;overflow:hidden;margin-bottom:4px}
+.flavor-fill{height:100%;border-radius:3px;transition:width .5s}
+.flavor-desc{font-size:11px;color:var(--text-tertiary)}
+@media(max-width:768px){.grid2{grid-template-columns:1fr}.method-grid{grid-template-columns:repeat(4,1fr)}}
+.condition-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.cond-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s}
+.cond-btn:hover{border-color:#fca5a5;background:#fef2f2}
+.cond-btn.active{border-color:transparent;background:#fef2f2;color:#dc2626;font-weight:600;box-shadow:0 0 0 2px rgba(239,68,68,0.12)}
+.health-card{border-radius:10px;padding:16px;margin-bottom:12px;border-left:4px solid}
+.health-card.danger{background:#fef2f2;border-color:#ef4444}
+.health-card.caution{background:#fefce8;border-color:#eab308}
+.health-card.good{background:#f0fdf4;border-color:#22c55e}
+.health-card.info{background:#eff6ff;border-color:#3b82f6}
+.health-severity{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;margin-right:8px}
+.sev-danger{background:#fee2e2;color:#dc2626}
+.sev-caution{background:#fef9c3;color:#a16207}
+.sev-good{background:#dcfce7;color:#16a34a}
+.sev-info{background:#dbeafe;color:#2563eb}
+.health-detail{font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px}
+.health-tip{background:#fafafa;border-radius:10px;padding:12px;margin-top:8px;font-size:12px;color:var(--text-secondary);border:1px solid #e5e5e5}
+.health-score{display:flex;align-items:center;gap:16px;padding:18px;border-radius:12px;margin-bottom:16px;background:#fff;color:var(--text);border:1px solid var(--border)}
+.score-circle{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:12px}
+.profile-field{background:#fafafa;border-radius:10px;padding:12px;border:1px solid #e5e5e5}
+.profile-field label{display:block;font-size:11px;color:var(--text-tertiary);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.profile-field input,.profile-field select{width:100%;padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;transition:all .2s}
+.profile-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px}
+.profile-field input:focus,.profile-field select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
+.family-grid{display:flex;flex-wrap:wrap;gap:8px}
+.family-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:12px;cursor:pointer;transition:all .2s}
+.family-btn:hover{border-color:#a3a3a3;background:#fafafa}
+.family-btn.active{border-color:transparent;background:var(--accent-light);color:#047857;font-weight:600;box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
+.toggle-btn{padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
+.toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
+.profile-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.profile-chip{padding:5px 12px;border-radius:8px;font-size:11px;background:var(--accent);color:#fff;font-weight:500}
+.member-tab{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:13px;cursor:pointer;transition:all .2s;color:var(--text-secondary);font-weight:500}
+.member-tab:hover{border-color:var(--accent);background:var(--accent-light)}
+.member-tab.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:0 1px 3px rgba(5,150,105,0.2)}
+.member-tab .delete-member{margin-left:6px;font-size:10px;opacity:.6;cursor:pointer;transition:opacity .2s}
+.member-tab .delete-member:hover{opacity:1;color:#ef4444}
+.add-member-btn{padding:8px 16px;border-radius:10px;border:1px dashed #d4d4d4;background:transparent;font-size:13px;cursor:pointer;color:var(--text-tertiary);transition:all .2s}
+.add-member-btn:hover{border-color:var(--accent);color:var(--accent)}
+.substance-category{font-size:11px;color:var(--text-tertiary);width:100%;padding:6px 0 2px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="logo" style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px)">
+      <svg viewBox="0 0 38 38" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+        <line x1="19" y1="8" x2="12" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="19" y1="8" x2="26" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="18" x2="12" y2="27" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="26" y1="18" x2="26" y2="27" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="27" x2="19" y2="32" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="26" y1="27" x2="19" y2="32" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="19" cy="8" r="4.5" fill="white"/>
+        <circle cx="12" cy="18" r="3.5" fill="white" opacity="0.95"/>
+        <circle cx="26" cy="18" r="3.5" fill="white" opacity="0.95"/>
+        <circle cx="12" cy="27" r="3" fill="white" opacity="0.9"/>
+        <circle cx="26" cy="27" r="3" fill="white" opacity="0.9"/>
+        <circle cx="19" cy="32" r="3.5" fill="white" opacity="0.95"/>
+        <line x1="17" y1="6" x2="17" y2="10" stroke="#047857" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="19" y1="5.5" x2="19" y2="10.5" stroke="#047857" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="21" y1="6" x2="21" y2="10" stroke="#047857" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <h1 style="font-size:18px;font-weight:600;letter-spacing:-0.02em;color:white">Mealcule</h1>
+      <p style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px">Molecular Kitchen Science</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Input Section -->
+  <div class="grid2">
+    <!-- Ingredients -->
+    <div class="card">
+      <div class="section-title">🥬 재료 선택 <span id="dbStatus" style="font-size:11px;font-weight:400;color:#737373;margin-left:auto"></span></div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="재료 검색 (1,300+ 식재료 DB)" oninput="onSearchInput()">
+      </div>
+      <div id="catTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+      <div class="ing-grid" id="ingGrid"></div>
+      <div id="selectedArea" style="margin-top:12px;display:none">
+        <p style="font-size:12px;color:#737373;margin-bottom:6px" id="selCount"></p>
+        <div id="selTags"></div>
+      </div>
+    </div>
+
+    <!-- Cooking Conditions -->
+    <div class="card">
+      <div class="section-title">🔥 조리 조건</div>
+      <p style="font-size:12px;color:#737373;margin-bottom:8px">조리 방법</p>
+      <div class="method-grid" id="methodGrid"></div>
+
+      <div class="slider-row">
+        <label>🌡️ 온도</label>
+        <span id="tempVal" style="font-size:16px;font-weight:700">180°C</span>
+      </div>
+      <input type="range" id="tempSlider" min="0" max="300" value="180" oninput="updateTemp()">
+      <div class="range-labels"><span>0°C</span><span>140°C 마이야르</span><span>200°C+ 주의</span><span>300°C</span></div>
+
+      <div class="slider-row">
+        <label>⏱️ 조리 시간</label>
+        <span id="timeVal" style="font-size:16px;font-weight:700;color:#171717">15분</span>
+      </div>
+      <input type="range" id="timeSlider" min="1" max="120" value="15" oninput="updateTime()">
+      <div class="range-labels"><span>1분</span><span>30분</span><span>60분</span><span>120분</span></div>
+
+      <button class="analyze-btn" id="analyzeBtn" disabled onclick="runAnalysis()">
+        🧪 화학 반응 분석 시작 →
+      </button>
+    </div>
+  </div>
+
+  <!-- Personal Profile + Health Conditions -->
+  <div class="card" style="margin-bottom:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="section-title" style="margin-bottom:0">👤 개인 건강 프로필</div>
+      <button class="toggle-btn" id="profileToggle" onclick="toggleProfile()">프로필 입력 ▼</button>
+    </div>
+
+    <!-- 멤버 탭 -->
+    <div id="memberTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
+
+    <div id="profileSummary" class="profile-summary" style="display:none"></div>
+
+    <div id="profilePanel" style="display:none">
+      <!-- 기본 정보 -->
+      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:12px">📋 기본 정보</p>
+      <div class="profile-grid">
+        <div class="profile-field"><label>이름</label><input type="text" id="pName" value="" placeholder="이름" onchange="updateProfile()"></div>
+        <div class="profile-field"><label>나이</label><input type="number" id="pAge" min="1" max="120" value="" placeholder="만 나이" onchange="updateProfile()"></div>
+        <div class="profile-field"><label>성별</label><select id="pGender" onchange="updateProfile()"><option value="">선택</option><option value="male">남성</option><option value="female">여성</option></select></div>
+        <div class="profile-field"><label>키 (cm)</label><input type="number" id="pHeight" min="100" max="250" value="" placeholder="cm" onchange="updateProfile()"></div>
+        <div class="profile-field"><label>체중 (kg)</label><input type="number" id="pWeight" min="20" max="300" value="" placeholder="kg" onchange="updateProfile()"></div>
+        <div class="profile-field"><label>인종/민족</label><select id="pEthnicity" onchange="updateProfile()"><option value="">선택</option><option value="east_asian">동아시아인</option><option value="southeast_asian">동남아시아인</option><option value="south_asian">남아시아인</option><option value="caucasian">유럽계</option><option value="african">아프리카계</option><option value="hispanic">히스패닉</option><option value="middle_eastern">중동계</option></select></div>
+        <div class="profile-field"><label>활동 수준</label><select id="pActivity" onchange="updateProfile()"><option value="">선택</option><option value="sedentary">비활동적 (사무직)</option><option value="light">가벼운 활동</option><option value="moderate">중간 활동</option><option value="active">활발한 활동</option><option value="very_active">매우 활발 (운동선수)</option></select></div>
+      </div>
+
+      <!-- 체질/특이사항 -->
+      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">🧬 체질 및 식이 특이사항</p>
+      <div class="family-grid" id="traitGrid"></div>
+
+      <!-- 가족력 -->
+      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">👨‍👩‍👧‍👦 가족 병력 <span style="color:#737373">(직계 가족 중 해당 질환이 있는 경우)</span></p>
+      <div class="family-grid" id="familyGrid"></div>
+
+      <!-- 약물/생활습관 -->
+      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">💊 약물 · 영양제 · 생활습관</p>
+      <p style="font-size:11px;color:#737373;margin-bottom:8px">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
+      <div class="family-grid" id="substanceGrid"></div>
+
+      <!-- 개인 질환 -->
+      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">🏥 현재 건강 상태 / 질환</p>
+      <div class="condition-grid" id="condGrid"></div>
+    </div>
+    <p id="condNote" style="font-size:11px;color:#737373;margin-top:8px;display:none">⚠️ 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
+  </div>
+
+  <!-- Results -->
+  <div id="results" style="display:none"></div>
+
+  <!-- Empty State -->
+  <div id="emptyState" class="empty-state">
+    <div class="big-icon">👨‍🍳</div>
+    <h3 style="color:#737373;font-weight:500;font-size:18px;margin-bottom:8px">재료를 선택하고 조리 조건을 설정해보세요</h3>
+    <p style="color:#737373;font-size:14px">화학 반응 · 영양소 변화 · 맛 프로파일을 과학적으로 분석합니다</p>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:20px;margin-top:40px;border-top:1px solid #e5e5e5;color:#737373;font-size:12px">
+  Mealcule v1.0 — Molecular Kitchen Science
+</footer>
+
+<script>
+// ── 카테고리 정의 ──
+const CATEGORIES = {
+  all:{label:"전체",emoji:"📋"},
+  meat:{label:"육류",emoji:"🥩"},
+  seafood:{label:"해산물",emoji:"🐟"},
+  vegetable:{label:"채소",emoji:"🥬"},
+  fruit:{label:"과일",emoji:"🍎"},
+  grain:{label:"곡물·면",emoji:"🌾"},
+  dairy:{label:"유제품",emoji:"🧀"},
+  egg:{label:"달걀",emoji:"🥚"},
+  nut:{label:"견과·씨앗",emoji:"🥜"},
+  mushroom:{label:"버섯",emoji:"🍄"},
+  legume:{label:"콩류",emoji:"🫘"},
+  herb:{label:"허브·향신료",emoji:"🌿"},
+  condiment:{label:"조미료·소스",emoji:"🫗"},
+  oil:{label:"기름",emoji:"🫒"},
+};
+
+// ── 식재료 DB (120+ 재료, 14개 카테고리) ──
+const DB = {
+  "소고기":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:26,fat:15,carbs:0,water:59,fiber:0},amino:["글루탐산","리신","류신"],vit:{B12:2.6,B6:0.4,niacin:5.1,iron:2.6,zinc:4.8},compounds:["미오글로빈","콜라겐","크레아틴","카르노신"],flavor:{umami:80,sweet:10,salty:5,sour:0,bitter:5}},
+  "돼지고기":{cat:"meat",emoji:"🥓",defaultG:200,comp:{protein:27,fat:14,carbs:0,water:58,fiber:0},amino:["글루탐산","리신","류신"],vit:{B1:0.73,B6:0.5,niacin:8.9,iron:2.2,zinc:2.8},compounds:["미오글로빈","카르니틴","크레아틴"],flavor:{umami:75,sweet:8,salty:5,sour:0,bitter:5}},
+  "닭가슴살":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:31,fat:3.6,carbs:0,water:65,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.88,niacin:9.9,selenium:27.4},compounds:["미오글로빈","카르노신","안세린"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+  "닭다리":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:26,fat:8,carbs:0,water:65,fiber:0},amino:["류신","리신"],vit:{B6:0.4,niacin:6.2,iron:1.4,zinc:2.8},compounds:["미오글로빈","콜라겐"],flavor:{umami:65,sweet:6,salty:5,sour:0,bitter:5}},
+  "양고기":{cat:"meat",emoji:"🐑",defaultG:200,comp:{protein:25,fat:16,carbs:0,water:58,fiber:0},amino:["글루탐산","류신","리신"],vit:{B12:2.4,B6:0.3,iron:2.3},compounds:["미오글로빈","카르노신","카르니틴"],flavor:{umami:78,sweet:10,salty:6,sour:0,bitter:6}},
+  "오리고기":{cat:"meat",emoji:"🦆",defaultG:200,comp:{protein:19,fat:28,carbs:0,water:52,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.8,iron:3.8,zinc:3.2},compounds:["미오글로빈","철분"],flavor:{umami:70,sweet:8,salty:5,sour:0,bitter:8}},
+  "베이컨":{cat:"meat",emoji:"🥓",defaultG:30,comp:{protein:37,fat:61,carbs:0,water:1,fiber:0},amino:["류신","리신"],vit:{B1:0.62,B6:0.5,niacin:6.8},compounds:["니트로사민","스모키 향료"],flavor:{umami:85,sweet:5,salty:85,sour:0,bitter:5}},
+  "소시지":{cat:"meat",emoji:"🌭",defaultG:50,comp:{protein:12,fat:28,carbs:4,water:55,fiber:0},amino:["류신","리신"],vit:{sodium:1100,iron:0.9},compounds:["니트라이트","타우린"],flavor:{umami:75,sweet:10,salty:75,sour:5,bitter:5}},
+  "햄":{cat:"meat",emoji:"🍖",defaultG:50,comp:{protein:13,fat:6.5,carbs:1.5,water:79,fiber:0},amino:["류신","리신"],vit:{B1:0.53,iron:0.8},compounds:["니트라이트","글루탐산"],flavor:{umami:70,sweet:8,salty:70,sour:3,bitter:5}},
+
+  "연어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:25,fat:11,carbs:0,water:63,fiber:0},amino:["류신","리신","메티오닌"],vit:{D:12.5,B12:3.2,selenium:36,omega3:2.3},compounds:["아스타잔틴","오메가-3","카르노신"],flavor:{umami:70,sweet:8,salty:5,sour:5,bitter:5}},
+  "참치":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:29,fat:1.3,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B12:9.3,niacin:7.2,selenium:90,omega3:0.2},compounds:["미오글로빈","아스타잔틴","타우린"],flavor:{umami:80,sweet:10,salty:5,sour:5,bitter:3}},
+  "새우":{cat:"seafood",emoji:"🦐",defaultG:100,comp:{protein:24,fat:0.3,carbs:0,water:75,fiber:0},amino:["류신","리신","메티오닌"],vit:{B12:1.68,selenium:38,calcium:52,iodine:150},compounds:["아스타잔틴","타우린","퀵토산"],flavor:{umami:75,sweet:8,salty:5,sour:5,bitter:3}},
+  "고등어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:13,carbs:0,water:66,fiber:0},amino:["류신","리신"],vit:{B12:10,D:17.6,selenium:44,omega3:2.6},compounds:["아스타잔틴","오메가-3"],flavor:{umami:75,sweet:8,salty:5,sour:5,bitter:5}},
+  "오징어":{cat:"seafood",emoji:"🦑",defaultG:100,comp:{protein:15,fat:0.4,carbs:3,water:81,fiber:0},amino:["류신","리신"],vit:{B12:0.48,selenium:23,iodine:100},compounds:["타우린","키토산","글루탐산"],flavor:{umami:75,sweet:5,salty:5,sour:5,bitter:3}},
+  "조개":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:12,fat:0.5,carbs:4.5,water:82,fiber:0},amino:["류신","리신"],vit:{B12:24,iron:28,selenium:63,zinc:9.2},compounds:["타우린","글리신"],flavor:{umami:80,sweet:15,salty:5,sour:10,bitter:3}},
+  "게":{cat:"seafood",emoji:"🦀",defaultG:100,comp:{protein:19,fat:1,carbs:0,water:79,fiber:0},amino:["류신","리신","메티오닌"],vit:{B12:9.8,calcium:278,zinc:4.1},compounds:["키토산","타우린"],flavor:{umami:80,sweet:10,salty:8,sour:5,bitter:3}},
+  "문어":{cat:"seafood",emoji:"🐙",defaultG:100,comp:{protein:18,fat:0.8,carbs:0,water:80,fiber:0},amino:["류신","리신"],vit:{B12:17.66,selenium:78},compounds:["타우린","폴리아민"],flavor:{umami:78,sweet:5,salty:5,sour:5,bitter:3}},
+  "꽁치":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:19,fat:13,carbs:0,water:67,fiber:0},amino:["류신","리신"],vit:{B12:9.9,D:13,omega3:2.1},compounds:["오메가-3","아스타잔틴"],flavor:{umami:72,sweet:8,salty:5,sour:5,bitter:5}},
+  "대구":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:17,fat:0.7,carbs:0,water:82,fiber:0},amino:["류신","리신"],vit:{B12:1.6,selenium:32},compounds:["타우린","글리신"],flavor:{umami:70,sweet:5,salty:5,sour:5,bitter:3}},
+  "광어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:1.5,carbs:0,water:78,fiber:0},amino:["류신","리신"],vit:{B12:1.8,selenium:36,D:5.1},compounds:["타우린","글리신"],flavor:{umami:75,sweet:5,salty:5,sour:5,bitter:3}},
+  "멸치":{cat:"seafood",emoji:"🐟",defaultG:30,comp:{protein:66,fat:3,carbs:0,water:17,fiber:0},amino:["류신","리신"],vit:{B12:51,calcium:520,iron:18},compounds:["타우린","칼슘"],flavor:{umami:90,sweet:5,salty:60,sour:5,bitter:3}},
+  "전복":{cat:"seafood",emoji:"🐚",defaultG:100,comp:{protein:19,fat:1,carbs:2,water:77,fiber:0},amino:["글리신","류신"],vit:{B12:5.7,calcium:166,iron:4},compounds:["타우린","키토산"],flavor:{umami:80,sweet:15,salty:5,sour:8,bitter:3}},
+
+  "양파":{cat:"vegetable",emoji:"🧅",defaultG:150,comp:{protein:1.1,fat:0.1,carbs:9.3,water:89,fiber:1.7},amino:["시스테인"],vit:{C:7.4,B6:0.12,folate:19,potassium:146},compounds:["알리신","퀘르세틴","프로필 설파이드","프럭토올리고당"],flavor:{umami:20,sweet:40,salty:0,sour:5,bitter:15}},
+  "마늘":{cat:"vegetable",emoji:"🧄",defaultG:10,comp:{protein:6.4,fat:0.5,carbs:33,water:59,fiber:2.1},amino:["시스테인","메티오닌"],vit:{C:31,B6:1.24,manganese:1.67},compounds:["알리신","알리인","디알릴 설파이드","아조엔"],flavor:{umami:30,sweet:10,salty:0,sour:5,bitter:20}},
+  "감자":{cat:"vegetable",emoji:"🥔",defaultG:200,comp:{protein:2,fat:0.1,carbs:17,water:79,fiber:2.2},amino:["아스파르트산","글루탐산"],vit:{C:19.7,B6:0.3,potassium:425},compounds:["전분(아밀로스)","솔라닌","클로로겐산","아스파라긴"],flavor:{umami:10,sweet:15,salty:0,sour:0,bitter:5}},
+  "토마토":{cat:"vegetable",emoji:"🍅",defaultG:150,comp:{protein:0.9,fat:0.2,carbs:3.9,water:94,fiber:1.2},amino:["글루탐산"],vit:{C:14,A:42,K:7.9,potassium:237,lycopene:2573},compounds:["리코펜","글루탐산","시트르산","나린게닌"],flavor:{umami:60,sweet:25,salty:0,sour:40,bitter:5}},
+  "고추":{cat:"vegetable",emoji:"🌶️",defaultG:15,comp:{protein:1.9,fat:0.4,carbs:8.8,water:88,fiber:1.5},amino:[],vit:{C:144,A:48,B6:0.51,potassium:322},compounds:["캡사이신","디하이드로캡사이신","카로티노이드"],flavor:{umami:5,sweet:15,salty:0,sour:5,bitter:10}},
+  "브로콜리":{cat:"vegetable",emoji:"🥦",defaultG:100,comp:{protein:2.8,fat:0.4,carbs:7,water:89,fiber:2.4},amino:["글루탐산","아스파르트산"],vit:{C:89,K:102,folate:63,calcium:47},compounds:["설포라판","인돌","캐롤","클로로필"],flavor:{umami:25,sweet:10,salty:0,sour:5,bitter:25}},
+  "당근":{cat:"vegetable",emoji:"🥕",defaultG:100,comp:{protein:0.9,fat:0.2,carbs:10,water:88,fiber:2.8},amino:[],vit:{A:835,K:13.2,potassium:320},compounds:["베타카로틴","리코펜","루테올린"],flavor:{umami:10,sweet:35,salty:0,sour:5,bitter:5}},
+  "시금치":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:2.7,fat:0.4,carbs:3.6,water:91,fiber:2.2},amino:["글루탐산"],vit:{K:483,A:469,C:28,folate:194,iron:2.7},compounds:["루테인","비올란틴","클로로필"],flavor:{umami:30,sweet:5,salty:0,sour:5,bitter:20}},
+  "배추":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.2,fat:0.2,carbs:3.2,water:95,fiber:1},amino:[],vit:{C:21,K:63,calcium:77},compounds:["카로틴","클로로필","설포라판"],flavor:{umami:15,sweet:10,salty:0,sour:5,bitter:10}},
+  "파프리카":{cat:"vegetable",emoji:"🫑",defaultG:100,comp:{protein:0.9,fat:0.3,carbs:6,water:92,fiber:2},amino:[],vit:{C:80,A:314,B6:0.3,potassium:211},compounds:["캡산토인","카로티노이드"],flavor:{umami:15,sweet:45,salty:0,sour:10,bitter:5}},
+  "양배추":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:1.3,fat:0.1,carbs:5.2,water:92,fiber:2.4},amino:["글루탐산"],vit:{C:36.6,K:101,folate:43},compounds:["설포라판","인돌","카로티노이드"],flavor:{umami:15,sweet:15,salty:0,sour:5,bitter:15}},
+  "오이":{cat:"vegetable",emoji:"🥒",defaultG:150,comp:{protein:0.7,fat:0.2,carbs:3.6,water:95,fiber:0.5},amino:[],vit:{C:2.8,K:16.4,potassium:147},compounds:["큐커비타신","클로로필"],flavor:{umami:5,sweet:5,salty:0,sour:10,bitter:10}},
+  "호박":{cat:"vegetable",emoji:"🎃",defaultG:100,comp:{protein:1,fat:0.1,carbs:5,water:94,fiber:0.5},amino:[],vit:{A:426,C:12,potassium:340},compounds:["베타카로틴","루테인"],flavor:{umami:10,sweet:20,salty:0,sour:5,bitter:5}},
+  "가지":{cat:"vegetable",emoji:"🍆",defaultG:100,comp:{protein:1.1,fat:0.2,carbs:5.2,water:92,fiber:3},amino:[],vit:{C:3.5,K:29,potassium:229},compounds:["알카로이드","안토시아닌"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:15}},
+  "셀러리":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:0.7,fat:0.1,carbs:3.7,water:95,fiber:1.6},amino:[],vit:{C:3.1,K:29.3,potassium:260},compounds:["3-n-부틸프탈라이드","루테올린"],flavor:{umami:10,sweet:5,salty:0,sour:10,bitter:15}},
+  "아스파라거스":{cat:"vegetable",emoji:"🥒",defaultG:100,comp:{protein:2.2,fat:0.1,carbs:3.7,water:93,fiber:2.1},amino:["글루탐산"],vit:{K:91.5,folate:52,C:5.6,A:38},compounds:["루틴","글루타치온"],flavor:{umami:25,sweet:5,salty:0,sour:5,bitter:10}},
+  "무":{cat:"vegetable",emoji:"🌰",defaultG:100,comp:{protein:0.7,fat:0.1,carbs:3.4,water:95,fiber:1.6},amino:[],vit:{C:25,K:1.3,potassium:233},compounds:["미로시나아제","글루코시놀레이트"],flavor:{umami:5,sweet:5,salty:0,sour:20,bitter:10}},
+  "콩나물":{cat:"vegetable",emoji:"🌱",defaultG:100,comp:{protein:3.1,fat:0.2,carbs:6,water:90,fiber:1},amino:["류신","리신"],vit:{C:20,K:34,folate:95},compounds:["사포닌","이소플라본"],flavor:{umami:10,sweet:10,salty:0,sour:5,bitter:5}},
+  "부추":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.4,fat:0.4,carbs:6.2,water:90,fiber:1.3},amino:[],vit:{C:23,K:213,A:77},compounds:["알리신","퀘르세틴"],flavor:{umami:20,sweet:10,salty:0,sour:5,bitter:15}},
+  "파":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:1.9,fat:0.3,carbs:7.3,water:89,fiber:1.4},amino:[],vit:{C:18,K:103,A:110},compounds:["알리신","퀘르세틴"],flavor:{umami:15,sweet:15,salty:0,sour:5,bitter:15}},
+  "미나리":{cat:"vegetable",emoji:"🌿",defaultG:100,comp:{protein:2.1,fat:0.1,carbs:4.1,water:93,fiber:1},amino:[],vit:{A:337,C:41,K:145},compounds:["데카날데하이드","데카놀"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:15}},
+  "피망":{cat:"vegetable",emoji:"🫑",defaultG:100,comp:{protein:0.9,fat:0.3,carbs:6,water:92,fiber:2},amino:[],vit:{C:80,A:314,K:49},compounds:["캡산토인","카로티노이드"],flavor:{umami:15,sweet:40,salty:0,sour:10,bitter:5}},
+  "비트":{cat:"vegetable",emoji:"🥗",defaultG:100,comp:{protein:1.6,fat:0.2,carbs:9.6,water:88,fiber:2.8},amino:["베타인"],vit:{C:4.9,folate:109,K:0.5,potassium:325},compounds:["베타인","베타라닌","안토시아닌"],flavor:{umami:15,sweet:30,salty:0,sour:10,bitter:5}},
+  "케일":{cat:"vegetable",emoji:"🥬",defaultG:100,comp:{protein:3.3,fat:0.7,carbs:6.6,water:84,fiber:1.3},amino:["글루탐산","알라닌"],vit:{K:704,A:478,C:120,calcium:254},compounds:["설포라판","루테인","루틴"],flavor:{umami:25,sweet:5,salty:0,sour:5,bitter:30}},
+  "고구마":{cat:"vegetable",emoji:"🍠",defaultG:100,comp:{protein:1.6,fat:0.1,carbs:20,water:77,fiber:3},amino:[],vit:{A:961,C:8.8,B6:0.28,potassium:337},compounds:["베타카로틴","안토시아닌"],flavor:{umami:5,sweet:40,salty:0,sour:5,bitter:5}},
+  "옥수수":{cat:"vegetable",emoji:"🌽",defaultG:100,comp:{protein:3.2,fat:1.2,carbs:19,water:76,fiber:2.7},amino:["루신"],vit:{B1:0.39,B5:0.42,C:6.8},compounds:["루테인","지아잔틴"],flavor:{umami:10,sweet:25,salty:0,sour:0,bitter:5}},
+
+  "사과":{cat:"fruit",emoji:"🍎",defaultG:150,comp:{protein:0.3,fat:0.2,carbs:14,water:85,fiber:2.4},amino:[],vit:{C:5.7,K:3.7,potassium:195},compounds:["퀘르세틴","클로로겐산","프로시아니딘"],flavor:{umami:5,sweet:45,salty:0,sour:15,bitter:5}},
+  "바나나":{cat:"fruit",emoji:"🍌",defaultG:100,comp:{protein:1.1,fat:0.3,carbs:23,water:75,fiber:2.6},amino:["트립토판","세로토닌"],vit:{B6:0.4,C:8.7,potassium:358},compounds:["푼오이신","세로토닌"],flavor:{umami:5,sweet:50,salty:0,sour:5,bitter:3}},
+  "딸기":{cat:"fruit",emoji:"🍓",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:8,water:91,fiber:2},amino:[],vit:{C:58.8,K:2.2,folate:25},compounds:["엘라그산","안토시아닌","카테킨"],flavor:{umami:5,sweet:40,salty:0,sour:20,bitter:5}},
+  "블루베리":{cat:"fruit",emoji:"🫐",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:14,water:84,fiber:2.4},amino:[],vit:{C:9.7,K:19.3},compounds:["안토시아닌","카테킨","리사린"],flavor:{umami:5,sweet:35,salty:0,sour:15,bitter:10}},
+  "아보카도":{cat:"fruit",emoji:"🥑",defaultG:100,comp:{protein:2,fat:15,carbs:9,water:73,fiber:7},amino:["글루탐산"],vit:{K:21,C:10,B5:1.4,potassium:485},compounds:["글루타치온","카로티노이드"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:5}},
+  "포도":{cat:"fruit",emoji:"🍇",defaultG:100,comp:{protein:0.7,fat:0.4,carbs:17,water:81,fiber:0.9},amino:[],vit:{C:3.2,K:191,potassium:191},compounds:["레스베라트롤","탄닌","안토시아닌"],flavor:{umami:5,sweet:50,salty:0,sour:10,bitter:5}},
+  "수박":{cat:"fruit",emoji:"🍉",defaultG:150,comp:{protein:0.6,fat:0.2,carbs:12,water:87,fiber:0.4},amino:[],vit:{C:8.1,A:28,lycopene:4532},compounds:["시트룰린","리코펜"],flavor:{umami:5,sweet:40,salty:0,sour:10,bitter:3}},
+  "키위":{cat:"fruit",emoji:"🥝",defaultG:100,comp:{protein:1.1,fat:0.5,carbs:15,water:83,fiber:3},amino:["글루탐산"],vit:{C:92.7,K:312,potassium:312},compounds:["악티니딘","플라보노이드"],flavor:{umami:5,sweet:40,salty:0,sour:25,bitter:5}},
+  "레몬":{cat:"fruit",emoji:"🍋",defaultG:30,comp:{protein:1.1,fat:0.3,carbs:9.3,water:89,fiber:2.8},amino:[],vit:{C:53,folate:11,potassium:138},compounds:["시트르산","리모넨","아스코르브산","헤스페리딘"],flavor:{umami:0,sweet:10,salty:0,sour:90,bitter:15}},
+  "오렌지":{cat:"fruit",emoji:"🍊",defaultG:100,comp:{protein:0.7,fat:0.2,carbs:12,water:87,fiber:2.4},amino:[],vit:{C:53.2,folate:30,potassium:181},compounds:["플라보노이드","나린게닌","헤스페리딘"],flavor:{umami:5,sweet:45,salty:0,sour:15,bitter:5}},
+  "자몽":{cat:"fruit",emoji:"🍊",defaultG:100,comp:{protein:0.8,fat:0.1,carbs:13,water:86,fiber:1.6},amino:[],vit:{C:33.3,potassium:135},compounds:["나린진","푸라노쿠마린","리모노이드"],flavor:{umami:5,sweet:35,salty:0,sour:35,bitter:20}},
+  "망고":{cat:"fruit",emoji:"🥭",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:15,water:84,fiber:1.6},amino:[],vit:{A:765,C:36.4,potassium:168},compounds:["망기페린","안토시아닌"],flavor:{umami:5,sweet:55,salty:0,sour:10,bitter:3}},
+  "파인애플":{cat:"fruit",emoji:"🍍",defaultG:100,comp:{protein:0.5,fat:0.1,carbs:13,water:86,fiber:1.4},amino:[],vit:{C:47.8,B6:0.11,potassium:109},compounds:["브로멜라인","프로산토시아니딘"],flavor:{umami:5,sweet:45,salty:0,sour:30,bitter:5}},
+  "복숭아":{cat:"fruit",emoji:"🍑",defaultG:100,comp:{protein:0.9,fat:0.3,carbs:10,water:89,fiber:1.5},amino:[],vit:{C:6.6,A:16,potassium:190},compounds:["엘라그산","클로로겐산"],flavor:{umami:5,sweet:45,salty:0,sour:10,bitter:5}},
+  "배":{cat:"fruit",emoji:"🍐",defaultG:100,comp:{protein:0.4,fat:0.1,carbs:15,water:84,fiber:3.1},amino:[],vit:{C:4.6,K:1.6,potassium:116},compounds:["아라분","클로로겐산"],flavor:{umami:5,sweet:40,salty:0,sour:10,bitter:5}},
+  "감":{cat:"fruit",emoji:"🍂",defaultG:100,comp:{protein:0.8,fat:0.3,carbs:19,water:80,fiber:1.6},amino:[],vit:{A:81,C:7.5,potassium:161},compounds:["탄닌","카로티노이드"],flavor:{umami:5,sweet:55,salty:0,sour:5,bitter:10}},
+
+  "밀가루":{cat:"grain",emoji:"🌾",defaultG:30,comp:{protein:10,fat:1,carbs:76,water:11,fiber:2.7},amino:["글루텐","글리아딘"],vit:{B1:0.12,B2:0.07,niacin:0.6,iron:4.6},compounds:["글루텐","카로티노이드"],flavor:{umami:10,sweet:15,salty:0,sour:0,bitter:0}},
+  "파스타":{cat:"grain",emoji:"🍝",defaultG:100,comp:{protein:13,fat:1.1,carbs:75,water:10,fiber:1.8},amino:["글루탐산"],vit:{B1:0.28,B2:0.1,niacin:2,iron:1.3},compounds:["글루텐","전분"],flavor:{umami:15,sweet:10,salty:0,sour:0,bitter:0}},
+  "귀리":{cat:"grain",emoji:"🌾",defaultG:50,comp:{protein:17,fat:7,carbs:66,water:8,fiber:10.6},amino:["글루탐산"],vit:{B1:0.76,B5:1.35,iron:4.7},compounds:["베타글루칸","아베나안토사이드"],flavor:{umami:15,sweet:15,salty:0,sour:0,bitter:10}},
+  "메밀":{cat:"grain",emoji:"🌾",defaultG:30,comp:{protein:13,fat:3,carbs:71,water:12,fiber:10},amino:["글루탐산"],vit:{B1:0.10,B2:0.44,rutin:30},compounds:["루틴","플라보노이드"],flavor:{umami:10,sweet:10,salty:0,sour:0,bitter:5}},
+  "현미":{cat:"grain",emoji:"🍚",defaultG:150,comp:{protein:3,fat:1,carbs:28,water:68,fiber:0.8},amino:["글루탐산"],vit:{B1:0.12,B3:1.5,manganese:1.3,magnesium:84},compounds:["감마오리자놀","토코트리에놀"],flavor:{umami:10,sweet:20,salty:0,sour:0,bitter:5}},
+  "쌀":{cat:"grain",emoji:"🍚",defaultG:150,comp:{protein:2.7,fat:0.3,carbs:28,water:69,fiber:0.4},amino:["글루탐산"],vit:{B1:0.02,B3:0.4,iron:0.2},compounds:["아밀로스","아밀로펙틴","감마오리자놀"],flavor:{umami:10,sweet:20,salty:0,sour:0,bitter:0}},
+  "식빵":{cat:"grain",emoji:"🍞",defaultG:30,comp:{protein:8,fat:2,carbs:49,water:38,fiber:2.4},amino:["글루텐"],vit:{B1:0.12,B2:0.07,folate:32},compounds:["글루텐","몰드","효모"],flavor:{umami:15,sweet:15,salty:10,sour:5,bitter:0}},
+  "우동면":{cat:"grain",emoji:"🍜",defaultG:100,comp:{protein:9,fat:0.3,carbs:62,water:28,fiber:1.8},amino:["글루탐산"],vit:{B1:0.14,B2:0.08,niacin:1.2},compounds:["글루텐","전분"],flavor:{umami:20,sweet:10,salty:15,sour:0,bitter:0}},
+  "라면(건면)":{cat:"grain",emoji:"🍜",defaultG:100,comp:{protein:8,fat:3,carbs:65,water:13,fiber:2},amino:["글루탐산"],vit:{B1:0.12,B2:0.07},compounds:["글루텐","전분"],flavor:{umami:25,sweet:10,salty:50,sour:5,bitter:0}},
+
+  "우유":{cat:"dairy",emoji:"🥛",defaultG:200,comp:{protein:3.2,fat:3.6,carbs:4.8,water:87,fiber:0},amino:["류신","리신","메티오닌"],vit:{A:28,D:0.06,B12:0.4,calcium:113,phosphorus:84},compounds:["카제인","유청","락토스"],flavor:{umami:20,sweet:20,salty:10,sour:5,bitter:0}},
+  "치즈":{cat:"dairy",emoji:"🧀",defaultG:30,comp:{protein:25,fat:33,carbs:1,water:37,fiber:0},amino:["류신","리신"],vit:{A:721,B12:1.3,calcium:721,phosphorus:456},compounds:["카제인","지방","락토스"],flavor:{umami:65,sweet:5,salty:50,sour:10,bitter:5}},
+  "크림":{cat:"dairy",emoji:"🍶",defaultG:30,comp:{protein:2.3,fat:34,carbs:3,water:61,fiber:0},amino:["류신"],vit:{A:1000,D:0.3,B12:0.2},compounds:["지방","카제인"],flavor:{umami:10,sweet:15,salty:10,sour:5,bitter:0}},
+  "요거트":{cat:"dairy",emoji:"🥛",defaultG:150,comp:{protein:3.5,fat:0.4,carbs:4,water:88,fiber:0},amino:["류신","리신"],vit:{B12:0.3,calcium:121,phosphorus:95},compounds:["프로바이오틱스","락토스"],flavor:{umami:15,sweet:15,salty:5,sour:30,bitter:0}},
+  "생크림":{cat:"dairy",emoji:"🍶",defaultG:30,comp:{protein:2,fat:35,carbs:2.8,water:60,fiber:0},amino:[],vit:{A:1200,D:0.4},compounds:["지방","카제인"],flavor:{umami:5,sweet:15,salty:10,sour:5,bitter:0}},
+  "모짜렐라":{cat:"dairy",emoji:"🧀",defaultG:30,comp:{protein:28,fat:17,carbs:3.1,water:51,fiber:0},amino:["류신","리신"],vit:{calcium:505,phosphorus:390},compounds:["카제인"],flavor:{umami:45,sweet:5,salty:40,sour:10,bitter:0}},
+  "파르메산":{cat:"dairy",emoji:"🧀",defaultG:10,comp:{protein:38,fat:29,carbs:4,water:27,fiber:0},amino:["글루탐산"],vit:{calcium:1109,phosphorus:738},compounds:["글루탐산나트륨","카제인"],flavor:{umami:80,sweet:0,salty:60,sour:10,bitter:3}},
+
+  "계란":{cat:"egg",emoji:"🥚",defaultG:60,comp:{protein:13,fat:11,carbs:1.1,water:75,fiber:0},amino:["류신","리신","메티오닌","트립토판"],vit:{A:160,D:2.0,B12:0.89,selenium:30.7,choline:294},compounds:["오보알부민","오보뮤코이드","레시틴","루테인"],flavor:{umami:30,sweet:5,salty:5,sour:0,bitter:0}},
+  "메추리알":{cat:"egg",emoji:"🥚",defaultG:10,comp:{protein:13,fat:11,carbs:0.4,water:74,fiber:0},amino:["류신","리신"],vit:{B12:0.64,selenium:32,choline:210},compounds:["오보알부민"],flavor:{umami:25,sweet:5,salty:5,sour:0,bitter:0}},
+  "오리알":{cat:"egg",emoji:"🥚",defaultG:70,comp:{protein:13,fat:14,carbs:0.9,water:72,fiber:0},amino:["류신","리신"],vit:{B12:0.92,selenium:37},compounds:["오보알부민"],flavor:{umami:30,sweet:5,salty:5,sour:0,bitter:0}},
+
+  "아몬드":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:21,fat:50,carbs:22,water:4,fiber:12.5},amino:["글루탐산"],vit:{E:25.6,B2:1.14,magnesium:270},compounds:["플라보노이드","폴리페놀"],flavor:{umami:25,sweet:10,salty:0,sour:0,bitter:5}},
+  "호두":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:9,fat:65,carbs:14,water:4,fiber:6.7},amino:["글루탐산"],vit:{copper:1.6,manganese:3.4,omega3:9.08},compounds:["폴리페놀","탄닌"],flavor:{umami:20,sweet:5,salty:0,sour:0,bitter:10}},
+  "땅콩":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:26,fat:49,carbs:20,water:3,fiber:6},amino:["글루탐산","아르기닌"],vit:{E:8.3,B1:0.64,magnesium:176},compounds:["리놀레산","폴리페놀"],flavor:{umami:25,sweet:15,salty:0,sour:0,bitter:3}},
+  "캐슈넛":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:18,fat:49,carbs:30,water:2,fiber:3.3},amino:["글루탐산"],vit:{copper:2.2,manganese:1.7,magnesium:240},compounds:["탄닌","플라보노이드"],flavor:{umami:20,sweet:20,salty:0,sour:0,bitter:3}},
+  "잣":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:14,fat:68,carbs:13,water:2,fiber:3.7},amino:["글루탐산"],vit:{copper:1.4,magnesium:251,manganese:7.7},compounds:["폴리페놀"],flavor:{umami:25,sweet:15,salty:0,sour:0,bitter:5}},
+  "참깨":{cat:"nut",emoji:"🥜",defaultG:15,comp:{protein:18,fat:52,carbs:23,water:5,fiber:11.8},amino:["메티오닌"],vit:{calcium:975,copper:4.1,magnesium:351},compounds:["리그난","세사몰"],flavor:{umami:20,sweet:10,salty:0,sour:0,bitter:10}},
+  "들깨":{cat:"nut",emoji:"🥜",defaultG:15,comp:{protein:19,fat:45,carbs:26,water:4,fiber:27.3},amino:["글루탐산"],vit:{magnesium:432,copper:0.9,manganese:3},compounds:["리그난"],flavor:{umami:25,sweet:10,salty:0,sour:0,bitter:15}},
+  "해바라기씨":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:20,fat:51,carbs:20,water:4,fiber:8.6},amino:["글루탐산"],vit:{E:41.1,B1:1.5,magnesium:325},compounds:["리놀레산"],flavor:{umami:20,sweet:10,salty:0,sour:0,bitter:5}},
+
+  "표고버섯":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:2.2,fat:0.3,carbs:7.3,water:89,fiber:1},amino:["글루탐산"],vit:{D:0.81,B5:1.5,copper:0.32},compounds:["에르고티오네인","렌티난"],flavor:{umami:45,sweet:5,salty:0,sour:5,bitter:5}},
+  "양송이":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:3.3,fat:0.3,carbs:3.3,water:92,fiber:1},amino:["글루탐산"],vit:{B2:0.4,B5:1.4,niacin:3.6},compounds:["에르고티오네인"],flavor:{umami:35,sweet:5,salty:0,sour:5,bitter:5}},
+  "팽이버섯":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:2.7,fat:0.3,carbs:6.9,water:89,fiber:2},amino:["글루탐산"],vit:{B1:0.04,B2:0.22,niacin:3.9},compounds:["렌티난","베타글루칸"],flavor:{umami:35,sweet:5,salty:0,sour:5,bitter:5}},
+  "새송이":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:3.4,fat:0.5,carbs:5.7,water:90,fiber:1},amino:["글루탐산"],vit:{B5:1.5,niacin:4.7,copper:0.25},compounds:["렌티난"],flavor:{umami:40,sweet:5,salty:0,sour:5,bitter:5}},
+  "목이버섯":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:8.8,fat:0.2,carbs:65,water:12,fiber:6.6},amino:["글루탐산"],vit:{iron:185,magnesium:19},compounds:["다당류"],flavor:{umami:30,sweet:5,salty:0,sour:5,bitter:3}},
+  "느타리":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:3.3,fat:0.2,carbs:7,water:88,fiber:1.1},amino:["글루탐산"],vit:{B5:1.3,niacin:3.5,copper:0.2},compounds:["렌티난"],flavor:{umami:40,sweet:5,salty:0,sour:5,bitter:5}},
+
+  "검은콩":{cat:"legume",emoji:"🫘",defaultG:100,comp:{protein:9,fat:1,carbs:17,water:71,fiber:6},amino:["글루탐산","리신","류신"],vit:{folate:44,manganese:1.8,magnesium:70},compounds:["안토시아닌","이소플라본"],flavor:{umami:25,sweet:5,salty:0,sour:0,bitter:5}},
+  "렌틸콩":{cat:"legume",emoji:"🫘",defaultG:100,comp:{protein:25,fat:0.4,carbs:20,water:11,fiber:8},amino:["리신","류신","글루탐산"],vit:{folate:181,iron:6.5,magnesium:47},compounds:["폴리페놀","사포닌"],flavor:{umami:30,sweet:5,salty:0,sour:0,bitter:5}},
+  "병아리콩":{cat:"legume",emoji:"🫘",defaultG:100,comp:{protein:19,fat:6,carbs:27,water:11,fiber:6},amino:["글루탐산","리신"],vit:{folate:172,magnesium:79,iron:4.3},compounds:["이소플라본","사포닌"],flavor:{umami:25,sweet:10,salty:0,sour:0,bitter:5}},
+  "팥":{cat:"legume",emoji:"🫘",defaultG:100,comp:{protein:9,fat:0.3,carbs:20,water:71,fiber:5},amino:["글루탐산","리신"],vit:{folate:159,iron:5.5,manganese:0.8},compounds:["안토시아닌","폴리페놀"],flavor:{umami:20,sweet:10,salty:0,sour:0,bitter:5}},
+  "완두콩":{cat:"legume",emoji:"🫘",defaultG:100,comp:{protein:5,fat:0.4,carbs:7,water:88,fiber:2.4},amino:["글루탐산","리신"],vit:{C:40,K:24,manganese:0.4},compounds:["이소플라본"],flavor:{umami:15,sweet:15,salty:0,sour:0,bitter:3}},
+  "된장(식재료)":{cat:"legume",emoji:"🫘",defaultG:15,comp:{protein:12,fat:5,carbs:10,water:67,fiber:2},amino:["글루탐산"],vit:{sodium:4030,iron:1.8},compounds:["멜라노이딘","글루탐산나트륨"],flavor:{umami:85,sweet:10,salty:80,sour:10,bitter:5}},
+  "두부":{cat:"legume",emoji:"🧊",defaultG:150,comp:{protein:8,fat:4.8,carbs:1.9,water:85,fiber:0.3},amino:["류신","리신"],vit:{calcium:350,iron:5.4},compounds:["이소플라본","제니스테인","다이드제인","사포닌"],flavor:{umami:25,sweet:5,salty:0,sour:0,bitter:5}},
+
+  "바질":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:3.2,fat:0.6,carbs:2.7,water:92,fiber:1.6},amino:[],vit:{K:27,A:264,C:18},compounds:["에센셜오일","리나롤","유게놀"],flavor:{umami:15,sweet:10,salty:0,sour:5,bitter:10}},
+  "로즈마리":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:3.3,fat:5.3,carbs:21,water:69,fiber:14.1},amino:[],vit:{A:20,C:21.8},compounds:["카르노솔","올레산"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:20}},
+  "타임":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:5.6,fat:1.7,carbs:24,water:65,fiber:18.5},amino:[],vit:{K:401,A:27,C:50},compounds:["티몰","카르바크롤"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:20}},
+  "민트":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:3.8,fat:0.9,carbs:6.4,water:85,fiber:2.8},amino:[],vit:{A:212,C:31.8},compounds:["멘톨","멘톤"],flavor:{umami:10,sweet:15,salty:0,sour:5,bitter:25}},
+  "고수(실란트로)":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:2.1,fat:0.1,carbs:3.7,water:93,fiber:2.1},amino:[],vit:{K:246,A:386,C:27},compounds:["린알롤","아네톨"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:15}},
+  "파슬리":{cat:"herb",emoji:"🌿",defaultG:5,comp:{protein:2.7,fat:0.8,carbs:6.3,water:88,fiber:1.3},amino:[],vit:{K:1640,A:421,C:133},compounds:["플라본","아피올"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:15}},
+  "생강":{cat:"herb",emoji:"🫚",defaultG:5,comp:{protein:1.8,fat:0.8,carbs:18,water:79,fiber:2.0},amino:[],vit:{C:5,B6:0.16,potassium:415},compounds:["진저롤","쇼가올","진저론"],flavor:{umami:5,sweet:5,salty:0,sour:5,bitter:15}},
+  "후추":{cat:"herb",emoji:"🌿",defaultG:2,comp:{protein:10.4,fat:3.3,carbs:64,water:12,fiber:25},amino:[],vit:{K:163,C:21},compounds:["피페린","사비닌"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:25}},
+  "시나몬":{cat:"herb",emoji:"🌿",defaultG:2,comp:{protein:3.9,fat:1.2,carbs:81,water:10,fiber:53},amino:[],vit:{K:1113,calcium:1002},compounds:["신나밀알데하이드","쿠마린"],flavor:{umami:5,sweet:60,salty:0,sour:0,bitter:20}},
+  "카레가루":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:12,fat:3.3,carbs:45,water:12,fiber:20},amino:[],vit:{iron:66,manganese:26},compounds:["쿠르쿠민","강황"],flavor:{umami:20,sweet:10,salty:0,sour:5,bitter:15}},
+  "강황":{cat:"herb",emoji:"🌿",defaultG:3,comp:{protein:9.7,fat:3.1,carbs:44,water:12,fiber:21},amino:[],vit:{iron:41,manganese:19.8},compounds:["쿠르쿠민"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:15}},
+  "와사비":{cat:"herb",emoji:"🌿",defaultG:2,comp:{protein:4.8,fat:0.4,carbs:8.3,water:87,fiber:0.8},amino:[],vit:{C:27,K:28},compounds:["알릴이소티오시아네이트","글루코시놀레이트"],flavor:{umami:10,sweet:5,salty:0,sour:10,bitter:30}},
+  "산초":{cat:"herb",emoji:"🌿",defaultG:2,comp:{protein:5.4,fat:8.7,carbs:60,water:13,fiber:25},amino:[],vit:{K:1104,iron:15},compounds:["히드록시알파산초올"],flavor:{umami:15,sweet:10,salty:0,sour:10,bitter:20}},
+
+  "소금":{cat:"condiment",emoji:"🫗",defaultG:5,comp:{protein:0,fat:0,carbs:0,water:0,fiber:0},amino:[],vit:{sodium:39146,chlorine:60662},compounds:["염화나트륨"],flavor:{umami:0,sweet:0,salty:100,sour:0,bitter:0}},
+  "식초":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:0.2,fat:0,carbs:0.9,water:94,fiber:0},amino:[],vit:{potassium:34},compounds:["아세트산","폴리페놀"],flavor:{umami:0,sweet:0,salty:0,sour:95,bitter:5}},
+  "고추장":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:5,fat:4.4,carbs:13,water:69,fiber:2},amino:["글루탐산"],vit:{sodium:1090,iron:2.2},compounds:["캡사이신","멜라노이딘"],flavor:{umami:35,sweet:20,salty:70,sour:20,bitter:10}},
+  "간장":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:8,fat:0,carbs:5,water:67,fiber:0},amino:["글루탐산"],vit:{sodium:5637,iron:1.9,potassium:212},compounds:["멜라노이딘","글루탐산나트륨","유기산"],flavor:{umami:95,sweet:15,salty:90,sour:10,bitter:10}},
+  "설탕":{cat:"condiment",emoji:"🍬",defaultG:10,comp:{protein:0,fat:0,carbs:100,water:0,fiber:0},amino:[],vit:{},compounds:["수크로스","글루코스","프럭토스"],flavor:{umami:0,sweet:100,salty:0,sour:0,bitter:0}},
+  "굴소스":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:5,fat:0,carbs:7,water:87,fiber:0},amino:["글루탐산"],vit:{sodium:1920,iron:5},compounds:["글루탐산나트륨"],flavor:{umami:80,sweet:20,salty:80,sour:5,bitter:5}},
+  "미림":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:0.4,fat:0,carbs:40,water:54,fiber:0},amino:[],vit:{sodium:13,potassium:15},compounds:["글루코스","말토스"],flavor:{umami:5,sweet:85,salty:5,sour:0,bitter:0}},
+  "물엿":{cat:"condiment",emoji:"🫗",defaultG:20,comp:{protein:0,fat:0,carbs:100,water:0,fiber:0},amino:[],vit:{},compounds:["글루코스","수크로스"],flavor:{umami:0,sweet:95,salty:0,sour:0,bitter:0}},
+  "케첩":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:0.2,fat:0,carbs:29,water:67,fiber:0},amino:[],vit:{sodium:1110},compounds:["리코펜","글루탐산"],flavor:{umami:35,sweet:50,salty:40,sour:20,bitter:5}},
+  "마요네즈":{cat:"condiment",emoji:"🫗",defaultG:15,comp:{protein:0.1,fat:79,carbs:0.1,water:16,fiber:0},amino:[],vit:{E:16.6},compounds:["지방","계란 레시틴"],flavor:{umami:5,sweet:5,salty:30,sour:15,bitter:0}},
+  "머스타드":{cat:"condiment",emoji:"🫗",defaultG:10,comp:{protein:3.3,fat:4.7,carbs:6.4,water:80,fiber:3.3},amino:[],vit:{K:40,calcium:70},compounds:["알릴이소티오시아네이트"],flavor:{umami:10,sweet:10,salty:30,sour:30,bitter:20}},
+  "꿀":{cat:"condiment",emoji:"🍯",defaultG:15,comp:{protein:0.3,fat:0,carbs:82,water:17,fiber:0},amino:[],vit:{},compounds:["글루코스","프럭토스"],flavor:{umami:0,sweet:95,salty:0,sour:5,bitter:0}},
+
+  "올리브오일":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:14.35,K:60.2},compounds:["올레산","폴리페놀","토코페롤"],flavor:{umami:0,sweet:0,salty:0,sour:0,bitter:20}},
+  "참기름":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:1.4,K:0},compounds:["세사몰","세사민"],flavor:{umami:5,sweet:0,salty:0,sour:0,bitter:25}},
+  "들기름":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:0,omega3:53},compounds:["알파리놀렌산"],flavor:{umami:5,sweet:0,salty:0,sour:0,bitter:20}},
+  "포도씨유":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:1.5},compounds:["리놀레산","폴리페놀"],flavor:{umami:0,sweet:0,salty:0,sour:0,bitter:10}},
+  "코코넛오일":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{},compounds:["라우르산","미리스트산"],flavor:{umami:0,sweet:0,salty:0,sour:0,bitter:5}},
+  "카놀라유":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:15.4,K:145},compounds:["올레산","리놀레산"],flavor:{umami:0,sweet:0,salty:0,sour:0,bitter:0}},
+  "버터":{cat:"oil",emoji:"🧈",defaultG:15,comp:{protein:0.9,fat:81,carbs:0.1,water:18,fiber:0},amino:[],vit:{A:684,D:0.6,E:2.3},compounds:["부티르산","디아세틸","카세인","유당"],flavor:{umami:5,sweet:10,salty:10,sour:5,bitter:0}},
+};
+
+const METHODS = {
+  pan_fry:{label:"팬 프라이",emoji:"🍳",range:[150,220]},
+  boil:{label:"끓이기",emoji:"🍲",range:[95,100]},
+  grill:{label:"그릴",emoji:"🔥",range:[200,300]},
+  steam:{label:"찜",emoji:"♨️",range:[95,100]},
+  oven:{label:"오븐",emoji:"🫕",range:[150,250]},
+  raw:{label:"생식",emoji:"🥗",range:[0,25]},
+  deep_fry:{label:"튀김",emoji:"🍤",range:[160,190]},
+  stir_fry:{label:"볶음",emoji:"🥘",range:[180,250]},
+};
+
+// ── 질환별 식이 규칙 DB ──
+const CONDITIONS = {
+  diabetes: {
+    label: "당뇨", emoji: "🩸",
+    desc: "혈당 관리가 필요한 상태",
+    rules: [
+      // 위험 규칙: {check: fn(ingMap,comp,method,temp,time) => bool, severity, title, detail, tip}
+      {check:(im,c)=>c.carbs>40, severity:"danger", title:"탄수화물 과다 섭취",
+        detail:(im,c)=>`총 탄수화물 ${c.carbs.toFixed(1)}g — 당뇨 환자 1회 식사 권장량(45-60g)에 근접하거나 초과합니다. 특히 ${Object.entries(im).filter(([n])=>DB[n]?.comp.carbs>10).map(([n,g])=>`${n}(${g}g → 탄수화물 ${(DB[n].comp.carbs*g/100).toFixed(1)}g)`).join(', ')}이 주요 원인입니다.`,
+        tip:"탄수화물 재료의 양을 줄이거나, 식이섬유가 풍부한 채소를 추가하여 GI를 낮추세요."},
+      {check:(im,c)=>c.carbs>60, severity:"danger", title:"탄수화물 위험 수준",
+        detail:(im,c)=>`총 탄수화물 ${c.carbs.toFixed(1)}g — 1회 식사 권장량(45-60g)을 크게 초과합니다. 급격한 혈당 상승(blood glucose spike) 위험이 높습니다.`,
+        tip:"쌀/감자/설탕의 양을 절반 이하로 줄이거나, 통곡물/콩류로 대체하세요."},
+      {check:(im)=>'설탕' in im && im['설탕']>5, severity:"danger", title:"설탕 직접 사용 주의",
+        detail:(im)=>`설탕 ${im['설탕']}g 투입 — 정제 당류는 혈당을 가장 빠르게 올리는 탄수화물입니다 (GI=65).`,
+        tip:"설탕 대신 에리스리톨, 스테비아 등 대체감미료를 고려하세요. 과일(레몬 등)로 맛을 보완하는 것도 방법입니다."},
+      {check:(im,c,m)=>['deep_fry','pan_fry'].includes(m)&&c.carbs>20, severity:"caution", title:"고온 조리 + 탄수화물 → GI 상승",
+        detail:(im,c)=>`전분의 호화(gelatinization)가 촉진되어 혈당 반응이 빨라집니다. 탄수화물 ${c.carbs.toFixed(1)}g + 고온 조리는 GI를 추가로 10-20포인트 높일 수 있습니다.`,
+        tip:"찜이나 저온 조리로 전환하면 전분의 호화도를 낮춰 GI를 줄일 수 있습니다."},
+      {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds.some(c=>c.includes('알리신'))), severity:"good", title:"마늘/양파의 혈당 조절 효과",
+        detail:()=>`알리신과 프럭토올리고당은 인슐린 감수성을 높이고 혈당 반응을 완만하게 만드는 연구 결과가 있습니다.`,
+        tip:"마늘은 열에 의해 알리신이 변환되므로, 조리 마무리에 생마늘을 소량 추가하면 효과를 극대화할 수 있습니다."},
+      {check:(im,c)=>c.fiber>5, severity:"good", title:"식이섬유가 혈당 완화에 도움",
+        detail:(im,c)=>`식이섬유 약 ${c.fiber.toFixed(1)}g — 식이섬유는 탄수화물의 소화 흡수 속도를 늦춰 혈당 급상승을 방지합니다.`,
+        tip:"목표: 1회 식사당 식이섬유 7-10g. 채소를 더 추가하면 좋습니다."},
+      {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds.some(c=>c.includes('캡사이신'))), severity:"good", title:"캡사이신의 인슐린 감수성 개선",
+        detail:()=>`고추의 캡사이신은 인슐린 분비를 촉진하고 포도당 대사를 개선하는 효과가 보고되어 있습니다.`,
+        tip:"매운맛을 적당히 활용하되, 위장이 예민한 경우 소량부터 시작하세요."},
+    ]
+  },
+  hypertension: {
+    label: "고혈압", emoji: "💉",
+    desc: "혈압 관리가 필요한 상태",
+    rules: [
+      {check:(im,c)=>c.sodium>800, severity:"danger", title:"나트륨 과다 섭취 위험",
+        detail:(im,c)=>`총 나트륨 약 ${c.sodium.toFixed(0)}mg — WHO 일일 권장량 2000mg의 ${Math.round(c.sodium/2000*100)}%입니다. 1회 식사로 매우 높습니다.`,
+        tip:"간장·소금 양을 절반으로 줄이고, 레몬·식초·허브로 맛을 보완하세요."},
+      {check:(im,c)=>c.sodium>400, severity:"caution", title:"나트륨 주의 필요",
+        detail:(im,c)=>`총 나트륨 약 ${c.sodium.toFixed(0)}mg — 고혈압 환자 1회 식사 권장량(600mg 이하)에 근접합니다.`,
+        tip:"저나트륨 간장 사용, 또는 칼륨이 풍부한 재료(토마토, 감자)를 추가해 나트륨 배출을 촉진하세요."},
+      {check:(im,c)=>c.potassium>500, severity:"good", title:"칼륨이 혈압 조절에 도움",
+        detail:(im,c)=>`칼륨 약 ${c.potassium.toFixed(0)}mg — 칼륨은 나트륨의 신장 배출을 촉진하여 혈압을 낮추는 역할을 합니다.`,
+        tip:"토마토, 감자, 바나나 등 칼륨 풍부한 식재료를 적극 활용하세요."},
+      {check:(im,c)=>c.fat>25, severity:"caution", title:"과도한 지방 섭취",
+        detail:(im,c)=>`총 지방 ${c.fat.toFixed(1)}g — 포화지방이 많으면 동맥경화를 촉진하여 혈압 관리에 불리합니다.`,
+        tip:"버터 대신 올리브오일을 사용하고, 조리법을 찜/삶기로 전환하세요."},
+      {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds.some(c=>c.includes('알리신'))), severity:"good", title:"마늘의 혈관 이완 효과",
+        detail:()=>`마늘의 알리신은 혈관을 이완시키는 NO(산화질소) 생성을 촉진하여 혈압 강하에 도움을 줄 수 있습니다.`,
+        tip:"생마늘을 하루 1-2쪽 섭취하는 것이 가장 효과적입니다."},
+    ]
+  },
+  kidney: {
+    label: "신장질환", emoji: "🫘",
+    desc: "신장 기능이 저하된 상태",
+    rules: [
+      {check:(im,c)=>c.protein>30, severity:"danger", title:"단백질 과다 — 신장 부담",
+        detail:(im,c)=>`총 단백질 ${c.protein.toFixed(1)}g — 신장질환 환자는 1회 식사 단백질 15-20g 이하가 권장됩니다. 과도한 단백질은 요소(BUN) 생성을 증가시켜 신장에 부담을 줍니다.`,
+        tip:"소고기/계란 양을 줄이고, 두부 등 식물성 단백질로 대체하면 신장 부담을 줄일 수 있습니다."},
+      {check:(im,c)=>c.potassium>600, severity:"danger", title:"칼륨 과다 — 고칼륨혈증 위험",
+        detail:(im,c)=>`칼륨 약 ${c.potassium.toFixed(0)}mg — 신장 기능이 저하되면 칼륨 배출이 어려워 고칼륨혈증(부정맥 위험)이 발생할 수 있습니다.`,
+        tip:"감자·토마토를 물에 담가 칼륨을 빼거나(leaching), 양을 줄이세요. 삶는 물은 버리세요."},
+      {check:(im,c)=>c.potassium>350, severity:"caution", title:"칼륨 섭취 주의",
+        detail:(im,c)=>`칼륨 약 ${c.potassium.toFixed(0)}mg — 중등도 수준이지만 신장 기능에 따라 주의가 필요합니다.`,
+        tip:"채소를 끓인 후 물을 버리면 칼륨을 30-50% 제거할 수 있습니다."},
+      {check:(im,c)=>c.sodium>600, severity:"caution", title:"나트륨 부종 악화 위험",
+        detail:(im,c)=>`나트륨 약 ${c.sodium.toFixed(0)}mg — 신장질환 시 나트륨 배출 능력이 저하되어 부종과 혈압 상승을 유발합니다.`,
+        tip:"간장 대신 레몬·식초로 맛을 내고, 허브·향신료를 활용하세요."},
+    ]
+  },
+  gout: {
+    label: "통풍", emoji: "🦶",
+    desc: "요산 수치 관리가 필요한 상태",
+    rules: [
+      {check:(im)=>Object.keys(im).some(n=>['소고기'].includes(n)&&im[n]>100), severity:"danger", title:"붉은 고기 과다 — 퓨린 위험",
+        detail:(im)=>`소고기 ${im['소고기']||0}g — 붉은 고기(100g당 퓨린 150-200mg)는 요산 생성을 크게 증가시킵니다.`,
+        tip:"소고기를 100g 이하로 줄이거나, 두부·계란 등 저퓨린 단백질로 대체하세요."},
+      {check:(im)=>'두부' in im, severity:"good", title:"두부 — 저퓨린 단백질 선택",
+        detail:()=>`두부는 100g당 퓨린이 20-40mg으로 매우 낮아 통풍 환자에게 안전한 단백질 공급원입니다.`,
+        tip:"고기 대신 두부를 주 단백질원으로 활용하는 것이 좋습니다."},
+      {check:(im)=>'계란' in im, severity:"good", title:"계란 — 퓨린 거의 없음",
+        detail:()=>`계란은 퓨린 함량이 거의 없어(100g당 <5mg) 통풍 환자에게 가장 안전한 동물성 단백질입니다.`,
+        tip:"계란을 활용한 조리법은 통풍 관리에 매우 유리합니다."},
+      {check:(im,c)=>c.fat>20&&['deep_fry'].includes('deep_fry'), severity:"caution", title:"고지방 조리 — 요산 배출 방해",
+        detail:(im,c)=>`지방 ${c.fat.toFixed(1)}g — 과도한 지방은 신장의 요산 배출을 방해하여 통풍 발작 위험을 높입니다.`,
+        tip:"튀김 대신 찜·삶기·그릴 조리법을 선택하세요."},
+    ]
+  },
+  heart: {
+    label: "심혈관질환", emoji: "❤️",
+    desc: "심장·혈관 건강 관리",
+    rules: [
+      {check:(im,c)=>c.saturatedFat>10, severity:"danger", title:"포화지방 과다 — 심혈관 위험",
+        detail:(im,c)=>`포화지방 추정 약 ${c.saturatedFat.toFixed(1)}g — AHA 권장 일일 상한 13g의 ${Math.round(c.saturatedFat/13*100)}%입니다. LDL 콜레스테롤을 높여 동맥경화 위험을 증가시킵니다.`,
+        tip:"버터→올리브오일, 소고기→생선으로 대체하면 포화지방을 크게 줄일 수 있습니다."},
+      {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds.some(c=>c.includes('올레산'))), severity:"good", title:"올리브오일의 심혈관 보호 효과",
+        detail:()=>`올레산(불포화지방산)은 LDL 콜레스테롤을 낮추고 HDL을 높여 심혈관 건강에 유익합니다.`,
+        tip:"올리브오일을 주 조리유로 사용하고, 엑스트라 버진을 마무리에 뿌려 폴리페놀 효과를 극대화하세요."},
+      {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds.some(c=>c.includes('리코펜'))), severity:"good", title:"리코펜의 심혈관 보호 효과",
+        detail:()=>`토마토의 리코펜은 LDL 산화를 억제하고 혈관 내피 기능을 개선하는 강력한 항산화제입니다.`,
+        tip:"토마토를 올리브오일과 함께 가열 조리하면 리코펜 흡수율이 최대 5배 증가합니다."},
+      {check:(im,c)=>c.sodium>800, severity:"caution", title:"나트륨 과다 — 심장 부담",
+        detail:(im,c)=>`나트륨 약 ${c.sodium.toFixed(0)}mg — 과도한 나트륨은 혈액량을 증가시켜 심장에 부담을 줍니다.`,
+        tip:"점진적으로 간을 줄여가면 2-3주 안에 미각이 적응합니다."},
+    ]
+  },
+  obesity: {
+    label: "비만/체중관리", emoji: "⚖️",
+    desc: "칼로리 및 체중 관리",
+    rules: [
+      {check:(im,c)=>c.calories>600, severity:"danger", title:"1회 식사 칼로리 과다",
+        detail:(im,c)=>`추정 칼로리 약 ${c.calories.toFixed(0)}kcal — 체중 관리 시 1회 식사 400-500kcal이 권장됩니다.`,
+        tip:"지방이 많은 재료(버터, 올리브오일)의 양을 줄이고, 채소 비율을 높이세요."},
+      {check:(im,c)=>c.calories>400&&c.calories<=600, severity:"caution", title:"칼로리 주의",
+        detail:(im,c)=>`추정 칼로리 약 ${c.calories.toFixed(0)}kcal — 적정 범위지만 간식·음료까지 고려하면 일일 총량을 초과할 수 있습니다.`,
+        tip:"식사 전 물을 한 잔 마시고, 천천히 먹으면 포만감을 높일 수 있습니다."},
+      {check:(im,c,m)=>['deep_fry'].includes(m), severity:"danger", title:"튀김 조리법 — 칼로리 급증",
+        detail:(im,c)=>`튀김은 기름을 흡수하여 칼로리가 2-3배 증가합니다. 같은 재료도 찜으로 조리하면 칼로리를 50% 이상 줄일 수 있습니다.`,
+        tip:"에어프라이어나 오븐 조리로 대체하면 기름 사용을 90% 줄일 수 있습니다."},
+      {check:(im,c)=>c.fiber>5, severity:"good", title:"식이섬유가 포만감에 도움",
+        detail:(im,c)=>`식이섬유 약 ${c.fiber.toFixed(1)}g — 포만감을 오래 유지하여 과식을 방지합니다.`,
+        tip:"채소를 먼저 먹고 탄수화물을 나중에 먹으면 혈당과 식욕 조절에 도움됩니다."},
+    ]
+  },
+};
+
+// ── 체질/특이사항 DB ──
+const TRAITS = {
+  lactose_intolerant: {label:"유당불내증", emoji:"🥛", desc:"유제품 소화 어려움"},
+  gluten_sensitive: {label:"글루텐 민감", emoji:"🌾", desc:"밀가루 민감 반응"},
+  alcohol_flush: {label:"알코올 플러시", emoji:"🍷", desc:"음주 시 얼굴 홍조 (ALDH2 변이)"},
+  spice_sensitive: {label:"매운맛 민감", emoji:"🌶️", desc:"캡사이신 위장 자극 민감"},
+  allergy_egg: {label:"계란 알레르기", emoji:"🥚", desc:"계란 단백질 알레르기"},
+  allergy_seafood: {label:"해산물 알레르기", emoji:"🦐", desc:"갑각류/어류 알레르기"},
+  vegetarian: {label:"채식주의", emoji:"🥬", desc:"육류 제한"},
+  low_salt: {label:"저염식", emoji:"🧂", desc:"나트륨 제한 식이"},
+  pregnant: {label:"임신/수유 중", emoji:"🤰", desc:"태아/영아 영향 고려"},
+  cold_constitution: {label:"냉체질 (한성)", emoji:"❄️", desc:"몸이 차고 소화가 느린 체질"},
+  hot_constitution: {label:"열체질 (열성)", emoji:"🔥", desc:"열이 많고 땀이 많은 체질"},
+};
+
+const FAMILY_HISTORY = {
+  fam_diabetes: {label:"당뇨병", emoji:"🩸"},
+  fam_hypertension: {label:"고혈압", emoji:"💉"},
+  fam_heart: {label:"심장질환", emoji:"❤️"},
+  fam_cancer_stomach: {label:"위암", emoji:"🔬"},
+  fam_cancer_colon: {label:"대장암", emoji:"🔬"},
+  fam_obesity: {label:"비만", emoji:"⚖️"},
+  fam_gout: {label:"통풍", emoji:"🦶"},
+  fam_kidney: {label:"신장질환", emoji:"🫘"},
+  fam_osteoporosis: {label:"골다공증", emoji:"🦴"},
+  fam_alzheimer: {label:"치매", emoji:"🧠"},
+};
+
+// ── 약물/영양제/생활습관 DB ──
+const SUBSTANCES = {
+  alcohol_none: {label:"비음주", emoji:"🚫", desc:"음주하지 않음", category:"alcohol"},
+  alcohol_light: {label:"경도 음주", emoji:"🍷", desc:"주 1-2회", category:"alcohol"},
+  alcohol_moderate: {label:"중등도 음주", emoji:"🍷", desc:"주 3-4회", category:"alcohol"},
+  alcohol_heavy: {label:"다량 음주", emoji:"🍷", desc:"거의 매일", category:"alcohol"},
+  smoking_none: {label:"비흡연", emoji:"🚭", desc:"담배를 피우지 않음", category:"smoking"},
+  smoking_current: {label:"현재 흡연", emoji:"🚬", desc:"현재 흡연 중", category:"smoking"},
+  smoking_quit: {label:"금연 중", emoji:"✋", desc:"1년 이내 금연", category:"smoking"},
+  med_metformin: {label:"메트포르민", emoji:"💊", desc:"당뇨약 (메트포르민)", category:"medication"},
+  med_statin: {label:"스타틴계", emoji:"💊", desc:"고지혈증약 (스타틴)", category:"medication"},
+  med_bp_med: {label:"혈압약", emoji:"💊", desc:"ACE억제제/ARB", category:"medication"},
+  med_anticoagulant: {label:"항응고제", emoji:"💊", desc:"와파린 등", category:"medication"},
+  med_nsaid: {label:"소염진통제", emoji:"💊", desc:"NSAIDs (아스피린 등)", category:"medication"},
+  med_ppi: {label:"위산억제제", emoji:"💊", desc:"PPI (오메프라졸 등)", category:"medication"},
+  med_thyroid: {label:"갑상선약", emoji:"💊", desc:"레보티록신 등", category:"medication"},
+  med_obesity: {label:"비만치료제", emoji:"💊", desc:"GLP-1 등", category:"medication"},
+  sup_omega3: {label:"오메가3", emoji:"🐟", desc:"오메가3 영양제", category:"supplement"},
+  sup_vitamin_d: {label:"비타민D", emoji:"☀️", desc:"비타민D 영양제", category:"supplement"},
+  sup_calcium: {label:"칼슘", emoji:"🥛", desc:"칼슘 영양제", category:"supplement"},
+  sup_iron: {label:"철분제", emoji:"🔴", desc:"철분 영양제", category:"supplement"},
+  sup_probiotics: {label:"프로바이오틱스", emoji:"🦠", desc:"프로바이오틱스", category:"supplement"},
+  sup_multivitamin: {label:"종합비타민", emoji:"💊", desc:"종합비타민", category:"supplement"},
+  sup_magnesium: {label:"마그네슘", emoji:"⚖️", desc:"마그네슘 영양제", category:"supplement"},
+  sup_coq10: {label:"코엔자임Q10", emoji:"💪", desc:"CoQ10 영양제", category:"supplement"},
+};
+
+// ── Supabase Config ──
+// 🔧 Supabase 프로젝트 생성 후 아래 값을 교체하세요
+const SUPABASE_URL = 'https://ojtgkvtzmedsbhqkbhwe.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_6c8GjizbhYKUBzQywsoUhA_3KYN25-2';
+const USE_SUPABASE = SUPABASE_URL && SUPABASE_KEY;
+
+// ── State ──
+let selected = {};  // {name: grams}
+let activeCategory = "all";
+let members = [{id:1, name:'나', age:null, gender:null, height:null, weight:null, ethnicity:null, activity:null, traits:[], familyHx:[], conditions:[], substances:[]}];
+let activeMemberId = 1;
+let nextMemberId = 2;
+let profileOpen = false;
+let method = "pan_fry";
+let charts = {};
+let searchTimeout = null;
+let apiCache = {};         // 검색 결과 캐시
+let dbCategories = null;   // Supabase 카테고리 캐시
+
+function activeMember() {
+  return members.find(m => m.id === activeMemberId);
+}
+
+function selNames() { return Object.keys(selected); }
+function selCount() { return selNames().length; }
+
+// ── Supabase API 헬퍼 ──
+async function supabaseQuery(table, params = {}) {
+  if (!USE_SUPABASE) return null;
+  const url = new URL(`${SUPABASE_URL}/rest/v1/${table}`);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  try {
+    const res = await fetch(url.toString(), {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      }
+    });
+    if (!res.ok) throw new Error(res.statusText);
+    return await res.json();
+  } catch (e) {
+    console.warn('Supabase query failed:', e);
+    return null;
+  }
+}
+
+// Supabase에서 카테고리 로드
+async function loadCategories() {
+  if (!USE_SUPABASE) return;
+  const data = await supabaseQuery('categories', { order: 'sort_order', select: '*' });
+  if (data) {
+    dbCategories = {};
+    data.forEach(c => { dbCategories[c.id] = { label: c.label, emoji: c.emoji }; });
+  }
+}
+
+// Supabase 재료 검색
+async function searchIngredientsAPI(query, category) {
+  const cacheKey = `${category}:${query}`;
+  if (apiCache[cacheKey]) return apiCache[cacheKey];
+
+  const params = { select: '*', order: 'name', limit: '50' };
+  if (category && category !== 'all') params.cat = `eq.${category}`;
+  if (query) params.name = `ilike.*${query}*`;
+
+  const data = await supabaseQuery('ingredients', params);
+  if (data) {
+    // Supabase 결과를 로컬 DB 포맷으로 변환
+    const results = {};
+    data.forEach(row => {
+      results[row.name] = {
+        cat: row.cat,
+        emoji: row.emoji,
+        defaultG: row.default_g,
+        comp: { protein: row.protein, fat: row.fat, carbs: row.carbs, water: row.water, fiber: row.fiber },
+        amino: JSON.parse(row.amino_acids || '[]'),
+        vit: {
+          A: row.vit_a, C: row.vit_c, D: row.vit_d, E: row.vit_e, K: row.vit_k,
+          B1: row.vit_b1, B2: row.vit_b2, B6: row.vit_b6, B12: row.vit_b12,
+          folate: row.folate, niacin: row.niacin,
+          sodium: row.sodium, potassium: row.potassium, calcium: row.calcium, iron: row.iron
+        },
+        compounds: JSON.parse(row.compounds || '[]'),
+        flavor: {
+          umami: row.flavor_umami, sweet: row.flavor_sweet, salty: row.flavor_salty,
+          sour: row.flavor_sour, bitter: row.flavor_bitter
+        },
+        _fromAPI: true
+      };
+      // API 결과를 로컬 DB에도 병합 (오프라인 대비)
+      if (!DB[row.name]) DB[row.name] = results[row.name];
+    });
+    apiCache[cacheKey] = results;
+    return results;
+  }
+  return null;
+}
+
+// 카테고리별 총 개수 조회
+async function getCategoryCount() {
+  if (!USE_SUPABASE) return Object.keys(DB).length;
+  const data = await supabaseQuery('ingredients', { select: 'id', limit: '1', head: 'true' });
+  return data ? data.length : Object.keys(DB).length;
+}
+
+// 검색 디바운스
+function onSearchInput() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => filterIngredients(), USE_SUPABASE ? 300 : 50);
+}
+
+// ── Init ──
+async function init() {
+  // Supabase 연결 상태 표시
+  const statusEl = document.getElementById('dbStatus');
+  if (USE_SUPABASE) {
+    statusEl.textContent = '🔄 DB 연결 중...';
+    await loadCategories();
+    statusEl.innerHTML = '<span style="color:#059669">● 온라인</span> · 1,300+ 식재료';
+  } else {
+    statusEl.innerHTML = '<span style="color:#737373">○ 로컬</span> · ' + Object.keys(DB).length + '개';
+  }
+  renderCategoryTabs();
+  renderIngredients();
+  renderMethods();
+  renderMemberTabs();
+  renderConditions();
+  renderTraits();
+  renderFamilyHx();
+  renderSubstances();
+  loadMemberForm();
+}
+
+function renderConditions() {
+  const grid = document.getElementById("condGrid");
+  const member = activeMember();
+  grid.innerHTML = "";
+  Object.entries(CONDITIONS).forEach(([key, c]) => {
+    const btn = document.createElement("button");
+    btn.className = "cond-btn" + (member.conditions.includes(key) ? " active" : "");
+    btn.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
+    btn.onclick = () => toggleCondition(key);
+    grid.appendChild(btn);
+  });
+}
+
+function toggleCondition(key) {
+  const member = activeMember();
+  if (member.conditions.includes(key)) member.conditions = member.conditions.filter(c => c !== key);
+  else member.conditions.push(key);
+  renderConditions();
+  updateProfileNote();
+}
+
+function toggleProfile() {
+  profileOpen = !profileOpen;
+  document.getElementById("profilePanel").style.display = profileOpen ? "block" : "none";
+  document.getElementById("profileToggle").textContent = profileOpen ? "프로필 접기 ▲" : "프로필 입력 ▼";
+  if (!profileOpen) updateProfileSummary();
+}
+
+function renderTraits() {
+  const grid = document.getElementById("traitGrid");
+  const member = activeMember();
+  grid.innerHTML = "";
+  Object.entries(TRAITS).forEach(([key, t]) => {
+    const btn = document.createElement("button");
+    btn.className = "family-btn" + (member.traits.includes(key) ? " active" : "");
+    btn.innerHTML = `${t.emoji} ${t.label}`;
+    btn.title = t.desc;
+    btn.onclick = () => {
+      const idx = member.traits.indexOf(key);
+      if (idx >= 0) member.traits.splice(idx, 1);
+      else member.traits.push(key);
+      renderTraits();
+      updateProfileSummary();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function renderFamilyHx() {
+  const grid = document.getElementById("familyGrid");
+  const member = activeMember();
+  grid.innerHTML = "";
+  Object.entries(FAMILY_HISTORY).forEach(([key, f]) => {
+    const btn = document.createElement("button");
+    btn.className = "family-btn" + (member.familyHx.includes(key) ? " active" : "");
+    btn.innerHTML = `${f.emoji} ${f.label}`;
+    btn.onclick = () => {
+      const idx = member.familyHx.indexOf(key);
+      if (idx >= 0) member.familyHx.splice(idx, 1);
+      else member.familyHx.push(key);
+      renderFamilyHx();
+      updateProfileSummary();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function loadMemberForm() {
+  const member = activeMember();
+  document.getElementById("pName").value = member.name || '';
+  document.getElementById("pAge").value = member.age || '';
+  document.getElementById("pGender").value = member.gender || '';
+  document.getElementById("pHeight").value = member.height || '';
+  document.getElementById("pWeight").value = member.weight || '';
+  document.getElementById("pEthnicity").value = member.ethnicity || '';
+  document.getElementById("pActivity").value = member.activity || '';
+}
+
+function saveMemberForm() {
+  const member = activeMember();
+  member.name = document.getElementById("pName").value || '나';
+  member.age = parseInt(document.getElementById("pAge").value) || null;
+  member.gender = document.getElementById("pGender").value || null;
+  member.height = parseInt(document.getElementById("pHeight").value) || null;
+  member.weight = parseInt(document.getElementById("pWeight").value) || null;
+  member.ethnicity = document.getElementById("pEthnicity").value || null;
+  member.activity = document.getElementById("pActivity").value || null;
+}
+
+function updateProfile() {
+  saveMemberForm();
+  updateProfileSummary();
+}
+
+function calcBMI(member) {
+  if (!member.height || !member.weight) return null;
+  return member.weight / ((member.height/100) ** 2);
+}
+
+function calcDailyCalories(member) {
+  if (!member.age || !member.gender || !member.height || !member.weight) return null;
+  let bmr;
+  if (member.gender === 'male') bmr = 88.362 + (13.397*member.weight) + (4.799*member.height) - (5.677*member.age);
+  else bmr = 447.593 + (9.247*member.weight) + (3.098*member.height) - (4.330*member.age);
+  const factors = {sedentary:1.2, light:1.375, moderate:1.55, active:1.725, very_active:1.9};
+  return bmr * (factors[member.activity] || 1.375);
+}
+
+function updateProfileSummary() {
+  saveMemberForm();
+  const el = document.getElementById("profileSummary");
+  const member = activeMember();
+  const chips = [];
+  if (member.age) chips.push(`${member.age}세`);
+  if (member.gender) chips.push(member.gender==='male'?'남성':'여성');
+  const bmi = calcBMI(member);
+  if (bmi) {
+    const bmiLabel = bmi<18.5?'저체중':bmi<23?'정상':bmi<25?'과체중':'비만';
+    chips.push(`BMI ${bmi.toFixed(1)} (${bmiLabel})`);
+  }
+  const ethLabels = {east_asian:'동아시아인',southeast_asian:'동남아시아인',south_asian:'남아시아인',caucasian:'유럽계',african:'아프리카계',hispanic:'히스패닉',middle_eastern:'중동계'};
+  if (member.ethnicity) chips.push(ethLabels[member.ethnicity]);
+  const actLabels = {sedentary:'비활동적',light:'가벼운 활동',moderate:'중간 활동',active:'활발',very_active:'매우 활발'};
+  if (member.activity) chips.push(actLabels[member.activity]);
+  member.traits.forEach(t => chips.push(TRAITS[t]?.emoji + ' ' + TRAITS[t]?.label));
+  member.familyHx.forEach(f => chips.push('👨‍👩‍👧 ' + FAMILY_HISTORY[f]?.label));
+  member.conditions.forEach(c => chips.push(CONDITIONS[c]?.emoji + ' ' + CONDITIONS[c]?.label));
+  member.substances.forEach(s => chips.push(SUBSTANCES[s]?.emoji + ' ' + SUBSTANCES[s]?.label));
+
+  if (chips.length > 0) {
+    el.style.display = "flex";
+    el.innerHTML = chips.map(c => `<span class="profile-chip">${c}</span>`).join("");
+  } else {
+    el.style.display = "none";
+  }
+  updateProfileNote();
+}
+
+function updateProfileNote() {
+  const member = activeMember();
+  const hasAny = member.conditions.length > 0 || member.traits.length > 0 || member.familyHx.length > 0 || member.age;
+  document.getElementById("condNote").style.display = hasAny ? "block" : "none";
+}
+
+function renderMemberTabs() {
+  const container = document.getElementById("memberTabs");
+  container.innerHTML = "";
+  members.forEach(m => {
+    const tab = document.createElement("button");
+    tab.className = "member-tab" + (m.id === activeMemberId ? " active" : "");
+    const deleteBtn = members.length > 1 ? `<span class="delete-member" onclick="deleteMember(${m.id}); event.stopPropagation();">✕</span>` : '';
+    tab.innerHTML = `${m.name}${deleteBtn}`;
+    tab.onclick = () => switchMember(m.id);
+    container.appendChild(tab);
+  });
+  if (members.length < 6) {
+    const addBtn = document.createElement("button");
+    addBtn.className = "add-member-btn";
+    addBtn.innerHTML = "+ 추가";
+    addBtn.onclick = addMember;
+    container.appendChild(addBtn);
+  }
+}
+
+function switchMember(memberId) {
+  saveMemberForm();
+  activeMemberId = memberId;
+  loadMemberForm();
+  renderMemberTabs();
+  renderConditions();
+  renderTraits();
+  renderFamilyHx();
+  renderSubstances();
+  updateProfileSummary();
+}
+
+function addMember() {
+  if (members.length >= 6) return;
+  saveMemberForm();
+  const newMember = {id: nextMemberId++, name: `사람${nextMemberId-1}`, age: null, gender: null, height: null, weight: null, ethnicity: null, activity: null, traits: [], familyHx: [], conditions: [], substances: []};
+  members.push(newMember);
+  switchMember(newMember.id);
+}
+
+function deleteMember(memberId) {
+  if (members.length <= 1) return;
+  members = members.filter(m => m.id !== memberId);
+  if (activeMemberId === memberId) {
+    activeMemberId = members[0].id;
+  }
+  switchMember(activeMemberId);
+}
+
+function renderSubstances() {
+  const grid = document.getElementById("substanceGrid");
+  const member = activeMember();
+  if (!grid) return;
+  grid.innerHTML = "";
+  const categories = {alcohol: '음주', smoking: '흡연', medication: '약물', supplement: '영양제'};
+  const categoryOrder = ['alcohol', 'smoking', 'medication', 'supplement'];
+  categoryOrder.forEach(cat => {
+    const items = Object.entries(SUBSTANCES).filter(([k,v]) => v.category === cat);
+    if (items.length > 0) {
+      const header = document.createElement("div");
+      header.className = "substance-category";
+      header.textContent = categories[cat];
+      grid.appendChild(header);
+      items.forEach(([key, s]) => {
+        const btn = document.createElement("button");
+        btn.className = "ing-btn" + (member.substances.includes(key) ? " active" : "");
+        btn.innerHTML = `<span>${s.emoji}</span><span>${s.label}</span>`;
+        btn.title = s.desc;
+        btn.onclick = () => {
+          const idx = member.substances.indexOf(key);
+          if (idx >= 0) member.substances.splice(idx, 1);
+          else member.substances.push(key);
+          renderSubstances();
+          updateProfileSummary();
+        };
+        grid.appendChild(btn);
+      });
+    }
+  });
+}
+
+// 투입 재료의 총 영양 성분 계산 (100g 기준 DB → 실제 g 환산)
+function calcTotalComposition(ingMap) {
+  const total = {protein:0, fat:0, carbs:0, water:0, fiber:0, sodium:0, potassium:0, saturatedFat:0, calories:0};
+  Object.entries(ingMap).forEach(([name, grams]) => {
+    const d = DB[name]; if (!d) return;
+    const s = grams / 100;
+    total.protein += (d.comp.protein||0) * s;
+    total.fat += (d.comp.fat||0) * s;
+    total.carbs += (d.comp.carbs||0) * s;
+    total.fiber += (d.comp.fiber||0) * s;
+    total.sodium += (d.vit.sodium||0) * s;
+    total.potassium += (d.vit.potassium||0) * s;
+    // 포화지방 추정: 동물성 지방은 ~40%, 식물성은 ~15%
+    const satRatio = ['소고기','계란','버터'].includes(name) ? 0.4 : 0.15;
+    total.saturatedFat += (d.comp.fat||0) * s * satRatio;
+  });
+  total.calories = total.protein * 4 + total.carbs * 4 + total.fat * 9;
+  return total;
+}
+
+// 질환별 건강 분석 (프로필 + 가족력 + 약물 상호작용 통합)
+function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
+  const member = memberForAnalysis || activeMember();
+  const hasProfile = member.age || member.traits.length > 0 || member.familyHx.length > 0;
+  if (member.conditions.length === 0 && !hasProfile && member.substances.length === 0) return [];
+  const comp = calcTotalComposition(ingMap);
+  const bmi = calcBMI(member);
+  const dailyCal = calcDailyCalories(member);
+  const results = [];
+
+  // 1) 기존 질환 분석
+  member.conditions.forEach(condKey => {
+    const cond = CONDITIONS[condKey];
+    if (!cond) return;
+    const findings = [];
+    cond.rules.forEach(rule => {
+      if (rule.check(ingMap, comp, method, temp, time)) {
+        findings.push({
+          severity: rule.severity, title: rule.title,
+          detail: typeof rule.detail === 'function' ? rule.detail(ingMap, comp) : rule.detail,
+          tip: rule.tip,
+        });
+      }
+    });
+
+    // 나이별 보정
+    if (member.age) {
+      if (member.age >= 65 && condKey === 'diabetes' && comp.carbs > 30) {
+        findings.push({severity:'caution', title:`${member.age}세 고령 — 혈당 조절 능력 저하`,
+          detail:`나이가 들수록 인슐린 감수성이 떨어져 같은 양의 탄수화물에도 혈당이 더 높이 올라갑니다. 65세 이상은 1회 탄수화물 30-40g 이하를 권장합니다.`,
+          tip:'식사량을 줄이고 횟수를 늘리는 소식다식(少食多食) 패턴이 혈당 관리에 유리합니다.'});
+      }
+      if (member.age >= 50 && condKey === 'heart') {
+        findings.push({severity:'info', title:`${member.age}세 — 심혈관 위험 연령`,
+          detail:`50세 이상은 심혈관질환 위험이 급격히 증가합니다. 식이 관리가 특히 중요한 시기입니다.`,
+          tip:'오메가-3 지방산(등푸른 생선, 아마씨)을 주 2-3회 섭취하면 심혈관 보호에 도움됩니다.'});
+      }
+    }
+
+    // BMI별 보정
+    if (bmi && bmi >= 25 && ['diabetes','heart','obesity'].includes(condKey)) {
+      findings.push({severity:'caution', title:`BMI ${bmi.toFixed(1)} — 과체중/비만 상태`,
+        detail:`현재 BMI가 ${bmi.toFixed(1)}로 ${bmi>=30?'비만':'과체중'} 범위입니다. 이는 인슐린 저항성, 고혈압, 이상지질혈증의 위험을 높입니다.`,
+        tip:`목표 BMI 23 이하를 위해 일일 칼로리를 ${dailyCal ? Math.round(dailyCal*0.8) + 'kcal' : '기초대사량의 80%'}로 제한하는 것을 고려하세요.`});
+    }
+
+    // 가족력 보정
+    const famMap = {fam_diabetes:'diabetes', fam_hypertension:'hypertension', fam_heart:'heart', fam_gout:'gout', fam_kidney:'kidney', fam_obesity:'obesity'};
+    member.familyHx.forEach(fh => {
+      if (famMap[fh] === condKey) {
+        findings.push({severity:'caution', title:`👨‍👩‍👧 가족력: ${FAMILY_HISTORY[fh]?.label}`,
+          detail:`직계 가족에 ${FAMILY_HISTORY[fh]?.label} 병력이 있어 유전적 소인이 있을 수 있습니다. 같은 식이라도 발병 위험이 일반인 대비 2-3배 높을 수 있습니다.`,
+          tip:'정기 검진과 함께 예방적 식이 관리를 더 엄격하게 적용하는 것이 좋습니다.'});
+      }
+    });
+
+    // 종합 점수 계산
+    let score = 70;
+    findings.forEach(f => {
+      if (f.severity === 'danger') score -= 30;
+      if (f.severity === 'caution') score -= 10;
+      if (f.severity === 'good') score += 15;
+      if (f.severity === 'info') score += 0;
+    });
+    score = Math.max(0, Math.min(100, score));
+    results.push({key:condKey, label:cond.label, emoji:cond.emoji, desc:cond.desc, score, findings, composition:comp});
+  });
+
+  // 2) 약물-음식 상호작용 분석
+  const substanceFindings = [];
+
+  // 메트포르민 + 알코올
+  if (member.substances.includes('med_metformin') && (member.substances.includes('alcohol_moderate') || member.substances.includes('alcohol_heavy'))) {
+    substanceFindings.push({severity:'danger', title:'메트포르민 + 알코올 → 유산산증 위험',
+      detail:'알코올은 메트포르민의 유산산증(lactic acidosis) 위험을 크게 높입니다. 특히 중등도 이상 음주 시 위험합니다.',
+      tip:'메트포르민 복용 중에는 음주를 피하거나 최소한으로 줄이세요.'});
+  }
+
+  // 항응고제(와파린) + 비타민K 풍부 음식
+  if (member.substances.includes('med_anticoagulant')) {
+    const vitKFoods = Object.keys(ingMap).filter(n => ['시금치','브로콜리','양배추'].includes(n));
+    if (vitKFoods.length > 0) {
+      substanceFindings.push({severity:'danger', title:`항응고제(와파린) + 비타민K 음식(${vitKFoods.join(',')}) → 약효 감소`,
+        detail:'비타민K는 와파린의 작용을 방해합니다. 갑작스러운 많은 비타민K 섭취는 혈전 위험을 높입니다.',
+        tip:'매일 일정량의 비타민K를 안정적으로 섭취하는 것이 중요합니다. 의사와 상담 후 식단을 조정하세요.'});
+    }
+  }
+
+  // 스타틴 + 자몽 (만약 DB에 있다면)
+  if (member.substances.includes('med_statin') && ingMap['자몽']) {
+    substanceFindings.push({severity:'caution', title:'스타틴 + 자몽 → 약물 농도 상승',
+      detail:'자몽의 furanocoumarin은 스타틴 대사를 방해하여 약물 농도가 과도하게 올라갈 수 있습니다.',
+      tip:'스타틴 복용 중에는 자몽과 자몽주스를 피하세요.'});
+  }
+
+  // 칼슘 보충제 + 철분 보충제
+  if (member.substances.includes('sup_calcium') && member.substances.includes('sup_iron')) {
+    substanceFindings.push({severity:'caution', title:'칼슘 + 철분 보충제 → 흡수 간섭',
+      detail:'칼슘은 철분 흡수를 방해합니다. 같은 시간에 섭취하면 둘 다의 흡수가 감소합니다.',
+      tip:'칼슘과 철분은 최소 2시간 이상 간격을 두고 섭취하세요.'});
+  }
+
+  // PPI + 칼슘/철분/B12
+  if (member.substances.includes('med_ppi')) {
+    const absorbIngs = [];
+    if (member.substances.includes('sup_calcium')) absorbIngs.push('칼슘');
+    if (member.substances.includes('sup_iron')) absorbIngs.push('철분');
+    if (absorbIngs.length > 0) {
+      substanceFindings.push({severity:'caution', title:`PPI + ${absorbIngs.join('/')} → 흡수 감소`,
+        detail:`PPI(위산억제제)는 위산을 줄이기 때문에 ${absorbIngs.join(',')}의 흡수가 감소합니다.`,
+        tip:`${absorbIngs.join(',')} 보충제는 PPI와 최소 2시간 간격을 두고 섭취하세요.`});
+    }
+  }
+
+  // 알코올_heavy + 고지방
+  if (member.substances.includes('alcohol_heavy') && comp.fat > 25) {
+    substanceFindings.push({severity:'danger', title:'다량 음주 + 고지방 식사 → 간 손상 위험',
+      detail:`높은 알코올 섭취와 고지방 식사는 지방간을 유발하고 간 손상을 가속화합니다.`,
+      tip:'음주량을 줄이고, 지방이 적은 음식을 선택하세요.'});
+  }
+
+  // 알코올 + NSAIDs → 위장 출혈
+  if ((member.substances.includes('alcohol_moderate') || member.substances.includes('alcohol_heavy')) && member.substances.includes('med_nsaid')) {
+    substanceFindings.push({severity:'danger', title:'알코올 + NSAIDs → 위장 출혈 위험',
+      detail:'알코올과 소염진통제(아스피린, 이부프로펜 등)를 함께 복용하면 위장 출혈 위험이 크게 증가합니다.',
+      tip:'가능한 음주를 피하고, 반드시 필요한 경우 NSAIDs는 식사와 함께 복용하세요.'});
+  }
+
+  // 흡연 + 비타민C 음식 (필요량 35mg 추가)
+  if (member.substances.includes('smoking_current')) {
+    const vitCFoods = Object.keys(ingMap).filter(n => DB[n]?.vit?.C && DB[n].vit.C > 20);
+    const vitCTotal = Object.entries(ingMap).reduce((sum,[n,g]) => sum + (DB[n]?.vit?.C||0) * g / 100, 0);
+    if (vitCFoods.length > 0 && vitCTotal >= 35) {
+      substanceFindings.push({severity:'good', title:'흡연 중 — 비타민C로 산화스트레스 완화',
+        detail:`현재 비타민C 약 ${vitCTotal.toFixed(1)}mg이 포함되어 있습니다. 흡연자는 비일반인보다 35mg 더 많은 비타민C가 필요합니다.`,
+        tip:'비타민C 풍부 식품(레몬, 파프리카, 키위)을 자주 섭취하세요.'});
+    }
+  }
+
+  // GLP-1(비만치료제) + 고지방/고탄수화물 → 소화불편
+  if (member.substances.includes('med_obesity')) {
+    if (comp.fat > 20 || comp.carbs > 40) {
+      substanceFindings.push({severity:'caution', title:'비만치료제(GLP-1) + 고지방/탄수화물 → 메스꺼움 위험',
+        detail:'GLP-1 약물은 위 배출을 느리게 하므로, 고지방·고탄수화물 식사 시 메스꺼움과 소화불편이 심할 수 있습니다.',
+        tip:'소량씩 자주 먹는 식사 패턴으로 전환하고, 기름진 음식과 단순 탄수화물을 제한하세요.'});
+    }
+  }
+
+  // 갑상선약 + 칼슘/철분/두부 (이소플라본)
+  if (member.substances.includes('med_thyroid')) {
+    const interferingItems = [];
+    if (member.substances.includes('sup_calcium')) interferingItems.push('칼슘');
+    if (member.substances.includes('sup_iron')) interferingItems.push('철분');
+    if ('두부' in ingMap) interferingItems.push('두부(이소플라본)');
+    if (interferingItems.length > 0) {
+      substanceFindings.push({severity:'caution', title:`갑상선약 + ${interferingItems.join('/')} → 흡수 방해`,
+        detail:`${interferingItems.join(',')}는 갑상선약 흡수를 방해합니다.`,
+        tip:`갑상선약은 공복에 복용하고, ${interferingItems.join(',')}는 최소 4시간 후에 섭취하세요.`});
+    }
+  }
+
+  // 오메가3 + 항응고제
+  if (member.substances.includes('sup_omega3') && member.substances.includes('med_anticoagulant')) {
+    substanceFindings.push({severity:'caution', title:'오메가3 + 항응고제 → 출혈 위험 증가',
+      detail:'오메가3는 항응고 작용이 있어 와파린과 함께 복용하면 출혈 위험이 증가합니다.',
+      tip:'의사와 상담하여 용량을 조정하거나 모니터링을 강화하세요.'});
+  }
+
+  // 알코올 + 임신
+  if (member.substances.includes('alcohol_moderate') || member.substances.includes('alcohol_heavy') || member.substances.includes('alcohol_light')) {
+    if (member.traits.includes('pregnant')) {
+      substanceFindings.push({severity:'danger', title:'임신 + 음주 → 태아 알코올 스펙트럼 장애(FASD) 위험',
+        detail:'임신 중 음주는 태자에게 심각한 뇌 손상, 발달 장애를 초래할 수 있습니다.',
+        tip:'임신 중에는 음주를 완전히 피해야 합니다.'});
+    }
+  }
+
+  // 3) 체질/특이사항 분석 (질환 선택 없어도 동작)
+  const traitFindings = [];
+
+  // 인종별 분석
+  if (member.ethnicity === 'east_asian') {
+    if (comp.carbs > 50) traitFindings.push({severity:'caution', title:'동아시아인 — 당뇨 고위험 인종',
+      detail:`동아시아인은 같은 BMI에서도 당뇨 발병률이 서양인보다 2-3배 높습니다 (인슐린 분비 능력이 상대적으로 낮음). 탄수화물 ${comp.carbs.toFixed(1)}g은 주의가 필요합니다.`,
+      tip:'백미 대신 현미/잡곡, 밀가루 대신 통밀을 선택하면 혈당 반응을 줄일 수 있습니다.'});
+    if (comp.sodium > 500) traitFindings.push({severity:'info', title:'동아시아인 — 나트륨 민감도 높음',
+      detail:`한국인/일본인은 유전적으로 나트륨 민감도가 높아 같은 소금량에서도 혈압이 더 많이 오르는 경향이 있습니다.`,
+      tip:'국물/장류의 양을 점진적으로 줄이는 것이 효과적입니다.'});
+  }
+  if (member.ethnicity === 'african' && comp.sodium > 400) {
+    traitFindings.push({severity:'caution', title:'아프리카계 — 소금 민감성 고혈압 위험',
+      detail:`아프리카계는 소금 민감성 고혈압 비율이 다른 인종보다 유의하게 높습니다.`,
+      tip:'DASH 식이요법(저나트륨, 고칼륨, 과일·채소 중심)이 특히 효과적입니다.'});
+  }
+
+  // 유당불내증
+  if (member.traits.includes('lactose_intolerant')) {
+    const dairyItems = Object.keys(ingMap).filter(n => ['버터','치즈','우유'].includes(n));
+    if (dairyItems.length > 0) traitFindings.push({severity:'caution', title:'유당불내증 — 유제품 포함(' + dairyItems.join(', ') + ')',
+      detail:`${dairyItems.join(', ')}에 유당이 포함되어 있습니다. 민감도에 따라 복부팽만, 가스, 설사 등 소화 불편감이 발생할 수 있습니다.`,
+      tip:'유제품 대신 두유, 아몬드밀크, 기버터(ghee) 등 유당 없는 대체품을 사용하세요.'});
+  }
+
+  // 매운맛 민감
+  if (member.traits.includes('spice_sensitive') && Object.keys(ingMap).some(n => DB[n]?.compounds.some(c => c.includes('캡사이신')))) {
+    traitFindings.push({severity:'caution', title:'매운맛 민감 — 캡사이신 주의',
+      detail:`고추의 캡사이신이 위산 분비를 촉진하여 속쓰림, 위장 불편감을 유발할 수 있습니다.`,
+      tip:'고추 양을 절반 이하로 줄이거나, 유제품(우유)과 함께 섭취하면 자극이 완화됩니다.'});
+  }
+
+  // 계란 알레르기
+  if (member.traits.includes('allergy_egg') && '계란' in ingMap) {
+    traitFindings.push({severity:'danger', title:'⚠️ 계란 알레르기 — 알레르겐 포함!',
+      detail:`계란이 ${ingMap['계란']}g 포함되어 있습니다. 오보알부민, 오보뮤코이드 등 알레르겐이 가열해도 완전히 파괴되지 않습니다.`,
+      tip:'계란을 완전히 제거하세요. 바인딩이 필요하면 아마씨 겔, 두부, 바나나로 대체할 수 있습니다.'});
+  }
+
+  // 해산물 알레르기
+  if (member.traits.includes('allergy_seafood')) {
+    const seafoods = Object.keys(ingMap).filter(n => ['연어','새우','참치','오징어','조개','멸치'].includes(n));
+    if (seafoods.length > 0) traitFindings.push({severity:'danger', title:'⚠️ 해산물 알레르기 — ' + seafoods.join(', ') + ' 포함!',
+      detail:`${seafoods.join(', ')}이(가) 포함되어 있습니다. 해산물 알레르기는 아나필락시스 위험이 있어 매우 주의해야 합니다.`,
+      tip:'해산물을 완전히 제거하세요. 단백질은 두부, 소고기, 닭고기로 대체하세요.'});
+  }
+
+  // 글루텐 민감
+  if (member.traits.includes('gluten_sensitive')) {
+    const glutenFoods = Object.keys(ingMap).filter(n => ['밀가루','파스타','빵'].includes(n));
+    if (glutenFoods.length > 0) traitFindings.push({severity:'caution', title:'글루텐 민감 — ' + glutenFoods.join(', ') + ' 포함',
+      detail:`${glutenFoods.join(', ')}에 글루텐이 포함되어 있습니다. 복부팽만, 피로감, 소화 불편 등이 발생할 수 있습니다.`,
+      tip:'쌀가루, 감자전분, 타피오카 등 글루텐 프리 대체재를 사용하세요.'});
+  }
+
+  // 임산부
+  if (member.traits.includes('pregnant')) {
+    if (comp.calories < 300) traitFindings.push({severity:'info', title:'임신 중 — 열량 보충 필요',
+      detail:`임산부는 일반인보다 1일 300kcal를 추가로 섭취해야 합니다. 현재 식사 열량이 부족할 수 있습니다.`,
+      tip:'단백질과 엽산이 풍부한 식품(두부, 시금치, 콩)을 추가하세요.'});
+    if (Object.keys(ingMap).some(n => n === '생강')) traitFindings.push({severity:'good', title:'임신 중 — 생강의 입덧 완화 효과',
+      detail:`생강의 진저롤은 입덧 완화에 효과적이라는 임상 연구 결과가 있습니다.`,
+      tip:'생강차 또는 조리 시 소량의 생강 추가가 도움됩니다.'});
+  }
+
+  // 한성/열성 체질
+  if (member.traits.includes('cold_constitution')) {
+    const warmFoods = Object.keys(ingMap).filter(n => ['생강','마늘','고추'].includes(n));
+    const coldFoods = Object.keys(ingMap).filter(n => ['두부','레몬'].includes(n));
+    if (warmFoods.length > 0) traitFindings.push({severity:'good', title:`한성 체질 — 온성 식재료(${warmFoods.join(', ')}) 적합`,
+      detail:'생강(진저롤), 마늘(알리신), 고추(캡사이신)는 혈액순환을 촉진하고 체온을 높여 냉체질에 유리합니다.',
+      tip:'따뜻한 조리법(찜, 끓이기)과 온성 재료를 조합하면 효과가 극대화됩니다.'});
+    if (coldFoods.length > 0 && warmFoods.length === 0) traitFindings.push({severity:'caution', title:`한성 체질 — 냉성 식재료 주의`,
+      detail:'냉체질에 차가운 성질의 음식이 많으면 소화 기능이 더 약해질 수 있습니다.',
+      tip:'생강이나 고추를 소량 추가하여 밸런스를 맞추세요.'});
+  }
+  if (member.traits.includes('hot_constitution')) {
+    const hotFoods = Object.keys(ingMap).filter(n => ['고추','생강','소고기'].includes(n));
+    if (hotFoods.length >= 2) traitFindings.push({severity:'caution', title:`열체질 — 열성 식재료 과다(${hotFoods.join(', ')})`,
+      detail:'열체질에 열성 재료가 많으면 피부 트러블, 상열감, 구내염 등이 악화될 수 있습니다.',
+      tip:'두부, 토마토 등 냉성/평성 재료를 추가하고, 튀김보다 찜·삶기를 선택하세요.'});
+  }
+
+  // 나이별 일반 분석
+  if (member.age && member.age >= 65) {
+    if (comp.protein < 15) traitFindings.push({severity:'caution', title:`${profile.age}세 고령 — 단백질 부족 주의`,
+      detail:`65세 이상은 근감소증(sarcopenia) 예방을 위해 1끼 단백질 20-30g이 권장됩니다. 현재 ${comp.protein.toFixed(1)}g으로 부족합니다.`,
+      tip:'계란, 두부, 소고기 등 단백질 식재료를 추가하세요.'});
+    const calciumIngs = Object.keys(ingMap).filter(n => DB[n]?.vit.calcium);
+    if (calciumIngs.length === 0) traitFindings.push({severity:'info', title:'고령 — 칼슘 섭취 고려',
+      detail:'골다공증 예방을 위해 1일 칼슘 800-1000mg이 권장됩니다.',
+      tip:'두부, 멸치 등 칼슘 식품을 추가하거나 보충제를 고려하세요.'});
+  }
+  if (member.age && member.age < 18 && member.age >= 10) {
+    traitFindings.push({severity:'info', title:`${profile.age}세 성장기 — 영양 균형 중요`,
+      detail:'성장기에는 단백질, 칼슘, 철분이 특히 중요합니다.',
+      tip:'다양한 식재료를 균형있게 섭취하고, 인스턴트 식품을 줄이세요.'});
+  }
+
+  // 가족력 예방 분석 (질환을 선택하지 않아도)
+  member.familyHx.forEach(fh => {
+    const condMap = {fam_diabetes:'diabetes',fam_hypertension:'hypertension',fam_heart:'heart',fam_gout:'gout',fam_kidney:'kidney',fam_obesity:'obesity'};
+    const mapped = condMap[fh];
+    if (mapped && !conditions.includes(mapped)) {
+      // 질환을 선택하지 않았지만 가족력이 있는 경우 예방 분석
+      if (fh === 'fam_diabetes' && comp.carbs > 50) {
+        traitFindings.push({severity:'caution', title:`가족력(당뇨) — 탄수화물 ${comp.carbs.toFixed(1)}g 주의`,
+          detail:'가족에 당뇨 병력이 있으면 본인도 유전적 소인이 있을 수 있습니다. 탄수화물 관리가 예방에 중요합니다.',
+          tip:'현재 당뇨가 없더라도 1회 탄수화물 50g 이하를 습관화하면 예방에 도움됩니다.'});
+      }
+      if (fh === 'fam_cancer_stomach' && temp >= 200) {
+        traitFindings.push({severity:'caution', title:'가족력(위암) — 고온 조리 주의',
+          detail:`${temp}°C 이상 고온 조리는 발암물질(HCA, PAH)을 생성할 수 있습니다. 위암 가족력이 있으면 더 주의가 필요합니다.`,
+          tip:'탄 부분은 제거하고, 굽기보다 찜·삶기 위주로 조리하세요.'});
+      }
+      if (fh === 'fam_cancer_colon') {
+        if (Object.keys(ingMap).some(n => n === '소고기') && ingMap['소고기'] > 100) {
+          traitFindings.push({severity:'caution', title:'가족력(대장암) — 붉은 고기 과다',
+            detail:'WHO는 붉은 고기를 Group 2A 발암물질로 분류했습니다. 가족력이 있으면 주 500g 이하로 제한을 권장합니다.',
+            tip:'소고기를 생선, 두부, 콩으로 부분 대체하세요.'});
+        }
+        if (comp.fiber > 5) traitFindings.push({severity:'good', title:'가족력(대장암) — 식이섬유 긍정적',
+          detail:`식이섬유 ${comp.fiber.toFixed(1)}g — 식이섬유는 대장 건강에 도움이 되며 대장암 위험을 낮출 수 있습니다.`,
+          tip:'목표: 1일 25-30g. 채소와 잡곡을 꾸준히 섭취하세요.'});
+      }
+      if (fh === 'fam_osteoporosis') {
+        const hasCa = Object.keys(ingMap).some(n => DB[n]?.vit.calcium);
+        traitFindings.push({severity: hasCa ? 'good' : 'info',
+          title:'가족력(골다공증) — 칼슘 ' + (hasCa ? '섭취 긍정적' : '보충 필요'),
+          detail:'가족력이 있으면 30대부터 칼슘과 비타민 D 섭취에 신경 써야 합니다.',
+          tip:'두부(칼슘 350mg/100g), 멸치, 우유를 활용하고 햇볕을 규칙적으로 쬐세요.'});
+      }
+    }
+  });
+
+  // 칼로리 대비 일일 권장량
+  if (dailyCal && comp.calories > 0) {
+    const mealRatio = comp.calories / (dailyCal / 3) * 100;
+    if (mealRatio > 150) traitFindings.push({severity:'caution', title:`1끼 열량이 일일 권장의 ${Math.round(mealRatio)}%`,
+      detail:`프로필 기준 일일 권장 칼로리 약 ${Math.round(dailyCal)}kcal, 1끼 적정량 약 ${Math.round(dailyCal/3)}kcal. 현재 ${comp.calories.toFixed(0)}kcal로 상당히 초과합니다.`,
+      tip:'재료 양을 전체적으로 줄이거나, 지방이 많은 재료를 교체하세요.'});
+    else if (mealRatio > 110) traitFindings.push({severity:'info', title:`1끼 열량: 일일 권장의 ${Math.round(mealRatio)}%`,
+      detail:`적정 범위에 가깝지만 간식 등을 고려하면 약간 높을 수 있습니다.`,
+      tip:'남은 식사에서 조금 적게 먹으면 균형이 맞습니다.'});
+  }
+
+  // traitFindings를 별도 결과로 추가 (프로필 기반 분석)
+  if (traitFindings.length > 0) {
+    let score = 70;
+    traitFindings.forEach(f => {
+      if (f.severity === 'danger') score -= 30;
+      if (f.severity === 'caution') score -= 10;
+      if (f.severity === 'good') score += 15;
+    });
+    score = Math.max(0, Math.min(100, score));
+    results.push({key:'profile', label:'개인 맞춤 분석', emoji:'👤', desc:'프로필·체질·가족력 기반', score, findings:traitFindings, composition:comp});
+  }
+
+  // substanceFindings를 별도 결과로 추가 (약물-음식 상호작용)
+  if (substanceFindings.length > 0) {
+    let score = 70;
+    substanceFindings.forEach(f => {
+      if (f.severity === 'danger') score -= 30;
+      if (f.severity === 'caution') score -= 10;
+      if (f.severity === 'good') score += 15;
+      if (f.severity === 'info') score += 0;
+    });
+    score = Math.max(0, Math.min(100, score));
+    results.push({key:'substances', label:'약물-음식 상호작용', emoji:'💊', desc:'복용 약물·영양제·생활습관 기반', score, findings:substanceFindings, composition:comp});
+  }
+
+  return results;
+}
+
+function renderIngredientsFromData(items, grid) {
+  let count = 0;
+  Object.entries(items).forEach(([name, data]) => {
+    count++;
+    const btn = document.createElement("button");
+    btn.className = "ing-btn" + (name in selected ? " active" : "");
+    btn.innerHTML = `<span>${data.emoji}</span><span>${name}</span>`;
+    btn.onclick = () => toggleIngredient(name);
+    grid.appendChild(btn);
+  });
+  return count;
+}
+
+function renderIngredients(filter = "") {
+  const grid = document.getElementById("ingGrid");
+  grid.innerHTML = "";
+  const lower = (filter || "").toLowerCase();
+
+  // 로컬 DB에서 먼저 표시
+  const localItems = {};
+  Object.entries(DB).forEach(([name, data]) => {
+    if (activeCategory !== "all" && data.cat !== activeCategory) return;
+    if (lower && !name.includes(lower)) return;
+    localItems[name] = data;
+  });
+
+  const count = renderIngredientsFromData(localItems, grid);
+
+  if (count === 0 && !USE_SUPABASE) {
+    grid.innerHTML = `<div style="width:100%;text-align:center;padding:16px;color:#737373;font-size:13px">검색 결과 없음</div>`;
+  }
+  if (count === 0 && USE_SUPABASE && lower) {
+    grid.innerHTML = `<div style="width:100%;text-align:center;padding:12px;color:#737373;font-size:13px">🔍 DB에서 검색 중...</div>`;
+  }
+}
+
+async function renderIngredientsAPI(filter) {
+  if (!USE_SUPABASE || !filter) return;
+  const apiResults = await searchIngredientsAPI(filter, activeCategory);
+  if (!apiResults) return;
+
+  const grid = document.getElementById("ingGrid");
+  // 로컬과 중복되지 않는 API 결과만 추가
+  const newItems = {};
+  Object.entries(apiResults).forEach(([name, data]) => {
+    if (!DB[name] || DB[name]._fromAPI) newItems[name] = data;
+  });
+
+  if (Object.keys(newItems).length > 0) {
+    // 기존 "검색 중" 메시지 제거
+    const placeholder = grid.querySelector('div[style*="text-align:center"]');
+    if (placeholder) placeholder.remove();
+
+    const divider = document.createElement('div');
+    divider.style.cssText = 'width:100%;padding:4px 0;font-size:11px;color:#059669;font-weight:600;border-top:1px solid #e5e5e5;margin-top:4px;padding-top:8px';
+    divider.textContent = `🌐 DB 검색 결과 (${Object.keys(newItems).length}건)`;
+    grid.appendChild(divider);
+
+    renderIngredientsFromData(newItems, grid);
+  } else {
+    const placeholder = grid.querySelector('div[style*="text-align:center"]');
+    if (placeholder) placeholder.innerHTML = `<div style="width:100%;text-align:center;padding:12px;color:#737373;font-size:13px">검색 결과 없음</div>`;
+  }
+}
+
+function renderCategoryTabs() {
+  const container = document.getElementById("catTabs");
+  container.innerHTML = "";
+  const cats = dbCategories || CATEGORIES;
+  // "전체" 탭 추가
+  const allBtn = document.createElement("button");
+  allBtn.className = "ing-btn" + (activeCategory === "all" ? " active" : "");
+  allBtn.style.cssText = "font-size:12px;padding:5px 10px";
+  allBtn.innerHTML = `<span>📋</span><span>전체</span>`;
+  allBtn.onclick = () => { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
+  container.appendChild(allBtn);
+  // 나머지 카테고리
+  Object.entries(cats).forEach(([key, c]) => {
+    if (key === 'all') return;
+    const btn = document.createElement("button");
+    btn.className = "ing-btn" + (activeCategory === key ? " active" : "");
+    btn.style.cssText = "font-size:12px;padding:5px 10px";
+    btn.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
+    btn.onclick = () => { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
+    container.appendChild(btn);
+  });
+}
+
+function renderMethods() {
+  const grid = document.getElementById("methodGrid");
+  grid.innerHTML = "";
+  Object.entries(METHODS).forEach(([key, m]) => {
+    const btn = document.createElement("button");
+    btn.className = "method-btn" + (method === key ? " active" : "");
+    btn.innerHTML = `<div class="emoji">${m.emoji}</div><div>${m.label}</div>`;
+    btn.onclick = () => {
+      method = key;
+      document.getElementById("tempSlider").value = Math.round((m.range[0] + m.range[1]) / 2);
+      updateTemp();
+      renderMethods();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function toggleIngredient(name) {
+  if (name in selected) delete selected[name];
+  else selected[name] = DB[name].defaultG || 100;
+  renderIngredients(document.getElementById("searchInput").value);
+  renderSelected();
+  document.getElementById("analyzeBtn").disabled = selCount() === 0;
+}
+
+function updateGrams(name, val) {
+  const g = Math.max(1, Math.min(9999, parseInt(val) || 1));
+  selected[name] = g;
+}
+
+function renderSelected() {
+  const area = document.getElementById("selectedArea");
+  const tags = document.getElementById("selTags");
+  const count = document.getElementById("selCount");
+  if (selCount() === 0) { area.style.display = "none"; return; }
+  area.style.display = "block";
+  const totalG = Object.values(selected).reduce((a,b)=>a+b, 0);
+  count.textContent = `선택됨 ${selCount()}개 · 총 ${totalG}g`;
+  tags.innerHTML = selNames().map(n =>
+    `<div class="gram-row">
+      <span style="font-size:16px">${DB[n].emoji}</span>
+      <span style="flex:1;color:#525252;font-size:13px">${n}</span>
+      <input type="number" class="gram-input" value="${selected[n]}" min="1" max="9999" onchange="updateGrams('${n}',this.value)" onkeyup="updateGrams('${n}',this.value)">
+      <span class="gram-unit">g</span>
+      <span class="x" style="cursor:pointer;opacity:.6;font-size:16px;color:#525252" onclick="toggleIngredient('${n}')">&times;</span>
+    </div>`
+  ).join("");
+}
+
+async function filterIngredients() {
+  const query = document.getElementById("searchInput").value;
+  renderIngredients(query);
+  // 로컬에 결과 부족하면 API 검색
+  if (USE_SUPABASE && query.length >= 1) {
+    await renderIngredientsAPI(query);
+  }
+}
+
+function updateTemp() {
+  const v = document.getElementById("tempSlider").value;
+  const el = document.getElementById("tempVal");
+  el.textContent = v + "°C";
+  el.style.color = v >= 200 ? "#ef4444" : v >= 140 ? "#f97316" : "#4ade80";
+}
+
+function updateTime() {
+  const v = document.getElementById("timeSlider").value;
+  document.getElementById("timeVal").textContent = v + "분";
+}
+
+// ── Analysis Engine (gram-weighted) ──
+function analyze(ingMap, method, temp, time) {
+  const ings = Object.keys(ingMap);
+  const rxns = [], warns = [];
+  const totalG = Object.values(ingMap).reduce((a,b)=>a+b,0) || 1;
+  // 100g당 성분을 실제 투입량으로 환산
+  const totalComp = (key) => ings.reduce((sum,n) => sum + (DB[n]?.comp[key]||0) * (ingMap[n]||0) / 100, 0);
+  const totalProtein = totalComp("protein");
+  const totalFat = totalComp("fat");
+  const totalCarbs = totalComp("carbs");
+
+  const has = fn => ings.some(i => DB[i] && fn(DB[i]));
+  // 양 기반 판단: 실제 투입된 성분의 절대량(g)
+  const hasProt = totalProtein > 3;
+  const hasSugar = totalCarbs > 5 || ings.includes("설탕");
+  const hasAmino = has(d => d.amino.includes("글루탐산") || d.amino.includes("리신"));
+  const hasAcid = has(d => d.compounds.some(c => c.includes("시트르산")));
+  const hasFat = totalFat > 3;
+  const hasStarch = has(d => d.compounds.some(c => c.includes("전분") || c.includes("아밀로")));
+  const hasCap = has(d => d.compounds.some(c => c.includes("캡사이신")));
+  const hasAllicin = has(d => d.compounds.some(c => c.includes("알리신")));
+  // 양이 많을수록 반응 강도 부스트 (기준: 300g)
+  const massBoost = Math.min(1.3, 0.7 + (totalG / 500));
+
+  if (hasAmino && hasSugar && temp >= 140) {
+    const int = Math.min(100, Math.round((((temp-140)/60)*50 + (time/30)*50) * massBoost));
+    rxns.push({name:"마이야르 반응 (Maillard Reaction)",icon:"🔬",intensity:int,
+      desc:`단백질 ${totalProtein.toFixed(1)}g + 탄수화물 ${totalCarbs.toFixed(1)}g이 ${temp}°C에서 반응 → 멜라노이딘 + 수백 가지 풍미 화합물 생성`,
+      effects:["갈색 색상 발현","고소한 풍미 생성","향기 화합물 다양화"],
+      science:"반응 속도 ∝ e^(-Ea/RT), Ea ≈ 100-180 kJ/mol",
+      health:int>70?"과도한 반응은 최종당화산물(AGEs) 생성 → 염증 촉진 가능":"적절한 수준에서 항산화 물질(멜라노이딘) 생성"});
+  }
+  if (hasSugar && temp >= 160) {
+    const int = Math.min(100, Math.round((((temp-160)/40)*60 + (time/20)*40) * massBoost));
+    rxns.push({name:"캐러멜화 (Caramelization)",icon:"🍯",intensity:int,
+      desc:`당류가 ${temp}°C 이상에서 열분해 → 캐러멜 특유의 향과 색 생성`,
+      effects:["호박색 발현","캐러멜 향 생성","복합 풍미"],
+      science:"수크로스 → 글루코스 + 프럭토스 → 탈수/중합 → 캐러멜란",
+      health:"고농도 HMF(하이드록시메틸푸르푸랄)는 유해 가능"});
+  }
+  if (hasProt && temp >= 60) {
+    const int = Math.min(100, Math.round((((temp-60)/80)*70 + (time/30)*30) * massBoost));
+    rxns.push({name:"단백질 변성 (Protein Denaturation)",icon:"🧬",intensity:int,
+      desc:`단백질 ${totalProtein.toFixed(1)}g이 ${temp}°C에서 3차/4차 구조 해체 → 질감·소화율 변화`,
+      effects:["조직 수축·응고","소화율 향상","수분 방출"],
+      science:"미오신 변성: 50°C, 콜라겐→젤라틴: 70°C+, 액틴: 70-80°C",
+      health:"적절한 변성은 소화율↑, 과도한 가열은 영양소↓"});
+  }
+  if (hasStarch && temp >= 60 && ["boil","steam","pan_fry"].includes(method)) {
+    const int = Math.min(100, Math.round(((temp-55)/40)*60 + (time/20)*40));
+    rxns.push({name:"전분 호화 (Starch Gelatinization)",icon:"💧",intensity:int,
+      desc:"전분 과립이 물을 흡수 → 팽윤·호화 → 점성 증가, 소화율 향상",
+      effects:["점성 증가","투명도 변화","소화율 대폭 향상"],
+      science:"수소결합 파괴 → 물 흡수 → 겔화 (60-80°C)",
+      health:"호화 전분은 혈당 반응이 빨라짐 (GI 상승)"});
+  }
+  const vitCIngs = ings.filter(i => DB[i]?.vit?.C && DB[i].vit.C > 10);
+  if (vitCIngs.length > 0 && temp >= 70) {
+    const deg = Math.min(95, Math.round((temp/100)*30 + (time/15)*40));
+    rxns.push({name:"비타민 C 열분해",icon:"💊",intensity:deg,
+      desc:`아스코르브산이 ${temp}°C에서 산화 분해 — 약 ${deg}% 손실 추정`,
+      effects:[`비타민 C ${deg}% 손실`,"항산화 능력 감소","갈변 촉진"],
+      science:"1차 반응 속도론: k = A·e^(-Ea/RT), Ea ≈ 70-100 kJ/mol",
+      health:`원래의 약 ${100-deg}%만 잔존 — 짧은 조리 시간 권장`});
+  }
+  if (hasCap && hasFat) {
+    rxns.push({name:"캡사이신 지용성 추출",icon:"🌶️",intensity:65,
+      desc:"캡사이신(지용성)이 기름에 효율적으로 용해 → 매운맛 극대화",
+      effects:["매운맛 강화","기름에 색소 추출","풍미 분산"],
+      science:"캡사이신 LogP ≈ 3.04, 지용성 용매에서 분배계수↑",
+      health:"대사 촉진, 항염 효과 ↔ 위장 자극 가능"});
+  }
+  if (hasAllicin && temp >= 60) {
+    const p = temp<100?60:temp<150?30:10;
+    rxns.push({name:"알리신 열변환",icon:"🧄",intensity:70,
+      desc:`마늘/양파의 알리신이 ${temp}°C에서 아조엔 등으로 변환`,
+      effects:["매운향 감소","단맛 증가","항산화 화합물 변환"],
+      science:"알리인 → 알리이나제 → 알리신 → 열 → 아조엔",
+      health:`항균·항산화 효과 약 ${p}% 잔존`});
+  }
+  if (hasFat && has(d => d.compounds.some(c => c.includes("레시틴")))) {
+    rxns.push({name:"유화 (Emulsification)",icon:"🔄",intensity:55,
+      desc:"레시틴(계란)이 유화제 역할 → 기름+물 안정적 결합",
+      effects:["크리미한 질감","소스 안정화","풍미 균일 분배"],
+      science:"레시틴의 친수성-소수성 구조 → O/W 에멀전 형성",
+      health:"지방 소화 흡수율↑, 지용성 비타민 흡수에 유리"});
+  }
+  if (hasAcid && hasProt) {
+    rxns.push({name:"산-단백질 응고",icon:"⚗️",intensity:50,
+      desc:"산(시트르산)이 단백질 등전점 유발 → 응고",
+      effects:["단백질 응고","pH 저하","살균 효과"],
+      science:"pH → 등전점(pI ≈ 4.5-5.5) → 순전하=0 → 응집",
+      health:"산 처리된 단백질은 소화율 개선 가능"});
+  }
+  if (ings.includes("토마토") && (hasFat || temp >= 80)) {
+    rxns.push({name:"리코펜 생체이용률↑",icon:"🍅",intensity:hasFat&&temp>=80?85:50,
+      desc:"가열+지방 → 리코펜 생체이용률 최대 5배 증가",
+      effects:["리코펜 추출↑","항산화 극대화","색상 강화"],
+      science:"가열→세포벽 파괴→trans→cis 리코펜(흡수율↑)",
+      health:"강력한 항산화제, 심혈관 보호 효과"});
+  }
+
+  if (temp>=200 && hasSugar && hasAmino) warns.push({type:"주의",msg:`${temp}°C에서 아크릴아마이드 생성 가능`});
+  if (temp>=250) warns.push({type:"경고",msg:"250°C 이상: PAH 및 HCA 생성 위험"});
+  if (method==="deep_fry" && time>15) warns.push({type:"주의",msg:"장시간 튀김은 과산화지질 생성 촉진"});
+  return {rxns, warns};
+}
+
+function calcNutrition(ingMap, method, temp, time) {
+  const ings = Object.keys(ingMap);
+  const n = {};
+  ings.forEach(name => {
+    const d = DB[name]; if (!d) return;
+    const grams = ingMap[name] || 100;
+    const scale = grams / 100;  // DB는 100g 기준
+    Object.entries(d.vit).forEach(([k,v]) => {
+      if (!n[k]) n[k] = {orig:0, cooked:0};
+      n[k].orig += v * scale;
+    });
+  });
+  const ws=["C","B1","B2","B6","B12","folate","niacin"], fs=["A","D","E","K"];
+  const ms=["iron","zinc","calcium","potassium","sodium","manganese","selenium"];
+  Object.keys(n).forEach(k => {
+    let r = 1;
+    if (ws.includes(k)) {
+      if (method==="boil") r=Math.max(.3,1-(time/60)*.6-.15);
+      else if (method==="steam") r=Math.max(.6,1-(time/60)*.3);
+      else if (method==="raw") r=1;
+      else r=Math.max(.4,1-(time/50)*.4);
+      if (k==="C") r*=Math.max(.2,1-((temp-70)/130)*.6);
+    } else if (fs.includes(k)) {
+      r=Math.max(.6,1-(time/60)*.25);
+    } else if (ms.includes(k)) {
+      r=method==="boil"?Math.max(.6,1-(time/60)*.3):Math.max(.85,1-(time/60)*.1);
+    } else { r=Math.max(.7,1-(time/60)*.2); }
+    n[k].cooked = Math.round(n[k].orig*r*100)/100;
+    n[k].ret = Math.round(r*100);
+  });
+  return n;
+}
+
+function predictFlavor(ingMap, method, temp, time) {
+  const ings = Object.keys(ingMap);
+  const b={umami:0,sweet:0,salty:0,sour:0,bitter:0};
+  let totalG = 0;
+  ings.forEach(name => { const d=DB[name]; if(!d) return;
+    const g = ingMap[name] || 100;
+    totalG += g;
+    Object.keys(b).forEach(t => { b[t] += (d.flavor[t]||0) * g; });
+  });
+  // 투입량 가중 평균
+  if (totalG>0) Object.keys(b).forEach(t => { b[t]=Math.round(b[t]/totalG); });
+  if (temp>=140) { b.umami=Math.min(100,b.umami+Math.round((temp-140)/10)); b.sweet=Math.min(100,b.sweet+Math.round((temp-140)/15)); b.bitter=Math.min(100,b.bitter+Math.round(Math.max(0,temp-200)/10)); }
+  if (["grill","stir_fry"].includes(method)) { b.umami=Math.min(100,b.umami+10); }
+  if (["boil","steam"].includes(method)) { b.sweet=Math.min(100,b.sweet+5); }
+  if (time>30) { b.umami=Math.min(100,b.umami+8); b.sweet=Math.min(100,b.sweet+5); }
+  return b;
+}
+
+// ── Render Results ──
+let currentTab = "reactions";
+
+function runAnalysis() {
+  if (!selCount()) return;
+  const temp = +document.getElementById("tempSlider").value;
+  const time = +document.getElementById("timeSlider").value;
+  const {rxns, warns} = analyze(selected, method, temp, time);
+  const nutrition = calcNutrition(selected, method, temp, time);
+  const flavor = predictFlavor(selected, method, temp, time);
+
+  document.getElementById("emptyState").style.display = "none";
+  const res = document.getElementById("results");
+  res.style.display = "block";
+
+  // Destroy old charts
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+
+  let html = '<div class="fade-in">';
+
+  // Warnings
+  warns.forEach(w => {
+    html += `<div class="warning ${w.type==='경고'?'error':'warn'}">⚠️ <span><strong>[${w.type}]</strong> ${w.msg}</span></div>`;
+  });
+
+  // Health analysis
+  // 모든 멤버에 대해 건강 분석 수행
+  const allMembersHealth = {};
+  members.forEach(m => {
+    const hr = analyzeHealth(selected, method, temp, time, m);
+    if (hr.length > 0) allMembersHealth[m.id] = {member: m, results: hr};
+  });
+  const hasHealth = Object.keys(allMembersHealth).length > 0;
+
+  // Tabs
+  html += `<div class="tabs">
+    <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchTab('reactions')">🧪 화학 반응</button>
+    <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchTab('nutrition')">📊 영양소 변화</button>
+    <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchTab('flavor')">🍽️ 맛 프로파일</button>
+    ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchTab('health')">🏥 건강 분석</button>` : ''}
+  </div>`;
+
+  // Reactions tab
+  html += `<div id="tab-reactions" style="display:${currentTab==='reactions'?'block':'none'}">`;
+  if (rxns.length === 0) {
+    html += `<div class="empty-state"><div class="big-icon">🧪</div><p style="color:#737373;margin-top:12px">특별한 화학 반응이 예측되지 않습니다</p><p style="font-size:13px;color:#737373">온도를 높이거나 재료를 추가해보세요</p></div>`;
+  } else {
+    rxns.forEach(r => {
+      const barColor = r.intensity>70 ? "linear-gradient(90deg,#f97316,#ef4444)" : r.intensity>40 ? "linear-gradient(90deg,#eab308,#f97316)" : "linear-gradient(90deg,#22c55e,#eab308)";
+      html += `<div class="rxn-card">
+        <div class="rxn-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="rxn-icon">${r.icon}</span>
+            <span class="rxn-name">${r.name}</span>
+          </div>
+          <div style="text-align:right;min-width:80px">
+            <div style="font-size:11px;color:#737373;margin-bottom:4px">반응 강도</div>
+            <div class="intensity-bar"><div class="intensity-fill" style="width:${r.intensity}%;background:${barColor}"></div></div>
+            <div style="font-size:11px;color:#737373;margin-top:2px">${r.intensity}%</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#737373;line-height:1.6;margin-bottom:12px">${r.desc}</p>
+        <div style="margin-bottom:12px">${r.effects.map(e => `<span class="effect-tag">${e}</span>`).join("")}</div>
+        <div class="science-box"><h4>과학적 메커니즘</h4><p>${r.science}</p></div>
+        <div class="health-box"><h4>건강 영향</h4><p>${r.health}</p></div>
+      </div>`;
+    });
+  }
+  html += "</div>";
+
+  // Nutrition tab
+  html += `<div id="tab-nutrition" style="display:${currentTab==='nutrition'?'block':'none'}">
+    <div class="grid2">
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">영양소 조리 전후 비교</h3>
+        <div class="chart-wrap"><canvas id="nutChart" height="300"></canvas></div>
+      </div>
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">시간별 비타민 잔존율 (%)</h3>
+        <div class="chart-wrap"><canvas id="timeChart" height="300"></canvas></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">상세 영양소 변화</h3>
+      <table>
+        <thead><tr><th>영양소</th><th style="text-align:right">조리 전</th><th style="text-align:right">조리 후</th><th style="text-align:right">잔존율</th><th style="width:35%">시각화</th></tr></thead>
+        <tbody>${Object.entries(nutrition).filter(([,v])=>v.orig>0).map(([k,v]) => {
+          const color = v.ret>=80?"#22c55e":v.ret>=60?"#eab308":"#ef4444";
+          return `<tr><td style="color:#171717">${k}</td><td style="text-align:right;color:#737373">${Math.round(v.orig*10)/10}</td><td style="text-align:right;color:#171717;font-weight:500">${Math.round(v.cooked*10)/10}</td><td style="text-align:right;font-weight:600;color:${color}">${v.ret}%</td><td><div class="ret-bar"><div class="ret-fill" style="width:${v.ret}%;background:${color}"></div></div></td></tr>`;
+        }).join("")}</tbody>
+      </table>
+    </div>
+  </div>`;
+
+  // Flavor tab
+  const flavorColors = {umami:"#6366f1",sweet:"#f97316",salty:"#3b82f6",sour:"#eab308",bitter:"#8b5cf6"};
+  const flavorNames = {umami:"감칠맛",sweet:"단맛",salty:"짠맛",sour:"신맛",bitter:"쓴맛"};
+  const flavorDescs = {umami:"글루탐산, 이노신산에 의한 깊은 맛",sweet:"당류, 마이야르 반응 산물",salty:"나트륨, 미네랄",sour:"유기산(시트르산 등)",bitter:"폴리페놀, 캐러멜화 산물"};
+
+  html += `<div id="tab-flavor" style="display:${currentTab==='flavor'?'block':'none'}">
+    <div class="grid2">
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:#171717">예상 맛 프로파일</h3>
+        <div class="chart-wrap"><canvas id="flavorChart" height="320"></canvas></div>
+      </div>
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">맛 분석 상세</h3>
+        ${Object.entries(flavor).map(([k,v]) => `<div class="flavor-detail">
+          <div class="flavor-label"><span style="font-size:14px;font-weight:600;color:${flavorColors[k]}">${flavorNames[k]}</span><span style="font-size:20px;font-weight:700;color:${flavorColors[k]}">${v}</span></div>
+          <div class="flavor-bar"><div class="flavor-fill" style="width:${v}%;background:${flavorColors[k]}"></div></div>
+          <div class="flavor-desc">${flavorDescs[k]}</div>
+        </div>`).join("")}
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">재료별 핵심 풍미 화합물</h3>
+      <div class="compound-grid">
+        ${selNames().map(n => { const d=DB[n]; if(!d) return ""; return `<div class="compound-card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:22px">${d.emoji}</span><span style="font-weight:600;color:#171717;font-size:14px">${n} (${selected[n]}g)</span></div>
+          <div>${d.compounds.map(c => `<span class="compound-tag">${c}</span>`).join("")}</div>
+        </div>`; }).join("")}
+      </div>
+    </div>
+  </div>`;
+
+  // Health tab
+  if (hasHealth) {
+    html += `<div id="tab-health" style="display:${currentTab==='health'?'block':'none'}">`;
+
+    // 총 성분 요약 (첫 번째 결과에서 composition 사용)
+    const firstResults = Object.values(allMembersHealth)[0];
+    const comp = firstResults.results[0].composition;
+    html += `<div class="card" style="margin-bottom:16px">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#171717">📋 투입 재료 총 성분 요약</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px">
+        ${[
+          {l:'칼로리',v:comp.calories.toFixed(0)+'kcal',c:'#f97316'},
+          {l:'단백질',v:comp.protein.toFixed(1)+'g',c:'#ef4444'},
+          {l:'지방',v:comp.fat.toFixed(1)+'g',c:'#eab308'},
+          {l:'탄수화물',v:comp.carbs.toFixed(1)+'g',c:'#3b82f6'},
+          {l:'식이섬유',v:comp.fiber.toFixed(1)+'g',c:'#22c55e'},
+          {l:'나트륨',v:comp.sodium.toFixed(0)+'mg',c:'#a855f7'},
+          {l:'칼륨',v:comp.potassium.toFixed(0)+'mg',c:'#06b6d4'},
+          {l:'포화지방',v:comp.saturatedFat.toFixed(1)+'g',c:'#f43f5e'},
+        ].map(n => `<div style="background:#fafafa;border-radius:10px;padding:10px;text-align:center;border:1px solid #e5e5e5">
+          <div style="font-size:11px;color:#737373;margin-bottom:4px">${n.l}</div>
+          <div style="font-size:16px;font-weight:700;color:${n.c}">${n.v}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+    // 각 멤버별 분석 결과
+    Object.entries(allMembersHealth).forEach(([memberId, memberData]) => {
+      const member = memberData.member;
+      const healthResults = memberData.results;
+
+      // 멤버 헤더
+      html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;margin-bottom:12px">
+        <div style="font-size:14px;font-weight:600;color:#047857">👤 ${member.name}${member.age ? ' (' + member.age + '세)' : ''}</div>
+      </div>`;
+
+      healthResults.forEach(hr => {
+        // 종합 점수
+        const scoreColor = hr.score >= 70 ? '#22c55e' : hr.score >= 40 ? '#eab308' : '#ef4444';
+        const scoreBg = hr.score >= 70 ? 'rgba(34,197,94,.1)' : hr.score >= 40 ? 'rgba(234,179,8,.1)' : 'rgba(239,68,68,.1)';
+        const scoreLabel = hr.score >= 70 ? '양호' : hr.score >= 40 ? '주의 필요' : '위험';
+
+        // SVG circular progress
+        const circumference = 2 * Math.PI * 34;
+        const dashoffset = circumference - (hr.score / 100) * circumference;
+        const svgHtml = `<svg width="80" height="80" style="transform:rotate(-90deg);margin:0 auto">
+          <circle cx="40" cy="40" r="34" fill="#fafafa" stroke="#e5e5e5" stroke-width="2"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="${scoreColor}" stroke-width="2.5" stroke-dasharray="${circumference}" stroke-dashoffset="${dashoffset}" style="transition:stroke-dashoffset 0.8s ease"/>
+          <text x="40" y="45" text-anchor="middle" font-size="22" font-weight="700" fill="${scoreColor}" style="pointer-events:none">${hr.score}</text>
+        </svg>`;
+
+        html += `<div class="health-score" style="background:${scoreBg};border:1px solid ${scoreColor}30">
+          <div class="score-circle" style="position:relative;background:#fafafa;border:none;display:flex;align-items:center;justify-content:center">${svgHtml}</div>
+          <div>
+            <div style="font-size:16px;font-weight:700;color:${scoreColor}">${hr.emoji} ${hr.label} 적합도: ${scoreLabel}</div>
+            <div style="font-size:12px;color:#525252;margin-top:2px">${hr.desc} · ${hr.findings.length}개 항목 분석됨</div>
+          </div>
+        </div>`;
+
+        // 개별 findings
+        if (hr.findings.length === 0) {
+          html += `<div class="card" style="margin-bottom:12px;text-align:center;color:#737373;padding:30px">
+            <p>현재 재료 조합에서 ${hr.label} 관련 특이사항이 없습니다.</p>
+          </div>`;
+        } else {
+          hr.findings.forEach(f => {
+            const sevClass = f.severity;
+            const sevLabel = {danger:'위험',caution:'주의',good:'긍정',info:'참고'}[f.severity];
+            const sevIcon = {danger:'🚫',caution:'⚠️',good:'✅',info:'ℹ️'}[f.severity];
+            html += `<div class="health-card ${sevClass}">
+              <div style="display:flex;align-items:center;margin-bottom:6px">
+                <span class="health-severity sev-${sevClass}">${sevIcon} ${sevLabel}</span>
+                <span style="font-size:14px;font-weight:600;color:#171717">${f.title}</span>
+              </div>
+              <div class="health-detail">${f.detail}</div>
+              ${f.tip ? `<div class="health-tip">💡 <strong>개선 팁:</strong> ${f.tip}</div>` : ''}
+            </div>`;
+          });
+        }
+      });
+    });
+
+    html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;font-size:12px;color:#047857">
+      ⚕️ 이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며, 개인의 건강 상태에 따라 다를 수 있습니다. 구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.
+    </div>`;
+    html += "</div>";
+  }
+
+  html += "</div>";
+  res.innerHTML = html;
+
+  // Draw Charts
+  setTimeout(() => {
+    // Nutrition Bar Chart
+    const nutEntries = Object.entries(nutrition).filter(([,v])=>v.orig>0).slice(0,8);
+    if (nutEntries.length > 0) {
+      const ctx1 = document.getElementById("nutChart");
+      if (ctx1) {
+        charts.nut = new Chart(ctx1, {
+          type: "bar",
+          data: {
+            labels: nutEntries.map(([k])=>k),
+            datasets: [
+              {label:"조리 전", data:nutEntries.map(([,v])=>Math.round(v.orig*10)/10), backgroundColor:"#a3a3a3", borderRadius:4},
+              {label:"조리 후", data:nutEntries.map(([,v])=>Math.round(v.cooked*10)/10), backgroundColor:"#059669", borderRadius:4},
+            ]
+          },
+          options: {responsive:true, plugins:{legend:{labels:{color:"#525252"}}}, scales:{x:{ticks:{color:"#525252"},grid:{color:"#e5e5e5"}},y:{ticks:{color:"#525252"},grid:{color:"#e5e5e5"}}}}
+        });
+      }
+    }
+
+    // Time Series Line Chart
+    const hasVitC = nutrition.C && nutrition.C.orig > 0;
+    const hasVitB6 = nutrition.B6 && nutrition.B6.orig > 0;
+    if (hasVitC || hasVitB6) {
+      const times = [0,5,10,15,20,30,45,60];
+      const datasets = [];
+      if (hasVitC) {
+        datasets.push({label:"비타민C 잔존율(%)", data:times.map(t => calcNutrition(selected,method,temp,t).C?.ret??100), borderColor:"#f97316", backgroundColor:"rgba(249,115,22,.1)", tension:.3, fill:true});
+      }
+      if (hasVitB6) {
+        datasets.push({label:"비타민B6 잔존율(%)", data:times.map(t => calcNutrition(selected,method,temp,t).B6?.ret??100), borderColor:"#22c55e", backgroundColor:"rgba(34,197,94,.1)", tension:.3, fill:true});
+      }
+      const ctx2 = document.getElementById("timeChart");
+      if (ctx2) {
+        charts.time = new Chart(ctx2, {
+          type:"line",
+          data:{labels:times.map(t=>t+"분"), datasets},
+          options:{responsive:true, plugins:{legend:{labels:{color:"#525252"}}}, scales:{x:{ticks:{color:"#525252"},grid:{color:"#e5e5e5"}},y:{min:0,max:100,ticks:{color:"#525252"},grid:{color:"#e5e5e5"}}}}
+        });
+      }
+    }
+
+    // Radar Chart
+    const ctx3 = document.getElementById("flavorChart");
+    if (ctx3) {
+      charts.flavor = new Chart(ctx3, {
+        type: "radar",
+        data: {
+          labels: Object.keys(flavor).map(k => flavorNames[k]),
+          datasets: [{
+            label: "맛 강도",
+            data: Object.values(flavor),
+            backgroundColor: "rgba(5,150,105,.12)",
+            borderColor: "#059669",
+            borderWidth: 2,
+            pointBackgroundColor: "#059669",
+            pointBorderColor: "#fff",
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: {
+              beginAtZero: true, max: 100,
+              grid: {color:"#e5e5e5"},
+              angleLines: {color:"#e5e5e5"},
+              pointLabels: {color:"#525252", font:{size:13}},
+              ticks: {color:"#737373", backdropColor:"transparent", stepSize:25}
+            }
+          },
+          plugins: {legend:{labels:{color:"#525252"}}}
+        }
+      });
+    }
+  }, 50);
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  ["reactions","nutrition","flavor","health"].forEach(t => {
+    const el = document.getElementById("tab-" + t);
+    if (el) el.style.display = t === tab ? "block" : "none";
+  });
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    const t = btn.textContent.includes('화학') ? 'reactions' : btn.textContent.includes('영양') ? 'nutrition' : btn.textContent.includes('맛') ? 'flavor' : 'health';
+    btn.className = "tab-btn" + (t === tab ? " active" : "");
+  });
+}
+
+// Boot
+init();
+</script>
+</body>
+</html>
