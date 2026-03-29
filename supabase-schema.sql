@@ -95,7 +95,7 @@ CREATE TABLE public.subscriptions (
   payment_provider TEXT, -- 'stripe', 'toss', 'paddle' 등
   payment_id TEXT,       -- 외부 결제 시스템 ID
   amount INTEGER DEFAULT 0,
-  currency TEXT DEFAULT 'KRW',
+  currency TEXT DEFAULT 'USD',  -- 글로벌 기준 USD, 실제 결제 시 현지 통화로 변환
   interval TEXT DEFAULT 'monthly' CHECK (interval IN ('monthly', 'yearly')),
   metadata JSONB DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -137,32 +137,34 @@ CREATE POLICY "Admin can manage all subscriptions"
 
 -- ══════════════════════════════════════════════════════════════
 -- 3. CATEGORIES (식재료 카테고리)
+-- i18n: label은 기본 표시명(현재 ko), translations JSONB로 다국어 지원
+-- translations 구조: {"en": "Meat", "ja": "肉類", "zh": "肉类", ...}
 -- ══════════════════════════════════════════════════════════════
 CREATE TABLE public.categories (
   id TEXT PRIMARY KEY,
-  label TEXT NOT NULL,
-  label_en TEXT,
+  label TEXT NOT NULL,                    -- 기본 표시명 (현재 ko, 추후 locale 기반 동적 변경)
+  translations JSONB DEFAULT '{}',        -- 다국어: {"en": "Meat", "ja": "肉類"}
   emoji TEXT,
   sort_order INTEGER DEFAULT 0,
   is_active BOOLEAN DEFAULT true
 );
 
-INSERT INTO public.categories (id, label, label_en, emoji, sort_order) VALUES
-  ('meat', '육류', 'Meat', '🥩', 1),
-  ('seafood', '해산물', 'Seafood', '🐟', 2),
-  ('veg', '채소', 'Vegetables', '🥬', 3),
-  ('fruit', '과일', 'Fruits', '🍎', 4),
-  ('dairy', '유제품', 'Dairy', '🧀', 5),
-  ('grain', '곡물', 'Grains', '🌾', 6),
-  ('egg', '계란류', 'Eggs', '🥚', 7),
-  ('oil', '오일', 'Oils', '🫒', 8),
-  ('sauce', '소스/양념', 'Sauces', '🧂', 9),
-  ('nut', '견과류', 'Nuts', '🥜', 10),
-  ('legume', '콩류', 'Legumes', '🫘', 11),
-  ('mushroom', '버섯', 'Mushrooms', '🍄', 12),
-  ('herb', '허브/향신료', 'Herbs & Spices', '🌿', 13),
-  ('processed', '가공식품', 'Processed', '🥫', 14),
-  ('beverage', '음료', 'Beverages', '🥤', 15);
+INSERT INTO public.categories (id, label, translations, emoji, sort_order) VALUES
+  ('meat',      '육류',       '{"en":"Meat","ja":"肉類","zh":"肉类","es":"Carnes","fr":"Viandes"}',              '🥩', 1),
+  ('seafood',   '해산물',     '{"en":"Seafood","ja":"魚介類","zh":"海鲜","es":"Mariscos","fr":"Fruits de mer"}', '🐟', 2),
+  ('veg',       '채소',       '{"en":"Vegetables","ja":"野菜","zh":"蔬菜","es":"Verduras","fr":"Légumes"}',      '🥬', 3),
+  ('fruit',     '과일',       '{"en":"Fruits","ja":"果物","zh":"水果","es":"Frutas","fr":"Fruits"}',             '🍎', 4),
+  ('dairy',     '유제품',     '{"en":"Dairy","ja":"乳製品","zh":"乳制品","es":"Lácteos","fr":"Produits laitiers"}','🧀', 5),
+  ('grain',     '곡물',       '{"en":"Grains","ja":"穀物","zh":"谷物","es":"Cereales","fr":"Céréales"}',        '🌾', 6),
+  ('egg',       '계란류',     '{"en":"Eggs","ja":"卵","zh":"蛋类","es":"Huevos","fr":"Œufs"}',                  '🥚', 7),
+  ('oil',       '오일',       '{"en":"Oils & Fats","ja":"油脂","zh":"油脂","es":"Aceites","fr":"Huiles"}',      '🫒', 8),
+  ('sauce',     '소스/양념',  '{"en":"Sauces & Seasonings","ja":"調味料","zh":"调味料","es":"Salsas","fr":"Sauces"}','🧂', 9),
+  ('nut',       '견과류',     '{"en":"Nuts & Seeds","ja":"ナッツ","zh":"坚果","es":"Nueces","fr":"Noix"}',      '🥜', 10),
+  ('legume',    '콩류',       '{"en":"Legumes","ja":"豆類","zh":"豆类","es":"Legumbres","fr":"Légumineuses"}',  '🫘', 11),
+  ('mushroom',  '버섯',       '{"en":"Mushrooms","ja":"きのこ","zh":"菌菇","es":"Hongos","fr":"Champignons"}',  '🍄', 12),
+  ('herb',      '허브/향신료','{"en":"Herbs & Spices","ja":"ハーブ・スパイス","zh":"香草香料","es":"Hierbas","fr":"Épices"}','🌿', 13),
+  ('processed', '가공식품',   '{"en":"Processed Foods","ja":"加工食品","zh":"加工食品","es":"Procesados","fr":"Transformés"}','🥫', 14),
+  ('beverage',  '음료',       '{"en":"Beverages","ja":"飲料","zh":"饮料","es":"Bebidas","fr":"Boissons"}',      '🥤', 15);
 
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 
@@ -178,11 +180,13 @@ CREATE POLICY "Admin can manage categories"
 
 -- ══════════════════════════════════════════════════════════════
 -- 4. INGREDIENTS (식재료 데이터베이스)
+-- i18n: name은 기본 표시명(현재 ko), translations JSONB로 다국어 지원
+-- translations 구조: {"en": "Chicken Breast", "ja": "鶏胸肉", "zh": "鸡胸肉"}
 -- ══════════════════════════════════════════════════════════════
 CREATE TABLE public.ingredients (
   id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  name_en TEXT,
+  name TEXT NOT NULL,              -- 기본 표시명 (현재 ko)
+  translations JSONB DEFAULT '{}', -- 다국어: {"en": "Chicken Breast", "ja": "鶏胸肉"}
   cat TEXT REFERENCES public.categories(id) NOT NULL,
   emoji TEXT,
   default_g NUMERIC DEFAULT 100,
@@ -235,7 +239,7 @@ CREATE TABLE public.ingredients (
 
 -- 검색 성능을 위한 인덱스
 CREATE INDEX idx_ingredients_name ON public.ingredients USING gin(name gin_trgm_ops);
-CREATE INDEX idx_ingredients_name_en ON public.ingredients USING gin(name_en gin_trgm_ops);
+CREATE INDEX idx_ingredients_translations ON public.ingredients USING gin(translations); -- 다국어 검색
 CREATE INDEX idx_ingredients_cat ON public.ingredients(cat);
 CREATE INDEX idx_ingredients_active ON public.ingredients(is_active) WHERE is_active = true;
 
@@ -260,21 +264,21 @@ CREATE POLICY "Admin can manage ingredients"
 
 -- ══════════════════════════════════════════════════════════════
 -- 5. REACTIONS (과학적 반응 데이터베이스)
+-- i18n: name/description/pro_detail은 기본 표시(현재 ko)
+-- translations 구조: {"en": {"name": "...", "description": "...", "pro_detail": "..."}, "ja": {...}}
 -- ══════════════════════════════════════════════════════════════
 CREATE TABLE public.reactions (
   id SERIAL PRIMARY KEY,
   key TEXT NOT NULL UNIQUE,
-  name TEXT NOT NULL,
-  name_en TEXT,
+  name TEXT NOT NULL,          -- 기본 표시명 (현재 ko)
   icon TEXT,
   category TEXT CHECK (category IN ('chemical', 'physical', 'biological', 'thermal')),
-  description TEXT,
-  description_en TEXT,
-  formula TEXT,                -- 화학식 또는 수학 모델
+  description TEXT,            -- 기본 설명 (현재 ko)
+  formula TEXT,                -- 화학식 또는 수학 모델 (언어 무관)
   mechanism TEXT,              -- 반응 메커니즘 설명
   confidence INTEGER DEFAULT 80 CHECK (confidence BETWEEN 0 AND 100),
-  pro_detail TEXT,             -- 프로 모드 상세 정보
-  pro_detail_en TEXT,
+  pro_detail TEXT,             -- 프로 모드 상세 정보 (현재 ko)
+  translations JSONB DEFAULT '{}', -- 다국어: {"en": {"name": "Maillard Reaction", "description": "...", "pro_detail": "..."}, "ja": {...}}
   -- 반응 조건
   temp_min NUMERIC,
   temp_max NUMERIC,
@@ -312,36 +316,52 @@ CREATE POLICY "Admin can manage reactions"
   );
 
 -- 기본 반응 데이터 삽입
-INSERT INTO public.reactions (key, name, name_en, icon, category, confidence, formula, trigger_methods, refs) VALUES
-  ('maillard', '마이야르 반응', 'Maillard Reaction', '🟫', 'chemical', 92,
+INSERT INTO public.reactions (key, name, translations, icon, category, confidence, formula, trigger_methods, refs) VALUES
+  ('maillard', '마이야르 반응',
+   '{"en":{"name":"Maillard Reaction","description":"Amino acids + reducing sugars react above 140°C → melanoidins + hundreds of flavor compounds","pro_detail":"Rate constant k = A·exp(-Ea/RT). Activation energy Ea ≈ 40–160 kJ/mol depending on amino acid type."},"ja":{"name":"メイラード反応"},"zh":{"name":"美拉德反应"},"es":{"name":"Reacción de Maillard"},"fr":{"name":"Réaction de Maillard"}}',
+   '🟫', 'chemical', 92,
    'k = A·exp(-Ea/RT), Ea≈40-160 kJ/mol',
    '["pan_fry","grill","oven","air_fry"]',
    '[{"authors":"Hodge, J.E.","year":1953,"title":"Chemistry of Browning Reactions in Model Systems","journal":"J. Agric. Food Chem.","doi":"10.1021/jf60140a600"}]'),
-  ('caramelization', '캐러멜화', 'Caramelization', '🍯', 'chemical', 88,
+  ('caramelization', '캐러멜화',
+   '{"en":{"name":"Caramelization","description":"Sugars decompose above 160°C → caramel aroma and brown color"},"ja":{"name":"カラメル化"},"zh":{"name":"焦糖化"},"es":{"name":"Caramelización"},"fr":{"name":"Caramélisation"}}',
+   '🍯', 'chemical', 88,
    'Sucrose → Glucose + Fructose → HMF → 색소',
    '["pan_fry","grill","oven"]',
    '[{"authors":"Kroh, L.W.","year":1994,"title":"Caramelisation in food and beverages","journal":"Food Chemistry","doi":"10.1016/0308-8146(94)90188-0"}]'),
-  ('protein_denaturation', '단백질 변성', 'Protein Denaturation', '🔬', 'physical', 90,
+  ('protein_denaturation', '단백질 변성',
+   '{"en":{"name":"Protein Denaturation","description":"Heat unfolds protein 3D/4D structure → texture and digestibility changes"},"ja":{"name":"タンパク質変性"},"zh":{"name":"蛋白质变性"},"es":{"name":"Desnaturalización proteica"},"fr":{"name":"Dénaturation des protéines"}}',
+   '🔬', 'physical', 90,
    'ΔG = ΔH - TΔS',
    '["pan_fry","grill","oven","boil","steam","sous_vide","air_fry"]',
    '[{"authors":"Tornberg, E.","year":2005,"title":"Effects of heat on meat proteins","journal":"Meat Science","doi":"10.1016/j.meatsci.2004.11.021"}]'),
-  ('starch_gelatin', '전분 호화', 'Starch Gelatinization', '🫧', 'physical', 90,
+  ('starch_gelatin', '전분 호화',
+   '{"en":{"name":"Starch Gelatinization","description":"Starch granules absorb water and swell with heat → gel formation"},"ja":{"name":"デンプンの糊化"},"zh":{"name":"淀粉糊化"},"es":{"name":"Gelatinización del almidón"},"fr":{"name":"Gélatinisation de l''amidon"}}',
+   '🫧', 'physical', 90,
    'Starch + H₂O + Heat → Gel',
    '["boil","steam","oven","microwave"]',
    '[{"authors":"Donovan, J.W.","year":1979,"title":"Phase transitions of the starch–water system","journal":"Biopolymers","doi":"10.1002/bip.1979.360180204"}]'),
-  ('vitamin_c_loss', '비타민C 손실', 'Vitamin C Degradation', '🍋', 'chemical', 85,
+  ('vitamin_c_loss', '비타민C 손실',
+   '{"en":{"name":"Vitamin C Degradation","description":"Ascorbic acid oxidizes rapidly under heat and oxygen exposure"},"ja":{"name":"ビタミンC損失"},"zh":{"name":"维生素C流失"},"es":{"name":"Degradación de vitamina C"},"fr":{"name":"Dégradation de la vitamine C"}}',
+   '🍋', 'chemical', 85,
    'C₆H₈O₆ → C₆H₆O₆ + H₂ (산화)',
    '["boil","pan_fry","grill","oven","microwave","air_fry"]',
    '[{"authors":"Lee, S.K. & Kader, A.A.","year":2000,"title":"Preharvest and postharvest factors influencing vitamin C content","journal":"Postharvest Biol. Technol."}]'),
-  ('lipid_oxidation', '지질 산화', 'Lipid Oxidation', '💨', 'chemical', 87,
+  ('lipid_oxidation', '지질 산화',
+   '{"en":{"name":"Lipid Oxidation","description":"Unsaturated fatty acids react with oxygen → rancidity and harmful compounds"},"ja":{"name":"脂質酸化"},"zh":{"name":"脂质氧化"},"es":{"name":"Oxidación lipídica"},"fr":{"name":"Oxydation lipidique"}}',
+   '💨', 'chemical', 87,
    'RH → R• + H• → ROO• → ROOH',
    '["pan_fry","grill","deep_fry","air_fry"]',
    '[{"authors":"Frankel, E.N.","year":1980,"title":"Lipid oxidation","journal":"Progress in Lipid Research","doi":"10.1016/0163-7827(80)90006-5"}]'),
-  ('acrylamide', '아크릴아마이드 생성', 'Acrylamide Formation', '⚠️', 'chemical', 88,
+  ('acrylamide', '아크릴아마이드 생성',
+   '{"en":{"name":"Acrylamide Formation","description":"Asparagine + reducing sugars react above 120°C → potential carcinogen"},"ja":{"name":"アクリルアミド生成"},"zh":{"name":"丙烯酰胺生成"},"es":{"name":"Formación de acrilamida"},"fr":{"name":"Formation d''acrylamide"}}',
+   '⚠️', 'chemical', 88,
    'Asparagine + Reducing Sugar → Acrylamide (>120°C)',
    '["pan_fry","grill","deep_fry","oven","air_fry"]',
    '[{"authors":"Mottram, D.S. et al.","year":2002,"title":"Acrylamide is formed in the Maillard reaction","journal":"Nature","doi":"10.1038/419448a"}]'),
-  ('nutrient_retention', '영양소 보존', 'Nutrient Retention', '🛡️', 'physical', 86,
+  ('nutrient_retention', '영양소 보존',
+   '{"en":{"name":"Nutrient Retention","description":"Gentle cooking methods preserve vitamins and minerals more effectively"},"ja":{"name":"栄養素保持"},"zh":{"name":"营养素保留"},"es":{"name":"Retención de nutrientes"},"fr":{"name":"Rétention des nutriments"}}',
+   '🛡️', 'physical', 86,
    'Retention% = f(method, time, temp, water)',
    '["steam","sous_vide","microwave","boil","raw"]',
    '[{"authors":"USDA Table of Nutrient Retention Factors","year":2007,"title":"Nutrient Retention Factors, Release 6","journal":"USDA"}]');
