@@ -56,19 +56,28 @@ function toRow(name, d) {
   };
 }
 
-// ── 3. Claude Haiku로 미네랄 데이터 보완 (배치 20개) ─────────────────────────
-async function fillMinerals(nameList) {
-  const prompt = `For each food ingredient, provide mineral values per 100g using USDA FoodData Central.
-Return ONLY valid JSON (no markdown):
+// ── 3. Claude Sonnet으로 정밀 성분 분석 (배치 20개) ──────────────────────────
+async function analyzeNutrition(nameList) {
+  const prompt = `You are a food science expert using USDA FoodData Central and peer-reviewed nutritional databases.
+For each food ingredient below, provide accurate nutritional data per 100g.
+Return ONLY valid JSON (no markdown, no explanation):
 {
-  "ingredient_name": {"sodium": <mg>, "potassium": <mg>, "calcium": <mg>, "iron": <mg>}
+  "ingredient_name": {
+    "sodium": <mg/100g>, "potassium": <mg/100g>, "calcium": <mg/100g>, "iron": <mg/100g>,
+    "vit_c": <mg/100g or null>, "vit_a": <mcg RAE/100g or null>, "vit_b12": <mcg/100g or null>,
+    "flavor_umami": <0-100>, "flavor_sweet": <0-100>, "flavor_salty": <0-100>,
+    "flavor_sour": <0-100>, "flavor_bitter": <0-100>,
+    "compounds": ["key bioactive compound1", "compound2"],
+    "amino_acids": ["dominant amino acid1", "amino2"]
+  }
 }
+Be precise. Use real USDA values. For Korean ingredients not in USDA, use Korean National Food Composition Database values.
 Ingredients: ${JSON.stringify(nameList)}`;
 
   const res  = await fetch('https://api.anthropic.com/v1/messages', {
     method:  'POST',
     headers: { 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body:    JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] }),
+    body:    JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
   });
   const text  = (await res.json()).content?.[0]?.text || '';
   const match = text.match(/\{[\s\S]*\}/);
@@ -99,30 +108,37 @@ async function main() {
   // 행 변환
   const rows = entries.map(([name, d]) => toRow(name, d));
 
-  // 미네랄 누락 항목 파악
-  const needsMinerals = rows.filter(r => r.sodium == null || r.potassium == null || r.calcium == null || r.iron == null);
-  console.log(`🔬 미네랄 보완 필요: ${needsMinerals.length}개`);
+  // 전체 재분석 (Sonnet으로 정밀 데이터)
+  console.log(`🔬 Claude Sonnet으로 전체 성분 정밀 분석 중...`);
+  const BATCH = 20;
+  for (let i = 0; i < rows.length; i += BATCH) {
+    const batch = rows.slice(i, i + BATCH);
+    const total = Math.ceil(rows.length / BATCH);
+    process.stdout.write(`  [${Math.floor(i/BATCH)+1}/${total}] ${batch.map(r=>r.name).slice(0,3).join(', ')}... `);
 
-  // 배치 20개씩 Claude 호출
-  const MINERAL_BATCH = 20;
-  for (let i = 0; i < needsMinerals.length; i += MINERAL_BATCH) {
-    const batch = needsMinerals.slice(i, i + MINERAL_BATCH);
-    const total = Math.ceil(needsMinerals.length / MINERAL_BATCH);
-    process.stdout.write(`  [${Math.floor(i/MINERAL_BATCH)+1}/${total}] ${batch.map(r=>r.name).slice(0,3).join(', ')}... `);
-
-    const minerals = await fillMinerals(batch.map(r => r.name));
+    const data = await analyzeNutrition(batch.map(r => r.name));
 
     for (const row of batch) {
-      const m = minerals[row.name];
-      if (m) {
-        row.sodium    ??= m.sodium;
-        row.potassium ??= m.potassium;
-        row.calcium   ??= m.calcium;
-        row.iron      ??= m.iron;
+      const d = data[row.name];
+      if (d) {
+        row.sodium        = d.sodium        ?? row.sodium;
+        row.potassium     = d.potassium     ?? row.potassium;
+        row.calcium       = d.calcium       ?? row.calcium;
+        row.iron          = d.iron          ?? row.iron;
+        row.vit_c         = d.vit_c         ?? row.vit_c;
+        row.vit_a         = d.vit_a         ?? row.vit_a;
+        row.vit_b12       = d.vit_b12       ?? row.vit_b12;
+        row.flavor_umami  = d.flavor_umami  ?? row.flavor_umami;
+        row.flavor_sweet  = d.flavor_sweet  ?? row.flavor_sweet;
+        row.flavor_salty  = d.flavor_salty  ?? row.flavor_salty;
+        row.flavor_sour   = d.flavor_sour   ?? row.flavor_sour;
+        row.flavor_bitter = d.flavor_bitter ?? row.flavor_bitter;
+        if (d.compounds?.length)   row.compounds   = d.compounds;
+        if (d.amino_acids?.length) row.amino_acids = d.amino_acids;
       }
     }
     console.log('✓');
-    if (i + MINERAL_BATCH < needsMinerals.length) await new Promise(r => setTimeout(r, 300));
+    if (i + BATCH < rows.length) await new Promise(r => setTimeout(r, 200));
   }
 
   // Supabase upsert (50개씩)
