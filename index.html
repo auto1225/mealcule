@@ -3742,7 +3742,8 @@ async function addIngredientWithAI(name) {
 
   try {
     const res = await fetch(`/api/add-ingredient?name=${encodeURIComponent(name)}`);
-    const data = await res.json();
+    let data;
+    try { data = await res.json(); } catch { throw new Error('서버 응답 오류 — 잠시 후 다시 시도해주세요'); }
 
     if (!res.ok || !data.ingredient) {
       grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px">❌ 분석 실패: ${data.error || '다시 시도해주세요'}</div>`;
