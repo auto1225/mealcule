@@ -3612,8 +3612,11 @@ async function renderIngredientsAPI(filter) {
 
     renderIngredientsFromData(newItems, grid);
   } else {
-    const placeholder = grid.querySelector('div[style*="text-align:center"]');
-    if (placeholder) placeholder.innerHTML = `<div style="width:100%;text-align:center;padding:12px;color:#737373;font-size:13px">검색 결과 없음</div>`;
+    // 로컬 + Supabase 모두 결과 없음 → AI 추가 버튼 표시
+    const hasLocalResults = grid.querySelectorAll('.ing-cell').length > 0;
+    if (!hasLocalResults && filter && filter.length >= 1) {
+      showAIAddButton(filter);
+    }
   }
 }
 
@@ -3708,10 +3711,81 @@ function clearAllIngredients() {
 async function filterIngredients() {
   const query = document.getElementById("searchInput").value;
   renderIngredients(query);
-  // 로컬에 결과 부족하면 API 검색
   if (!!sbClient && query.length >= 1) {
     await renderIngredientsAPI(query);
+  } else if (!sbClient && query.length >= 2) {
+    // 오프라인 + 로컬 결과 없을 때도 AI 버튼 표시
+    const grid = document.getElementById("ingGrid");
+    if (grid.querySelectorAll('.ing-cell').length === 0) showAIAddButton(query);
   }
+}
+
+// ── AI 재료 자동 추가 ─────────────────────────────────────────────────────────
+function showAIAddButton(query) {
+  const grid = document.getElementById("ingGrid");
+  const safe = query.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  grid.innerHTML = `
+    <div style="text-align:center;padding:24px 16px">
+      <div style="color:#737373;font-size:13px;margin-bottom:14px">'${safe}' 검색 결과 없음</div>
+      <button id="aiAddBtn" onclick="addIngredientWithAI('${query.replace(/'/g,"\\'")}')"
+        style="background:#10b981;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;font-weight:600">
+        🤖 AI로 '${safe}' 추가하기
+      </button>
+      <div style="color:#a3a3a3;font-size:11px;margin-top:8px">AI가 영양 데이터를 분석해 DB에 저장합니다</div>
+    </div>`;
+}
+
+async function addIngredientWithAI(name) {
+  const grid = document.getElementById("ingGrid");
+  const safe = name.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  grid.innerHTML = `<div style="text-align:center;padding:24px;color:#737373;font-size:13px">⏳ AI가 '${safe}' 분석 중...</div>`;
+
+  try {
+    const res = await fetch(`/api/add-ingredient?name=${encodeURIComponent(name)}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.ingredient) {
+      grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px">❌ 분석 실패: ${data.error || '다시 시도해주세요'}</div>`;
+      return;
+    }
+
+    const ing = data.ingredient;
+    // 로컬 DB에 추가
+    DB[ing.name] = {
+      cat: ing.cat || 'processed',
+      emoji: ing.emoji || '🍽️',
+      defaultG: ing.default_g || 100,
+      comp: { protein: ing.protein||0, fat: ing.fat||0, carbs: ing.carbs||0, water: ing.water||0, fiber: ing.fiber||0 },
+      amino: Array.isArray(ing.amino_acids) ? ing.amino_acids : [],
+      vit: { sodium: ing.sodium, potassium: ing.potassium, calcium: ing.calcium, iron: ing.iron, C: ing.vit_c, A: ing.vit_a, B12: ing.vit_b12 },
+      compounds: Array.isArray(ing.compounds) ? ing.compounds : [],
+      flavor: { umami: ing.flavor_umami||0, sweet: ing.flavor_sweet||0, salty: ing.flavor_salty||0, sour: ing.flavor_sour||0, bitter: ing.flavor_bitter||0 },
+      _fromAPI: true,
+    };
+
+    // 검색 재실행으로 결과 표시
+    document.getElementById("searchInput").value = ing.name;
+    renderIngredients(ing.name);
+
+    const isNew = data.source === 'ai_generated';
+    showToast(isNew ? `✨ '${ing.name}' AI 추가 완료! 모든 사용자가 이용할 수 있습니다.` : `'${ing.name}' DB에서 불러왔습니다.`);
+  } catch (e) {
+    grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px">❌ 오류: ${e.message}</div>`;
+  }
+}
+
+function showToast(msg) {
+  let toast = document.getElementById('globalToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'globalToast';
+    toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;max-width:90vw;text-align:center;pointer-events:none';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3500);
 }
 
 function updateTemp() {
