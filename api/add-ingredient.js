@@ -1,11 +1,12 @@
-// Vercel Serverless Function — POST /api/add-ingredient
-// 검색 결과 없는 재료를 Claude AI로 분석해 Supabase에 자동 추가
+// Vercel Serverless Function — GET /api/add-ingredient?name=XXX
+// anon 키 + SECURITY DEFINER RPC 함수로 service_role 키 불필요
+// 필요 env var: ANTHROPIC_API_KEY
 
 const SUPABASE_URL = 'https://ojtgkvtzmedsbhqkbhwe.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_6c8GjizbhYKUBzQywsoUhA_3KYN25-2';
 const CATEGORY_KEYS = ['meat','seafood','veg','fruit','grain','dairy','egg','nut','mushroom','legume','herb','sauce','oil','beverage','processed'];
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,16 +17,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '유효하지 않은 재료명' });
   }
 
-  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-  const ANTHROPIC_API_KEY    = process.env.ANTHROPIC_API_KEY;
-
-  if (!SUPABASE_SERVICE_KEY || !ANTHROPIC_API_KEY) {
-    return res.status(500).json({ error: '서버 설정 오류 (env vars missing)' });
+  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+  if (!ANTHROPIC_API_KEY) {
+    return res.status(500).json({ error: '서버 설정 오류 (ANTHROPIC_API_KEY missing)' });
   }
 
   const sbHeaders = {
-    apikey: SUPABASE_SERVICE_KEY,
-    Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
     'Content-Type': 'application/json',
   };
 
@@ -40,36 +39,23 @@ export default async function handler(req, res) {
   }
 
   // ── 2. Claude Haiku로 영양 데이터 생성 ───────────────────────────────────
-  const prompt = `You are a food science database assistant. Generate accurate nutritional data for the food ingredient: "${name}"
+  const prompt = `You are a food science database. Generate accurate nutritional data for: "${name}"
 
-Return ONLY a JSON object (no markdown, no explanation) with these exact fields:
+Return ONLY valid JSON (no markdown, no explanation):
 {
   "name": "${name}",
-  "cat": "<one of: meat|seafood|veg|fruit|grain|dairy|egg|nut|mushroom|legume|herb|sauce|oil|beverage|processed>",
-  "emoji": "<single most relevant emoji>",
-  "default_g": <typical serving size in grams, integer>,
-  "protein": <g per 100g, number>,
-  "fat": <g per 100g, number>,
-  "carbs": <g per 100g, number>,
-  "water": <g per 100g, number>,
-  "fiber": <g per 100g, number>,
-  "sodium": <mg per 100g, number>,
-  "potassium": <mg per 100g, number>,
-  "calcium": <mg per 100g, number>,
-  "iron": <mg per 100g, number>,
-  "vit_c": <mg per 100g, number or null>,
-  "vit_a": <mcg RAE per 100g, number or null>,
-  "vit_b12": <mcg per 100g, number or null>,
-  "flavor_umami": <0-100, integer>,
-  "flavor_sweet": <0-100, integer>,
-  "flavor_salty": <0-100, integer>,
-  "flavor_sour": <0-100, integer>,
-  "flavor_bitter": <0-100, integer>,
-  "compounds": [<array of 2-5 key bioactive compound names as strings>],
-  "amino_acids": [<array of 1-3 key amino acids as strings, or empty array>]
+  "cat": "<meat|seafood|veg|fruit|grain|dairy|egg|nut|mushroom|legume|herb|sauce|oil|beverage|processed>",
+  "emoji": "<single emoji>",
+  "default_g": <integer serving size>,
+  "protein": <g/100g>, "fat": <g/100g>, "carbs": <g/100g>, "water": <g/100g>, "fiber": <g/100g>,
+  "sodium": <mg/100g>, "potassium": <mg/100g>, "calcium": <mg/100g>, "iron": <mg/100g>,
+  "vit_c": <mg/100g or null>, "vit_a": <mcg/100g or null>, "vit_b12": <mcg/100g or null>,
+  "flavor_umami": <0-100>, "flavor_sweet": <0-100>, "flavor_salty": <0-100>,
+  "flavor_sour": <0-100>, "flavor_bitter": <0-100>,
+  "compounds": ["compound1", "compound2"],
+  "amino_acids": ["amino1"]
 }
-
-Base values on USDA FoodData Central or peer-reviewed sources. All macros per 100g.`;
+Use USDA FoodData Central values. All macros per 100g.`;
 
   let claudeText = '';
   try {
@@ -96,41 +82,26 @@ Base values on USDA FoodData Central or peer-reviewed sources. All macros per 10
   let ingredient;
   try {
     const jsonMatch = claudeText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('JSON not found in response');
+    if (!jsonMatch) throw new Error('JSON not found');
     ingredient = JSON.parse(jsonMatch[0]);
-
-    // 카테고리 유효성 검사
     if (!CATEGORY_KEYS.includes(ingredient.cat)) ingredient.cat = 'processed';
-
-    // 필수 필드 기본값
-    ingredient.is_active = true;
-    ingredient.source = 'ai_generated';
-    ingredient.name = name; // 사용자 입력 이름 우선
+    ingredient.name = name;
   } catch (e) {
     return res.status(422).json({ error: 'AI 응답 파싱 실패', raw: claudeText });
   }
 
-  // ── 4. Supabase에 저장 ────────────────────────────────────────────────────
-  const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/ingredients`, {
+  // ── 4. SECURITY DEFINER RPC로 저장 (anon 권한으로 RLS 우회) ──────────────
+  const rpcRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/insert_ai_ingredient`, {
     method: 'POST',
-    headers: { ...sbHeaders, Prefer: 'return=representation' },
+    headers: sbHeaders,
     body: JSON.stringify(ingredient),
   });
 
-  if (!insertRes.ok) {
-    const errBody = await insertRes.text();
-    // 중복 삽입 시 기존 항목 반환
-    if (insertRes.status === 409) {
-      const dupRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/ingredients?name=eq.${encodeURIComponent(name)}&select=*&limit=1`,
-        { headers: sbHeaders }
-      );
-      const dup = await dupRes.json();
-      return res.json({ ingredient: dup[0] || ingredient, source: 'existing' });
-    }
+  if (!rpcRes.ok) {
+    const errBody = await rpcRes.text();
     return res.status(500).json({ error: 'DB 저장 실패', detail: errBody });
   }
 
-  const saved = await insertRes.json();
-  return res.json({ ingredient: saved[0] || ingredient, source: 'ai_generated' });
+  const saved = await rpcRes.json();
+  return res.json({ ingredient: saved || ingredient, source: 'ai_generated' });
 }
