@@ -3745,7 +3745,7 @@ async function addIngredientWithAI(name) {
     let data;
     try { data = await res.json(); } catch { throw new Error('서버 응답 오류 — 잠시 후 다시 시도해주세요'); }
 
-    if (res.status === 404) {
+    if (res.status === 404 || res.status === 422) {
       grid.innerHTML = `<div style="text-align:center;padding:20px;color:#f59e0b;font-size:13px">⚠️ ${data.error}</div>`;
       return;
     }

@@ -91,6 +91,12 @@ Use USDA FoodData Central values. All macros per 100g.`;
     if (ingredient.exists === false) {
       return res.status(404).json({ error: `'${name}'은(는) 실존하는 식재료가 아닙니다.` });
     }
+    // 핵심 영양 필드 유효성 검사
+    const REQUIRED = ['protein','fat','carbs','water','sodium','potassium','calcium','iron'];
+    const missing = REQUIRED.filter(k => ingredient[k] == null || isNaN(Number(ingredient[k])));
+    if (missing.length > 0) {
+      return res.status(422).json({ error: `성분 분석 불완전: ${missing.join(', ')} 데이터 없음` });
+    }
     if (!CATEGORY_KEYS.includes(ingredient.cat)) ingredient.cat = 'processed';
     ingredient.name = name;
   } catch (e) {
