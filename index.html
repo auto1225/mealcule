@@ -47,6 +47,15 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard
 .ing-cell .ci-e{font-size:14px;flex-shrink:0;line-height:1}
 .ing-cell .ci-n{font-size:10px;color:#525252;line-height:1.3;word-break:keep-all;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .ing-cell.active .ci-n{color:#065f46;font-weight:600}
+/* ── Parent expand ───────────────────────────────────────────────────────── */
+.ing-cell--parent .ci-arr{margin-left:auto;font-size:9px;color:#c4c4c4;flex-shrink:0;transition:transform .15s}
+.ing-cell--parent.expanded .ci-arr{transform:rotate(90deg);color:var(--accent)}
+.ing-cell--parent.expanded{background:#f0fdf4}
+.ing-expand{display:none;border-bottom:1px solid #e5e5e5}
+.ing-expand.open{display:block}
+.ing-sub-row .ing-cell{background:#f8fafb;padding-left:14px;border-left:3px solid #d1fae5}
+.ing-sub-row .ing-cell:hover{background:#f0f9ff}
+.ing-sub-row .ing-cell.active{background:#ecfdf5;border-left-color:var(--accent)}
 /* ── Selected row (table style) ────────────────────────────────────────── */
 .sel-bar{margin-top:14px;padding-top:12px;border-top:1px solid #e5e5e5}
 .sel-bar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -825,7 +834,10 @@ const DB = {
   "카놀라유":{cat:"oil",emoji:"🫒",defaultG:15,comp:{protein:0,fat:100,carbs:0,water:0,fiber:0},amino:[],vit:{E:15.4,K:145},compounds:["올레산","리놀레산"],flavor:{umami:0,sweet:0,salty:0,sour:0,bitter:0}},
   "버터":{cat:"oil",emoji:"🧈",defaultG:15,comp:{protein:0.9,fat:81,carbs:0.1,water:18,fiber:0},amino:[],vit:{A:684,D:0.6,E:2.3},compounds:["부티르산","디아세틸","카세인","유당"],flavor:{umami:5,sweet:10,salty:10,sour:5,bitter:0}},
 
-  // ── Meat (추가) ──────────────────────────────────────────────────────────
+  // ── Meat parents (부위 선택용 상위 항목) ─────────────────────────────────
+  "닭고기":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:27,fat:6,carbs:0,water:66,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.7,niacin:9.5,selenium:26},compounds:["카르노신","미오글로빈"],flavor:{umami:62,sweet:6,salty:5,sour:0,bitter:4}},
+
+  // ── Meat (추가 부위) ─────────────────────────────────────────────────────
   "소고기 등심":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:22,fat:22,carbs:0,water:55,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.4,zinc:4.5,iron:2.4},compounds:["미오글로빈","콜라겐","크레아틴"],flavor:{umami:82,sweet:10,salty:5,sour:0,bitter:5}},
   "소고기 안심":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:22,fat:8,carbs:0,water:69,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.4,zinc:3.8,iron:2.1},compounds:["미오글로빈","크레아틴"],flavor:{umami:75,sweet:8,salty:5,sour:0,bitter:5}},
   "삼겹살":{cat:"meat",emoji:"🐷",defaultG:200,comp:{protein:14,fat:34,carbs:0,water:51,fiber:0},amino:["류신","리신"],vit:{B1:0.5,B6:0.4,niacin:5},compounds:["미오글로빈","콜라겐"],flavor:{umami:70,sweet:8,salty:5,sour:0,bitter:5}},
@@ -1284,6 +1296,16 @@ const DB_SCI = {
 };
 // Merge quantitative sci data into DB at runtime
 Object.entries(DB_SCI).forEach(([k,v]) => { if (DB[k]) DB[k].sci = v; });
+
+// ── 부위 계층 구조 (parent → children) ─────────────────────────────────────
+const PARENT_GROUPS = {
+  "소고기":   ["소고기 등심","소고기 안심","비프 패티","사골","곱창","간(소고기)"],
+  "돼지고기": ["삼겹살","목살(돼지)","베이컨","소시지","햄","스팸","비엔나소시지"],
+  "닭고기":   ["닭가슴살","닭다리","닭날개","닭 안심","닭 모래집"],
+  "오리고기": ["훈제오리"],
+  "치즈":     ["모짜렐라","파르메산","크림치즈","체다치즈","그뤼에르","리코타","코티지치즈","고다치즈"],
+};
+const CHILD_SET = new Set(Object.values(PARENT_GROUPS).flat());
 
 const METHODS = {
   pan_fry:{label:"팬 프라이",emoji:"🍳",range:[150,220]},
@@ -2872,21 +2894,61 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
   return results;
 }
 
-function renderIngredientsFromData(items, grid) {
-  const entries = Object.entries(items);
-  if (entries.length === 0) return 0;
+function renderIngredientsFromData(items, grid, bypassGrouping = false) {
+  // Filter out children unless bypassing (e.g., during search)
+  const entries = bypassGrouping
+    ? Object.entries(items)
+    : Object.entries(items).filter(([name]) => !CHILD_SET.has(name));
+
+  if (entries.length === 0) return Object.keys(items).length > 0 ? -1 : 0;
+
   for (let i = 0; i < entries.length; i += 5) {
+    const rowEntries = entries.slice(i, i + 5);
     const row = document.createElement("div");
     row.className = "ing-row";
-    for (let j = i; j < Math.min(i + 5, entries.length); j++) {
-      const [name, data] = entries[j];
+    const parentsInRow = [];
+
+    rowEntries.forEach(([name, data]) => {
+      const children = !bypassGrouping && PARENT_GROUPS[name];
+      const isParent = children && children.length > 0;
       const cell = document.createElement("div");
-      cell.className = "ing-cell" + (name in selected ? " active" : "");
-      cell.innerHTML = `<span class="ci-e">${data.emoji}</span><span class="ci-n">${name}</span>`;
-      cell.onclick = () => toggleIngredient(name);
+      cell.className = "ing-cell" + (name in selected ? " active" : "") + (isParent ? " ing-cell--parent" : "");
+      if (isParent) {
+        cell.dataset.parentKey = name;
+        cell.innerHTML = `<span class="ci-e">${data.emoji}</span><span class="ci-n">${name}</span><span class="ci-arr">▶</span>`;
+        cell.onclick = () => toggleParentExpand(name);
+        parentsInRow.push(name);
+      } else {
+        cell.innerHTML = `<span class="ci-e">${data.emoji}</span><span class="ci-n">${name}</span>`;
+        cell.onclick = () => toggleIngredient(name);
+      }
       row.appendChild(cell);
-    }
+    });
+
     grid.appendChild(row);
+
+    // Append hidden expansion panels for any parent in this row
+    parentsInRow.forEach(parentName => {
+      const expand = document.createElement("div");
+      expand.className = "ing-expand";
+      expand.id = `ing-expand-${parentName}`;
+      const children = (PARENT_GROUPS[parentName] || []).filter(c => DB[c]);
+      for (let ci = 0; ci < children.length; ci += 5) {
+        const subRow = document.createElement("div");
+        subRow.className = "ing-row ing-sub-row";
+        children.slice(ci, ci + 5).forEach(cname => {
+          const cdata = DB[cname];
+          if (!cdata) return;
+          const subCell = document.createElement("div");
+          subCell.className = "ing-cell" + (cname in selected ? " active" : "");
+          subCell.innerHTML = `<span class="ci-e">${cdata.emoji}</span><span class="ci-n">${cname}</span>`;
+          subCell.onclick = () => toggleIngredient(cname);
+          subRow.appendChild(subCell);
+        });
+        expand.appendChild(subRow);
+      }
+      grid.appendChild(expand);
+    });
   }
   return entries.length;
 }
@@ -2924,7 +2986,8 @@ function renderIngredients(filter = "") {
     localItems[name] = data;
   });
 
-  const count = renderIngredientsFromData(localItems, grid);
+  // 검색 시 자식 항목도 직접 표시 (bypassGrouping=true)
+  const count = renderIngredientsFromData(localItems, grid, !!lower);
 
   if (count === 0 && !!!sbClient) {
     grid.innerHTML = `<div style="padding:16px;text-align:center;color:#737373;font-size:13px">검색 결과 없음</div>`;
@@ -2997,6 +3060,14 @@ function renderMethods() {
     };
     grid.appendChild(btn);
   });
+}
+
+function toggleParentExpand(name) {
+  const expand = document.getElementById(`ing-expand-${name}`);
+  const cell = document.querySelector(`.ing-cell--parent[data-parent-key="${name}"]`);
+  if (!expand) return;
+  const open = expand.classList.toggle("open");
+  if (cell) cell.classList.toggle("expanded", open);
 }
 
 function toggleIngredient(name) {
