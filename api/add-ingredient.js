@@ -94,7 +94,7 @@ Use USDA FoodData Central values. All macros per 100g.`;
   const rpcRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/insert_ai_ingredient`, {
     method: 'POST',
     headers: sbHeaders,
-    body: JSON.stringify(ingredient),
+    body: JSON.stringify({ data: ingredient }),
   });
 
   if (!rpcRes.ok) {
