@@ -56,6 +56,15 @@ CREATE TRIGGER profiles_updated_at
   BEFORE UPDATE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+-- 관리자 체크 함수 (재귀 방지를 위해 SECURITY DEFINER 사용)
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
 -- RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
@@ -69,9 +78,7 @@ CREATE POLICY "Users can update own profile"
 
 CREATE POLICY "Admin can view all profiles"
   ON public.profiles FOR SELECT
-  USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  USING (public.is_admin());
 
 -- ══════════════════════════════════════════════════════════════
 -- 2. SUBSCRIPTIONS (구독/결제)
@@ -125,7 +132,7 @@ CREATE POLICY "Users can view own subscriptions"
 CREATE POLICY "Admin can manage all subscriptions"
   ON public.subscriptions FOR ALL
   USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.is_admin()
   );
 
 -- ══════════════════════════════════════════════════════════════
@@ -166,7 +173,7 @@ CREATE POLICY "Anyone can view categories"
 CREATE POLICY "Admin can manage categories"
   ON public.categories FOR ALL
   USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.is_admin()
   );
 
 -- ══════════════════════════════════════════════════════════════
@@ -248,7 +255,7 @@ CREATE POLICY "Anyone can view active ingredients"
 CREATE POLICY "Admin can manage ingredients"
   ON public.ingredients FOR ALL
   USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.is_admin()
   );
 
 -- ══════════════════════════════════════════════════════════════
@@ -301,7 +308,7 @@ CREATE POLICY "Anyone can view active reactions"
 CREATE POLICY "Admin can manage reactions"
   ON public.reactions FOR ALL
   USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.is_admin()
   );
 
 -- 기본 반응 데이터 삽입
@@ -390,7 +397,7 @@ CREATE POLICY "Users can delete own analysis"
 CREATE POLICY "Admin can view all analysis"
   ON public.analysis_history FOR SELECT
   USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.is_admin()
   );
 
 -- ══════════════════════════════════════════════════════════════
@@ -509,7 +516,7 @@ CREATE POLICY "Users can view own feedback"
 CREATE POLICY "Admin can manage all feedback"
   ON public.feedback FOR ALL
   USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.is_admin()
   );
 
 -- ══════════════════════════════════════════════════════════════

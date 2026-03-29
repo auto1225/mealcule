@@ -93,6 +93,19 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .flavor-fill{height:100%;border-radius:3px;transition:width .5s}
 .flavor-desc{font-size:11px;color:var(--text-tertiary)}
 @media(max-width:768px){.grid2{grid-template-columns:1fr}.method-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:480px){
+  .header{padding:12px 14px}
+  .header h1{font-size:15px!important}
+  .header p{display:none!important}
+  .logo{width:32px;height:32px}
+  .mode-toggle{display:none!important}
+  .pricing-btn{display:none!important}
+  .auth-btn{padding:5px 10px;font-size:11px}
+  .user-avatar{padding:4px 8px}
+  .user-avatar span{display:none}
+  .header-actions{gap:6px}
+  .version-badge{display:none}
+}
 .condition-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .cond-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s}
 .cond-btn:hover{border-color:#fca5a5;background:#fef2f2}
@@ -1727,15 +1740,25 @@ async function init() {
   if (sbClient) {
     statusEl.textContent = '🔄 DB 연결 중...';
     try {
-      await loadCategories();
-      const count = await getCategoryCount();
-      statusEl.innerHTML = `<span style="color:#059669">● 온라인</span> · ${count.toLocaleString()}+ 식재료`;
+      await Promise.race([
+        loadCategories(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      ]);
+      const count = await Promise.race([
+        getCategoryCount(),
+        new Promise(resolve => setTimeout(() => resolve(Object.keys(DB).length), 5000))
+      ]);
+      if (dbCategories) {
+        statusEl.innerHTML = `<span style="color:#059669">● 온라인</span> · ${count.toLocaleString()}+ 식재료`;
+      } else {
+        statusEl.innerHTML = `<span style="color:#f97316">● 로컬</span> · ${Object.keys(DB).length}+ 식재료`;
+      }
     } catch(e) {
-      statusEl.innerHTML = '<span style="color:#f97316">● 재연결</span> · 로컬 모드';
+      statusEl.innerHTML = `<span style="color:#f97316">● 로컬</span> · ${Object.keys(DB).length}+ 식재료`;
       console.warn('DB 연결 실패, 로컬 모드:', e);
     }
   } else {
-    statusEl.innerHTML = '<span style="color:#737373">○ 로컬</span> · ' + Object.keys(DB).length + '개';
+    statusEl.innerHTML = '<span style="color:#737373">○ 로컬</span> · ' + Object.keys(DB).length + '+ 식재료';
   }
 
   renderCategoryTabs();
