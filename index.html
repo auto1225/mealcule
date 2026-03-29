@@ -1339,7 +1339,8 @@ async function initAuth() {
         updateUserUI();
         hideLoginPage();
       } catch(e) { /* ignore */ }
-    } else if (guest) {
+    } else {
+      // DEV: auto-skip login as guest
       isGuest = true;
       hideLoginPage();
     }
@@ -1355,11 +1356,14 @@ async function initAuth() {
       updateUserUI();
       hideLoginPage();
     } else {
-      const guest = localStorage.getItem('mc_guest');
-      if (guest) { isGuest = true; hideLoginPage(); }
+      // DEV: auto-skip login as guest
+      isGuest = true;
+      hideLoginPage();
     }
   } catch(e) {
     console.warn('Auth init error:', e);
+    isGuest = true;
+    hideLoginPage();
   }
 
   // Auth 상태 변경 리스너
@@ -1432,7 +1436,6 @@ async function openUserMenu() {
 }
 
 async function selectPlan(plan) {
-  if (!currentUser) { openAuthModal(); return; }
 
   if (sbClient && authSession) {
     // DB에 구독 정보 저장
@@ -3105,7 +3108,6 @@ function updateSliderLabels() {
 // FEEDBACK UI
 // ══════════════════════════════════════════════════
 function openFeedbackModal() {
-  if (!currentUser) { openAuthModal(); return; }
   document.getElementById('feedbackModal').style.display = 'flex';
 }
 function closeFeedbackModal() {
@@ -3142,6 +3144,102 @@ init();
   <a href="#">개인정보처리방침</a><br>
   <span style="color:#a3a3a3">&copy; 2026 Mealcule. All rights reserved.</span>
 </footer>
+
+<!-- ══ DEV NAVIGATION ══ -->
+<style>
+#devNav { position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(15,15,15,0.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:7px 10px;display:flex;align-items:center;gap:5px;overflow-x:auto;border-top:1px solid rgba(255,255,255,0.08);-ms-overflow-style:none;scrollbar-width:none }
+#devNav::-webkit-scrollbar { display:none }
+#devNav .dev-label { color:#f97316;font-size:9px;font-weight:700;white-space:nowrap;flex-shrink:0;letter-spacing:.06em;padding:2px 6px;background:rgba(249,115,22,0.15);border-radius:4px;border:1px solid rgba(249,115,22,0.3) }
+#devNav .dev-sep { width:1px;height:18px;background:rgba(255,255,255,0.15);flex-shrink:0;margin:0 2px }
+#devNav button { padding:4px 9px;border-radius:6px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:#e5e5e5;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .15s;font-family:inherit }
+#devNav button:hover { background:rgba(255,255,255,0.12) }
+#devNav .dev-close { margin-left:auto;flex-shrink:0;border-color:rgba(255,255,255,0.1) }
+</style>
+<div id="devNav">
+  <span class="dev-label">DEV</span>
+  <button onclick="devGoMain()">🏠 메인</button>
+  <button onclick="devRunSample()">🧪 샘플분석</button>
+  <div class="dev-sep"></div>
+  <button onclick="devTab('reactions')">⚗️ 반응</button>
+  <button onclick="devTab('nutrition')">📊 영양</button>
+  <button onclick="devTab('flavor')">🍽️ 맛</button>
+  <button onclick="devTab('health')">🏥 건강</button>
+  <div class="dev-sep"></div>
+  <button onclick="devGoProfile()">👤 프로필</button>
+  <button onclick="devGoHistory()">📋 기록</button>
+  <button onclick="openPricingModal()">💎 요금제</button>
+  <button onclick="openFeedbackModal()">💬 피드백</button>
+  <button onclick="showLoginPage()">🔑 로그인</button>
+  <button class="dev-close" onclick="document.getElementById('devNav').style.display='none'" title="닫기">✕</button>
+</div>
+
+<script>
+// Add bottom padding so content isn't hidden behind dev nav
+document.body.style.paddingBottom = '48px';
+
+function devGoMain() {
+  closePricingModal();
+  document.getElementById('feedbackModal').style.display = 'none';
+  document.getElementById('historyPanel').style.display = 'none';
+  profileOpen = false;
+  const pp = document.getElementById('profilePanel');
+  if (pp) pp.style.display = 'none';
+  const tog = document.getElementById('profileToggle');
+  if (tog) tog.textContent = '프로필 입력 ▼';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('emptyState').style.display = '';
+  hideLoginPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function devGoProfile() {
+  devGoMain();
+  document.getElementById('emptyState').style.display = 'none';
+  profileOpen = true;
+  const pp = document.getElementById('profilePanel');
+  if (pp) pp.style.display = 'block';
+  const tog = document.getElementById('profileToggle');
+  if (tog) tog.textContent = '프로필 접기 ▲';
+  setTimeout(() => pp && pp.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+
+async function devGoHistory() {
+  devGoMain();
+  const hp = document.getElementById('historyPanel');
+  hp.style.display = 'block';
+  await renderHistory();
+  setTimeout(() => hp.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+
+function devTab(tab) {
+  const res = document.getElementById('results');
+  if (!res || !res.innerHTML.trim() || res.style.display === 'none') {
+    devRunSample().then(() => setTimeout(() => { switchTab(tab); res.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200));
+  } else {
+    devGoMain();
+    res.style.display = 'block';
+    document.getElementById('emptyState').style.display = 'none';
+    switchTab(tab);
+    setTimeout(() => res.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+  }
+}
+
+async function devRunSample() {
+  devGoMain();
+  // Reset and pre-select sample ingredients
+  selected = { '닭가슴살': 150, '마늘': 10, '양파': 80, '올리브 오일': 15 };
+  method = 'pan_fry';
+  // Sync sliders to reasonable defaults
+  const temp = document.getElementById('tempSlider');
+  const time = document.getElementById('timeSlider');
+  if (temp) temp.value = 180;
+  if (time) time.value = 15;
+  updateSliderLabels();
+  renderIngredients();
+  renderMethods();
+  await runAnalysis();
+}
+</script>
 
 </body>
 </html>
