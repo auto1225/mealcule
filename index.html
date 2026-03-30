@@ -85,6 +85,20 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard
 .method-btn:hover{border-color:#a3a3a3;background:#fafafa}
 .method-btn.active{border-color:transparent;background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(5,150,105,0.3)}
 .method-btn .emoji{font-size:20px;display:block;margin-bottom:4px}
+.method-btn.add-method-btn{border-style:dashed;color:#a3a3a3;font-size:22px;display:flex;align-items:center;justify-content:center;min-height:68px}
+.method-btn.add-method-btn:hover{border-color:var(--accent);color:var(--accent);background:#f0fdf4}
+.method-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center}
+.method-modal-overlay.open{display:flex}
+.method-modal{background:#fff;border-radius:16px;padding:24px;width:min(380px,90vw);box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.method-modal h3{margin:0 0 6px;font-size:16px;font-weight:600}
+.method-modal p{margin:0 0 16px;font-size:13px;color:#737373}
+.method-modal input{width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;outline:none}
+.method-modal input:focus{border-color:var(--accent)}
+.method-modal-actions{display:flex;gap:8px;margin-top:12px}
+.method-modal-actions button{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:500}
+.method-modal-confirm{background:var(--accent);color:#fff}
+.method-modal-cancel{background:#f5f5f5;color:#404040}
+#methodModalStatus{margin-top:10px;font-size:13px;min-height:20px;text-align:center}
 .slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .slider-row label{font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;font-weight:500}
 input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:#e5e5e5;outline:none;margin-bottom:8px}
@@ -2883,7 +2897,7 @@ async function init() {
     statusEl.textContent = '🔄 DB 연결 중...';
     try {
       await Promise.race([
-        loadCategories(),
+        Promise.all([loadCategories(), loadCustomMethods()]),
         new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
       ]);
       const count = await Promise.race([
@@ -3665,6 +3679,117 @@ function renderCategoryTabs() {
   });
 }
 
+// ── 커뮤니티 조리 방법 Supabase 로드 ────────────────────────────────────────
+let customMethodsLoaded = false;
+async function loadCustomMethods() {
+  if (!sbClient || customMethodsLoaded) return;
+  try {
+    const { data, error } = await sbClient
+      .from('cooking_methods').select('*').eq('is_active', true).order('created_at', { ascending: true });
+    if (error || !data) return;
+    let added = 0;
+    data.forEach(m => {
+      if (METHODS[m.key]) return; // 내장 방법은 덮어쓰지 않음
+      METHODS[m.key] = {
+        label: m.label, label_en: m.label_en,
+        emoji: m.emoji || '🍳',
+        range: [m.range_min, m.range_max],
+        medium: m.medium,
+        pressure_atm: parseFloat(m.pressure_atm) || 1.0,
+        o2_level: parseFloat(m.o2_level) || 0.7,
+        leach_factor: parseFloat(m.leach_factor) || 0.0,
+        fat_contact: m.fat_contact || false,
+        browning: m.browning !== false,
+        starch_h2o: m.starch_h2o || false,
+        pah_risk: m.pah_risk || false,
+        uniformity: m.uniformity || 'medium',
+        _fromDB: true,
+      };
+      added++;
+    });
+    customMethodsLoaded = true;
+    if (added > 0) renderMethods();
+  } catch(e) { console.warn('loadCustomMethods:', e); }
+}
+
+// ── DB에서 로드한 방법 객체를 METHODS 포맷으로 변환 ──────────────────────────
+function dbMethodToMETHODS(m) {
+  return {
+    label: m.label, label_en: m.label_en,
+    emoji: m.emoji || '🍳',
+    range: [m.range_min, m.range_max],
+    medium: m.medium,
+    pressure_atm: parseFloat(m.pressure_atm) || 1.0,
+    o2_level: parseFloat(m.o2_level) || 0.7,
+    leach_factor: parseFloat(m.leach_factor) || 0.0,
+    fat_contact: m.fat_contact || false,
+    browning: m.browning !== false,
+    starch_h2o: m.starch_h2o || false,
+    pah_risk: m.pah_risk || false,
+    uniformity: m.uniformity || 'medium',
+    _fromDB: true,
+  };
+}
+
+// ── 모달 열기/닫기 ─────────────────────────────────────────────────────────
+function openMethodModal() {
+  document.getElementById('methodModalOverlay').classList.add('open');
+  document.getElementById('methodModalInput').value = '';
+  document.getElementById('methodModalStatus').textContent = '';
+  document.getElementById('methodModalConfirmBtn').disabled = false;
+  setTimeout(() => document.getElementById('methodModalInput').focus(), 100);
+}
+function closeMethodModal() {
+  document.getElementById('methodModalOverlay').classList.remove('open');
+}
+async function confirmAddMethod() {
+  const name = document.getElementById('methodModalInput').value.trim();
+  if (!name) return;
+  document.getElementById('methodModalConfirmBtn').disabled = true;
+  document.getElementById('methodModalStatus').innerHTML = `<span style="color:#737373">⏳ AI가 '${name.replace(/</g,'&lt;')}' 분석 중...</span>`;
+  await addMethodWithAI(name);
+}
+
+// ── AI로 조리 방법 추가 ────────────────────────────────────────────────────
+async function addMethodWithAI(name) {
+  const statusEl = document.getElementById('methodModalStatus');
+  try {
+    const res = await fetch(`/api/add-method?name=${encodeURIComponent(name)}`);
+    let data;
+    try { data = await res.json(); } catch { throw new Error('서버 응답 오류'); }
+
+    if (res.status === 404 || res.status === 422 || res.status === 409) {
+      statusEl.innerHTML = `<span style="color:#f59e0b">⚠️ ${data.error}</span>`;
+      document.getElementById('methodModalConfirmBtn').disabled = false;
+      return;
+    }
+    if (!res.ok || !data.method) {
+      statusEl.innerHTML = `<span style="color:#ef4444">❌ ${data.error || '분석 실패'}</span>`;
+      document.getElementById('methodModalConfirmBtn').disabled = false;
+      return;
+    }
+
+    const m = data.method;
+    METHODS[m.key] = dbMethodToMETHODS(m);
+
+    // 새 방법 선택
+    method = m.key;
+    const slider = document.getElementById('tempSlider');
+    if (slider) { slider.value = Math.round((m.range_min + m.range_max) / 2); updateTemp(); }
+
+    renderMethods();
+    closeMethodModal();
+
+    const isNew = data.source === 'ai_generated';
+    showToast(isNew
+      ? `✨ '${m.label}' 추가 완료! 전체 사용자와 공유됩니다.`
+      : `'${m.label}' DB에서 불러왔습니다.`);
+  } catch(e) {
+    statusEl.innerHTML = `<span style="color:#ef4444">❌ 오류: ${e.message}</span>`;
+    document.getElementById('methodModalConfirmBtn').disabled = false;
+  }
+}
+
 function renderMethods() {
   const grid = document.getElementById("methodGrid");
   grid.innerHTML = "";
@@ -3680,6 +3805,13 @@ function renderMethods() {
     };
     grid.appendChild(btn);
   });
+  // "+" 추가 버튼
+  const addBtn = document.createElement("button");
+  addBtn.className = "method-btn add-method-btn";
+  addBtn.title = "조리 방법 추가";
+  addBtn.innerHTML = "+";
+  addBtn.onclick = openMethodModal;
+  grid.appendChild(addBtn);
 }
 
 function toggleParentExpand(name) {
@@ -4814,6 +4946,21 @@ async function devRunSample() {
   await runAnalysis();
 }
 </script>
+
+<!-- 조리 방법 추가 모달 -->
+<div class="method-modal-overlay" id="methodModalOverlay" onclick="if(event.target===this)closeMethodModal()">
+  <div class="method-modal">
+    <h3>🍳 조리 방법 추가</h3>
+    <p>전 세계 어떤 조리 방법이든 입력하세요.<br>AI가 물리화학 인자를 분석하고 모든 사용자와 공유합니다.</p>
+    <input type="text" id="methodModalInput" placeholder="예: 적외선 그릴, Robata, Plancha..." maxlength="80"
+      onkeydown="if(event.key==='Enter')confirmAddMethod()">
+    <div id="methodModalStatus"></div>
+    <div class="method-modal-actions">
+      <button class="method-modal-cancel" onclick="closeMethodModal()">취소</button>
+      <button class="method-modal-confirm" id="methodModalConfirmBtn" onclick="confirmAddMethod()">AI 분석 추가</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
