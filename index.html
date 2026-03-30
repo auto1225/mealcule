@@ -2788,70 +2788,147 @@ const CONDITIONS = {
         tip:"균형 잡힌 식사는 정신 건강의 기초입니다. 규칙적인 식사 패턴을 유지하세요."},
     ]
   },
+
+  // ── 뇌신경 / 면역 / 혈액 ─────────────────────────────────────────────────
+  stroke: {label:"뇌졸중", emoji:"🧠", desc:"뇌혈관 막힘·파열 — 고혈압·혈전 연관", rules:[
+    {check:(im,c)=>c.sodium>1200, severity:"danger", title:"고염 — 혈압 상승·뇌혈관 위험",
+      detail:()=>`나트륨 과다는 혈압을 높여 뇌혈관 손상 위험을 증가시킵니다. 뇌졸중의 가장 큰 예방 가능 위험 인자입니다.`, tip:"나트륨 1,500mg/일 이하. DASH 식이를 실천하세요."},
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 혈전 억제·뇌혈관 보호",
+      detail:()=>`EPA·DHA는 혈소판 응집을 억제하고 뇌혈관 내피 기능을 개선합니다.`, tip:"등푸른 생선을 주 3회 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['시금치','케일','브로콜리','아스파라거스'].includes(n)), severity:"good", title:"엽산·비타민K — 호모시스테인 저하",
+      detail:()=>`엽산은 뇌졸중 위험인자인 호모시스테인을 낮춥니다. 비타민K는 혈관 석회화를 억제합니다.`, tip:"녹색 채소를 매일 2컵 이상 섭취하세요."},
+    {check:(im,c)=>c.potassium>400, severity:"good", title:"칼륨 풍부 — 혈압 조절",
+      detail:()=>`칼륨은 나트륨 배출을 촉진하여 혈압을 낮추고 뇌졸중 위험을 줄입니다.`, tip:"바나나·토마토·감자·아보카도를 활용하세요."},
+    {check:(im,c)=>c.saturatedFat>10, severity:"caution", title:"포화지방 — 동맥경화·혈전 위험",
+      detail:()=>`포화지방은 LDL 콜레스테롤을 높여 뇌혈관 동맥경화를 촉진합니다.`, tip:"붉은 고기를 생선·두부로 대체하세요."},
+  ]},
+  alzheimer: {label:"치매/알츠하이머", emoji:"🧠", desc:"뇌 신경세포 퇴화 — APOE4 유전·산화 스트레스·염증 연관", rules:[
+    {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds?.some(c=>c.includes('오메가3'))||['연어','고등어','청어','블루베리','견과류'].includes(n)), severity:"good", title:"MIND 식이 핵심 식품 — 뇌 신경 보호",
+      detail:()=>`오메가3 DHA, 폴리페놀, 비타민E는 뇌 신경세포막을 보호하고 아밀로이드 플라크 형성을 억제합니다.`, tip:"MIND 식이: 베리류·녹색채소·견과류·통곡물·생선 주 3회 이상."},
+    {check:(im,c)=>c.saturatedFat>8, severity:"caution", title:"포화지방 — 뇌혈관 손상·인지 저하 가속",
+      detail:()=>`포화지방과 트랜스지방은 뇌혈관을 손상시키고 신경 염증을 촉진합니다.`, tip:"올리브오일·견과류·생선으로 지방 공급원을 교체하세요."},
+    {check:(im,c)=>c.carbs>60&&Object.keys(im).some(n=>n==='설탕'), severity:"caution", title:"고당분 — 인슐린 저항성·인지 저하",
+      detail:()=>`당뇨와 인슐린 저항성은 알츠하이머 위험을 2-3배 높입니다 ('3형 당뇨' 가설). 뇌의 포도당 대사 장애가 핵심 기전입니다.`, tip:"정제당을 줄이고 복합탄수화물로 대체하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['강황'].includes(n)), severity:"good", title:"커큐민 — 아밀로이드 플라크 분해 효과",
+      detail:()=>`강황의 커큐민은 아밀로이드-β 응집을 억제하고 신경 염증을 줄입니다. 인도의 알츠하이머 발생률이 낮은 것과 연관이 연구됩니다.`, tip:"후추와 함께 섭취하면 흡수율이 증가합니다."},
+  ]},
+  parkinson: {label:"파킨슨병", emoji:"🫳", desc:"도파민 신경세포 퇴화 — 산화 스트레스·환경 요인 연관", rules:[
+    {check:(im)=>Object.keys(im).some(n=>['블루베리','라즈베리','시금치','브로콜리','토마토'].includes(n)), severity:"good", title:"항산화 식품 — 도파민 신경세포 보호",
+      detail:()=>`산화 스트레스는 흑질 도파민 신경세포 손상의 주요 기전입니다. 플라보노이드·비타민C·E가 풍부한 식품이 신경 보호 효과를 보입니다.`, tip:"베리류·녹색채소·토마토를 매일 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['연어','고등어','청어'].includes(n)), severity:"good", title:"오메가3 — 신경 염증 억제",
+      detail:()=>`DHA는 도파민 수용체 밀도를 유지하고 신경 염증을 억제합니다. 파킨슨 환자에서 생선 섭취와 진행 억제 연관성이 보고됩니다.`, tip:"등푸른 생선을 주 3회 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>n.includes('커피')), severity:"good", title:"커피 카페인 — 파킨슨 위험 감소",
+      detail:()=>`카페인은 아데노신 A2A 수용체를 차단하여 도파민 신호를 보호합니다. 커피 섭취자에서 파킨슨 위험 32-60% 감소가 보고됩니다.`, tip:"하루 2-3잔의 커피를 규칙적으로 섭취하세요."},
+    {check:(im,c)=>c.protein>40, severity:"info", title:"고단백 — 레보도파 흡수 방해 가능",
+      detail:()=>`단백질의 아미노산은 레보도파와 같은 운반체를 경쟁하여 약물 흡수를 감소시킵니다. 약 복용 시간 관리가 중요합니다.`, tip:"레보도파 복용 30분 후 식사하거나, 단백질을 저녁에 집중 섭취하세요."},
+  ]},
+  autoimmune: {label:"자가면역질환", emoji:"🛡️", desc:"면역 과활성 — 류마티스/갑상선/장 자가면역 포함", rules:[
+    {check:(im,c)=>c.sodium>700, severity:"caution", title:"고나트륨 — TH17 세포 활성화로 면역 과항진",
+      detail:()=>`과도한 나트륨은 TH17 세포 분화를 촉진하여 자가면역 반응을 악화시킵니다.`, tip:"저나트륨 식단 (<1500mg/일)을 엄격히 유지하세요."},
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 면역 조절·염증 억제",
+      detail:()=>`EPA는 항염증 에이코사노이드를 생성하여 과도한 면역 반응을 억제합니다.`, tip:"등푸른 생선, 아마씨, 호두를 꾸준히 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['강황','생강'].includes(n)), severity:"good", title:"커큐민·생강 — 면역 조절 항염 효과",
+      detail:()=>`커큐민은 NF-κB를 억제하여 염증성 사이토카인(TNF-α, IL-6) 생성을 줄입니다.`, tip:"강황+후추+올리브오일 조합으로 흡수율을 높이세요."},
+    {check:(im)=>Object.keys(im).some(n=>['김치','된장','요거트'].includes(n)), severity:"good", title:"발효식품 — 장내 미생물 통한 면역 조절",
+      detail:()=>`장내 미생물 불균형(dysbiosis)은 자가면역 질환의 주요 촉발 요인입니다. 프로바이오틱스가 Treg 세포를 활성화합니다.`, tip:"매일 발효식품을 섭취하여 장내 환경을 개선하세요."},
+  ]},
+  lupus: {label:"루푸스 (SLE)", emoji:"🦋", desc:"전신 자가면역질환 — 항핵항체 양성·피부/관절/신장 침범", rules:[
+    {check:(im)=>Object.keys(im).some(n=>n.includes('새싹')||n==='알팔파'), severity:"danger", title:"알팔파 새싹 — 루푸스 플레어 직접 유발",
+      detail:()=>`알팔파의 L-카나바닌은 루푸스 환자에서 면역 활성화와 플레어(악화)를 직접 유발하는 아미노산 유사체입니다.`, tip:"알팔파 새싹, 알팔파 보충제를 완전히 피하세요."},
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 루푸스 염증 및 신장 보호",
+      detail:()=>`EPA/DHA는 루푸스 신염 악화를 억제하고 관절 염증을 완화합니다. 루푸스 환자의 오메가3 섭취와 질병 활성도 감소가 연관됩니다.`, tip:"연어·고등어·청어를 주 3회 이상 섭취하세요."},
+    {check:(im,c)=>c.vitaminD>10, severity:"good", title:"비타민D — 면역 조절 핵심 영양소",
+      detail:()=>`루푸스 환자의 90% 이상이 비타민D 결핍입니다. 비타민D는 면역 관용(tolerance)을 증진시켜 자가면역 반응을 억제합니다.`, tip:"비타민D 강화 식품과 햇볕 노출을 병행하세요. 혈중 25(OH)D 40ng/mL 이상 목표."},
+    {check:(im,c)=>c.sodium>600, severity:"caution", title:"고나트륨 — 신장 부담·혈압 상승",
+      detail:()=>`루푸스 신염이 있으면 나트륨 과다는 신장 기능을 악화시킵니다.`, tip:"나트륨 1,200mg/일 이하를 목표로 하세요."},
+  ]},
+  allergy_disease: {label:"알레르기 질환", emoji:"⚠️", desc:"면역 과민반응 — 알레르기 비염·아토피·두드러기 포함", rules:[
+    {check:(im)=>Object.keys(im).some(n=>['김치','요거트','케피르'].includes(n)), severity:"good", title:"프로바이오틱스 — 알레르기 면역 조절 (Th1/Th2 균형)",
+      detail:()=>`장내 미생물이 Th2 우세 알레르기 면역을 Th1으로 조절합니다. 프로바이오틱스 섭취가 아토피, 알레르기 비염 증상을 완화합니다.`, tip:"발효식품을 매일 섭취하거나 프로바이오틱스 보충제를 활용하세요."},
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 히스타민 반응 완화·염증 억제",
+      detail:()=>`EPA는 히스타민 생성을 줄이고 알레르기성 염증 반응을 억제합니다.`, tip:"등푸른 생선, 아마씨, 치아씨를 꾸준히 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['양파','사과'].includes(n)), severity:"good", title:"퀘르세틴 (양파·사과) — 비만세포 탈과립 억제",
+      detail:()=>`퀘르세틴은 비만세포에서 히스타민 방출을 억제하여 알레르기 반응을 줄입니다. 천연 항히스타민제 역할을 합니다.`, tip:"양파를 요리에 꾸준히 사용하고 사과를 껍질째 섭취하세요."},
+  ]},
+  asthma: {label:"천식/호흡기", emoji:"💨", desc:"기도 과민반응 — 염증·기관지 수축·환경 유발인자 연관", rules:[
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 기도 염증 억제·폐 기능 개선",
+      detail:()=>`EPA는 류코트리엔(기관지 수축 매개체) 생성을 줄여 천식 증상을 완화합니다.`, tip:"등푸른 생선을 주 3회 이상 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['브로콜리','시금치','아몬드'].includes(n)), severity:"good", title:"마그네슘 풍부 — 기관지 이완",
+      detail:()=>`마그네슘은 기관지 평활근을 이완시켜 기도를 넓히고 천식 발작 빈도를 줄입니다.`, tip:"녹색채소, 견과류, 통곡물로 마그네슘(320-420mg/일)을 보충하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['건포도','말린과일','와인'].includes(n)), severity:"caution", title:"아황산염(건과일·와인) — 기관지 수축 유발",
+      detail:()=>`아황산염 과민 천식 환자의 5-10%에서 아황산염이 즉각적인 기관지 수축을 유발합니다.`, tip:"건과일, 와인, 식초 등 아황산염 함유 식품에 주의하세요."},
+    {check:(im,c)=>c.sodium>800, severity:"caution", title:"고나트륨 — 기도 과민성 증가",
+      detail:()=>`나트륨 과다 섭취는 기도 반응성을 높이고 천식 증상을 악화시킵니다.`, tip:"저나트륨 식단이 천식 관리에 도움됩니다."},
+  ]},
+
+  // ── 암 — 추가 ──────────────────────────────────────────────────────────────
+  cervical_cancer: {label:"자궁경부암", emoji:"🎗️", desc:"자궁경부 악성종양 — HPV 감염·엽산 부족 연관", rules:[
+    {check:(im)=>Object.keys(im).some(n=>['시금치','브로콜리','아스파라거스','콩'].includes(n)), severity:"good", title:"엽산 풍부 식품 — HPV 진행 억제",
+      detail:()=>`엽산 결핍은 HPV 바이러스의 자궁경부 세포 DNA 통합을 촉진합니다. 충분한 엽산 섭취가 경부상피이형성증 예방에 중요합니다.`, tip:"잎채소, 콩류, 아스파라거스를 매일 섭취하고, 흡연을 피하세요."},
+    {check:(im,c)=>c.vitaminC>50, severity:"good", title:"비타민C — HPV 감염 세포 면역 강화",
+      detail:()=>`비타민C는 면역 기능을 강화하고 항산화 작용으로 자궁경부 세포를 보호합니다.`, tip:"피망, 파프리카, 브로콜리, 딸기로 비타민C를 보충하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['브로콜리','콜리플라워','케일'].includes(n)), severity:"good", title:"십자화과 채소 DIM — 에스트로겐 대사 조절",
+      detail:()=>`인돌-3-카르비놀(I3C)이 에스트로겐을 덜 발암성인 형태로 대사시키고 HPV 감염 세포 증식을 억제합니다.`, tip:"십자화과 채소를 주 5회 이상 섭취하세요."},
+  ]},
+  ovarian_cancer: {label:"난소암", emoji:"🎗️", desc:"난소 악성종양 — 유전(BRCA1/2)·호르몬·환경 복합 요인", rules:[
+    {check:(im,c)=>c.fiber>8, severity:"good", title:"식이섬유 — 에스트로겐 조절·난소암 위험 감소",
+      detail:()=>`식이섬유는 에스트로겐 장-간 순환을 억제하여 에스트로겐 노출을 줄입니다.`, tip:"채소·콩류·통곡물·과일로 25-30g/일 목표."},
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 난소 세포 항염 보호",
+      detail:()=>`오메가3는 난소 주변 만성 염증을 억제하여 난소암 위험을 줄입니다.`, tip:"등푸른 생선을 주 3회 섭취하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['녹차'].includes(n)), severity:"good", title:"녹차 EGCG — 난소암 세포 아포토시스 유도",
+      detail:()=>`EGCG는 난소암 세포의 VEGF(혈관 신생인자)를 억제하고 세포 자멸을 유도합니다.`, tip:"하루 3-4잔 80°C 녹차를 섭취하세요."},
+  ]},
+  thyroid_cancer: {label:"갑상선암", emoji:"🦋", desc:"갑상선 악성종양 — 방사선·요오드 불균형 연관", rules:[
+    {check:(im)=>Object.keys(im).some(n=>['미역','다시마'].includes(n))&&Object.values({}).length>0, severity:"info", title:"요오드 식품 — 갑상선 기능 영향 주의",
+      detail:()=>`갑상선암 치료 후 방사성 요오드 치료 전 저요오드 식사가 필요한 경우가 있습니다. 담당 의사와 상담 후 결정하세요.`, tip:"치료 상태에 따라 요오드 섭취를 조절하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['브로콜리','양배추','케일'].includes(n)), severity:"info", title:"십자화과 채소 — 갑상선 기능 영향 가능",
+      detail:()=>`십자화과 채소의 고이트로겐은 갑상선 요오드 흡수를 억제할 수 있으나, 가열 조리 시 대부분 불활성화됩니다.`, tip:"충분히 가열 조리하면 안전하게 섭취할 수 있습니다."},
+    {check:(im)=>Object.keys(im).some(n=>['브라질너트','굴','새우'].includes(n)), severity:"good", title:"셀레늄 풍부 식품 — 갑상선 호르몬 대사 지원",
+      detail:()=>`셀레늄은 갑상선 과산화효소 보호인자로 갑상선 조직 보호에 필수적입니다.`, tip:"브라질너트 1-2알이 하루 셀레늄 권장량을 충족합니다."},
+  ]},
+  leukemia: {label:"백혈병/혈액암", emoji:"🩸", desc:"혈액·골수 악성종양 — 조혈세포 DNA 손상·발암물질 연관", rules:[
+    {check:(im)=>Object.keys(im).some(n=>['블루베리','딸기','라즈베리'].includes(n)), severity:"good", title:"베리류 안토시아닌 — 백혈병 세포 증식 억제",
+      detail:()=>`안토시아닌은 백혈병 세포의 세포주기 정지와 아포토시스를 유도합니다.`, tip:"냉동 베리도 신선 베리와 동등한 효과를 제공합니다."},
+    {check:(im)=>Object.keys(im).some(n=>['시금치','브로콜리','아스파라거스'].includes(n)), severity:"good", title:"엽산 풍부 — 조혈세포 DNA 합성 지원",
+      detail:()=>`엽산은 조혈세포의 DNA 복제 정확성을 높여 돌연변이 축적을 줄입니다.`, tip:"잎채소를 매일 섭취하고, 고용량 엽산 보충제는 의사 상담 후 복용하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['베이컨','소시지','햄'].includes(n)), severity:"caution", title:"가공육 — 아질산염 조혈세포 DNA 손상",
+      detail:()=>`아질산염-니트로사민은 조혈세포 DNA를 손상시켜 혈액암 위험을 높입니다.`, tip:"가공육을 완전히 제거하고 신선한 단백질로 대체하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['녹차'].includes(n)), severity:"good", title:"녹차 EGCG — 백혈병 세포 아포토시스 유도",
+      detail:()=>`EGCG는 만성 림프구성 백혈병 세포의 Bcl-2 억제와 자멸 유도 효과가 연구됩니다.`, tip:"하루 3-4잔 녹차를 규칙적으로 섭취하세요."},
+  ]},
+  epilepsy: {label:"뇌전증", emoji:"⚡", desc:"뇌 전기적 이상 방전 — 발작 반복·유전·뇌 손상 연관", rules:[
+    {check:(im,c)=>c.carbs<20&&c.fat>20, severity:"good", title:"저탄고지 패턴 — 케톤 생성 식이 근거",
+      detail:()=>`케톤 생성 식이(고지방·저탄수화물)는 뇌의 에너지 대사를 포도당에서 케톤체로 전환하여 난치성 뇌전증 발작을 50% 이상 줄입니다.`, tip:"케톤 식이는 전문 의료팀 감독 하에 시행하세요."},
+    {check:(im,c)=>c.vitaminD>10, severity:"good", title:"비타민D — 뇌전증 약물 대사 지원",
+      detail:()=>`항경련제 장기 복용 환자의 80%에서 비타민D 결핍이 나타납니다. 비타민D는 골밀도 보호와 신경 기능 유지에 필요합니다.`, tip:"비타민D 강화 식품과 규칙적인 햇볕 노출을 병행하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['소주','맥주','와인'].includes(n)), severity:"danger", title:"알코올 — 발작 역치 저하·약물 상호작용",
+      detail:()=>`알코올은 GABA 수용체를 교란하고 항경련제 대사를 방해합니다. 금주 후 금단 발작의 위험도 있습니다.`, tip:"뇌전증 환자에게 알코올은 절대 금기입니다."},
+    {check:(im)=>Object.keys(im).some(n=>['시금치','아몬드','브로콜리'].includes(n)), severity:"good", title:"마그네슘 풍부 — 신경 과흥분 억제",
+      detail:()=>`마그네슘은 NMDA 수용체를 차단하여 신경 과흥분을 억제합니다. 마그네슘 결핍이 발작 역치를 낮출 수 있습니다.`, tip:"녹색채소와 견과류로 마그네슘을 보충하세요."},
+  ]},
+  schizophrenia: {label:"조현병", emoji:"🧩", desc:"도파민·글루타메이트 불균형 — 뇌 구조·기능 이상", rules:[
+    {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 EPA/DHA — 신경막 인지질 최적화",
+      detail:()=>`조현병 환자에서 뇌 인지질 DHA 농도가 낮습니다. EPA 보충이 음성 증상과 인지 기능 개선에 효과를 보인 임상 연구들이 있습니다.`, tip:"등푸른 생선을 주 3회 이상 섭취하세요."},
+    {check:(im,c)=>c.vitaminD>10, severity:"good", title:"비타민D — 신경 발달 및 도파민 조절",
+      detail:()=>`비타민D 결핍이 조현병 위험 증가와 연관됩니다. 비타민D는 도파민 합성 효소(TH)를 조절합니다.`, tip:"비타민D 강화 식품과 햇볕 노출을 규칙적으로 유지하세요."},
+    {check:(im)=>Object.keys(im).some(n=>['김치','된장','요거트'].includes(n)), severity:"good", title:"발효식품 — 장-뇌 축 통한 정신 건강",
+      detail:()=>`장내 미생물이 GABA 등 신경전달물질에 영향을 줍니다. 조현병 환자에서 장내 미생물 다양성 감소가 확인됩니다.`, tip:"매일 발효식품으로 장내 환경을 개선하세요."},
+    {check:(im,c)=>c.carbs>60&&Object.keys(im).some(n=>n==='설탕'), severity:"caution", title:"고당분 — 항정신병 약물 대사증후군 악화",
+      detail:()=>`항정신병 약물은 체중 증가·인슐린 저항성을 유발합니다. 고당분 섭취는 이를 악화시킵니다.`, tip:"정제당을 줄이고 복합탄수화물과 채소를 늘리세요."},
+  ]},
 };
 
 // ── 질환 카테고리 그룹 (부모-자식 확장 구조) ──────────────────────────────
-// ── 질환 + 가족력 통합 그룹 ── ck=본인 질환키, fk=가족력키 (null 가능) ──────
-const UNIFIED_GROUPS = {
-  cancer: {label:"암 / 종양", emoji:"🎗️", items:[
-    {label:"위암",       emoji:"🫃", ck:"stomach_cancer",    fk:"fam_cancer_stomach"},
-    {label:"간암",       emoji:"🟫", ck:"liver_cancer",      fk:"fam_cancer_liver"},
-    {label:"대장암",     emoji:"🔄", ck:"colon_cancer",      fk:"fam_cancer_colon"},
-    {label:"폐암",       emoji:"🫁", ck:"lung_cancer",       fk:"fam_cancer_lung"},
-    {label:"유방암",     emoji:"🎀", ck:"breast_cancer",     fk:"fam_cancer_breast"},
-    {label:"전립선암",   emoji:"🔵", ck:"prostate_cancer",   fk:"fam_cancer_prostate"},
-    {label:"췌장암",     emoji:"🟡", ck:"pancreatic_cancer", fk:"fam_cancer_pancreas"},
-    {label:"자궁경부암", emoji:"🎗️", ck:null,               fk:"fam_cancer_cervical"},
-    {label:"난소암",     emoji:"🎗️", ck:null,               fk:"fam_cancer_ovarian"},
-    {label:"갑상선암",   emoji:"🦋", ck:null,               fk:"fam_cancer_thyroid"},
-    {label:"백혈병/혈액암",emoji:"🩸",ck:null,              fk:"fam_cancer_leukemia"},
-  ]},
-  cardio: {label:"심혈관", emoji:"❤️", items:[
-    {label:"고혈압",     emoji:"💉", ck:"hypertension",      fk:"fam_hypertension"},
-    {label:"심혈관질환", emoji:"❤️", ck:"heart",             fk:"fam_heart"},
-    {label:"고지혈증",   emoji:"🫀", ck:"hyperlipidemia",    fk:"fam_hyperlipidemia"},
-    {label:"대사증후군", emoji:"🔬", ck:"metabolic_syndrome",fk:null},
-    {label:"뇌졸중",     emoji:"🧠", ck:null,               fk:"fam_stroke"},
-  ]},
-  metabolic: {label:"대사 / 내분비", emoji:"🔬", items:[
-    {label:"당뇨",       emoji:"🩸", ck:"diabetes",          fk:"fam_diabetes"},
-    {label:"비만/체중",  emoji:"⚖️", ck:"obesity",           fk:"fam_obesity"},
-    {label:"다낭성 난소",emoji:"🔬", ck:"pcos",              fk:"fam_pcos"},
-    {label:"갑상선 저하",emoji:"🦋", ck:"thyroid_hypo",      fk:"fam_thyroid"},
-    {label:"갑상선 항진",emoji:"🦋", ck:"thyroid_hyper",     fk:null},
-    {label:"통풍",       emoji:"🦶", ck:"gout",              fk:"fam_gout"},
-  ]},
-  digestive: {label:"소화기", emoji:"🫃", items:[
-    {label:"역류성 식도염",emoji:"🔥",ck:"gerd",             fk:"fam_gerd"},
-    {label:"위염/위궤양",emoji:"🫃",  ck:"gastritis",        fk:null},
-    {label:"과민성 대장", emoji:"🌀", ck:"ibs",              fk:null},
-    {label:"크론병",     emoji:"🌀", ck:"crohns",            fk:"fam_ibd"},
-    {label:"셀리악병",   emoji:"🌾", ck:"celiac",            fk:"fam_celiac"},
-    {label:"담석증",     emoji:"🟡", ck:"gallstone",         fk:null},
-    {label:"췌장염",     emoji:"🔶", ck:"pancreatitis",      fk:null},
-    {label:"지방간",     emoji:"🟫", ck:"fatty_liver",       fk:null},
-  ]},
-  renal: {label:"신장 / 혈액", emoji:"🫘", items:[
-    {label:"신장질환",   emoji:"🫘", ck:"kidney",            fk:"fam_kidney"},
-    {label:"간질환",     emoji:"🫀", ck:"liver",             fk:"fam_liver"},
-    {label:"빈혈",       emoji:"🩸", ck:"anemia",            fk:"fam_anemia"},
-  ]},
-  musculo: {label:"근골격 / 면역", emoji:"🦴", items:[
-    {label:"골다공증",   emoji:"🦴", ck:"osteoporosis",      fk:"fam_osteoporosis"},
-    {label:"류마티스",   emoji:"🦴", ck:"arthritis",         fk:"fam_arthritis"},
-    {label:"근감소증",   emoji:"💪", ck:"sarcopenia",        fk:null},
-    {label:"자가면역",   emoji:"🛡️", ck:null,               fk:"fam_autoimmune"},
-    {label:"루푸스",     emoji:"🛡️", ck:null,               fk:"fam_lupus"},
-    {label:"알레르기질환",emoji:"⚠️",ck:null,               fk:"fam_allergy"},
-    {label:"천식",       emoji:"💨", ck:null,               fk:"fam_asthma"},
-  ]},
-  mental: {label:"정신 / 뇌건강", emoji:"🧠", items:[
-    {label:"우울증",     emoji:"💙", ck:"depression_nutrition",fk:"fam_depression"},
-    {label:"치매/알츠하이머",emoji:"🧠",ck:null,             fk:"fam_alzheimer"},
-    {label:"파킨슨병",   emoji:"🫳", ck:null,               fk:"fam_parkinson"},
-    {label:"뇌전증",     emoji:"⚡", ck:null,               fk:"fam_epilepsy"},
-    {label:"조현병",     emoji:"🧠", ck:null,               fk:"fam_schizophrenia"},
-  ]},
+// ── 질환 통합 그룹 (본인/가족력 공유 DB) ─────────────────────────────────
+// 각 key는 CONDITIONS 객체의 key와 동일 — 양쪽 탭 모두 이 DB를 사용
+const DISEASE_GROUPS = {
+  cancer:   {label:"암 / 종양",     emoji:"🎗️", keys:['stomach_cancer','liver_cancer','colon_cancer','lung_cancer','breast_cancer','prostate_cancer','pancreatic_cancer','cervical_cancer','ovarian_cancer','thyroid_cancer','leukemia']},
+  cardio:   {label:"심혈관",         emoji:"❤️",  keys:['hypertension','heart','hyperlipidemia','metabolic_syndrome','stroke']},
+  metabolic:{label:"대사 / 내분비", emoji:"🔬",  keys:['diabetes','obesity','pcos','thyroid_hypo','thyroid_hyper','gout']},
+  digestive:{label:"소화기",         emoji:"🫃",  keys:['gerd','gastritis','ibs','crohns','celiac','gallstone','pancreatitis','fatty_liver']},
+  renal:    {label:"신장 / 혈액",   emoji:"🫘",  keys:['kidney','liver','anemia']},
+  musculo:  {label:"근골격 / 면역", emoji:"🦴",  keys:['osteoporosis','arthritis','sarcopenia','autoimmune','lupus','allergy_disease','asthma']},
+  mental:   {label:"정신 / 뇌건강", emoji:"🧠",  keys:['depression_nutrition','alzheimer','parkinson','epilepsy','schizophrenia']},
 };
 
 // ── 체질/특이사항 DB ──
@@ -2892,51 +2969,7 @@ const TRAITS = {
   hot_constitution:  {label:"열체질 (열성)", emoji:"🔥", desc:"열이 많고 땀이 많은 체질 — 서늘한 음식 선호"},
 };
 
-const FAMILY_HISTORY = {
-  fam_diabetes:        {label:"당뇨병",       emoji:"🩸"},
-  fam_hypertension:    {label:"고혈압",       emoji:"💉"},
-  fam_hyperlipidemia:  {label:"고지혈증",     emoji:"🫀"},
-  fam_heart:           {label:"심장질환",     emoji:"❤️"},
-  fam_stroke:          {label:"뇌졸중",       emoji:"🧠"},
-  fam_cancer_stomach:  {label:"위암",         emoji:"🔬"},
-  fam_cancer_colon:    {label:"대장암",       emoji:"🔬"},
-  fam_cancer_liver:    {label:"간암",         emoji:"🔬"},
-  fam_cancer_lung:     {label:"폐암",         emoji:"🔬"},
-  fam_cancer_breast:   {label:"유방암",       emoji:"🎗️"},
-  fam_cancer_prostate: {label:"전립선암",     emoji:"🔬"},
-  fam_cancer_pancreas: {label:"췌장암",       emoji:"🔬"},
-  fam_obesity:         {label:"비만",         emoji:"⚖️"},
-  fam_gout:            {label:"통풍",         emoji:"🦶"},
-  fam_kidney:          {label:"신장질환",     emoji:"🫘"},
-  fam_liver:           {label:"간질환",       emoji:"🫀"},
-  fam_thyroid:         {label:"갑상선질환",   emoji:"🦋"},
-  fam_osteoporosis:    {label:"골다공증",     emoji:"🦴"},
-  fam_autoimmune:      {label:"자가면역질환", emoji:"🛡️"},
-  fam_alzheimer:       {label:"치매/알츠하이머",  emoji:"🧠"},
-  fam_depression:      {label:"우울증/정신질환",  emoji:"💙"},
-  fam_parkinson:       {label:"파킨슨병",        emoji:"🫳"},
-  // 암 — 추가
-  fam_cancer_cervical: {label:"자궁경부암",       emoji:"🎗️"},
-  fam_cancer_ovarian:  {label:"난소암",           emoji:"🎗️"},
-  fam_cancer_thyroid:  {label:"갑상선암",         emoji:"🦋"},
-  fam_cancer_leukemia: {label:"백혈병/혈액암",    emoji:"🩸"},
-  // 대사
-  fam_pcos:            {label:"다낭성 난소 증후군",emoji:"🔬"},
-  // 소화기
-  fam_ibd:             {label:"염증성 장질환",    emoji:"🫃"},
-  fam_celiac:          {label:"셀리악병",         emoji:"🌾"},
-  fam_gerd:            {label:"역류성 식도염",    emoji:"🔥"},
-  // 신장·혈액
-  fam_anemia:          {label:"빈혈 (유전성)",    emoji:"🩸"},
-  // 근골격·면역
-  fam_arthritis:       {label:"류마티스 관절염",  emoji:"🦴"},
-  fam_lupus:           {label:"루푸스 (SLE)",     emoji:"🛡️"},
-  fam_allergy:         {label:"알레르기 질환",    emoji:"⚠️"},
-  fam_asthma:          {label:"천식/호흡기",      emoji:"💨"},
-  // 신경·정신
-  fam_epilepsy:        {label:"뇌전증 (간질)",   emoji:"⚡"},
-  fam_schizophrenia:   {label:"조현병",           emoji:"🧠"},
-};
+// FAMILY_HISTORY 제거됨 — 통합 DB: CONDITIONS를 양쪽 탭(본인 질환 / 직계 가족 병력) 공유 사용
 
 // ── 약물/영양제/생활습관 DB ──
 const SUBSTANCES = {
@@ -3895,23 +3928,20 @@ function renderConditions() {
   container.appendChild(tabBar);
 
   // 현재 탭 기준 배열
-  const myArr   = isMe ? member.conditions : member.familyHx;
+  const myArr    = isMe ? member.conditions : member.familyHx;
   const theirArr = isMe ? member.familyHx : member.conditions;
-  const myKey   = isMe ? 'ck' : 'fk';
-  const theirKey = isMe ? 'fk' : 'ck';
   const activeClass = isMe ? 'cond-active' : 'fam-active';
   const crossLabel  = isMe ? '가족✓' : '나✓';
 
   const wrap = document.createElement("div");
   wrap.className = "ing-table";
 
-  // ── UNIFIED_GROUPS 렌더링 ──
-  Object.entries(UNIFIED_GROUPS).forEach(([groupKey, group]) => {
-    // 현재 탭에 해당하는 항목만 (key가 null이면 제외)
-    const items = group.items.filter(it => !!it[myKey]);
+  // ── DISEASE_GROUPS 렌더링 (양쪽 탭 공유 DB) ──
+  Object.entries(DISEASE_GROUPS).forEach(([groupKey, group]) => {
+    const items = group.keys.filter(k => !!CONDITIONS[k]);
     if (!items.length) return;
 
-    const selCount = items.filter(it => myArr.includes(it[myKey])).length;
+    const selCount = items.filter(k => myArr.includes(k)).length;
     const isOpen = _condExpanded.has(groupKey);
 
     const hdr = document.createElement("div");
@@ -3929,15 +3959,14 @@ function renderConditions() {
     for (let i = 0; i < items.length; i += 4) {
       const subRow = document.createElement("div");
       subRow.className = "ing-sub-row ing-row health-ing-row";
-      items.slice(i, i + 4).forEach(it => {
-        const key = it[myKey];
-        const crossKey = it[theirKey];
+      items.slice(i, i + 4).forEach(key => {
+        const cond = CONDITIONS[key];
         const isActive = myArr.includes(key);
-        const crossActive = !!(crossKey && theirArr.includes(crossKey));
+        const crossActive = theirArr.includes(key);
 
         const cell = document.createElement("div");
         cell.className = "ing-cell" + (isActive ? " " + activeClass : "");
-        cell.innerHTML = `<span class="ci-e">${it.emoji}</span><span class="ci-n">${it.label}</span>${crossActive ? `<span class="ci-cross-tag">${crossLabel}</span>` : ''}`;
+        cell.innerHTML = `<span class="ci-e">${cond.emoji}</span><span class="ci-n">${cond.label}</span>${crossActive ? `<span class="ci-cross-tag">${crossLabel}</span>` : ''}`;
         cell.onclick = e => {
           e.stopPropagation();
           const idx = myArr.indexOf(key);
@@ -3953,10 +3982,8 @@ function renderConditions() {
     wrap.appendChild(expand);
   });
 
-  // ── 직접 추가(AI) 항목 ──
-  const customEntries = isMe
-    ? Object.entries(customConditions)
-    : Object.entries(customFamilyHx);
+  // ── 직접 추가(AI) 항목 — 양쪽 탭 공유 ──
+  const customEntries = Object.entries(customConditions);
   if (customEntries.length > 0) {
     const gk = "_custom";
     const selCount = customEntries.filter(([k]) => myArr.includes(k)).length;
@@ -3976,9 +4003,10 @@ function renderConditions() {
       subRow.className = "ing-sub-row ing-row health-ing-row";
       customEntries.slice(i, i + 4).forEach(([k, item]) => {
         const isActive = myArr.includes(k);
+        const crossActive = theirArr.includes(k);
         const cell = document.createElement("div");
         cell.className = "ing-cell health-custom" + (isActive ? " " + activeClass : "");
-        cell.innerHTML = `<span class="ci-e">${item.emoji}</span><span class="ci-n">${item.label}</span>`;
+        cell.innerHTML = `<span class="ci-e">${item.emoji}</span><span class="ci-n">${item.label}</span>${crossActive ? `<span class="ci-cross-tag">${crossLabel}</span>` : ''}`;
         cell.onclick = e => {
           e.stopPropagation();
           const idx = myArr.indexOf(k);
@@ -4143,7 +4171,7 @@ function updateProfileSummary() {
   const actLabels = {sedentary:'비활동적',light:'가벼운 활동',moderate:'중간 활동',active:'활발',very_active:'매우 활발'};
   if (member.activity) chips.push(actLabels[member.activity]);
   member.traits.forEach(t => { const d = TRAITS[t]||customTraits[t]; if(d) chips.push(d.emoji+' '+d.label); });
-  member.familyHx.forEach(f => { const d = FAMILY_HISTORY[f]||customFamilyHx[f]; if(d) chips.push('👨‍👩‍👧 '+d.label); });
+  member.familyHx.forEach(f => { const d = CONDITIONS[f]||customConditions[f]; if(d) chips.push('👨‍👩‍👧 '+d.label); });
   member.conditions.forEach(c => { const d = CONDITIONS[c]||customConditions[c]; if(d) chips.push(d.emoji+' '+d.label); });
   member.substances.forEach(s => { const d = SUBSTANCES[s]||customSubstances[s]; if(d) chips.push(d.emoji+' '+d.label); });
 
@@ -4310,15 +4338,13 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
         tip:`목표 BMI 23 이하를 위해 일일 칼로리를 ${dailyCal ? Math.round(dailyCal*0.8) + 'kcal' : '기초대사량의 80%'}로 제한하는 것을 고려하세요.`});
     }
 
-    // 가족력 보정
-    const famMap = {fam_diabetes:'diabetes', fam_hypertension:'hypertension', fam_heart:'heart', fam_gout:'gout', fam_kidney:'kidney', fam_obesity:'obesity'};
-    member.familyHx.forEach(fh => {
-      if (famMap[fh] === condKey) {
-        findings.push({severity:'caution', title:`👨‍👩‍👧 가족력: ${FAMILY_HISTORY[fh]?.label}`,
-          detail:`직계 가족에 ${FAMILY_HISTORY[fh]?.label} 병력이 있어 유전적 소인이 있을 수 있습니다. 같은 식이라도 발병 위험이 일반인 대비 2-3배 높을 수 있습니다.`,
-          tip:'정기 검진과 함께 예방적 식이 관리를 더 엄격하게 적용하는 것이 좋습니다.'});
-      }
-    });
+    // 가족력 보정 — 통합 DB: familyHx와 conditions가 같은 key 사용
+    if (member.familyHx.includes(condKey)) {
+      const famLabel = (CONDITIONS[condKey]||customConditions[condKey])?.label || condKey;
+      findings.push({severity:'caution', title:`👨‍👩‍👧 가족력: ${famLabel}`,
+        detail:`직계 가족에 ${famLabel} 병력이 있어 유전적 소인이 있을 수 있습니다. 같은 식이라도 발병 위험이 일반인 대비 2-3배 높을 수 있습니다.`,
+        tip:'정기 검진과 함께 예방적 식이 관리를 더 엄격하게 적용하는 것이 좋습니다.'});
+    }
 
     // 종합 점수 계산
     let score = 70;
@@ -4946,23 +4972,22 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
       tip:'다양한 식재료를 균형있게 섭취하고, 인스턴트 식품을 줄이세요.'});
   }
 
-  // 가족력 예방 분석 (질환을 선택하지 않아도)
+  // 가족력 예방 분석 (질환을 선택하지 않아도) — 통합 DB: fh === 조건 key 그대로 사용
   member.familyHx.forEach(fh => {
-    const condMap = {fam_diabetes:'diabetes',fam_hypertension:'hypertension',fam_heart:'heart',fam_gout:'gout',fam_kidney:'kidney',fam_obesity:'obesity'};
-    const mapped = condMap[fh];
-    if (mapped && !member.conditions.includes(mapped)) {
+    // 같은 조건이 본인 질환에 없을 때만 예방 분석
+    if (!member.conditions.includes(fh)) {
       // 질환을 선택하지 않았지만 가족력이 있는 경우 예방 분석
-      if (fh === 'fam_diabetes' && comp.carbs > 50) {
+      if (fh === 'diabetes' && comp.carbs > 50) {
         traitFindings.push({severity:'caution', title:`가족력(당뇨) — 탄수화물 ${comp.carbs.toFixed(1)}g 주의`,
           detail:'가족에 당뇨 병력이 있으면 본인도 유전적 소인이 있을 수 있습니다. 탄수화물 관리가 예방에 중요합니다.',
           tip:'현재 당뇨가 없더라도 1회 탄수화물 50g 이하를 습관화하면 예방에 도움됩니다.'});
       }
-      if (fh === 'fam_cancer_stomach' && temp >= 200) {
+      if (fh === 'stomach_cancer' && temp >= 200) {
         traitFindings.push({severity:'caution', title:'가족력(위암) — 고온 조리 주의',
           detail:`${temp}°C 이상 고온 조리는 발암물질(HCA, PAH)을 생성할 수 있습니다. 위암 가족력이 있으면 더 주의가 필요합니다.`,
           tip:'탄 부분은 제거하고, 굽기보다 찜·삶기 위주로 조리하세요.'});
       }
-      if (fh === 'fam_cancer_colon') {
+      if (fh === 'colon_cancer') {
         if (Object.keys(ingMap).some(n => n === '소고기') && ingMap['소고기'] > 100) {
           traitFindings.push({severity:'caution', title:'가족력(대장암) — 붉은 고기 과다',
             detail:'WHO는 붉은 고기를 Group 2A 발암물질로 분류했습니다. 가족력이 있으면 주 500g 이하로 제한을 권장합니다.',
@@ -4972,7 +4997,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
           detail:`식이섬유 ${comp.fiber.toFixed(1)}g — 식이섬유는 대장 건강에 도움이 되며 대장암 위험을 낮출 수 있습니다.`,
           tip:'목표: 1일 25-30g. 채소와 잡곡을 꾸준히 섭취하세요.'});
       }
-      if (fh === 'fam_osteoporosis') {
+      if (fh === 'osteoporosis') {
         const hasCa = Object.keys(ingMap).some(n => DB[n]?.vit.calcium);
         traitFindings.push({severity: hasCa ? 'good' : 'info',
           title:'가족력(골다공증) — 칼슘 ' + (hasCa ? '섭취 긍정적' : '보충 필요'),
@@ -4983,7 +5008,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
 
     // ── 추가 가족력 예방 분석 ──────────────────────────────────────────
     // 고혈압 가족력
-    if (fh === 'fam_hypertension' && !member.conditions.includes('hypertension')) {
+    if (fh === 'hypertension' && !member.conditions.includes('hypertension')) {
       if (comp.sodium > 500) traitFindings.push({severity:'caution', title:'가족력(고혈압) — 나트륨 주의',
         detail:`나트륨 약 ${comp.sodium.toFixed(0)}mg — 고혈압 가족력이 있으면 나트륨 민감도가 높을 수 있습니다. 예방 차원에서 1,500mg/일 이하를 권장합니다.`,
         tip:'DASH 식이(저나트륨, 고칼륨, 고섬유질, 저지방 유제품)가 고혈압 예방에 효과적입니다.'});
@@ -4993,7 +5018,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 고지혈증 가족력
-    if (fh === 'fam_hyperlipidemia' && !member.conditions.includes('heart')) {
+    if (fh === 'hyperlipidemia' && !member.conditions.includes('hyperlipidemia')) {
       if (comp.saturatedFat > 7) traitFindings.push({severity:'caution', title:'가족력(고지혈증) — 포화지방 주의',
         detail:`포화지방 추정 약 ${comp.saturatedFat.toFixed(1)}g — 고지혈증 가족력이 있으면 LDL 콜레스테롤이 올라가기 쉽습니다.`,
         tip:'버터·삼겹살·치즈를 줄이고 올리브오일, 등푸른 생선, 견과류로 대체하세요.'});
@@ -5005,21 +5030,21 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 심장질환 가족력
-    if (fh === 'fam_heart' && !member.conditions.includes('heart')) {
+    if (fh === 'heart' && !member.conditions.includes('heart')) {
       if (comp.saturatedFat > 10) traitFindings.push({severity:'caution', title:'가족력(심장질환) — 포화지방 과다',
         detail:`포화지방 약 ${comp.saturatedFat.toFixed(1)}g — 심장질환 가족력이 있으면 포화지방 제한이 더욱 중요합니다.`,
         tip:'붉은 고기 대신 생선(오메가3), 통곡물, 채소 중심 식사를 유지하세요.'});
     }
 
     // 뇌졸중 가족력
-    if (fh === 'fam_stroke' && !member.conditions.includes('hypertension')) {
+    if (fh === 'stroke' && !member.conditions.includes('stroke')) {
       if (comp.sodium > 600) traitFindings.push({severity:'caution', title:'가족력(뇌졸중) — 나트륨·혈압 관리 중요',
         detail:`나트륨 약 ${comp.sodium.toFixed(0)}mg — 뇌졸중의 주요 위험 인자인 고혈압 예방을 위해 나트륨 제한이 중요합니다.`,
         tip:'짜게 먹는 습관을 줄이고, 금연·금주·규칙적 운동을 병행하세요.'});
     }
 
     // 간암 가족력
-    if (fh === 'fam_cancer_liver') {
+    if (fh === 'liver_cancer') {
       if (member.substances.includes('alcohol_moderate') || member.substances.includes('alcohol_heavy')) {
         traitFindings.push({severity:'danger', title:'가족력(간암) + 음주 — 간암 위험 매우 높음',
           detail:'간암 가족력 + 음주는 간암 위험을 크게 높입니다. B형·C형 간염 검사와 함께 음주를 삼가야 합니다.',
@@ -5031,7 +5056,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 폐암 가족력
-    if (fh === 'fam_cancer_lung') {
+    if (fh === 'lung_cancer') {
       const brassicaFoods = Object.keys(ingMap).filter(n => ['브로콜리','양배추','케일','콜리플라워'].includes(n));
       if (brassicaFoods.length > 0) traitFindings.push({severity:'good', title:`가족력(폐암) — 십자화과 채소(${brassicaFoods.join(', ')}) 긍정적`,
         detail:'브로콜리의 설포라판, 인돌-3-카르비놀은 발암물질 해독 효소를 활성화하여 폐암 예방에 도움이 됩니다.',
@@ -5039,7 +5064,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 유방암 가족력
-    if (fh === 'fam_cancer_breast') {
+    if (fh === 'breast_cancer') {
       if (member.substances.includes('alcohol_moderate') || member.substances.includes('alcohol_heavy')) {
         traitFindings.push({severity:'caution', title:'가족력(유방암) + 음주 — 에스트로겐 수치 상승',
           detail:'알코올은 에스트로겐 수치를 높여 호르몬 수용체 양성 유방암 위험을 증가시킵니다.',
@@ -5051,7 +5076,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 전립선암 가족력
-    if (fh === 'fam_cancer_prostate') {
+    if (fh === 'prostate_cancer') {
       const lycopeneFoods = Object.keys(ingMap).filter(n => DB[n]?.compounds?.some(c => c.includes('리코펜')));
       if (lycopeneFoods.length > 0) traitFindings.push({severity:'good', title:`가족력(전립선암) — 리코펜(${lycopeneFoods.join(', ')}) 긍정적`,
         detail:'토마토의 리코펜은 전립선암 위험을 줄인다는 여러 연구가 있습니다. 가열 조리 시 흡수율이 4-5배 증가합니다.',
@@ -5064,7 +5089,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 췌장암 가족력
-    if (fh === 'fam_cancer_pancreas') {
+    if (fh === 'pancreatic_cancer') {
       if (comp.carbs > 60 || Object.keys(ingMap).some(n => n === '설탕' && ingMap[n] > 10)) {
         traitFindings.push({severity:'caution', title:'가족력(췌장암) — 고당분 식사 주의',
           detail:'만성적 인슐린 자극은 췌장에 부담을 줍니다. 정제 당류와 고혈당 식품을 줄이는 것이 예방에 중요합니다.',
@@ -5073,14 +5098,14 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 간질환 가족력
-    if (fh === 'fam_liver' && !member.conditions.includes('liver')) {
+    if (fh === 'liver' && !member.conditions.includes('liver')) {
       if (comp.fat > 25) traitFindings.push({severity:'caution', title:'가족력(간질환) — 고지방 식사 지방간 위험',
         detail:`지방 ${comp.fat.toFixed(1)}g — 간질환 가족력이 있으면 지방간에 취약할 수 있습니다.`,
         tip:'포화지방을 줄이고, 녹황색 채소·십자화과 채소로 간 보호 성분을 섭취하세요.'});
     }
 
     // 갑상선질환 가족력
-    if (fh === 'fam_thyroid' && !member.conditions.includes('thyroid_hypo')) {
+    if ((fh === 'thyroid_hypo' || fh === 'thyroid_hyper') && !member.conditions.includes(fh)) {
       const iodineCheck = Object.keys(ingMap).some(n => ['미역','다시마','김','굴'].includes(n));
       traitFindings.push({severity: iodineCheck ? 'good' : 'info',
         title:'가족력(갑상선질환) — 요오드 섭취 ' + (iodineCheck ? '적정' : '점검 필요'),
@@ -5089,7 +5114,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 자가면역질환 가족력
-    if (fh === 'fam_autoimmune') {
+    if (fh === 'autoimmune') {
       const antiInflamFoods = Object.keys(ingMap).filter(n =>
         DB[n]?.compounds?.some(c => c.includes('오메가3')) || ['생강','강황','블루베리'].includes(n));
       if (antiInflamFoods.length > 0) traitFindings.push({severity:'good', title:'가족력(자가면역) — 항염 성분 식품 포함',
@@ -5101,7 +5126,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 치매/알츠하이머 가족력
-    if (fh === 'fam_alzheimer') {
+    if (fh === 'alzheimer') {
       const brainFoods = Object.keys(ingMap).filter(n =>
         DB[n]?.compounds?.some(c => c.includes('오메가3')) || ['블루베리','견과류','연어','고등어'].includes(n));
       if (brainFoods.length > 0) traitFindings.push({severity:'good', title:'가족력(치매) — 뇌 보호 식품 포함',
@@ -5113,7 +5138,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 우울증/정신질환 가족력
-    if (fh === 'fam_depression') {
+    if (fh === 'depression_nutrition') {
       const serotoninFoods = Object.keys(ingMap).filter(n => ['계란','두부','닭고기','바나나','연어'].includes(n));
       if (serotoninFoods.length > 0) traitFindings.push({severity:'good', title:'가족력(우울증) — 트립토판 식품 포함',
         detail:`${serotoninFoods.join(', ')}에 트립토판이 풍부합니다. 트립토판은 세로토닌 합성의 전구체로 기분 조절에 중요합니다.`,
@@ -5121,7 +5146,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     }
 
     // 파킨슨병 가족력
-    if (fh === 'fam_parkinson') {
+    if (fh === 'parkinson') {
       const antioxFoods = Object.keys(ingMap).filter(n =>
         DB[n]?.compounds?.some(c => c.includes('리코펜')) || ['브로콜리','시금치','블루베리','토마토'].includes(n));
       if (antioxFoods.length > 0) traitFindings.push({severity:'good', title:'가족력(파킨슨) — 항산화 식품 포함',
@@ -5481,16 +5506,24 @@ function _addHealthItemToProfile(item) {
     if (!member.traits.includes(key)) member.traits.push(key);
     renderTraits();
   } else if (type === 'family') {
+    // 공유 DB: 양쪽 커스텀 스토어에 동시 저장
+    const customItem = {label:item.label, emoji:item.emoji, desc:item.desc, avoidFoods:[], benefitFoods:[], notes:[]};
+    customConditions[key] = customItem;
     customFamilyHx[key] = {label:item.label, emoji:item.emoji, desc:item.desc};
     if (!member.familyHx.includes(key)) member.familyHx.push(key);
-    renderFamilyHx();
+    if (!member.conditions.includes(key)) member.conditions.push(key);
+    renderConditions();
+    updateProfileNote();
   } else if (type === 'substance') {
     customSubstances[key] = {label:item.label, emoji:item.emoji, desc:item.desc, category:item.category||'medication', interactions:item.interactions, warningFoods:item.warningFoods};
     if (!member.substances.includes(key)) member.substances.push(key);
     renderSubstances();
   } else if (type === 'condition') {
+    // 공유 DB: 양쪽 커스텀 스토어에 동시 저장
     customConditions[key] = {label:item.label, emoji:item.emoji, desc:item.desc, avoidFoods:item.avoidFoods||[], benefitFoods:item.benefitFoods||[], notes:item.notes||[]};
+    customFamilyHx[key] = {label:item.label, emoji:item.emoji, desc:item.desc};
     if (!member.conditions.includes(key)) member.conditions.push(key);
+    if (!member.familyHx.includes(key)) member.familyHx.push(key);
     renderConditions();
     updateProfileNote();
   }
