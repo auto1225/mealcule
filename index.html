@@ -2683,6 +2683,9 @@ async function exportReport() {
 // ── Supabase Config ──
 const SUPABASE_URL = 'https://ojtgkvtzmedsbhqkbhwe.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_6c8GjizbhYKUBzQywsoUhA_3KYN25-2';
+// 로컬 개발 환경에서는 API 호출을 Vercel 배포 서버로 라우팅
+const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  ? 'https://mealcule.vercel.app' : '';
 const USE_SUPABASE = SUPABASE_URL && SUPABASE_KEY;
 
 // Supabase Client (supabase-js v2)
@@ -3754,7 +3757,7 @@ async function confirmAddMethod() {
 async function addMethodWithAI(name) {
   const statusEl = document.getElementById('methodModalStatus');
   try {
-    const res = await fetch(`/api/add-method?name=${encodeURIComponent(name)}`);
+    const res = await fetch(`${API_BASE}/api/add-method?name=${encodeURIComponent(name)}`);
     let data;
     try { data = await res.json(); } catch { throw new Error('서버 응답 오류'); }
 
@@ -3899,7 +3902,7 @@ async function addIngredientWithAI(name) {
   grid.innerHTML = `<div style="text-align:center;padding:24px;color:#737373;font-size:13px">⏳ AI가 '${safe}' 분석 중...</div>`;
 
   try {
-    const res = await fetch(`/api/add-ingredient?name=${encodeURIComponent(name)}`);
+    const res = await fetch(`${API_BASE}/api/add-ingredient?name=${encodeURIComponent(name)}`);
     let data;
     try { data = await res.json(); } catch { throw new Error('서버 응답 오류 — 잠시 후 다시 시도해주세요'); }
 
