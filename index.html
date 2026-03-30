@@ -3565,7 +3565,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
   member.familyHx.forEach(fh => {
     const condMap = {fam_diabetes:'diabetes',fam_hypertension:'hypertension',fam_heart:'heart',fam_gout:'gout',fam_kidney:'kidney',fam_obesity:'obesity'};
     const mapped = condMap[fh];
-    if (mapped && !conditions.includes(mapped)) {
+    if (mapped && !member.conditions.includes(mapped)) {
       // 질환을 선택하지 않았지만 가족력이 있는 경우 예방 분석
       if (fh === 'fam_diabetes' && comp.carbs > 50) {
         traitFindings.push({severity:'caution', title:`가족력(당뇨) — 탄수화물 ${comp.carbs.toFixed(1)}g 주의`,
