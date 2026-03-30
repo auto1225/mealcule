@@ -189,10 +189,8 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
   .header-actions{gap:6px}
   .version-badge{display:none}
 }
-.condition-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.cond-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s}
-.cond-btn:hover{border-color:#fca5a5;background:#fef2f2}
-.cond-btn.active{border-color:transparent;background:#fef2f2;color:#dc2626;font-weight:600;box-shadow:0 0 0 2px rgba(239,68,68,0.12)}
+.condition-grid{margin-bottom:12px}
+.cond-btn{display:none} /* legacy — not used */
 .health-card{border-radius:10px;padding:16px;margin-bottom:12px;border-left:4px solid}
 .health-card.danger{background:#fef2f2;border-color:#ef4444}
 .health-card.caution{background:#fefce8;border-color:#eab308}
@@ -213,10 +211,26 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .profile-field input,.profile-field select{width:100%;padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;transition:all .2s}
 .profile-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px}
 .profile-field input:focus,.profile-field select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
-.family-grid{display:flex;flex-wrap:wrap;gap:8px}
-.family-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:12px;cursor:pointer;transition:all .2s}
-.family-btn:hover{border-color:#a3a3a3;background:#fafafa}
-.family-btn.active{border-color:transparent;background:var(--accent-light);color:#047857;font-weight:600;box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
+.family-grid{} /* replaced by health-table */
+.family-btn{display:none} /* legacy */
+/* ── 건강 프로필 테이블 ── */
+.health-table{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:4px}
+.health-row{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid #f5f5f5;transition:background .12s;user-select:none;background:#fff}
+.health-row:last-child{border-bottom:none}
+.health-row:hover{background:#fafafa}
+.health-row.active{background:#f0fdf4;border-left:3px solid var(--accent)}
+.health-row.active .health-row-label{color:#047857;font-weight:600}
+.health-row.cond-row.active{background:#fef2f2;border-left:3px solid #ef4444}
+.health-row.cond-row.active .health-row-label{color:#dc2626;font-weight:600}
+.health-row-check{width:16px;height:16px;border-radius:4px;border:1.5px solid #d4d4d4;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .15s}
+.health-row.active .health-row-check{background:var(--accent);border-color:var(--accent);color:#fff}
+.health-row.cond-row.active .health-row-check{background:#ef4444;border-color:#ef4444;color:#fff}
+.health-row-icon{font-size:15px;flex-shrink:0;width:20px;text-align:center;line-height:1}
+.health-row-main{flex:1;min-width:0}
+.health-row-label{font-size:13px;color:var(--text-secondary);font-weight:500}
+.health-row-desc{font-size:11px;color:#a3a3a3;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.health-table-section{font-size:10px;color:#a3a3a3;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:6px 14px 4px;background:#fafafa;border-bottom:1px solid #f5f5f5}
+.health-row.custom-item .health-row-label::after{content:'AI';font-size:8px;background:var(--accent);color:#fff;border-radius:3px;padding:1px 4px;margin-left:5px;vertical-align:middle;font-weight:700}
 .toggle-btn{padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
 .profile-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
@@ -3266,24 +3280,19 @@ async function init() {
 }
 
 function renderConditions() {
-  const grid = document.getElementById("condGrid");
+  const container = document.getElementById("condGrid");
   const member = activeMember();
-  grid.innerHTML = "";
-  Object.entries(CONDITIONS).forEach(([key, c]) => {
-    const btn = document.createElement("button");
-    btn.className = "cond-btn" + (member.conditions.includes(key) ? " active" : "");
-    btn.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
-    btn.onclick = () => toggleCondition(key);
-    grid.appendChild(btn);
+  container.innerHTML = "";
+  const table = document.createElement("div");
+  table.className = "health-table";
+  const allConds = {...CONDITIONS, ...customConditions};
+  Object.entries(allConds).forEach(([key, c]) => {
+    const active = member.conditions.includes(key);
+    const isCustom = !!customConditions[key];
+    const row = _makeHealthRow(key, c.emoji, c.label, c.desc || '', active, isCustom, 'cond-row', () => toggleCondition(key));
+    table.appendChild(row);
   });
-  Object.entries(customConditions).forEach(([key, c]) => {
-    const btn = document.createElement("button");
-    btn.className = "cond-btn custom-item" + (member.conditions.includes(key) ? " active" : "");
-    btn.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
-    btn.title = c.desc || '';
-    btn.onclick = () => toggleCondition(key);
-    grid.appendChild(btn);
-  });
+  container.appendChild(table);
 }
 
 function toggleCondition(key) {
@@ -3301,48 +3310,56 @@ function toggleProfile() {
   if (!profileOpen) updateProfileSummary();
 }
 
+function _makeHealthRow(key, icon, label, desc, isActive, isCustom, extraClass, onToggle) {
+  const row = document.createElement("div");
+  row.className = "health-row" + (isActive ? " active" : "") + (isCustom ? " custom-item" : "") + (extraClass ? " " + extraClass : "");
+  row.innerHTML = `
+    <div class="health-row-check">✓</div>
+    <div class="health-row-icon">${icon}</div>
+    <div class="health-row-main">
+      <div class="health-row-label">${label}</div>
+      ${desc ? `<div class="health-row-desc">${desc}</div>` : ''}
+    </div>`;
+  row.onclick = onToggle;
+  return row;
+}
+
 function renderTraits() {
-  const grid = document.getElementById("traitGrid");
+  const container = document.getElementById("traitGrid");
   const member = activeMember();
-  grid.innerHTML = "";
+  container.innerHTML = "";
+  const table = document.createElement("div");
+  table.className = "health-table";
   const allTraits = {...TRAITS, ...customTraits};
   Object.entries(allTraits).forEach(([key, t]) => {
-    const btn = document.createElement("button");
-    const isCustom = !!customTraits[key];
-    btn.className = "family-btn" + (member.traits.includes(key) ? " active" : "") + (isCustom ? " custom-item" : "");
-    btn.innerHTML = `${t.emoji} ${t.label}`;
-    btn.title = t.desc || '';
-    btn.onclick = () => {
+    const active = member.traits.includes(key);
+    const row = _makeHealthRow(key, t.emoji, t.label, t.desc || '', active, !!customTraits[key], '', () => {
       const idx = member.traits.indexOf(key);
-      if (idx >= 0) member.traits.splice(idx, 1);
-      else member.traits.push(key);
-      renderTraits();
-      updateProfileSummary();
-    };
-    grid.appendChild(btn);
+      if (idx >= 0) member.traits.splice(idx, 1); else member.traits.push(key);
+      renderTraits(); updateProfileSummary();
+    });
+    table.appendChild(row);
   });
+  container.appendChild(table);
 }
 
 function renderFamilyHx() {
-  const grid = document.getElementById("familyGrid");
+  const container = document.getElementById("familyGrid");
   const member = activeMember();
-  grid.innerHTML = "";
+  container.innerHTML = "";
+  const table = document.createElement("div");
+  table.className = "health-table";
   const allFamily = {...FAMILY_HISTORY, ...customFamilyHx};
   Object.entries(allFamily).forEach(([key, f]) => {
-    const btn = document.createElement("button");
-    const isCustom = !!customFamilyHx[key];
-    btn.className = "family-btn" + (member.familyHx.includes(key) ? " active" : "") + (isCustom ? " custom-item" : "");
-    btn.innerHTML = `${f.emoji} ${f.label}`;
-    btn.title = f.desc || '';
-    btn.onclick = () => {
+    const active = member.familyHx.includes(key);
+    const row = _makeHealthRow(key, f.emoji, f.label, f.desc || '', active, !!customFamilyHx[key], '', () => {
       const idx = member.familyHx.indexOf(key);
-      if (idx >= 0) member.familyHx.splice(idx, 1);
-      else member.familyHx.push(key);
-      renderFamilyHx();
-      updateProfileSummary();
-    };
-    grid.appendChild(btn);
+      if (idx >= 0) member.familyHx.splice(idx, 1); else member.familyHx.push(key);
+      renderFamilyHx(); updateProfileSummary();
+    });
+    table.appendChild(row);
   });
+  container.appendChild(table);
 }
 
 function loadMemberForm() {
@@ -3476,37 +3493,33 @@ function deleteMember(memberId) {
 }
 
 function renderSubstances() {
-  const grid = document.getElementById("substanceGrid");
+  const container = document.getElementById("substanceGrid");
   const member = activeMember();
-  if (!grid) return;
-  grid.innerHTML = "";
+  if (!container) return;
+  container.innerHTML = "";
   const allSubstances = {...SUBSTANCES, ...customSubstances};
   const categories = {alcohol: '음주', smoking: '흡연', medication: '약물', supplement: '영양제', lifestyle: '생활습관'};
   const categoryOrder = ['alcohol', 'smoking', 'medication', 'supplement', 'lifestyle'];
+  const table = document.createElement("div");
+  table.className = "health-table";
   categoryOrder.forEach(cat => {
     const items = Object.entries(allSubstances).filter(([k,v]) => v.category === cat);
-    if (items.length > 0) {
-      const header = document.createElement("div");
-      header.className = "substance-category";
-      header.textContent = categories[cat];
-      grid.appendChild(header);
-      items.forEach(([key, s]) => {
-        const btn = document.createElement("button");
-        const isCustom = !!customSubstances[key];
-        btn.className = "ing-btn" + (member.substances.includes(key) ? " active" : "") + (isCustom ? " custom-item" : "");
-        btn.innerHTML = `<span>${s.emoji}</span><span>${s.label}</span>`;
-        btn.title = s.desc || '';
-        btn.onclick = () => {
-          const idx = member.substances.indexOf(key);
-          if (idx >= 0) member.substances.splice(idx, 1);
-          else member.substances.push(key);
-          renderSubstances();
-          updateProfileSummary();
-        };
-        grid.appendChild(btn);
+    if (items.length === 0) return;
+    const header = document.createElement("div");
+    header.className = "health-table-section";
+    header.textContent = categories[cat];
+    table.appendChild(header);
+    items.forEach(([key, s]) => {
+      const active = member.substances.includes(key);
+      const row = _makeHealthRow(key, s.emoji, s.label, s.desc || '', active, !!customSubstances[key], '', () => {
+        const idx = member.substances.indexOf(key);
+        if (idx >= 0) member.substances.splice(idx, 1); else member.substances.push(key);
+        renderSubstances(); updateProfileSummary();
       });
-    }
+      table.appendChild(row);
+    });
   });
+  container.appendChild(table);
 }
 
 // 투입 재료의 총 영양 성분 계산 (100g 기준 DB → 실제 g 환산)
