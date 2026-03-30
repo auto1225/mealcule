@@ -1899,28 +1899,40 @@ const PARENT_GROUPS = {
 };
 const CHILD_SET = new Set(Object.values(PARENT_GROUPS).flat());
 
+// ── 조리 방법 데이터 ──────────────────────────────────────────────────────────
+// medium: 열전달 매체 — dry(건열) | water(수침) | steam(증기) | oil(유침) | mw(마이크로파) | smoke(훈연) | none(비가열)
+// pressure_atm: 조리 중 기압 배수 (1.0=상압, 압력솥≈1.3 → 비등점 121°C)
+// o2_level: 산소 노출도 0-1 (지질산화, 비타민 산화 속도에 비례)
+// leach_factor: 수용성 영양소 용출율 0-1 (1=완전 침지, 0=건열 무손실)
+// fat_contact: 지방상 직접 접촉 여부 (지용성 영양소 추출, 지질산화, 칼로리 증가)
+// browning: 마이야르·캐러멜화 가능 여부 (건열 표면에서 수분 증발 후 가능)
+// starch_h2o: 전분 호화 가능 여부 (수분 공급 필요)
+// pah_risk: 연소·훈연으로 인한 PAH/HCA 생성 위험
+// uniformity: 온도 균일도 — high(균일) | medium(중간) | low(불균일·핫스팟)
+// ─────────────────────────────────────────────────────────────────────────────
+//                         medium    p_atm  o2   leach  fat    brown  h2o    pah    unif
 const METHODS = {
-  pan_fry:     {label:"팬 프라이",   emoji:"🍳",range:[150,220]},
-  boil:        {label:"끓이기",     emoji:"🍲",range:[95,100]},
-  steam:       {label:"찜",        emoji:"♨️",range:[95,100]},
-  grill:       {label:"그릴",      emoji:"🔥",range:[200,300]},
-  oven:        {label:"오븐",      emoji:"🫕",range:[150,250]},
-  deep_fry:    {label:"튀김",      emoji:"🍤",range:[160,190]},
-  stir_fry:    {label:"볶음",      emoji:"🥘",range:[180,250]},
-  air_fry:     {label:"에어프라이어",emoji:"🌀",range:[160,210]},
-  microwave:   {label:"전자레인지", emoji:"📡",range:[60,100]},
-  pressure:    {label:"압력솥",    emoji:"🫙",range:[110,130]},
-  slow_cook:   {label:"슬로우쿠킹",emoji:"⏲️",range:[70,95]},
-  sous_vide:   {label:"수비드",    emoji:"🎯",range:[50,90]},
-  smoke:       {label:"훈제",      emoji:"🪵",range:[90,135]},
-  charcoal:    {label:"숯불구이",  emoji:"🔥",range:[300,500]},
-  wok:         {label:"웍 볶음",   emoji:"🥢",range:[200,300]},
-  blanch:      {label:"데치기",    emoji:"💧",range:[90,100]},
-  braise:      {label:"브레이징",  emoji:"🍖",range:[80,100]},
-  poach:       {label:"포칭",      emoji:"🫗",range:[70,85]},
-  tandoor:     {label:"탄두르",    emoji:"🏺",range:[250,480]},
-  ferment:     {label:"발효",      emoji:"🧫",range:[4,40]},
-  raw:         {label:"생식",      emoji:"🥗",range:[0,25]},
+  pan_fry:  {label:"팬 프라이",  emoji:"🍳",range:[150,220], medium:'dry',    pressure_atm:1.0, o2_level:0.7, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  boil:     {label:"끓이기",    emoji:"🍲",range:[95,100],  medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.9, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  steam:    {label:"찜",       emoji:"♨️",range:[95,100],  medium:'steam',  pressure_atm:1.0, o2_level:0.2, leach_factor:0.2, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  grill:    {label:"그릴",     emoji:"🔥",range:[200,300],  medium:'dry',    pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  oven:     {label:"오븐",     emoji:"🫕",range:[150,250],  medium:'dry',    pressure_atm:1.0, o2_level:0.8, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  deep_fry: {label:"튀김",     emoji:"🍤",range:[160,190],  medium:'oil',    pressure_atm:1.0, o2_level:0.4, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'high'  },
+  stir_fry: {label:"볶음",     emoji:"🥘",range:[180,250],  medium:'dry',    pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  air_fry:  {label:"에어프라이어",emoji:"🌀",range:[160,210], medium:'dry',   pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  microwave:{label:"전자레인지",emoji:"📡",range:[60,100],   medium:'mw',     pressure_atm:1.0, o2_level:0.5, leach_factor:0.3, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'low'   },
+  pressure: {label:"압력솥",   emoji:"🫙",range:[110,130],  medium:'water',  pressure_atm:1.3, o2_level:0.0, leach_factor:0.7, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  slow_cook:{label:"슬로우쿠킹",emoji:"⏲️",range:[70,95],   medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.8, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  sous_vide:{label:"수비드",   emoji:"🎯",range:[50,90],    medium:'water',  pressure_atm:1.0, o2_level:0.0, leach_factor:0.1, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  smoke:    {label:"훈제",     emoji:"🪵",range:[90,135],   medium:'smoke',  pressure_atm:1.0, o2_level:0.6, leach_factor:0.0, fat_contact:false, browning:false, starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  charcoal: {label:"숯불구이", emoji:"🔥",range:[300,500],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  wok:      {label:"웍 볶음",  emoji:"🥢",range:[200,300],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'low'   },
+  blanch:   {label:"데치기",   emoji:"💧",range:[90,100],   medium:'water',  pressure_atm:1.0, o2_level:0.2, leach_factor:0.6, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  braise:   {label:"브레이징", emoji:"🍖",range:[80,100],   medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.6, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  poach:    {label:"포칭",     emoji:"🫗",range:[70,85],    medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.5, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  tandoor:  {label:"탄두르",   emoji:"🏺",range:[250,480],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  ferment:  {label:"발효",     emoji:"🧫",range:[4,40],     medium:'none',   pressure_atm:1.0, o2_level:0.3, leach_factor:0.1, fat_contact:false, browning:false, starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  raw:      {label:"생식",     emoji:"🥗",range:[0,25],     medium:'none',   pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:false, starch_h2o:false, pah_risk:false, uniformity:'high'  },
 };
 
 // ── 질환별 식이 규칙 DB ──
@@ -3931,6 +3943,7 @@ const SCI = {
 
 // ── Analysis Engine (gram-weighted, Arrhenius kinetics) ──
 function analyze(ingMap, method, temp, time) {
+  const md = METHODS[method] || {};  // 조리 방법 물리화학 인자
   const ings = Object.keys(ingMap);
   const rxns = [], warns = [];
   const totalG = Object.values(ingMap).reduce((a,b)=>a+b,0) || 1;
@@ -3963,7 +3976,8 @@ function analyze(ingMap, method, temp, time) {
   const hasAllicin = totalAllicin > 0.05 || has(d => d.compounds.some(c => c.includes("알리신")));
 
   // ── Maillard Reaction: 2nd-order Arrhenius, Ea=100 kJ/mol (Martins, Jongen & van Boekel 2001) ──
-  if (hasAmino && hasSugar && temp >= 140) {
+  // 건열 표면에서만 발생 (수분 매체 = 수증기·수침에서는 표면 갈변 불가)
+  if (hasAmino && hasSugar && temp >= 140 && md.browning) {
     const ext = SCI.maillardExtent(temp, time);
     const int = Math.min(100, Math.round(ext * 100));
     const T = temp + 273.15;
@@ -3978,7 +3992,8 @@ function analyze(ingMap, method, temp, time) {
   }
 
   // ── Caramelization: Ea=128 kJ/mol (Kroh 1994, Food Chem) ──
-  if (hasSugar && temp >= 120) {
+  // 마이야르와 동일하게 건열 표면 필요, 수침에서는 당이 녹아나와 캐러멜화 불가
+  if (hasSugar && temp >= 120 && md.browning) {
     const ext = SCI.caramelExtent(temp, time);
     const int = Math.min(100, Math.round(ext * 100));
     if (int > 2) {
@@ -4009,7 +4024,8 @@ function analyze(ingMap, method, temp, time) {
   }
 
   // ── Starch Gelatinization: Avrami n=3, Ea=260 kJ/mol (Donovan 1979, Biopolymers) ──
-  if (hasStarch && temp >= 55 && ["boil","steam","pan_fry","stir_fry","wok","pressure","slow_cook","braise","blanch","poach","microwave"].includes(method)) {
+  // starch_h2o=true인 방법(수침·증기·마이크로파)에서만 전분 호화 발생
+  if (hasStarch && temp >= 55 && md.starch_h2o) {
     const frac = SCI.starchGelatinization(temp, time);
     const int = Math.min(100, Math.round(frac * 100));
     if (int > 1) {
@@ -4023,9 +4039,13 @@ function analyze(ingMap, method, temp, time) {
   }
 
   // ── Vitamin C Degradation: 1st-order, Ea=75 kJ/mol (Santos & Silva 2008) ──
+  // leach_factor: 수침에서 비타민 C가 조리수로 용출되어 추가 손실 발생
   const vitCIngs = ings.filter(i => DB[i]?.vit?.C && DB[i].vit.C > 10);
   if (vitCIngs.length > 0 && temp >= 60) {
-    const ret = SCI.vitCRetention(temp, time);
+    const thermalRet = SCI.vitCRetention(temp, time);
+    // 용출 손실 추가: leach_factor만큼 비례해서 잔존율 추가 감소
+    const leachPenalty = (md.leach_factor || 0) * 0.35;
+    const ret = Math.max(0.01, thermalRet * (1 - leachPenalty));
     const loss = Math.min(99, Math.round((1-ret)*100));
     const T = temp + 273.15;
     const k = 3e6 * Math.exp(-75000/(SCI.R*T));
@@ -4039,12 +4059,13 @@ function analyze(ingMap, method, temp, time) {
   }
 
   // ── Lipid Oxidation: induction period model (Frankel 1980, Prog Lipid Res) ──
-  if (hasFat && temp >= 150) {
-    const ox = SCI.lipidOxidation(temp, time);
+  // o2_level이 낮을수록(진공·밀폐) 산화 억제, fat_contact=true이면 기름 흡수로 산화 기질↑
+  if (hasFat && temp >= 150 && (md.o2_level || 0) > 0.2) {
+    const ox = SCI.lipidOxidation(temp, time) * Math.max(0.1, md.o2_level || 0.7);
     const int = Math.min(100, Math.round(ox * 100));
     if (int > 5) {
       rxns.push({name:"지질 산화 (Lipid Oxidation)",key:"lipid_oxidation",icon:"⚠️",intensity:int,
-        desc:`불포화지방산이 산소와 반응 → 과산화지질 생성 위험도 ${int}%`,
+        desc:`불포화지방산이 산소(노출도 ${Math.round((md.o2_level||0.7)*100)}%)와 반응 → 과산화지질 생성 위험도 ${int}%`,
         effects:["산패취 발생","과산화지질 생성","필수지방산 손실"],
         science:`유도기간 모델: Ea_개시=150kJ/mol, Ea_전파=60kJ/mol (Frankel 1980)`,
         proDetail:`Frankel (1980) Prog Lipid Res 19:1. 자동산화 3단계: 개시(Ea=150kJ/mol)→전파(Ea=60kJ/mol)→종결. ROOH 누적량 ∝ exp(-Ea_init/RT)·t. 항산화제(토코페롤) 존재시 유도기간 2-5배 연장. 현재 산화위험도=${int}%.`,
@@ -4121,11 +4142,24 @@ function analyze(ingMap, method, temp, time) {
       health:"리코펜: 전립선암 위험↓(RR 0.79, Giovannucci 1995), LDL 산화↓"});
   }
 
+  // ── Method-specific warnings (METHODS 데이터 기반) ────────────────────────
   if (temp>=250) warns.push({type:"경고",msg:"250°C 이상: PAH(다환방향족탄화수소) 및 HCA(이환아민) 생성 → IARC Group 2A 발암물질 위험"});
-  if (method==="deep_fry" && time>15) warns.push({type:"주의",msg:`장시간 튀김(${time}분): 과산화지질(LOOH) 누적 — 발연점 초과 여부 확인 권장`});
-  if (method==="charcoal" || method==="smoke") warns.push({type:"주의",msg:"숯불/훈제: 연기 중 PAH(벤조피렌 등) 육류 표면 침착 — 탄화 부위 제거 권장"});
-  if (method==="pressure" && time>45) warns.push({type:"주의",msg:`장시간 압력 조리(${time}분): 수용성 비타민(B군, C) 손실 최대 40% 가능`});
-  if (method==="microwave" && temp>100) warns.push({type:"주의",msg:"전자레인지 과가열: 국소 핫스팟 발생 → 불균일한 온도 분포로 살균 불완전 가능"});
+  if (md.pah_risk) warns.push({type:"주의",msg:`${md.label} — 연소·훈연 PAH(벤조피렌 등) 표면 침착 위험 (o2 노출도 ${Math.round((md.o2_level||0)*100)}%) — 탄화 부위 제거 권장`});
+  if (md.medium==='oil' && time>15) warns.push({type:"주의",msg:`장시간 유침 조리(${time}분): 과산화지질(LOOH) 누적, 발연점 초과 여부 확인 권장`});
+  if ((md.pressure_atm||1)>1.1) warns.push({type:"정보",msg:`압력 조리(${md.pressure_atm}atm) → 비등점 약 ${Math.round(100 + (md.pressure_atm-1)*27)}°C, 단백질 변성·전분 호화 촉진 — 영양소 보존률은 저온 장시간 조리보다 우수`});
+  if (md.medium==='mw' && md.uniformity==='low') warns.push({type:"주의",msg:"마이크로파 유전 가열: 국소 핫스팟 발생 → 온도 불균일(±20°C), 중간에 저어주기 권장"});
+  if ((md.leach_factor||0)>=0.8 && time>30) warns.push({type:"정보",msg:`장시간 수침 조리(${time}분): 수용성 영양소(B군, C, 칼륨) 조리수로 용출 최대 ${Math.round((md.leach_factor||0)*90)}% — 국물도 함께 섭취 권장`});
+  if (md.medium==='none' && method==='ferment') {
+    rxns.push({name:"발효 (Fermentation)",key:"fermentation",icon:"🧫",intensity:70,
+      desc:"미생물 대사로 유기산·알코올·항균 펩타이드 생성 → 풍미·저장성·프로바이오틱스↑",
+      effects:["젖산·초산 생성(pH↓)","단백질 가수분해","프로바이오틱스 증식","비타민 B군 증가"],
+      science:"젖산균 Lactobacillus: 포도당→젖산 (Embden-Meyerhof 경로, ΔG=-196kJ/mol)",
+      proDetail:"젖산 발효: 포도당 → 2 젖산 (ΔG°=-196kJ/mol). pH 3.5-4.5 도달 시 유해균 억제. 프로테아제 활성화 → 펩타이드·아미노산 증가 → 감칠맛↑. 비타민 B12·K2·엽산 신생합성 가능. ACE억제 펩타이드(혈압↓), GABA(신경안정) 생성.",
+      health:"프로바이오틱스, 단쇄지방산(SCFA) 생산 → 장내 미생물 다양성↑, 면역 조절"});
+  }
+  if (md.medium==='water' && md.pressure_atm===1.0 && method==='sous_vide') {
+    warns.push({type:"정보",msg:`수비드 저온 장시간(${temp}°C/${time}분): 정밀 온도 제어로 단백질 변성도 최적화 가능 — 단, 63°C 미만에서 가금류 사용 시 살모넬라 살균 시간 확인 필요`});
+  }
   return {rxns, warns};
 }
 
@@ -4143,7 +4177,10 @@ function calcNutrition(ingMap, method, temp, time) {
     });
   });
   const waterSol = ["C","B1","B2","B6","B12","folate","niacin"];
+  const mData = METHODS[method] || {};
   const idx = SCI.methodIdx(method);
+  // leach_factor: 수용성 영양소 용출 보정 (boil=0.9 → 최대 35% 추가 감소, steam=0.2 → 7% 추가 감소)
+  const leachPenalty = (mData.leach_factor || 0) * 0.35;
   Object.keys(n).forEach(k => {
     const baseRet = SCI.USDA[k]?.[idx] ?? (waterSol.includes(k) ? 0.75 : 0.90);
     const isWS = waterSol.includes(k);
@@ -4157,6 +4194,8 @@ function calcNutrition(ingMap, method, temp, time) {
     } else {
       r = SCI.timeCorrect(baseRet, time, isWS);
     }
+    // 수용성 영양소는 조리수 용출 추가 감소 적용
+    if (isWS) r = Math.max(0.05, r * (1 - leachPenalty));
     n[k].cooked = Math.round(n[k].orig * r * 100) / 100;
     n[k].ret = Math.round(r * 100);
   });
