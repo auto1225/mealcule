@@ -213,24 +213,12 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .profile-field input:focus,.profile-field select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(5,150,105,0.15)}
 .family-grid{} /* replaced by health-table */
 .family-btn{display:none} /* legacy */
-/* ── 건강 프로필 테이블 ── */
-.health-table{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:4px}
-.health-row{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid #f5f5f5;transition:background .12s;user-select:none;background:#fff}
-.health-row:last-child{border-bottom:none}
-.health-row:hover{background:#fafafa}
-.health-row.active{background:#f0fdf4;border-left:3px solid var(--accent)}
-.health-row.active .health-row-label{color:#047857;font-weight:600}
-.health-row.cond-row.active{background:#fef2f2;border-left:3px solid #ef4444}
-.health-row.cond-row.active .health-row-label{color:#dc2626;font-weight:600}
-.health-row-check{width:16px;height:16px;border-radius:4px;border:1.5px solid #d4d4d4;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .15s}
-.health-row.active .health-row-check{background:var(--accent);border-color:var(--accent);color:#fff}
-.health-row.cond-row.active .health-row-check{background:#ef4444;border-color:#ef4444;color:#fff}
-.health-row-icon{font-size:15px;flex-shrink:0;width:20px;text-align:center;line-height:1}
-.health-row-main{flex:1;min-width:0}
-.health-row-label{font-size:13px;color:var(--text-secondary);font-weight:500}
-.health-row-desc{font-size:11px;color:#a3a3a3;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.health-table-section{font-size:10px;color:#a3a3a3;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:6px 14px 4px;background:#fafafa;border-bottom:1px solid #f5f5f5}
-.health-row.custom-item .health-row-label::after{content:'AI';font-size:8px;background:var(--accent);color:#fff;border-radius:3px;padding:1px 4px;margin-left:5px;vertical-align:middle;font-weight:700}
+/* ── 건강 프로필 그리드 (재료 테이블과 동일 구조) ── */
+.health-ing-row{display:grid;grid-template-columns:repeat(4,1fr)}
+.health-ing-row .ing-cell:nth-child(4n){border-right:none}
+.ing-cell.cond-active{background:#fef2f2}
+.ing-cell.cond-active .ci-n{color:#dc2626;font-weight:600}
+.ing-cell.health-custom .ci-n::after{content:'AI';font-size:7px;background:var(--accent);color:#fff;border-radius:3px;padding:0 3px;margin-left:3px;vertical-align:middle;font-weight:700}
 .toggle-btn{padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
 .profile-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
@@ -3283,16 +3271,13 @@ function renderConditions() {
   const container = document.getElementById("condGrid");
   const member = activeMember();
   container.innerHTML = "";
-  const table = document.createElement("div");
-  table.className = "health-table";
   const allConds = {...CONDITIONS, ...customConditions};
-  Object.entries(allConds).forEach(([key, c]) => {
-    const active = member.conditions.includes(key);
-    const isCustom = !!customConditions[key];
-    const row = _makeHealthRow(key, c.emoji, c.label, c.desc || '', active, isCustom, 'cond-row', () => toggleCondition(key));
-    table.appendChild(row);
-  });
-  container.appendChild(table);
+  container.appendChild(_healthGrid(
+    Object.entries(allConds), member,
+    k => member.conditions.includes(k),
+    k => toggleCondition(k),
+    'cond-active', k => !!customConditions[k]
+  ));
 }
 
 function toggleCondition(key) {
@@ -3324,42 +3309,57 @@ function _makeHealthRow(key, icon, label, desc, isActive, isCustom, extraClass, 
   return row;
 }
 
+function _healthCell(key, emoji, label, desc, active, isCustom, activeCls, onToggle) {
+  const cell = document.createElement("div");
+  cell.className = "ing-cell" + (active ? (" " + (activeCls || "active")) : "") + (isCustom ? " health-custom" : "");
+  cell.innerHTML = `<span class="ci-e">${emoji}</span><span class="ci-n">${label}</span>`;
+  cell.title = desc || '';
+  cell.onclick = onToggle;
+  return cell;
+}
+
+function _healthGrid(entries, member, keyFn, toggleFn, activeCls, isCustomFn) {
+  const wrap = document.createElement("div");
+  wrap.className = "ing-table";
+  for (let i = 0; i < entries.length; i += 4) {
+    const row = document.createElement("div");
+    row.className = "ing-row health-ing-row";
+    entries.slice(i, i + 4).forEach(([key, item]) => {
+      row.appendChild(_healthCell(
+        key, item.emoji, item.label, item.desc || '',
+        keyFn(key), isCustomFn ? isCustomFn(key) : false,
+        activeCls, () => { toggleFn(key); }
+      ));
+    });
+    wrap.appendChild(row);
+  }
+  return wrap;
+}
+
 function renderTraits() {
   const container = document.getElementById("traitGrid");
   const member = activeMember();
   container.innerHTML = "";
-  const table = document.createElement("div");
-  table.className = "health-table";
   const allTraits = {...TRAITS, ...customTraits};
-  Object.entries(allTraits).forEach(([key, t]) => {
-    const active = member.traits.includes(key);
-    const row = _makeHealthRow(key, t.emoji, t.label, t.desc || '', active, !!customTraits[key], '', () => {
-      const idx = member.traits.indexOf(key);
-      if (idx >= 0) member.traits.splice(idx, 1); else member.traits.push(key);
-      renderTraits(); updateProfileSummary();
-    });
-    table.appendChild(row);
-  });
-  container.appendChild(table);
+  container.appendChild(_healthGrid(
+    Object.entries(allTraits), member,
+    k => member.traits.includes(k),
+    k => { const i = member.traits.indexOf(k); if (i>=0) member.traits.splice(i,1); else member.traits.push(k); renderTraits(); updateProfileSummary(); },
+    'active', k => !!customTraits[k]
+  ));
 }
 
 function renderFamilyHx() {
   const container = document.getElementById("familyGrid");
   const member = activeMember();
   container.innerHTML = "";
-  const table = document.createElement("div");
-  table.className = "health-table";
   const allFamily = {...FAMILY_HISTORY, ...customFamilyHx};
-  Object.entries(allFamily).forEach(([key, f]) => {
-    const active = member.familyHx.includes(key);
-    const row = _makeHealthRow(key, f.emoji, f.label, f.desc || '', active, !!customFamilyHx[key], '', () => {
-      const idx = member.familyHx.indexOf(key);
-      if (idx >= 0) member.familyHx.splice(idx, 1); else member.familyHx.push(key);
-      renderFamilyHx(); updateProfileSummary();
-    });
-    table.appendChild(row);
-  });
-  container.appendChild(table);
+  container.appendChild(_healthGrid(
+    Object.entries(allFamily), member,
+    k => member.familyHx.includes(k),
+    k => { const i = member.familyHx.indexOf(k); if (i>=0) member.familyHx.splice(i,1); else member.familyHx.push(k); renderFamilyHx(); updateProfileSummary(); },
+    'active', k => !!customFamilyHx[k]
+  ));
 }
 
 function loadMemberForm() {
@@ -3498,28 +3498,31 @@ function renderSubstances() {
   if (!container) return;
   container.innerHTML = "";
   const allSubstances = {...SUBSTANCES, ...customSubstances};
-  const categories = {alcohol: '음주', smoking: '흡연', medication: '약물', supplement: '영양제', lifestyle: '생활습관'};
-  const categoryOrder = ['alcohol', 'smoking', 'medication', 'supplement', 'lifestyle'];
-  const table = document.createElement("div");
-  table.className = "health-table";
-  categoryOrder.forEach(cat => {
-    const items = Object.entries(allSubstances).filter(([k,v]) => v.category === cat);
-    if (items.length === 0) return;
-    const header = document.createElement("div");
-    header.className = "health-table-section";
-    header.textContent = categories[cat];
-    table.appendChild(header);
-    items.forEach(([key, s]) => {
-      const active = member.substances.includes(key);
-      const row = _makeHealthRow(key, s.emoji, s.label, s.desc || '', active, !!customSubstances[key], '', () => {
-        const idx = member.substances.indexOf(key);
-        if (idx >= 0) member.substances.splice(idx, 1); else member.substances.push(key);
-        renderSubstances(); updateProfileSummary();
+  const catLabels = {alcohol:'🍷 음주', smoking:'🚬 흡연', medication:'💊 약물', supplement:'🌿 영양제', lifestyle:'🏃 생활습관'};
+  const catOrder = ['alcohol','smoking','medication','supplement','lifestyle'];
+  const wrap = document.createElement("div");
+  wrap.className = "ing-table";
+  catOrder.forEach(cat => {
+    const items = Object.entries(allSubstances).filter(([,v]) => v.category === cat);
+    if (!items.length) return;
+    const hdr = document.createElement("div");
+    hdr.className = "ing-cat-hdr";
+    hdr.innerHTML = `<span>${catLabels[cat]}</span>`;
+    wrap.appendChild(hdr);
+    for (let i = 0; i < items.length; i += 4) {
+      const row = document.createElement("div");
+      row.className = "ing-row health-ing-row";
+      items.slice(i, i+4).forEach(([key, s]) => {
+        row.appendChild(_healthCell(
+          key, s.emoji, s.label, s.desc || '',
+          member.substances.includes(key), !!customSubstances[key], 'active',
+          () => { const idx = member.substances.indexOf(key); if (idx>=0) member.substances.splice(idx,1); else member.substances.push(key); renderSubstances(); updateProfileSummary(); }
+        ));
       });
-      table.appendChild(row);
-    });
+      wrap.appendChild(row);
+    }
   });
-  container.appendChild(table);
+  container.appendChild(wrap);
 }
 
 // 투입 재료의 총 영양 성분 계산 (100g 기준 DB → 실제 g 환산)
