@@ -834,9 +834,9 @@ const CATEGORIES = {
 
 // ── 식재료 DB (350+ 재료, 15개 카테고리) ──
 const DB = {
-  "소고기":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:26,fat:15,carbs:0,water:59,fiber:0},amino:["글루탐산","리신","류신"],vit:{B12:2.6,B6:0.4,niacin:5.1,iron:2.6,zinc:4.8},compounds:["미오글로빈","콜라겐","크레아틴","카르노신"],flavor:{umami:80,sweet:10,salty:5,sour:0,bitter:5}},
-  "돼지고기":{cat:"meat",emoji:"🥓",defaultG:200,comp:{protein:27,fat:14,carbs:0,water:58,fiber:0},amino:["글루탐산","리신","류신"],vit:{B1:0.73,B6:0.5,niacin:8.9,iron:2.2,zinc:2.8},compounds:["미오글로빈","카르니틴","크레아틴"],flavor:{umami:75,sweet:8,salty:5,sour:0,bitter:5}},
-  "닭가슴살":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:31,fat:3.6,carbs:0,water:65,fiber:0},amino:["류신","리신","메티오닌"],vit:{B6:0.88,niacin:9.9,selenium:27.4},compounds:["미오글로빈","카르노신","안세린"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5}},
+  "소고기":{cat:"meat",emoji:"🥩",defaultG:200,comp:{protein:26,fat:15,carbs:0,water:59,fiber:0},amino:["글루탐산","리신","류신","이소류신","발린"],vit:{B12:2.6,B6:0.4,niacin:5.1,iron:2.6,zinc:4.8,phosphorus:198,selenium:18.2,magnesium:21},compounds:["미오글로빈","콜라겐","크레아틴","카르노신"],flavor:{umami:80,sweet:10,salty:5,sour:0,bitter:5},sci:{glu:3.3,imp:230,asparagine:0.04,free_glu:33}},
+  "돼지고기":{cat:"meat",emoji:"🥓",defaultG:200,comp:{protein:27,fat:14,carbs:0,water:58,fiber:0},amino:["글루탐산","리신","류신","이소류신"],vit:{B1:0.73,B6:0.5,niacin:8.9,iron:2.2,zinc:2.8,phosphorus:210,selenium:28,magnesium:22},compounds:["미오글로빈","카르니틴","크레아틴"],flavor:{umami:75,sweet:8,salty:5,sour:0,bitter:5},sci:{glu:2.8,imp:200,asparagine:0.03}},
+  "닭가슴살":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:31,fat:3.6,carbs:0,water:65,fiber:0},amino:["류신","리신","메티오닌","트립토판"],vit:{B6:0.88,niacin:9.9,selenium:27.4,phosphorus:228,magnesium:29},compounds:["미오글로빈","카르노신","안세린"],flavor:{umami:60,sweet:5,salty:5,sour:0,bitter:5},sci:{glu:3.0,imp:280,asparagine:0.03}},
   "닭다리":{cat:"meat",emoji:"🍗",defaultG:200,comp:{protein:26,fat:8,carbs:0,water:65,fiber:0},amino:["류신","리신"],vit:{B6:0.4,niacin:6.2,iron:1.4,zinc:2.8},compounds:["미오글로빈","콜라겐"],flavor:{umami:65,sweet:6,salty:5,sour:0,bitter:5}},
   "양고기":{cat:"meat",emoji:"🐑",defaultG:200,comp:{protein:25,fat:16,carbs:0,water:58,fiber:0},amino:["글루탐산","류신","리신"],vit:{B12:2.4,B6:0.3,iron:2.3},compounds:["미오글로빈","카르노신","카르니틴"],flavor:{umami:78,sweet:10,salty:6,sour:0,bitter:6}},
   "오리고기":{cat:"meat",emoji:"🦆",defaultG:200,comp:{protein:19,fat:28,carbs:0,water:52,fiber:0},amino:["글루탐산","류신"],vit:{B12:2.8,iron:3.8,zinc:3.2},compounds:["미오글로빈","철분"],flavor:{umami:70,sweet:8,salty:5,sour:0,bitter:8}},
@@ -844,9 +844,9 @@ const DB = {
   "소시지":{cat:"meat",emoji:"🌭",defaultG:50,comp:{protein:12,fat:28,carbs:4,water:55,fiber:0},amino:["류신","리신"],vit:{sodium:1100,iron:0.9},compounds:["니트라이트","타우린"],flavor:{umami:75,sweet:10,salty:75,sour:5,bitter:5}},
   "햄":{cat:"meat",emoji:"🍖",defaultG:50,comp:{protein:13,fat:6.5,carbs:1.5,water:79,fiber:0},amino:["류신","리신"],vit:{B1:0.53,iron:0.8},compounds:["니트라이트","글루탐산"],flavor:{umami:70,sweet:8,salty:70,sour:3,bitter:5}},
 
-  "연어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:25,fat:11,carbs:0,water:63,fiber:0},amino:["류신","리신","메티오닌"],vit:{D:12.5,B12:3.2,selenium:36,omega3:2.3},compounds:["아스타잔틴","오메가-3","카르노신"],flavor:{umami:70,sweet:8,salty:5,sour:5,bitter:5}},
+  "연어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:25,fat:11,carbs:0,water:63,fiber:0},amino:["류신","리신","메티오닌","트립토판"],vit:{D:12.5,B12:3.2,selenium:36,omega3:2.3,phosphorus:240,magnesium:29},compounds:["아스타잔틴","오메가-3","카르노신"],flavor:{umami:70,sweet:8,salty:5,sour:5,bitter:5},sci:{glu:2.1,imp:290,free_glu:20}},
   "참치":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:29,fat:1.3,carbs:0,water:69,fiber:0},amino:["류신","리신"],vit:{B12:9.3,niacin:7.2,selenium:90,omega3:0.2},compounds:["미오글로빈","아스타잔틴","타우린"],flavor:{umami:80,sweet:10,salty:5,sour:5,bitter:3}},
-  "새우":{cat:"seafood",emoji:"🦐",defaultG:100,comp:{protein:24,fat:0.3,carbs:0,water:75,fiber:0},amino:["류신","리신","메티오닌"],vit:{B12:1.68,selenium:38,calcium:52,iodine:150},compounds:["아스타잔틴","타우린","퀵토산"],flavor:{umami:75,sweet:8,salty:5,sour:5,bitter:3}},
+  "새우":{cat:"seafood",emoji:"🦐",defaultG:100,comp:{protein:24,fat:0.3,carbs:0,water:75,fiber:0},amino:["류신","리신","메티오닌","글리신"],vit:{B12:1.68,selenium:38,calcium:52,iodine:150,phosphorus:205,magnesium:37},compounds:["아스타잔틴","타우린","퀵토산"],flavor:{umami:75,sweet:8,salty:5,sour:5,bitter:3},sci:{glu:1.5,imp:180,free_glu:45}},
   "고등어":{cat:"seafood",emoji:"🐟",defaultG:150,comp:{protein:20,fat:13,carbs:0,water:66,fiber:0},amino:["류신","리신"],vit:{B12:10,D:17.6,selenium:44,omega3:2.6},compounds:["아스타잔틴","오메가-3"],flavor:{umami:75,sweet:8,salty:5,sour:5,bitter:5}},
   "오징어":{cat:"seafood",emoji:"🦑",defaultG:100,comp:{protein:15,fat:0.4,carbs:3,water:81,fiber:0},amino:["류신","리신"],vit:{B12:0.48,selenium:23,iodine:100},compounds:["타우린","키토산","글루탐산"],flavor:{umami:75,sweet:5,salty:5,sour:5,bitter:3}},
   "조개":{cat:"seafood",emoji:"🦪",defaultG:100,comp:{protein:12,fat:0.5,carbs:4.5,water:82,fiber:0},amino:["류신","리신"],vit:{B12:24,iron:28,selenium:63,zinc:9.2},compounds:["타우린","글리신"],flavor:{umami:80,sweet:15,salty:5,sour:10,bitter:3}},
@@ -859,16 +859,16 @@ const DB = {
   "전복":{cat:"seafood",emoji:"🐚",defaultG:100,comp:{protein:19,fat:1,carbs:2,water:77,fiber:0},amino:["글리신","류신"],vit:{B12:5.7,calcium:166,iron:4},compounds:["타우린","키토산"],flavor:{umami:80,sweet:15,salty:5,sour:8,bitter:3}},
 
   "양파":{cat:"veg",emoji:"🧅",defaultG:150,comp:{protein:1.1,fat:0.1,carbs:9.3,water:89,fiber:1.7},amino:["시스테인"],vit:{C:7.4,B6:0.12,folate:19,potassium:146},compounds:["알리신","퀘르세틴","프로필 설파이드","프럭토올리고당"],flavor:{umami:20,sweet:40,salty:0,sour:5,bitter:15}},
-  "마늘":{cat:"veg",emoji:"🧄",defaultG:10,comp:{protein:6.4,fat:0.5,carbs:33,water:59,fiber:2.1},amino:["시스테인","메티오닌"],vit:{C:31,B6:1.24,manganese:1.67},compounds:["알리신","알리인","디알릴 설파이드","아조엔"],flavor:{umami:30,sweet:10,salty:0,sour:5,bitter:20}},
-  "감자":{cat:"veg",emoji:"🥔",defaultG:200,comp:{protein:2,fat:0.1,carbs:17,water:79,fiber:2.2},amino:["아스파르트산","글루탐산"],vit:{C:19.7,B6:0.3,potassium:425},compounds:["전분(아밀로스)","솔라닌","클로로겐산","아스파라긴"],flavor:{umami:10,sweet:15,salty:0,sour:0,bitter:5}},
-  "토마토":{cat:"veg",emoji:"🍅",defaultG:150,comp:{protein:0.9,fat:0.2,carbs:3.9,water:94,fiber:1.2},amino:["글루탐산"],vit:{C:14,A:42,K:7.9,potassium:237,lycopene:2573},compounds:["리코펜","글루탐산","시트르산","나린게닌"],flavor:{umami:60,sweet:25,salty:0,sour:40,bitter:5}},
-  "고추":{cat:"veg",emoji:"🌶️",defaultG:15,comp:{protein:1.9,fat:0.4,carbs:8.8,water:88,fiber:1.5},amino:[],vit:{C:144,A:48,B6:0.51,potassium:322},compounds:["캡사이신","디하이드로캡사이신","카로티노이드"],flavor:{umami:5,sweet:15,salty:0,sour:5,bitter:10}},
-  "브로콜리":{cat:"veg",emoji:"🥦",defaultG:100,comp:{protein:2.8,fat:0.4,carbs:7,water:89,fiber:2.4},amino:["글루탐산","아스파르트산"],vit:{C:89,K:102,folate:63,calcium:47},compounds:["설포라판","인돌","캐롤","클로로필"],flavor:{umami:25,sweet:10,salty:0,sour:5,bitter:25}},
-  "당근":{cat:"veg",emoji:"🥕",defaultG:100,comp:{protein:0.9,fat:0.2,carbs:10,water:88,fiber:2.8},amino:[],vit:{A:835,K:13.2,potassium:320},compounds:["베타카로틴","리코펜","루테올린"],flavor:{umami:10,sweet:35,salty:0,sour:5,bitter:5}},
-  "시금치":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:2.7,fat:0.4,carbs:3.6,water:91,fiber:2.2},amino:["글루탐산"],vit:{K:483,A:469,C:28,folate:194,iron:2.7},compounds:["루테인","비올란틴","클로로필"],flavor:{umami:30,sweet:5,salty:0,sour:5,bitter:20}},
+  "마늘":{cat:"veg",emoji:"🧄",defaultG:10,comp:{protein:6.4,fat:0.5,carbs:33,water:59,fiber:2.1},amino:["시스테인","메티오닌","글루탐산"],vit:{C:31,B6:1.24,manganese:1.67,selenium:14.2,phosphorus:153,calcium:181},compounds:["알리신","알리인","디알릴 설파이드","아조엔","폴리페놀"],flavor:{umami:30,sweet:10,salty:0,sour:5,bitter:20},sci:{allicin:4.4,free_glu:100}},
+  "감자":{cat:"veg",emoji:"🥔",defaultG:200,comp:{protein:2,fat:0.1,carbs:17,water:79,fiber:2.2},amino:["아스파르트산","글루탐산"],vit:{C:19.7,B6:0.3,potassium:425,magnesium:23,phosphorus:57},compounds:["전분(아밀로스)","솔라닌","클로로겐산","아스파라긴","폴리페놀"],flavor:{umami:10,sweet:15,salty:0,sour:0,bitter:5},sci:{asparagine:0.3,free_glu:18}},
+  "토마토":{cat:"veg",emoji:"🍅",defaultG:150,comp:{protein:0.9,fat:0.2,carbs:3.9,water:94,fiber:1.2},amino:["글루탐산"],vit:{C:14,A:42,K:7.9,potassium:237,lycopene:2573,magnesium:11,phosphorus:24},compounds:["리코펜","글루탐산","시트르산","나린게닌","폴리페놀","카로티노이드"],flavor:{umami:60,sweet:25,salty:0,sour:40,bitter:5},sci:{glu:0.14,free_glu:246}},
+  "고추":{cat:"veg",emoji:"🌶️",defaultG:15,comp:{protein:1.9,fat:0.4,carbs:8.8,water:88,fiber:1.5},amino:["글루탐산"],vit:{C:144,A:48,B6:0.51,potassium:322},compounds:["캡사이신","디하이드로캡사이신","카로티노이드","폴리페놀"],flavor:{umami:5,sweet:15,salty:0,sour:5,bitter:10},sci:{capsaicin:0.2}},
+  "브로콜리":{cat:"veg",emoji:"🥦",defaultG:100,comp:{protein:2.8,fat:0.4,carbs:7,water:89,fiber:2.4},amino:["글루탐산","아스파르트산"],vit:{C:89,K:102,folate:63,calcium:47,magnesium:21,phosphorus:66,iron:0.73},compounds:["설포라판","인돌","캐롤","클로로필","글루코시놀레이트","카로티노이드","폴리페놀"],flavor:{umami:25,sweet:10,salty:0,sour:5,bitter:25}},
+  "당근":{cat:"veg",emoji:"🥕",defaultG:100,comp:{protein:0.9,fat:0.2,carbs:10,water:88,fiber:2.8},amino:["글루탐산"],vit:{A:835,K:13.2,potassium:320,C:5.9,phosphorus:35,magnesium:12},compounds:["베타카로틴","리코펜","루테올린","카로티노이드","폴리페놀"],flavor:{umami:10,sweet:35,salty:0,sour:5,bitter:5}},
+  "시금치":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:2.7,fat:0.4,carbs:3.6,water:91,fiber:2.2},amino:["글루탐산"],vit:{K:483,A:469,C:28,folate:194,iron:2.7,calcium:99,magnesium:79,phosphorus:49},compounds:["루테인","비올란틴","클로로필","폴리페놀","옥살산","베타카로틴"],flavor:{umami:30,sweet:5,salty:0,sour:5,bitter:20}},
   "배추":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:1.2,fat:0.2,carbs:3.2,water:95,fiber:1},amino:[],vit:{C:21,K:63,calcium:77},compounds:["카로틴","클로로필","설포라판"],flavor:{umami:15,sweet:10,salty:0,sour:5,bitter:10}},
   "파프리카":{cat:"veg",emoji:"🫑",defaultG:100,comp:{protein:0.9,fat:0.3,carbs:6,water:92,fiber:2},amino:[],vit:{C:80,A:314,B6:0.3,potassium:211},compounds:["캡산토인","카로티노이드"],flavor:{umami:15,sweet:45,salty:0,sour:10,bitter:5}},
-  "양배추":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:1.3,fat:0.1,carbs:5.2,water:92,fiber:2.4},amino:["글루탐산"],vit:{C:36.6,K:101,folate:43},compounds:["설포라판","인돌","카로티노이드"],flavor:{umami:15,sweet:15,salty:0,sour:5,bitter:15}},
+  "양배추":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:1.3,fat:0.1,carbs:5.2,water:92,fiber:2.4},amino:["글루탐산"],vit:{C:36.6,K:101,folate:43,calcium:40,magnesium:12,phosphorus:26},compounds:["설포라판","인돌","카로티노이드","글루코시놀레이트","클로로필","폴리페놀"],flavor:{umami:15,sweet:15,salty:0,sour:5,bitter:15}},
   "오이":{cat:"veg",emoji:"🥒",defaultG:150,comp:{protein:0.7,fat:0.2,carbs:3.6,water:95,fiber:0.5},amino:[],vit:{C:2.8,K:16.4,potassium:147},compounds:["큐커비타신","클로로필"],flavor:{umami:5,sweet:5,salty:0,sour:10,bitter:10}},
   "호박":{cat:"veg",emoji:"🎃",defaultG:100,comp:{protein:1,fat:0.1,carbs:5,water:94,fiber:0.5},amino:[],vit:{A:426,C:12,potassium:340},compounds:["베타카로틴","루테인"],flavor:{umami:10,sweet:20,salty:0,sour:5,bitter:5}},
   "가지":{cat:"veg",emoji:"🍆",defaultG:100,comp:{protein:1.1,fat:0.2,carbs:5.2,water:92,fiber:3},amino:[],vit:{C:3.5,K:29,potassium:229},compounds:["알카로이드","안토시아닌"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:15}},
@@ -881,14 +881,14 @@ const DB = {
   "미나리":{cat:"veg",emoji:"🌿",defaultG:100,comp:{protein:2.1,fat:0.1,carbs:4.1,water:93,fiber:1},amino:[],vit:{A:337,C:41,K:145},compounds:["데카날데하이드","데카놀"],flavor:{umami:10,sweet:5,salty:0,sour:5,bitter:15}},
   "피망":{cat:"veg",emoji:"🫑",defaultG:100,comp:{protein:0.9,fat:0.3,carbs:6,water:92,fiber:2},amino:[],vit:{C:80,A:314,K:49},compounds:["캡산토인","카로티노이드"],flavor:{umami:15,sweet:40,salty:0,sour:10,bitter:5}},
   "비트":{cat:"veg",emoji:"🥗",defaultG:100,comp:{protein:1.6,fat:0.2,carbs:9.6,water:88,fiber:2.8},amino:["베타인"],vit:{C:4.9,folate:109,K:0.5,potassium:325},compounds:["베타인","베타라닌","안토시아닌"],flavor:{umami:15,sweet:30,salty:0,sour:10,bitter:5}},
-  "케일":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:3.3,fat:0.7,carbs:6.6,water:84,fiber:1.3},amino:["글루탐산","알라닌"],vit:{K:704,A:478,C:120,calcium:254},compounds:["설포라판","루테인","루틴"],flavor:{umami:25,sweet:5,salty:0,sour:5,bitter:30}},
+  "케일":{cat:"veg",emoji:"🥬",defaultG:100,comp:{protein:3.3,fat:0.7,carbs:6.6,water:84,fiber:1.3},amino:["글루탐산","알라닌"],vit:{K:704,A:478,C:120,calcium:254,magnesium:34,iron:1.6,phosphorus:55},compounds:["설포라판","루테인","루틴","글루코시놀레이트","클로로필","베타카로틴","폴리페놀"],flavor:{umami:25,sweet:5,salty:0,sour:5,bitter:30}},
   "고구마":{cat:"veg",emoji:"🍠",defaultG:100,comp:{protein:1.6,fat:0.1,carbs:20,water:77,fiber:3},amino:[],vit:{A:961,C:8.8,B6:0.28,potassium:337},compounds:["베타카로틴","안토시아닌"],flavor:{umami:5,sweet:40,salty:0,sour:5,bitter:5}},
   "옥수수":{cat:"veg",emoji:"🌽",defaultG:100,comp:{protein:3.2,fat:1.2,carbs:19,water:76,fiber:2.7},amino:["루신"],vit:{B1:0.39,B5:0.42,C:6.8},compounds:["루테인","지아잔틴"],flavor:{umami:10,sweet:25,salty:0,sour:0,bitter:5}},
 
-  "사과":{cat:"fruit",emoji:"🍎",defaultG:150,comp:{protein:0.3,fat:0.2,carbs:14,water:85,fiber:2.4},amino:[],vit:{C:5.7,K:3.7,potassium:195},compounds:["퀘르세틴","클로로겐산","프로시아니딘"],flavor:{umami:5,sweet:45,salty:0,sour:15,bitter:5}},
+  "사과":{cat:"fruit",emoji:"🍎",defaultG:150,comp:{protein:0.3,fat:0.2,carbs:14,water:85,fiber:2.4},amino:[],vit:{C:5.7,K:3.7,potassium:195,magnesium:5},compounds:["퀘르세틴","클로로겐산","프로시아니딘","폴리페놀","카테킨"],flavor:{umami:5,sweet:45,salty:0,sour:15,bitter:5}},
   "바나나":{cat:"fruit",emoji:"🍌",defaultG:100,comp:{protein:1.1,fat:0.3,carbs:23,water:75,fiber:2.6},amino:["트립토판","세로토닌"],vit:{B6:0.4,C:8.7,potassium:358},compounds:["푼오이신","세로토닌"],flavor:{umami:5,sweet:50,salty:0,sour:5,bitter:3}},
   "딸기":{cat:"fruit",emoji:"🍓",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:8,water:91,fiber:2},amino:[],vit:{C:58.8,K:2.2,folate:25},compounds:["엘라그산","안토시아닌","카테킨"],flavor:{umami:5,sweet:40,salty:0,sour:20,bitter:5}},
-  "블루베리":{cat:"fruit",emoji:"🫐",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:14,water:84,fiber:2.4},amino:[],vit:{C:9.7,K:19.3},compounds:["안토시아닌","카테킨","리사린"],flavor:{umami:5,sweet:35,salty:0,sour:15,bitter:10}},
+  "블루베리":{cat:"fruit",emoji:"🫐",defaultG:100,comp:{protein:0.7,fat:0.3,carbs:14,water:84,fiber:2.4},amino:[],vit:{C:9.7,K:19.3,E:0.57,manganese:0.34,magnesium:6},compounds:["안토시아닌","카테킨","리사린","폴리페놀","프로안토시아니딘"],flavor:{umami:5,sweet:35,salty:0,sour:15,bitter:10}},
   "아보카도":{cat:"fruit",emoji:"🥑",defaultG:100,comp:{protein:2,fat:15,carbs:9,water:73,fiber:7},amino:["글루탐산"],vit:{K:21,C:10,B5:1.4,potassium:485},compounds:["글루타치온","카로티노이드"],flavor:{umami:15,sweet:5,salty:0,sour:5,bitter:5}},
   "포도":{cat:"fruit",emoji:"🍇",defaultG:100,comp:{protein:0.7,fat:0.4,carbs:17,water:81,fiber:0.9},amino:[],vit:{C:3.2,K:191,potassium:191},compounds:["레스베라트롤","탄닌","안토시아닌"],flavor:{umami:5,sweet:50,salty:0,sour:10,bitter:5}},
   "수박":{cat:"fruit",emoji:"🍉",defaultG:150,comp:{protein:0.6,fat:0.2,carbs:12,water:87,fiber:0.4},amino:[],vit:{C:8.1,A:28,lycopene:4532},compounds:["시트룰린","리코펜"],flavor:{umami:5,sweet:40,salty:0,sour:10,bitter:3}},
@@ -920,7 +920,7 @@ const DB = {
   "모짜렐라":{cat:"dairy",emoji:"🧀",defaultG:30,comp:{protein:28,fat:17,carbs:3.1,water:51,fiber:0},amino:["류신","리신"],vit:{calcium:505,phosphorus:390},compounds:["카제인"],flavor:{umami:45,sweet:5,salty:40,sour:10,bitter:0}},
   "파르메산":{cat:"dairy",emoji:"🧀",defaultG:10,comp:{protein:38,fat:29,carbs:4,water:27,fiber:0},amino:["글루탐산"],vit:{calcium:1109,phosphorus:738},compounds:["글루탐산나트륨","카제인"],flavor:{umami:80,sweet:0,salty:60,sour:10,bitter:3}},
 
-  "계란":{cat:"egg",emoji:"🥚",defaultG:60,comp:{protein:13,fat:11,carbs:1.1,water:75,fiber:0},amino:["류신","리신","메티오닌","트립토판"],vit:{A:160,D:2.0,B12:0.89,selenium:30.7,choline:294},compounds:["오보알부민","오보뮤코이드","레시틴","루테인"],flavor:{umami:30,sweet:5,salty:5,sour:0,bitter:0}},
+  "계란":{cat:"egg",emoji:"🥚",defaultG:60,comp:{protein:13,fat:11,carbs:1.1,water:75,fiber:0},amino:["류신","리신","메티오닌","트립토판","시스테인"],vit:{A:160,D:2.0,B12:0.89,selenium:30.7,choline:294,phosphorus:198,iron:1.75,zinc:1.29,folate:47,K:0.3},compounds:["오보알부민","오보뮤코이드","레시틴","루테인"],flavor:{umami:30,sweet:5,salty:5,sour:0,bitter:0},sci:{lecithin:1500,glu:1.7,free_glu:23}},
   "메추리알":{cat:"egg",emoji:"🥚",defaultG:10,comp:{protein:13,fat:11,carbs:0.4,water:74,fiber:0},amino:["류신","리신"],vit:{B12:0.64,selenium:32,choline:210},compounds:["오보알부민"],flavor:{umami:25,sweet:5,salty:5,sour:0,bitter:0}},
   "오리알":{cat:"egg",emoji:"🥚",defaultG:70,comp:{protein:13,fat:14,carbs:0.9,water:72,fiber:0},amino:["류신","리신"],vit:{B12:0.92,selenium:37},compounds:["오보알부민"],flavor:{umami:30,sweet:5,salty:5,sour:0,bitter:0}},
   "달걀흰자":{cat:"egg",emoji:"🥚",defaultG:50,comp:{protein:10.9,fat:0.2,carbs:0.7,water:88,fiber:0},amino:["알부민","오보무신","오보트랜스페린"],vit:{B2:0.44,B5:0.19,selenium:20},compounds:["오보알부민","리소자임","아비딘"],flavor:{umami:15,sweet:3,salty:3,sour:3,bitter:3}},
@@ -937,7 +937,7 @@ const DB = {
   "들깨":{cat:"nut",emoji:"🥜",defaultG:15,comp:{protein:19,fat:45,carbs:26,water:4,fiber:27.3},amino:["글루탐산"],vit:{magnesium:432,copper:0.9,manganese:3},compounds:["리그난"],flavor:{umami:25,sweet:10,salty:0,sour:0,bitter:15}},
   "해바라기씨":{cat:"nut",emoji:"🥜",defaultG:30,comp:{protein:20,fat:51,carbs:20,water:4,fiber:8.6},amino:["글루탐산"],vit:{E:41.1,B1:1.5,magnesium:325},compounds:["리놀레산"],flavor:{umami:20,sweet:10,salty:0,sour:0,bitter:5}},
 
-  "표고버섯":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:2.2,fat:0.3,carbs:7.3,water:89,fiber:1},amino:["글루탐산"],vit:{D:0.81,B5:1.5,copper:0.32},compounds:["에르고티오네인","렌티난"],flavor:{umami:45,sweet:5,salty:0,sour:5,bitter:5}},
+  "표고버섯":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:2.2,fat:0.3,carbs:7.3,water:89,fiber:1},amino:["글루탐산"],vit:{D:0.81,B5:1.5,copper:0.32,selenium:5.7,phosphorus:112,potassium:304},compounds:["에르고티오네인","렌티난","폴리페놀"],flavor:{umami:45,sweet:5,salty:0,sour:5,bitter:5},sci:{gmp:150,free_glu:72}},
   "양송이":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:3.3,fat:0.3,carbs:3.3,water:92,fiber:1},amino:["글루탐산"],vit:{B2:0.4,B5:1.4,niacin:3.6},compounds:["에르고티오네인"],flavor:{umami:35,sweet:5,salty:0,sour:5,bitter:5}},
   "팽이버섯":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:2.7,fat:0.3,carbs:6.9,water:89,fiber:2},amino:["글루탐산"],vit:{B1:0.04,B2:0.22,niacin:3.9},compounds:["렌티난","베타글루칸"],flavor:{umami:35,sweet:5,salty:0,sour:5,bitter:5}},
   "새송이":{cat:"mushroom",emoji:"🍄",defaultG:100,comp:{protein:3.4,fat:0.5,carbs:5.7,water:90,fiber:1},amino:["글루탐산"],vit:{B5:1.5,niacin:4.7,copper:0.25},compounds:["렌티난"],flavor:{umami:40,sweet:5,salty:0,sour:5,bitter:5}},
@@ -3030,6 +3030,18 @@ const SUBSTANCES = {
   life_night_shift:      {label:"야간·교대 근무",  emoji:"🌙", desc:"생체리듬 교란 — 식사 패턴 불규칙", category:"lifestyle"},
   life_stress_high:      {label:"고스트레스",       emoji:"😓", desc:"만성 스트레스 — 코르티솔 과다·폭식 위험", category:"lifestyle"},
   life_sleep_disorder:   {label:"수면장애",         emoji:"😴", desc:"불면증·수면무호흡 — 식욕호르몬 교란", category:"lifestyle"},
+  // ── 추가 약물 (Phase 4) ────────────────────────────────────────────────
+  med_lithium:           {label:"리튬",             emoji:"💊", desc:"양극성 장애 치료제 — 나트륨·수분 균형 중요", category:"medication"},
+  med_clopidogrel:       {label:"클로피도그렐",     emoji:"💊", desc:"항혈소판제(플라빅스) — CYP2C19 대사", category:"medication"},
+  med_methotrexate:      {label:"메토트렉세이트",   emoji:"💊", desc:"항류마티스/항암제 — 엽산 길항작용", category:"medication"},
+  med_ksparing_diuretic: {label:"칼륨보존이뇨제",   emoji:"💊", desc:"스피로노락톤/아밀로라이드 — 고칼륨혈증 주의", category:"medication"},
+  med_digoxin:           {label:"디곡신",           emoji:"💊", desc:"강심배당체 — 좁은 치료역, 전해질 민감", category:"medication"},
+  med_theophylline:      {label:"테오필린",         emoji:"💊", desc:"기관지확장제 — 카페인과 크산틴 경쟁", category:"medication"},
+  med_levodopa:          {label:"레보도파",         emoji:"💊", desc:"파킨슨 치료제 — 고단백식 흡수 방해", category:"medication"},
+  med_ace_inhibitor:     {label:"ACE억제제",        emoji:"💊", desc:"혈압약(프릴계) — 고칼륨혈증 주의", category:"medication"},
+  med_arb:               {label:"ARB",              emoji:"💊", desc:"혈압약(사르탄계) — 고칼륨혈증 주의", category:"medication"},
+  med_quinolone:         {label:"퀴놀론 항생제",    emoji:"💊", desc:"시프로플록사신 등 — 금속이온 킬레이션", category:"medication"},
+  med_tetracycline:      {label:"테트라사이클린",   emoji:"💊", desc:"항생제 — 칼슘/철분/마그네슘 킬레이션", category:"medication"},
 };
 
 // ══════════════════════════════════════════════════
@@ -3084,6 +3096,59 @@ const REFERENCES = {
     papers: [
       {authors:"Frankel, E.N.", year:1998, title:"Lipid Oxidation", journal:"The Oily Press, Dundee", vol:"2nd Ed.", pages:"", doi:""}
     ]
+  },
+  pah: {
+    confidence: 89,
+    papers: [
+      {authors:"Phillips, D.H.", year:1999, title:"Polycyclic aromatic hydrocarbons in the diet", journal:"Mutation Research", vol:"443(1-2)", pages:"139-147", doi:"10.1016/S1383-5742(99)00016-2"},
+      {authors:"EFSA Panel on Contaminants in the Food Chain", year:2008, title:"PAH in food — Scientific Opinion", journal:"EFSA Journal", vol:"724", pages:"1-114", doi:"10.2903/j.efsa.2008.724"}
+    ]
+  },
+  hca: {
+    confidence: 87,
+    papers: [
+      {authors:"Skog, K., Steineck, G., Augustsson, K., Jägerstad, M.", year:1998, title:"Effect of cooking temperature on the formation of heterocyclic amines in fried meat products and pan residues", journal:"Carcinogenesis", vol:"19(6)", pages:"1061-1067", doi:"10.1093/carcin/19.6.1061"},
+      {authors:"Sugimura, T.", year:2000, title:"Nutrition and dietary carcinogens", journal:"Carcinogenesis", vol:"21(3)", pages:"387-395", doi:"10.1093/carcin/21.3.387"}
+    ]
+  },
+  nitrosamine: {
+    confidence: 90,
+    papers: [
+      {authors:"Honikel, K.O.", year:2008, title:"The use and control of nitrate and nitrite for the processing of meat products", journal:"Meat Science", vol:"78(1-2)", pages:"68-76", doi:"10.1016/j.meatsci.2007.05.030"},
+      {authors:"IARC Working Group", year:2018, title:"Red Meat and Processed Meat", journal:"IARC Monographs", vol:"114", pages:"1-502", doi:""}
+    ]
+  },
+  anthocyanin: {
+    confidence: 86,
+    papers: [
+      {authors:"Patras, A., Brunton, N.P., O'Donnell, C., Tiwari, B.K.", year:2010, title:"Effect of thermal processing on anthocyanin stability in foods", journal:"Trends in Food Science & Technology", vol:"21(1)", pages:"3-11", doi:"10.1016/j.tifs.2009.07.004"}
+    ]
+  },
+  chlorophyll: {
+    confidence: 85,
+    papers: [
+      {authors:"Schwartz, S.J., von Elbe, J.H.", year:1983, title:"Kinetics of chlorophyll degradation to pyropheophytin in vegetables", journal:"Journal of Food Science", vol:"48(4)", pages:"1303-1306", doi:"10.1111/j.1365-2621.1983.tb09224.x"}
+    ]
+  },
+  beta_carotene: {
+    confidence: 88,
+    papers: [
+      {authors:"Chen, B.H., Huang, J.H.", year:1998, title:"Degradation and isomerization of chlorophyll a and β-carotene as affected by various heating and illumination treatments", journal:"Journal of Food Science", vol:"63(5)", pages:"751-754", doi:"10.1111/j.1365-2621.1998.tb15798.x"},
+      {authors:"Deming, D.M., et al.", year:2002, title:"Amount of dietary fat at a meal determines β-carotene absorption", journal:"American Journal of Clinical Nutrition", vol:"75(6)", pages:"1041-1049", doi:"10.1093/ajcn/75.6.1041"}
+    ]
+  },
+  glucosinolate: {
+    confidence: 89,
+    papers: [
+      {authors:"Verkerk, R., Schreiner, M., Krumbein, A., et al.", year:2009, title:"Glucosinolates in Brassica vegetables: The influence of the food supply chain on intake, bioavailability and human health", journal:"Molecular Nutrition & Food Research", vol:"53(S2)", pages:"S219-S265", doi:"10.1002/mnfr.200800065"},
+      {authors:"Matusheski, N.V., Juvik, J.A., Jeffery, E.H.", year:2004, title:"Heating decreases epithiospecifier protein activity and increases sulforaphane formation in broccoli", journal:"Phytochemistry", vol:"65(9)", pages:"1273-1281", doi:"10.1016/j.phytochem.2004.04.013"}
+    ]
+  },
+  polyphenol_oxidation: {
+    confidence: 84,
+    papers: [
+      {authors:"Yoruk, R., Marshall, M.R.", year:2003, title:"Physicochemical properties and function of plant polyphenol oxidase: A review", journal:"Journal of Food Biochemistry", vol:"27(5)", pages:"361-422", doi:"10.1111/j.1745-4514.2003.tb00289.x"}
+    ]
   }
 };
 
@@ -3092,7 +3157,11 @@ const RXN_REF_MAP = {
   'maillard': 'maillard', 'caramelization': 'caramelization',
   'protein_denaturation': 'protein_denaturation', 'starch_gelatinization': 'starch_gelatinization',
   'vitamin_c_loss': 'vitamin_c_loss', 'capsaicin': null, 'allicin': null,
-  'emulsification': null, 'acid_coagulation': null, 'lycopene': null
+  'emulsification': null, 'acid_coagulation': null, 'lycopene': null,
+  'pah': 'pah', 'hca': 'hca', 'nitrosamine': 'nitrosamine',
+  'anthocyanin': 'anthocyanin', 'chlorophyll': 'chlorophyll',
+  'beta_carotene': 'beta_carotene', 'glucosinolate': 'glucosinolate',
+  'polyphenol_oxidation': 'polyphenol_oxidation'
 };
 
 // ══════════════════════════════════════════════════
@@ -4274,19 +4343,50 @@ function renderSubstances() {
 
 // 투입 재료의 총 영양 성분 계산 (100g 기준 DB → 실제 g 환산)
 function calcTotalComposition(ingMap) {
-  const total = {protein:0, fat:0, carbs:0, water:0, fiber:0, sodium:0, potassium:0, saturatedFat:0, calories:0};
+  // 확장된 영양소 추적: 기존 macro + micro 영양소 추가 (CONDITIONS rules에서 참조)
+  const total = {protein:0, fat:0, carbs:0, water:0, fiber:0, sodium:0, potassium:0, saturatedFat:0, calories:0,
+    calcium:0, iron:0, zinc:0, vitaminC:0, vitaminD:0, vitaminK:0, vitaminA:0, vitaminE:0,
+    vitaminB6:0, vitaminB12:0, folate:0, magnesium:0, selenium:0, omega3:0, phosphorus:0, purine:0, iodine:0};
+  // 포화지방 추정: 동물성 카테고리별 세분화 (USDA FoodData Central 기준)
+  const highSatAnimals = new Set(['소고기','돼지고기','삼겹살','양고기','베이컨','소시지','버터','치즈','크림치즈','생크림','라드']);
+  const medSatAnimals = new Set(['계란','닭고기','오리고기','우유','요거트','닭가슴살']);
+  const highSatPlants = new Set(['코코넛오일','팜유','코코넛밀크','코코넛']);
+  // 퓨린 추정: 식품군별 퓨린 함량 (mg/100g) — Choi et al. 2004, NEJM
+  const purineHigh = new Set(['소고기','돼지고기','양고기','멸치','정어리','꽁치','고등어','새우','조개','굴','간','내장']);
+  const purineMed = new Set(['닭고기','오리고기','연어','참치','두부','콩','렌틸콩','버섯','표고버섯','아스파라거스','시금치']);
   Object.entries(ingMap).forEach(([name, grams]) => {
     const d = DB[name]; if (!d) return;
     const s = grams / 100;
     total.protein += (d.comp.protein||0) * s;
     total.fat += (d.comp.fat||0) * s;
     total.carbs += (d.comp.carbs||0) * s;
+    total.water += (d.comp.water||0) * s;
     total.fiber += (d.comp.fiber||0) * s;
-    total.sodium += (d.vit.sodium||0) * s;
-    total.potassium += (d.vit.potassium||0) * s;
-    // 포화지방 추정: 동물성 지방은 ~40%, 식물성은 ~15%
-    const satRatio = ['소고기','계란','버터'].includes(name) ? 0.4 : 0.15;
+    total.sodium += (d.vit?.sodium||0) * s;
+    total.potassium += (d.vit?.potassium||0) * s;
+    total.calcium += (d.vit?.calcium||0) * s;
+    total.iron += (d.vit?.iron||0) * s;
+    total.zinc += (d.vit?.zinc||0) * s;
+    total.vitaminC += (d.vit?.C||0) * s;
+    total.vitaminD += (d.vit?.D||0) * s;
+    total.vitaminK += (d.vit?.K||0) * s;
+    total.vitaminA += (d.vit?.A||0) * s;
+    total.vitaminE += (d.vit?.E||0) * s;
+    total.vitaminB6 += (d.vit?.B6||0) * s;
+    total.vitaminB12 += (d.vit?.B12||0) * s;
+    total.folate += (d.vit?.folate||0) * s;
+    total.magnesium += (d.vit?.magnesium||0) * s;
+    total.selenium += (d.vit?.selenium||0) * s;
+    total.omega3 += (d.vit?.omega3||0) * s;
+    total.phosphorus += (d.vit?.phosphorus||0) * s;
+    total.iodine += (d.vit?.iodine||0) * s;
+    // 포화지방 세분화 (WHO 2023: <10% total energy)
+    const satRatio = highSatAnimals.has(name) ? 0.45 : medSatAnimals.has(name) ? 0.30 : highSatPlants.has(name) ? 0.82 : 0.14;
     total.saturatedFat += (d.comp.fat||0) * s * satRatio;
+    // 퓨린 추정: Choi HK et al. (2004) NEJM 350:1093
+    if (purineHigh.has(name)) total.purine += 170 * s;
+    else if (purineMed.has(name)) total.purine += 80 * s;
+    else total.purine += 15 * s;
   });
   total.calories = total.protein * 4 + total.carbs * 4 + total.fat * 9;
   return total;
@@ -4690,6 +4790,74 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     substanceFindings.push({severity:'caution', title:'주로 좌식 생활 + 고칼로리 식사 → 에너지 잉여 주의',
       detail:`활동량이 적은 경우 기초대사량이 낮아 칼로리 ${comp.calories.toFixed(0)}kcal의 식사는 체중 증가로 이어질 수 있습니다.`,
       tip:'식사량을 약 20% 줄이거나, 식후 20분 이상 산책을 습관화하세요.'});
+  }
+
+  // ── 추가 약물-음식 상호작용 (Phase 4) ────────────────────────────────────
+  // 리튬 + 저나트륨: DiPiro JT (2020) Pharmacotherapy Handbook 10th Ed
+  if (member.substances.includes('med_lithium')) {
+    if (comp.sodium < 200) substanceFindings.push({severity:'danger', title:'리튬 + 저나트륨 식사 → 리튬 독성 위험',
+      detail:`나트륨 ${comp.sodium.toFixed(0)}mg — 저나트륨 식사는 신장 리튬 재흡수를 증가시켜 혈중 농도가 독성 수준으로 상승할 수 있습니다 (치료역 0.6-1.2 mEq/L, 매우 좁음).`,
+      tip:'리튬 복용 시 일정한 나트륨 섭취를 유지하고, 급격한 식이 변화를 피하세요. 탈수도 위험합니다.'});
+    if (Object.keys(ingMap).some(n => ['커피','녹차','홍차'].includes(n))) substanceFindings.push({severity:'info', title:'리튬 + 카페인 → 리튬 수치 변동',
+      detail:'카페인은 이뇨 작용으로 리튬 배설을 촉진합니다. 갑자기 카페인을 중단하면 리튬 수치가 급상승할 수 있습니다.',
+      tip:'카페인 섭취량을 일정하게 유지하세요.'});
+  }
+  // 클로피도그렐 + 자몽: Holmberg MT et al. (2014) Clin Pharmacol Ther 95:383
+  if (member.substances.includes('med_clopidogrel') && Object.keys(ingMap).some(n => n.includes('자몽'))) {
+    substanceFindings.push({severity:'danger', title:'클로피도그렐(플라빅스) + 자몽 → 항혈소판 효과 감소',
+      detail:'자몽의 퓨라노쿠마린이 CYP2C19을 억제하여 클로피도그렐의 활성 대사체 전환을 차단합니다. 심혈관 사건 위험 증가.',
+      tip:'클로피도그렐 복용 기간 중 자몽 및 자몽주스를 완전히 피하세요.'});
+  }
+  // 메토트렉세이트 + 엽산: Whittle SL & Hughes RA (2004) Cochrane Database Syst Rev
+  if (member.substances.includes('med_methotrexate')) {
+    if (comp.folate > 200) substanceFindings.push({severity:'info', title:'메토트렉세이트 + 고엽산 식사 → 약효 변동 가능',
+      detail:`엽산 ${comp.folate.toFixed(0)}μg — 메토트렉세이트는 엽산 길항제입니다. 의사가 처방한 엽산 보충 외 과도한 엽산 섭취는 약효에 영향을 줄 수 있습니다.`,
+      tip:'엽산 보충은 의사 지시대로만. 과도한 녹색 잎채소 섭취는 주치의와 상담.'});
+  }
+  // 칼륨보존이뇨제 + 고칼륨: Palmer BF (2004) NEJM 351:585
+  if (member.substances.includes('med_ksparing_diuretic') && comp.potassium > 400) {
+    substanceFindings.push({severity:'danger', title:`칼륨보존이뇨제 + 칼륨 ${comp.potassium.toFixed(0)}mg → 고칼륨혈증 위험`,
+      detail:'스피로노락톤/아밀로라이드는 칼륨 배설을 억제합니다. 고칼륨 식사 시 혈중 K⁺>5.5 mEq/L → 부정맥·심정지 위험.',
+      tip:'바나나, 오렌지, 감자, 토마토 등 고칼륨 식품을 제한하고 정기적으로 혈중 칼륨을 확인하세요.'});
+  }
+  // ACE억제제/ARB + 고칼륨: Raebel MA et al. (2007) Pharmacoepidemiol Drug Saf 16:1129
+  if ((member.substances.includes('med_ace_inhibitor') || member.substances.includes('med_arb')) && comp.potassium > 500) {
+    substanceFindings.push({severity:'caution', title:`ACE억제제/ARB + 칼륨 ${comp.potassium.toFixed(0)}mg → 고칼륨혈증 주의`,
+      detail:'ACE억제제(프릴계)/ARB(사르탄계)는 알도스테론 분비를 억제하여 칼륨 배설이 감소합니다.',
+      tip:'고칼륨 식품(바나나, 아보카도, 시금치)을 과다 섭취하지 않도록 주의하세요.'});
+  }
+  // 디곡신 + 고섬유질/저칼륨: Bauer LA (2008) Applied Clinical Pharmacokinetics 2nd Ed
+  if (member.substances.includes('med_digoxin')) {
+    if (comp.fiber > 10) substanceFindings.push({severity:'caution', title:`디곡신 + 고섬유질 ${comp.fiber.toFixed(1)}g → 흡수 감소`,
+      detail:'식이섬유가 디곡신을 흡착하여 생체이용률이 감소합니다. 치료역이 매우 좁은 약물(0.8-2.0 ng/mL)이므로 주의.',
+      tip:'디곡신은 식사 1시간 전 또는 2시간 후 공복 투여가 바람직합니다.'});
+    if (comp.potassium < 200) substanceFindings.push({severity:'danger', title:'디곡신 + 저칼륨 → 디곡신 독성 위험',
+      detail:'저칼륨혈증은 Na⁺/K⁺-ATPase에 대한 디곡신 결합을 증가시켜 독성(부정맥)을 유발합니다.',
+      tip:'칼륨이 풍부한 식품(바나나, 감자, 오렌지)을 꾸준히 섭취하세요.'});
+  }
+  // 테오필린 + 카페인: Carrillo JA & Benitez J (2000) Clin Pharmacokinet 39:127
+  if (member.substances.includes('med_theophylline') && Object.keys(ingMap).some(n => ['커피','녹차','홍차','초콜릿','에너지드링크'].includes(n))) {
+    substanceFindings.push({severity:'danger', title:'테오필린 + 카페인 → 크산틴 독성 위험',
+      detail:'테오필린과 카페인은 모두 메틸크산틴으로 CYP1A2에 의해 경쟁적으로 대사됩니다. 동시 섭취 시 진전·빈맥·발작 위험.',
+      tip:'테오필린 복용 중 카페인 음료를 완전히 피하세요.'});
+  }
+  // 레보도파 + 고단백: Nutt JG et al. (1984) NEJM 310:483
+  if (member.substances.includes('med_levodopa') && comp.protein > 20) {
+    substanceFindings.push({severity:'caution', title:`레보도파 + 단백질 ${comp.protein.toFixed(1)}g → 흡수 경쟁`,
+      detail:'대형 중성 아미노산(LNAA)이 레보도파와 소장 및 혈뇌장벽 수송체에서 경쟁합니다 (Nutt 1984 NEJM). 단백질이 많으면 약효 감소.',
+      tip:'단백질 섭취를 저녁에 집중하고, 레보도파는 식사 30분 전 공복에 복용하세요.'});
+  }
+  // 퀴놀론 + 칼슘/철분/마그네슘: Lomaestro BM & Bailie GR (1995) Ann Pharmacother 29:1101
+  if (member.substances.includes('med_quinolone') && (comp.calcium > 150 || comp.iron > 3 || comp.magnesium > 50)) {
+    substanceFindings.push({severity:'danger', title:'퀴놀론 항생제 + 금속이온 → 킬레이션으로 흡수 거의 차단',
+      detail:`칼슘 ${comp.calcium.toFixed(0)}mg, 철분 ${comp.iron.toFixed(1)}mg, 마그네슘 ${comp.magnesium.toFixed(0)}mg — 다가 금속이온이 퀴놀론과 불용성 킬레이트를 형성하여 항생제 흡수가 최대 90% 감소합니다.`,
+      tip:'퀴놀론은 유제품·제산제·철분제 섭취 2시간 전 또는 6시간 후에 복용하세요.'});
+  }
+  // 테트라사이클린 + 칼슘/철분: Neuvonen PJ (1976) Drugs 11:45
+  if (member.substances.includes('med_tetracycline') && (comp.calcium > 100 || comp.iron > 2)) {
+    substanceFindings.push({severity:'danger', title:'테트라사이클린 + 칼슘/철분 → 킬레이션으로 약효 상실',
+      detail:'테트라사이클린은 Ca²⁺, Fe²⁺/³⁺, Mg²⁺, Al³⁺과 불용성 킬레이트를 형성합니다. 우유 한 잔으로도 흡수율 50-65% 감소.',
+      tip:'테트라사이클린은 식사 1시간 전 또는 2시간 후, 물로만 복용. 유제품 완전 분리.'});
   }
 
   // 3) 체질/특이사항 분석 (질환 선택 없어도 동작)
@@ -5154,6 +5322,47 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
         tip:'녹황색 채소, 베리류, 코코넛오일(MCT), 강황을 꾸준히 섭취하세요.'});
     }
   });
+
+  // ── 영양소 교차분석 (Cross-Correlation) ──────────────────────────────────
+  // 비타민C + 철분 시너지: Hallberg L et al. (1989) Am J Clin Nutr 49:140
+  if (comp.vitaminC > 25 && comp.iron > 2) {
+    traitFindings.push({severity:'good', title:`비타민C ${comp.vitaminC.toFixed(0)}mg + 철분 ${comp.iron.toFixed(1)}mg — 흡수 시너지`,
+      detail:'비타민C는 비헴철(Fe³⁺→Fe²⁺)을 환원하여 소장 흡수율을 최대 6배 증가시킵니다 (Hallberg 1989).',
+      tip:'철분이 풍부한 시금치·두부와 레몬즙·피망을 함께 먹으면 철분 흡수 극대화.'});
+  }
+  // 칼슘 vs 철분 경쟁: Hallberg L et al. (1991) Am J Clin Nutr 53:112
+  if (comp.calcium > 150 && comp.iron > 2) {
+    traitFindings.push({severity:'info', title:`칼슘 ${comp.calcium.toFixed(0)}mg과 철분 ${comp.iron.toFixed(1)}mg 동시 섭취 — 흡수 경쟁`,
+      detail:'칼슘 300mg 이상 시 비헴철 흡수율 최대 50% 감소 (Hallberg 1991). 같은 끼니 대량 동시 섭취는 비효율적.',
+      tip:'철분 보충이 중요하면 칼슘은 다른 끼니에 분산 섭취 권장.'});
+  }
+  // 폴리페놀-단백질 결합: Ozdal T et al. (2013) Food Res Int 51:954
+  const hasTeaTannin = Object.keys(ingMap).some(n => ['녹차','홍차','커피','와인'].includes(n));
+  if (hasTeaTannin && comp.protein > 15) {
+    traitFindings.push({severity:'info', title:'탄닌/폴리페놀과 단백질 결합 — 상호 생체이용률 감소',
+      detail:'차/커피의 탄닌은 단백질과 불용성 복합체를 형성하여 양쪽 모두 흡수율이 감소합니다 (Ozdal 2013).',
+      tip:'식사 중 차/커피보다 30분 이후 별도 섭취가 효과적.'});
+  }
+  // 비타민D + 칼슘 시너지: Heaney RP (2008) J Am Coll Nutr 27:62
+  if (comp.vitaminD > 3 && comp.calcium > 100) {
+    traitFindings.push({severity:'good', title:`비타민D ${comp.vitaminD.toFixed(1)}μg + 칼슘 ${comp.calcium.toFixed(0)}mg — 흡수 시너지`,
+      detail:'비타민D는 소장 칼슘 수송체(CaBP-9k) 발현을 유도하여 칼슘 흡수를 2-3배 증가시킵니다 (Heaney 2008).',
+      tip:'연어+우유, 계란+치즈 등의 조합이 골밀도 유지에 효과적.'});
+  }
+  // 오메가3 + 커큐민 상승: Jäger R et al. (2014) J Int Soc Sports Nutr 11:20
+  const hasCurcumin = Object.keys(ingMap).some(n => ['강황','카레','울금'].includes(n));
+  if (comp.omega3 > 0.5 && hasCurcumin) {
+    traitFindings.push({severity:'good', title:'오메가3 + 커큐민 — 항염 시너지',
+      detail:'오메가3(EPA/DHA)와 커큐민은 NF-κB 경로를 상호보완적으로 억제하여 항염 효과가 증폭됩니다.',
+      tip:'연어+강황 조합은 항염 식이의 핵심 조합.'});
+  }
+  // WHO 나트륨/칼륨 비율: WHO (2012) Guideline 나트륨 <2000mg/일, 칼륨 >3510mg/일
+  if (comp.sodium > 0 && comp.potassium > 0) {
+    const naKRatio = comp.sodium / Math.max(1, comp.potassium);
+    if (naKRatio > 2) traitFindings.push({severity:'caution', title:`나트륨/칼륨 비율 ${naKRatio.toFixed(1)} — WHO 권장 <1.0`,
+      detail:`현재 나트륨 ${comp.sodium.toFixed(0)}mg, 칼륨 ${comp.potassium.toFixed(0)}mg. WHO는 Na/K<1.0을 권장합니다. 높은 비율은 고혈압 위험을 증가시킵니다.`,
+      tip:'칼륨이 풍부한 바나나, 아보카도, 감자, 토마토를 추가하세요.'});
+  }
 
   // 칼로리 대비 일일 권장량
   if (dailyCal && comp.calories > 0) {
@@ -5828,6 +6037,71 @@ const SCI = {
     const k = 1e8 * Math.exp(-92000/(this.R*(tempC+273.15)));
     return Math.exp(-k * timeMin * 60);
   },
+  // ── 추가 반응 모델 (Phase 1) ──────────────────────────────────────────
+  // PAH (polycyclic aromatic hydrocarbons): formation on fat-drip/char surfaces
+  // Phillips (1999) Mutation Res 443:139; EFSA (2008) J EFSA 724:1-114
+  pahFormation(tempC, timeMin) {
+    if (tempC < 200) return 0;
+    // 벤조피렌 생성: Ea≈120 kJ/mol, 지방 열분해 → 라디칼 고리화
+    const k = 2e9 * Math.exp(-120000/(this.R*(tempC+273.15)));
+    return Math.min(1, k * timeMin * 60);
+  },
+  // HCA (heterocyclic amines): creatine + amino acids + sugars at high temp
+  // Skog K et al. (1998) Food Chem Toxicol 36:879; Sugimura T (2000) Mutation Res 447:17
+  hcaFormation(tempC, timeMin) {
+    if (tempC < 150) return 0;
+    // PhIP (2-amino-1-methyl-6-phenylimidazo[4,5-b]pyridine) 주요 HCA
+    const k = 8e7 * Math.exp(-80000/(this.R*(tempC+273.15)));
+    return Math.min(1, k * timeMin * 60);
+  },
+  // Nitrosamine: nitrite + secondary amines at high temp
+  // Honikel (2008) Meat Sci 78:68; IARC Monograph 114 (2018)
+  nitrosamineFormation(tempC, timeMin) {
+    if (tempC < 130) return 0;
+    const k = 3e6 * Math.exp(-95000/(this.R*(tempC+273.15)));
+    return Math.min(1, k * timeMin * 60);
+  },
+  // Anthocyanin thermal degradation: 1st-order, Ea≈75 kJ/mol
+  // Patras A et al. (2010) Trends Food Sci Technol 21:3
+  anthocyaninRetention(tempC, timeMin) {
+    if (tempC < 50) return 1;
+    const k = 5e6 * Math.exp(-75000/(this.R*(tempC+273.15)));
+    return Math.exp(-k * timeMin * 60);
+  },
+  // Chlorophyll degradation → pheophytin (Mg loss), Ea≈68 kJ/mol
+  // Schwartz SJ & von Elbe JH (1983) J Food Sci 48:1303
+  chlorophyllRetention(tempC, timeMin) {
+    if (tempC < 50) return 1;
+    const k = 1e6 * Math.exp(-68000/(this.R*(tempC+273.15)));
+    return Math.exp(-k * timeMin * 60);
+  },
+  // Beta-carotene trans-to-cis isomerization: enhances bioavailability
+  // Chen BH & Huang JH (1998) J Food Sci 63:751
+  betaCaroteneIsomer(tempC, timeMin) {
+    if (tempC < 50) return 0;
+    const k = 2e4 * Math.exp(-50000/(this.R*(tempC+273.15)));
+    return Math.min(1, 1 - Math.exp(-k * timeMin * 60));
+  },
+  // Glucosinolate hydrolysis: myrosinase active 20-60°C, thermal 60-100°C
+  // Verkerk R et al. (2009) Food Chem Toxicol 47:16
+  glucosinolateHydrolysis(tempC, timeMin) {
+    if (tempC < 20) return 0;
+    // Myrosinase: optimal 30-40°C, inactivated >70°C
+    const enzymatic = tempC <= 70 ? Math.exp(-Math.pow((tempC-35)/15, 2)) : 0;
+    // Thermal: Ea≈90 kJ/mol, significant above 60°C
+    const thermal = tempC >= 60 ? Math.min(1, this.extent(tempC, timeMin, 90000, 1e7)) : 0;
+    const timeFactor = 1 - Math.exp(-timeMin/15);
+    return Math.min(1, Math.max(enzymatic * timeFactor * 0.8, thermal));
+  },
+  // Polyphenol oxidation (PPO enzymatic browning): active 25-70°C, inactivated >70°C
+  // Yoruk R & Marshall MR (2003) J Food Biochem 27:361
+  polyphenolOxidation(tempC, timeMin) {
+    if (tempC > 80 || tempC < 15) return 0;
+    // Bell-curve: optimal at 40°C, inactivated progressively above 60°C
+    const activity = Math.exp(-Math.pow((tempC - 40) / 18, 2));
+    const timeFactor = 1 - Math.exp(-timeMin / 10);
+    return Math.min(1, activity * timeFactor);
+  },
   // USDA Nutrient Retention Factors Release 6 (2007)
   // [boil, steam, bake/roast, fry, raw]
   USDA: {
@@ -6073,6 +6347,124 @@ function analyze(ingMap, method, temp, time) {
       science:"가열→세포벽 파괴→trans-to-cis 이성화 | Stahl & Sies (1992)",
       proDetail:`Stahl & Sies (1992) J Nutr 122:2161. cis-이성체 생체이용률은 trans 대비 2.5-4.3배↑(Clinton 1998). 최적조건: 80-100°C·15-20분+지방(오일)→세포벽 파괴+미셀 형성. 리코펜 함량: 생토마토 2.6mg/100g vs 토마토페이스트 29.3mg/100g. 현재 생체이용률 지수: ${bio}%.`,
       health:"리코펜: 전립선암 위험↓(RR 0.79, Giovannucci 1995), LDL 산화↓"});
+  }
+
+  // ── PAH Formation: Ea=120 kJ/mol (Phillips 1999, EFSA 2008) ──
+  if (hasFat && temp >= 200 && (md.pah_risk || md.medium === 'smoke' || temp >= 300)) {
+    const pah = SCI.pahFormation(temp, time) * Math.max(0.3, md.o2_level || 0.7);
+    const int = Math.min(100, Math.round(pah * 100));
+    if (int > 2) {
+      rxns.push({name:"PAH 생성 (다환방향족탄화수소)",key:"pah",icon:"⚠️",intensity:int,
+        desc:`지방 열분해 → 벤조[a]피렌 등 PAH 생성 위험도 ${int}% (IARC Group 1 발암물질)`,
+        effects:["벤조[a]피렌 생성","표면 탄화 침착","발암물질 축적"],
+        science:`k(T)=A·exp(-Ea/RT) | Ea=120kJ/mol, A=2×10⁹ | Phillips (1999) Mutation Res 443:139`,
+        proDetail:`EFSA (2008) J EFSA 724. 벤조[a]피렌(BaP): 지방 열분해→라디칼 고리화→다환 방향족 축합. EU 규제 한도: 훈제식품 BaP<2μg/kg (Reg. 835/2011). 직접 화염 접촉시 BaP 최대 130μg/kg. 간접 열원·물받이 사용으로 90% 이상 감소. 마리네이드(산성)로 최대 70% 억제.`,
+        health:"IARC Group 1 발암물질 — 직접 불꽃 피하고, 탄화부위 제거, 알루미늄 포일 활용 권장"});
+    }
+  }
+
+  // ── HCA Formation: Ea=80 kJ/mol (Skog 1998, Sugimura 2000) ──
+  if (hasProt && temp >= 150 && md.browning && time > 5) {
+    const hca = SCI.hcaFormation(temp, time);
+    const int = Math.min(100, Math.round(hca * 100));
+    if (int > 3) {
+      rxns.push({name:"HCA 생성 (이환방향족아민)",key:"hca",icon:"🔴",intensity:int,
+        desc:`크레아틴+아미노산+당류 → PhIP 등 HCA 생성 위험도 ${int}% (IARC Group 2A)`,
+        effects:["PhIP·MeIQx 생성","고온·장시간 조리시 급증","표면 부착"],
+        science:`k(T)=A·exp(-Ea/RT) | Ea=80kJ/mol | Skog et al. (1998) Food Chem Toxicol 36:879`,
+        proDetail:`Sugimura (2000) Mutation Res 447:17. PhIP(2-amino-1-methyl-6-phenylimidazo[4,5-b]pyridine): 가장 흔한 HCA. 크레아틴(근육)+유리아미노산+포도당 → Strecker 분해 → 고리화. 조리 전 마리네이드(로즈마리, 올리브오일)로 최대 90% 감소 (Smith 2008). 뒤집기 빈도↑로 표면온도↓→HCA↓.`,
+        health:"IARC Group 2A 발암물질 — 마리네이드, 저온조리, 자주 뒤집기로 최소화"});
+    }
+  }
+
+  // ── Nitrosamine: Ea=95 kJ/mol (Honikel 2008, IARC Monograph 114) ──
+  const hasNitrite = ings.some(n => ['베이컨','소시지','햄','핫도그','살라미'].includes(n));
+  if (hasNitrite && temp >= 130) {
+    const nit = SCI.nitrosamineFormation(temp, time);
+    const int = Math.min(100, Math.round(nit * 100));
+    if (int > 1) {
+      rxns.push({name:"니트로사민 생성",key:"nitrosamine",icon:"☢️",intensity:int,
+        desc:`아질산염+2차 아민 → NDMA 등 니트로사민 생성 위험도 ${int}% (IARC Group 1)`,
+        effects:["N-니트로소디메틸아민(NDMA) 생성","고온 가공육에서 급증"],
+        science:`Ea=95kJ/mol | Honikel (2008) Meat Sci 78:68 | IARC Monograph 114`,
+        proDetail:`IARC (2018) Monograph 114. 가공육은 IARC Group 1 발암물질(대장암). 아질산나트륨(E250) → NO + 2차아민 → 니트로사민. 비타민 C(아스코르브산) 첨가로 니트로사민 생성 최대 90% 억제 (Mirvish 1994 Cancer Lett). 직접 화염 조리 시 니트로사민 3-4배 증가.`,
+        health:"IARC Group 1 — 가공육 고온 조리 최소화, 비타민C 풍부 채소와 함께 섭취"});
+    }
+  }
+
+  // ── Anthocyanin Degradation: Ea=75 kJ/mol (Patras 2010) ──
+  const hasAnthocyanin = has(d => d.compounds?.some(c => c.includes("안토시아닌")));
+  if (hasAnthocyanin && temp >= 60) {
+    const ret = SCI.anthocyaninRetention(temp, time);
+    const loss = Math.min(99, Math.round((1-ret)*100));
+    if (loss > 5) {
+      rxns.push({name:"안토시아닌 열분해",key:"anthocyanin",icon:"🫐",intensity:loss,
+        desc:`안토시아닌 ${loss}% 분해 — 항산화 색소 손실 (잔존율 ${100-loss}%)`,
+        effects:["적/보라 색상 퇴색","항산화 능력 감소","갈변화"],
+        science:`1차 반응: Ea=75kJ/mol | Patras et al. (2010) Trends Food Sci Technol 21:3`,
+        proDetail:`Patras (2010). 안토시아닌: pH<3에서 적색(flavylium cation, 안정), pH>7에서 청/녹→무색. 열분해: chalcone 개환 → 무색 화합물. 최적보존: pH<4, 50°C 이하 단시간, 빛 차단, 금속이온(Cu²⁺, Fe³⁺) 회피. 동결-해동도 세포벽 파괴로 방출↑.`,
+        health:`잔존 ${100-loss}% — 짧은 조리, 산성 환경(레몬즙), 저온으로 보존 극대화`});
+    }
+  }
+
+  // ── Chlorophyll Degradation: Ea=68 kJ/mol (Schwartz & von Elbe 1983) ──
+  const hasChlorophyll = has(d => d.compounds?.some(c => c.includes("클로로필")));
+  if (hasChlorophyll && temp >= 60) {
+    const ret = SCI.chlorophyllRetention(temp, time);
+    const loss = Math.min(99, Math.round((1-ret)*100));
+    if (loss > 5) {
+      rxns.push({name:"클로로필 분해 → 페오피틴",key:"chlorophyll",icon:"🥬",intensity:loss,
+        desc:`클로로필 ${loss}% 분해 → 페오피틴(올리브색) 전환 (Mg²⁺ 치환)`,
+        effects:["선명 녹색 → 올리브/갈색","Mg²⁺ 이탈","시각 품질 감소"],
+        science:`1차 반응: Ea=68kJ/mol | Schwartz & von Elbe (1983) J Food Sci 48:1303`,
+        proDetail:`Schwartz (1983). 클로로필→페오피틴: 산(pH<5) 또는 열에 의해 포르피린 고리 중심 Mg²⁺이 2H⁺로 치환. 클로로필 a(청녹)→페오피틴 a(올리브), 클로로필 b(황녹)→페오피틴 b. 보존법: 약알칼리(베이킹소다 소량), 짧은 블랜칭(30초), 급냉(얼음물).`,
+        health:`녹색 채소는 짧은 고온 조리(블랜칭 30초→급냉) 또는 스팀으로 색·영양 동시 보존`});
+    }
+  }
+
+  // ── Beta-Carotene Isomerization (Chen & Huang 1998) ──
+  const hasBetaCarotene = has(d => d.compounds?.some(c => c.includes("베타카로틴") || c.includes("카로티노이드")));
+  if (hasBetaCarotene && temp >= 60 && hasFat) {
+    const isom = SCI.betaCaroteneIsomer(temp, time);
+    const int = Math.min(100, Math.round(isom * 100));
+    if (int > 5) {
+      rxns.push({name:"베타카로틴 이성화 (생체이용률↑)",key:"beta_carotene",icon:"🥕",intensity:int,
+        desc:`trans→cis 이성화 ${int}% 진행 + 지방 공존 → 생체이용률 최대 6.5배↑`,
+        effects:["cis-이성체 생성","미셀 가용성 증가","지용성 흡수 극대화"],
+        science:`Ea≈50kJ/mol | Chen & Huang (1998) J Food Sci 63:751`,
+        proDetail:`Chen & Huang (1998). all-trans-β-carotene → 9-cis, 13-cis, 15-cis 이성체 생성. cis-이성체: 결정성↓, 미셀 가용성↑ → 소장 흡수율 3.5-6.5배 증가 (Deming 2002, Am J Clin Nutr). 최적조건: 80-100°C, 10-20분, 식용유(올리브오일) 5-10mL 동시 조리. 비타민A 전구체로서 면역·시력 유지 필수.`,
+        health:"당근·호박·고구마는 기름과 함께 가열 조리 시 프로비타민A 흡수 극대화"});
+    }
+  }
+
+  // ── Glucosinolate → Sulforaphane (Verkerk 2009, Matusheski 2004) ──
+  const hasCruciferous = ings.some(n => ['브로콜리','양배추','케일','콜리플라워','배추','무','갓','루꼴라','겨자'].includes(n));
+  if (hasCruciferous) {
+    const hydro = SCI.glucosinolateHydrolysis(temp, time);
+    const int = Math.min(100, Math.round(hydro * 100));
+    // 설포라판 수율: 60-70°C 최적 (마이로시네이즈 활성), >80°C에서 효소 불활성→저수율
+    const sulfoYield = temp <= 70 ? Math.round(hydro * 80) : temp <= 100 ? Math.round(hydro * 30) : Math.round(hydro * 10);
+    rxns.push({name:"글루코시놀레이트 가수분해",key:"glucosinolate",icon:"🥦",intensity:int,
+      desc:`십자화과 글루코시놀레이트 ${int}% 가수분해 → 설포라판 수율 약 ${sulfoYield}%`,
+      effects:["설포라판(SFN) 생성","이소티오시아네이트 방출","항암 효소 활성화"],
+      science:`마이로시네이즈: 최적 30-40°C | 열분해: Ea=90kJ/mol | Verkerk (2009)`,
+      proDetail:`Verkerk et al. (2009) Food Chem Toxicol 47:16. 글루코시놀레이트 → (마이로시네이즈) → 이소티오시아네이트(설포라판). 마이로시네이즈 최적: 30-40°C, 60-70°C에서 잔존 활성. >75°C 효소 완전 불활성화 → 열분해 경로(니트릴 생성↑, 설포라판↓). Matusheski (2004): 60°C 10분 처리 시 설포라판 수율 최대. 장내 세균 마이로시네이즈로 부분 보상 가능.`,
+      health:`설포라판: Nrf2 경로 활성화 → 해독효소(GST) 유도, 항암(Zhang 1992 PNAS). ${temp<=70?'현재 온도에서 효소 활성→높은 수율':'고온에서 효소 불활성→잘게 썰어 상온 방치 후 조리 권장'}`});
+  }
+
+  // ── Polyphenol Oxidation (Yoruk & Marshall 2003) ──
+  const hasPolyphenol = has(d => d.compounds?.some(c => c.includes("폴리페놀") || c.includes("카테킨") || c.includes("퀘르세틴") || c.includes("탄닌")));
+  if (hasPolyphenol && temp < 80 && temp >= 15 && method !== 'raw') {
+    const ox = SCI.polyphenolOxidation(temp, time);
+    const int = Math.min(100, Math.round(ox * 100));
+    if (int > 5) {
+      rxns.push({name:"폴리페놀 효소적 갈변 (PPO)",key:"polyphenol_oxidation",icon:"🍎",intensity:int,
+        desc:`폴리페놀옥시다아제(PPO) 활성 → 효소적 갈변 ${int}% 진행`,
+        effects:["갈변(melanin 생성)","항산화 능력 감소","풍미 변화"],
+        science:`PPO 최적 40°C, >70°C 불활성 | Yoruk & Marshall (2003)`,
+        proDetail:`Yoruk & Marshall (2003) J Food Biochem 27:361. 기질: catechol, chlorogenic acid → PPO → o-quinone → melanin 중합. 억제방법: (1) 산처리(pH<3 → 레몬즙/구연산), (2) 70°C 이상 가열(블랜칭), (3) 비타민C(환원제), (4) NaCl 침지. 최적 pH 5-7, 최적 온도 35-45°C.`,
+        health:"레몬즙(산성화), 블랜칭(효소 불활성), 물 침지(산소 차단)로 갈변 억제"});
+    }
   }
 
   // ── Method-specific warnings (METHODS 데이터 기반) ────────────────────────
