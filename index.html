@@ -689,6 +689,7 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
         <div class="profile-field"><label>키 (cm)</label><input type="number" id="pHeight" min="100" max="250" value="" placeholder="cm" onchange="updateProfile()"></div>
         <div class="profile-field"><label>체중 (kg)</label><input type="number" id="pWeight" min="20" max="300" value="" placeholder="kg" onchange="updateProfile()"></div>
         <div class="profile-field"><label>인종/민족</label><select id="pEthnicity" onchange="updateProfile()"><option value="">선택</option><option value="east_asian">동아시아인</option><option value="southeast_asian">동남아시아인</option><option value="south_asian">남아시아인</option><option value="caucasian">유럽계</option><option value="african">아프리카계</option><option value="hispanic">히스패닉</option><option value="middle_eastern">중동계</option></select></div>
+        <div class="profile-field"><label>국적</label><select id="pCountry" onchange="updateProfile()"><option value="">선택</option><option value="kr">🇰🇷 한국</option><option value="jp">🇯🇵 일본</option><option value="cn">🇨🇳 중국</option><option value="us">🇺🇸 미국</option><option value="gb">🇬🇧 영국</option><option value="fr">🇫🇷 프랑스</option><option value="de">🇩🇪 독일</option><option value="it">🇮🇹 이탈리아</option><option value="es">🇪🇸 스페인</option><option value="th">🇹🇭 태국</option><option value="vn">🇻🇳 베트남</option><option value="in">🇮🇳 인도</option><option value="id">🇮🇩 인도네시아</option><option value="ph">🇵🇭 필리핀</option><option value="mx">🇲🇽 멕시코</option><option value="br">🇧🇷 브라질</option><option value="tr">🇹🇷 터키</option><option value="sa">🇸🇦 사우디아라비아</option><option value="eg">🇪🇬 이집트</option><option value="ng">🇳🇬 나이지리아</option><option value="other">기타</option></select></div>
         <div class="profile-field"><label>활동 수준</label><select id="pActivity" onchange="updateProfile()"><option value="">선택</option><option value="sedentary">비활동적 (사무직)</option><option value="light">가벼운 활동</option><option value="moderate">중간 활동</option><option value="active">활발한 활동</option><option value="very_active">매우 활발 (운동선수)</option></select></div>
       </div>
 
@@ -2518,6 +2519,7 @@ async function loadMemberProfiles() {
       height: m.height,
       weight: m.weight,
       ethnicity: m.ethnicity,
+      country: m.country || null,
       activity: m.activity,
       traits: m.traits || [],
       familyHx: m.family_history || [],
@@ -2541,6 +2543,7 @@ async function saveMemberToDB(member) {
     height: member.height,
     weight: member.weight,
     ethnicity: member.ethnicity,
+    country: member.country || null,
     activity: member.activity,
     traits: JSON.stringify(member.traits || []),
     family_history: JSON.stringify(member.familyHx || []),
@@ -2891,7 +2894,7 @@ async function dbRPC(fn, params = {}) {
 // ── State ──
 let selected = {};  // {name: grams}
 let activeCategory = "all";
-let members = [{id:1, name:'나', age:null, gender:null, height:null, weight:null, ethnicity:null, activity:null, traits:[], familyHx:[], conditions:[], substances:[]}];
+let members = [{id:1, name:'나', age:null, gender:null, height:null, weight:null, ethnicity:null, country:null, activity:null, traits:[], familyHx:[], conditions:[], substances:[]}];
 let activeMemberId = 1;
 let nextMemberId = 2;
 let profileOpen = false;
@@ -3153,6 +3156,7 @@ function loadMemberForm() {
   document.getElementById("pHeight").value = member.height || '';
   document.getElementById("pWeight").value = member.weight || '';
   document.getElementById("pEthnicity").value = member.ethnicity || '';
+  document.getElementById("pCountry").value = member.country || '';
   document.getElementById("pActivity").value = member.activity || '';
 }
 
@@ -3164,6 +3168,7 @@ function saveMemberForm() {
   member.height = parseInt(document.getElementById("pHeight").value) || null;
   member.weight = parseInt(document.getElementById("pWeight").value) || null;
   member.ethnicity = document.getElementById("pEthnicity").value || null;
+  member.country = document.getElementById("pCountry").value || null;
   member.activity = document.getElementById("pActivity").value || null;
 }
 
@@ -3200,6 +3205,8 @@ function updateProfileSummary() {
   }
   const ethLabels = {east_asian:'동아시아인',southeast_asian:'동남아시아인',south_asian:'남아시아인',caucasian:'유럽계',african:'아프리카계',hispanic:'히스패닉',middle_eastern:'중동계'};
   if (member.ethnicity) chips.push(ethLabels[member.ethnicity]);
+  const countryLabels = {kr:'🇰🇷 한국',jp:'🇯🇵 일본',cn:'🇨🇳 중국',us:'🇺🇸 미국',gb:'🇬🇧 영국',fr:'🇫🇷 프랑스',de:'🇩🇪 독일',it:'🇮🇹 이탈리아',es:'🇪🇸 스페인',th:'🇹🇭 태국',vn:'🇻🇳 베트남',in:'🇮🇳 인도',id:'🇮🇩 인도네시아',ph:'🇵🇭 필리핀',mx:'🇲🇽 멕시코',br:'🇧🇷 브라질',tr:'🇹🇷 터키',sa:'🇸🇦 사우디',eg:'🇪🇬 이집트',ng:'🇳🇬 나이지리아',other:'기타'};
+  if (member.country) chips.push(countryLabels[member.country] || member.country);
   const actLabels = {sedentary:'비활동적',light:'가벼운 활동',moderate:'중간 활동',active:'활발',very_active:'매우 활발'};
   if (member.activity) chips.push(actLabels[member.activity]);
   member.traits.forEach(t => chips.push(TRAITS[t]?.emoji + ' ' + TRAITS[t]?.label));
@@ -3257,7 +3264,7 @@ function switchMember(memberId) {
 function addMember() {
   if (members.length >= 6) return;
   saveMemberForm();
-  const newMember = {id: nextMemberId++, name: `사람${nextMemberId-1}`, age: null, gender: null, height: null, weight: null, ethnicity: null, activity: null, traits: [], familyHx: [], conditions: [], substances: []};
+  const newMember = {id: nextMemberId++, name: `사람${nextMemberId-1}`, age: null, gender: null, height: null, weight: null, ethnicity: null, country: null, activity: null, traits: [], familyHx: [], conditions: [], substances: []};
   members.push(newMember);
   switchMember(newMember.id);
 }
@@ -4823,7 +4830,7 @@ async function runAnalysis() {
   res.innerHTML = html;
 
   // Trigger recipe loading
-  _pendingRecipeLoad = { ethnicity: member0.ethnicity, conditions: member0.conditions || [], traits: member0.traits || [], country: '' };
+  _pendingRecipeLoad = { ethnicity: member0.ethnicity, country: member0.country || '', conditions: member0.conditions || [], traits: member0.traits || [] };
   if (currentTab === 'recipes') loadRecipes('');
 
   // Draw Charts
