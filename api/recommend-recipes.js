@@ -10,7 +10,15 @@ export default async function handler(req, res) {
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'ANTHROPIC_API_KEY missing' });
 
-  const { ingredients = [], method, temp, time, conditions = [], traits = [], ethnicity, country } = req.body || {};
+  const { ingredients = [], method, temp, time, conditions = [], traits = [], ethnicity, country, userLang = 'ko' } = req.body || {};
+
+  const LANG_NAME = {
+    ko:'Korean', ja:'Japanese', zh:'Chinese', 'zh-Hans':'Chinese',
+    en:'English', fr:'French', de:'German', it:'Italian', es:'Spanish',
+    th:'Thai', vi:'Vietnamese', hi:'Hindi', ar:'Arabic', el:'Greek',
+    tr:'Turkish', id:'Indonesian', pt:'Portuguese',
+  };
+  const outputLang = LANG_NAME[userLang] || 'Korean';
 
   const CUISINE_MAP = {
     east_asian:      'Korean, Japanese, or Chinese',
@@ -48,19 +56,21 @@ Rules:
 - If health conditions exist, avoid contraindicated ingredients and mention it
 - Match the cuisine style strictly
 - youtubeQuery should be a natural search phrase (in the cuisine's local language if possible, else English) for finding this recipe on YouTube
+- ALL text fields (name, description, healthNote, cuisine) MUST be written in ${outputLang}
+- difficulty must be one word in ${outputLang} meaning Easy/Medium/Hard
 
 Return ONLY a valid JSON array, no markdown, no explanation:
 [
   {
-    "name": "레시피 한국어 이름",
+    "name": "Recipe name in ${outputLang}",
     "name_en": "English recipe name",
-    "description": "한국어 설명 1-2문장",
-    "usedIngredients": ["재료1", "재료2"],
-    "healthNote": "건강 혜택 또는 주의사항 1문장",
-    "allergens": ["allergen1"],
-    "cuisine": "요리 국가/스타일",
-    "difficulty": "쉬움",
-    "youtubeQuery": "YouTube search query string"
+    "description": "1-2 sentence description in ${outputLang}",
+    "usedIngredients": ["ingredient name in ${outputLang}"],
+    "healthNote": "1 sentence health benefit or caution in ${outputLang}",
+    "allergens": ["allergen in English"],
+    "cuisine": "Cuisine country/style in ${outputLang}",
+    "difficulty": "Easy/Medium/Hard equivalent in ${outputLang}",
+    "youtubeQuery": "YouTube search query in the cuisine's local language"
   }
 ]`;
 

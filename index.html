@@ -373,6 +373,18 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .yt-vchannel{font-size:10px;color:var(--text-tertiary)}
 .yt-vstats{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
 .yt-vstat{font-size:10px;color:#737373}
+/* ── YouTube In-App Modal Player ───────────────────────────────── */
+.yt-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9000;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.yt-modal-overlay.show{opacity:1;pointer-events:all}
+.yt-modal{background:#111;border-radius:20px 20px 0 0;width:100%;max-width:720px;padding:16px 16px 28px;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1)}
+.yt-modal-overlay.show .yt-modal{transform:translateY(0)}
+.yt-modal-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.yt-modal-title{flex:1;font-size:13px;font-weight:600;color:#fff;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.yt-modal-close{width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.yt-modal-close:hover{background:rgba(255,255,255,.28)}
+.yt-iframe-wrap{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.yt-iframe-wrap iframe{width:100%;height:100%;border:none;display:block}
+.yt-modal-hint{margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.07);font-size:11px;color:rgba(255,255,255,.55);text-align:center;line-height:1.6}
 .version-badge{font-size:10px;color:rgba(255,255,255,0.6);margin-left:4px}
 .trust-footer{background:#f5f5f5;border-top:1px solid #e5e5e5;padding:20px;margin-top:40px;text-align:center;font-size:11px;color:#737373;line-height:2}
 .trust-footer a{color:var(--accent);text-decoration:none}
@@ -4967,6 +4979,7 @@ async function loadRecipes(country) {
         traits: member0.traits || [],
         ethnicity: member0.ethnicity || null,
         country: country || null,
+        userLang: getUserLang(),
       }),
     });
     const data = await r.json();
@@ -5078,7 +5091,7 @@ function renderYtVideos(container, videos) {
   const playSm = `<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>`;
   const [feat, ...rest] = videos;
   const featHtml = `
-    <a class="yt-feat" href="https://www.youtube.com/watch?v=${feat.id}" target="_blank" rel="noopener">
+    <div class="yt-feat" onclick="openYtVideo('${feat.id}','${escQ(feat.title)}')" style="cursor:pointer">
       <div class="yt-feat-thumb">
         <img src="${feat.thumbnail.replace('mqdefault','hqdefault')}" alt="${feat.title}" loading="lazy">
         <div class="yt-feat-play">${playLg}</div>
@@ -5094,11 +5107,11 @@ function renderYtVideos(container, videos) {
           <span class="yt-feat-stat">📅 ${fmtDate(feat.publishedAt)}</span>
         </div>
       </div>
-    </a>`;
+    </div>`;
   const gridHtml = rest.length ? `
     <div class="yt-grid">
       ${rest.map(v => `
-        <a class="yt-card" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">
+        <div class="yt-card" onclick="openYtVideo('${v.id}','${escQ(v.title)}')" style="cursor:pointer">
           <div class="yt-thumb">
             <img src="${v.thumbnail}" alt="${v.title}" loading="lazy">
             <div class="yt-play">${playSm}</div>
@@ -5113,9 +5126,37 @@ function renderYtVideos(container, videos) {
               <span class="yt-vstat">📅 ${fmtDate(v.publishedAt)}</span>
             </div>
           </div>
-        </a>`).join('')}
+        </div>`).join('')}
     </div>` : '';
   container.innerHTML = featHtml + gridHtml;
+}
+
+function getUserLang() {
+  const country = _pendingRecipeLoad?.country || '';
+  if (country && COUNTRY_LANG[country]) return COUNTRY_LANG[country].lang;
+  const ethnicity = _pendingRecipeLoad?.ethnicity || '';
+  return ({east_asian:'ko',southeast_asian:'vi',south_asian:'hi',caucasian:'en',african:'fr',hispanic:'es',middle_eastern:'ar'})[ethnicity] || 'ko';
+}
+
+function openYtVideo(videoId, title) {
+  const lang = getUserLang();
+  const modal = document.getElementById('ytModal');
+  if (!modal) return;
+  document.getElementById('ytModalTitle').textContent = title;
+  document.getElementById('ytIframeWrap').innerHTML =
+    `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=1&hl=${lang}&cc_lang_pref=${lang}&rel=0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen></iframe>`;
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeYtModal() {
+  const modal = document.getElementById('ytModal');
+  if (!modal) return;
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+  setTimeout(() => { const w = document.getElementById('ytIframeWrap'); if (w) w.innerHTML = ''; }, 340);
 }
 
 function fmtNum(n) {
@@ -5367,6 +5408,18 @@ async function devRunSample() {
       <button class="method-modal-cancel" onclick="closeMethodModal()">취소</button>
       <button class="method-modal-confirm" id="methodModalConfirmBtn" onclick="confirmAddMethod()">AI 분석 추가</button>
     </div>
+  </div>
+</div>
+
+<!-- YouTube In-App Player Modal -->
+<div class="yt-modal-overlay" id="ytModal" onclick="if(event.target===this)closeYtModal()">
+  <div class="yt-modal">
+    <div class="yt-modal-top">
+      <div class="yt-modal-title" id="ytModalTitle"></div>
+      <button class="yt-modal-close" onclick="closeYtModal()">✕</button>
+    </div>
+    <div class="yt-iframe-wrap" id="ytIframeWrap"></div>
+    <div class="yt-modal-hint">💡 자막 켜기: 영상 우측 하단 <strong style="color:rgba(255,255,255,.85)">CC</strong> 버튼 → <strong style="color:rgba(255,255,255,.85)">자동번역</strong> → 언어 선택 &nbsp;·&nbsp; 프로필 국적에 맞는 언어가 자동 설정됩니다</div>
   </div>
 </div>
 
