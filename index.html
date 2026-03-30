@@ -218,6 +218,14 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .health-ing-row .ing-cell:nth-child(4n){border-right:none}
 .ing-cell.cond-active{background:#fef2f2}
 .ing-cell.cond-active .ci-n{color:#dc2626;font-weight:600}
+/* ── Condition group headers ────────────────────────────────────────────── */
+.cond-group-hdr{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f9fafb;border-bottom:1px solid #e5e5e5;cursor:pointer;font-weight:600;font-size:13px;user-select:none;transition:background .15s}
+.cond-group-hdr:hover{background:#f0f9ff}
+.cond-group-hdr .cg-e{font-size:16px;line-height:1;flex-shrink:0}
+.cond-group-hdr .cg-badge{background:var(--accent);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;line-height:1.6}
+.cond-group-hdr .cg-arr{margin-left:auto;font-size:9px;color:#c4c4c4;flex-shrink:0;transition:transform .15s}
+.cond-group-hdr.expanded .cg-arr{transform:rotate(90deg);color:var(--accent)}
+.cond-group-hdr.expanded{background:#f0fdf4}
 .ing-cell.health-custom .ci-n::after{content:'AI';font-size:7px;background:var(--accent);color:#fff;border-radius:3px;padding:0 3px;margin-left:3px;vertical-align:middle;font-weight:700}
 .toggle-btn{padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -2594,6 +2602,162 @@ const CONDITIONS = {
     ]
   },
 
+  // ── 암 / 종양 ─────────────────────────────────────────────────────────────
+  stomach_cancer: {
+    label:"위암", emoji:"🫃",
+    desc:"위 점막 악성종양 — 식염·가공육·H.pylori 연관",
+    rules:[
+      {check:(im,c)=>c.sodium>1200, severity:"danger", title:"고염 식품 — 위 점막 손상·H.pylori 증식 촉진",
+        detail:()=>`소금은 위 점막 보호층을 손상시키고 H.pylori 감염을 촉진합니다. 하루 나트륨 2,000mg 이하를 목표로 하세요.`,
+        tip:"국물 섭취 최소화, 젓갈·절임류 제한. 요리 시 소금 대신 식초·레몬즙을 활용하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['베이컨','소시지','햄','훈제연어'].includes(n)), severity:"danger", title:"가공·훈제육 — 니트로사민 발암물질",
+        detail:()=>`훈제·염장 가공육의 니트로사민과 PAH는 위암 위험을 최대 74% 증가시킵니다.`,
+        tip:"가공육은 주 1회 이하로 제한하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['마늘','브로콜리','양배추'].includes(n)), severity:"good", title:"알리신·설포라판 — H.pylori 억제·항암",
+        detail:()=>`마늘의 알리신은 H.pylori를 직접 억제합니다. 브로콜리·양배추의 설포라판은 발암물질 해독 효소를 유도합니다.`,
+        tip:"마늘은 으깬 후 10분 방치하면 알리신 생성 최대화."},
+      {check:(im)=>Object.keys(im).some(n=>n.includes('토마토')), severity:"good", title:"리코펜(토마토) — 위암 세포 산화 억제",
+        detail:()=>`조리된 토마토(소스·케첩)는 생토마토보다 리코펜 흡수율이 3배 높습니다.`,
+        tip:"올리브오일과 함께 조리한 토마토 소스 형태가 가장 효과적입니다."},
+      {check:(im,c,m)=>m&&['char_grill','bbq','smoke'].includes(m), severity:"caution", title:"고온 직화·훈연 — PAH·HCA 발암물질",
+        detail:()=>`300°C 이상 직화 시 벤조피렌 등 발암물질이 생성됩니다.`,
+        tip:"찜·삶기·저온 조리로 대체하고 탄 부분은 제거하세요."},
+    ]
+  },
+
+  liver_cancer: {
+    label:"간암", emoji:"🟫",
+    desc:"간세포암 — B·C형 간염·간경변·알코올성 간질환 배경",
+    rules:[
+      {check:(im,c)=>Object.keys(im).some(n=>n.includes('술')||n.includes('맥주')||n.includes('소주')||n.includes('와인')), severity:"danger", title:"알코올 — 간경변 촉진·간암 위험 직접 상승",
+        detail:()=>`알코올 대사 산물 아세트알데히드는 발암물질입니다. 간암 환자에게 알코올은 절대 금기입니다.`,
+        tip:"알코올 완전 차단이 필수입니다."},
+      {check:(im)=>Object.keys(im).some(n=>['땅콩','옥수수'].includes(n)), severity:"caution", title:"아플라톡신 위험 식품 — 간암 발암물질",
+        detail:()=>`곰팡이 오염 땅콩·옥수수의 아플라톡신 B1은 WHO 1군 발암물질입니다.`,
+        tip:"오래되거나 곰팡이 흔적이 있는 제품은 즉시 폐기하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['브로콜리','양배추','케일'].includes(n)), severity:"good", title:"십자화과 채소 — 간 해독 효소 유도",
+        detail:()=>`설포라판은 Phase II 해독 효소를 활성화하여 발암물질 제거를 돕습니다.`,
+        tip:"주 3-4회 섭취를 목표로 하세요."},
+      {check:(im)=>Object.keys(im).some(n=>n.includes('커피')), severity:"good", title:"커피 — 간섬유화·간암 위험 감소",
+        detail:()=>`하루 2-3잔의 커피가 간경변 위험 44%, 간암 위험 40% 감소와 연관됩니다.`,
+        tip:"블랙커피 또는 아메리카노를 권장합니다."},
+      {check:(im,c)=>c.fat>25&&c.carbs>60, severity:"caution", title:"고지방+고탄수화물 — 지방간 진행 가속",
+        detail:()=>`과잉 에너지 섭취는 간내 지방 축적을 가속화하고 간경변·간암 진행 위험을 높입니다.`,
+        tip:"균형 잡힌 식사로 적정 체중 유지가 간 건강의 핵심입니다."},
+    ]
+  },
+
+  colon_cancer: {
+    label:"대장암", emoji:"🔄",
+    desc:"대장·직장 악성종양 — 식이섬유 부족·적색육 연관",
+    rules:[
+      {check:(im)=>Object.keys(im).some(n=>['소고기','돼지고기','양고기','베이컨','소시지','햄'].includes(n)), severity:"danger", title:"적색·가공육 — 대장암 위험 증가 (WHO 1군 발암물질)",
+        detail:()=>`가공육은 WHO 1군 발암물질입니다. 적색육 100g/일 추가 섭취마다 대장암 위험 17% 증가. 헴철·니트로사민이 주요 기전입니다.`,
+        tip:"가공육 주 1회 이하, 적색육 주 300g 이하(조리 후)로 제한하세요."},
+      {check:(im,c)=>c.fiber<5, severity:"caution", title:"식이섬유 부족 — 발암물질 접촉 시간 증가",
+        detail:()=>`식이섬유는 변 통과 시간을 단축해 발암물질의 장 점막 접촉을 줄입니다.`,
+        tip:"통곡물·콩류·채소·과일을 적극 섭취하세요."},
+      {check:(im,c)=>c.fiber>8, severity:"good", title:"풍부한 식이섬유 — 부티레이트 생성 (암 억제)",
+        detail:()=>`발효성 식이섬유는 부티레이트로 전환되어 대장 세포 에너지원이자 암 억제 유전자 활성화 인자로 작용합니다.`,
+        tip:"콩류·귀리·사과·당근 등 다양한 섬유를 섭취하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['마늘','양파'].includes(n)), severity:"good", title:"알리움 채소 — 항암 유기황화합물",
+        detail:()=>`마늘·양파의 알리신·퀘르세틴은 대장암 세포 증식 억제 및 세포 사멸 유도 효과가 있습니다.`,
+        tip:"주 5회 이상 마늘·양파를 요리에 사용하세요."},
+      {check:(im,c,m,t)=>m&&['char_grill','bbq'].includes(m)&&t>250, severity:"caution", title:"직화 고온 조리 — HCA(헤테로고리아민) 생성",
+        detail:()=>`250°C 이상 직화 조리 시 이형방향족아민(HCA)이 생성되어 대장 세포 DNA 돌연변이를 유발합니다.`,
+        tip:"찜·삶기·저온 오븐으로 대체하세요."},
+    ]
+  },
+
+  lung_cancer: {
+    label:"폐암", emoji:"🫁",
+    desc:"폐 악성종양 — 흡연·발암물질·산화 스트레스 연관",
+    rules:[
+      {check:(im)=>Object.keys(im).some(n=>['당근','고구마','호박','시금치'].includes(n)), severity:"good", title:"카로티노이드 — 항산화·폐 세포 보호",
+        detail:()=>`식품 형태의 베타카로틴·루테인·리코펜은 폐 세포를 산화 스트레스로부터 보호합니다. ⚠️ 흡연자는 베타카로틴 보충제를 피하세요 (CARET 연구).`,
+        tip:"식품 형태로만 섭취하세요. 보충제 고용량은 흡연자에게 역효과."},
+      {check:(im)=>Object.keys(im).some(n=>['브로콜리','브로콜리새싹','케일','양배추'].includes(n)), severity:"good", title:"설포라판 — 발암물질 해독 효소 유도",
+        detail:()=>`브로콜리의 설포라판은 Nrf2 경로를 활성화해 흡연 관련 발암물질 제거를 돕습니다.`,
+        tip:"살짝 데친 브로콜리가 가장 효과적입니다."},
+      {check:(im,c)=>c.vitaminC>50, severity:"good", title:"비타민C — 폐 산화 스트레스 중화",
+        detail:()=>`폐는 고산소 환경으로 산화 스트레스에 취약합니다. 비타민C는 직접적 항산화제로 폐 기능 유지에 필수입니다.`,
+        tip:"피망·파프리카·브로콜리·키위를 매 식사에 포함하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['베이컨','소시지','햄'].includes(n)), severity:"caution", title:"가공육 — 니트로사민 폐 DNA 손상",
+        detail:()=>`가공육의 니트리트가 니트로사민으로 전환되어 폐 DNA를 손상시킬 수 있습니다.`,
+        tip:"가공육을 최소화하고 신선한 단백질로 대체하세요."},
+      {check:(im,c)=>c.omega3>2, severity:"good", title:"오메가3 — 폐 염증 억제·면역 강화",
+        detail:()=>`EPA·DHA는 프로-레졸빈 생성으로 폐 염증을 억제합니다.`,
+        tip:"연어·고등어·청어를 주 3회 이상 섭취하세요."},
+    ]
+  },
+
+  breast_cancer: {
+    label:"유방암", emoji:"🎀",
+    desc:"유방 악성종양 — 에스트로겐·생활습관·유전 복합 요인",
+    rules:[
+      {check:(im)=>Object.keys(im).some(n=>['소주','맥주','와인','막걸리'].includes(n)), severity:"danger", title:"알코올 — 에스트로겐 상승·DNA 손상",
+        detail:()=>`알코올은 혈중 에스트로겐을 높이고 아세트알데히드가 유방 세포 DNA를 손상합니다. 음주량에 비례해 위험 증가 (1잔/일 +7-10%).`,
+        tip:"알코올은 가능한 완전히 피하세요. 적은 양도 위험을 높입니다."},
+      {check:(im)=>Object.keys(im).some(n=>['브로콜리','브로콜리새싹','케일','양배추','콜리플라워'].includes(n)), severity:"good", title:"DIM(십자화과) — 에스트로겐 대사 경로 조절",
+        detail:()=>`브로콜리의 인돌-3-카르비놀(I3C)은 에스트로겐을 덜 활성화된 형태로 대사시켜 유방암 위험을 낮춥니다.`,
+        tip:"주 5회 이상 십자화과 채소를 섭취하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['두부','두유','된장','청국장'].includes(n)), severity:"good", title:"대두 이소플라본 — 에스트로겐 수용체 경쟁 억제",
+        detail:()=>`아시아 여성의 대두 섭취와 유방암 발생률 역상관이 보고됩니다. 발효 대두(된장·청국장)는 이소플라본 흡수율이 더 높습니다.`,
+        tip:"보충제보다 식품 형태(두부·된장)로 섭취하세요."},
+      {check:(im,c)=>c.fiber>8, severity:"good", title:"풍부한 식이섬유 — 혈중 에스트로겐 배출 촉진",
+        detail:()=>`식이섬유는 장에서 에스트로겐 재흡수를 차단하고 대변으로 배출을 촉진합니다.`,
+        tip:"콩류·통곡물·채소·과일로 매 식사 섬유를 보충하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['아마씨'].includes(n)), severity:"good", title:"아마씨 리그난 — 식물성 에스트로겐 조절",
+        detail:()=>`아마씨의 리그난은 에스트로겐 수용체를 점유해 강한 에스트로겐 신호를 차단합니다.`,
+        tip:"하루 1큰술(10g) 갈아서 요거트·스무디에 넣어 드세요."},
+    ]
+  },
+
+  prostate_cancer: {
+    label:"전립선암", emoji:"🔵",
+    desc:"전립선 악성종양 — 안드로겐·포화지방·노화 연관",
+    rules:[
+      {check:(im)=>Object.keys(im).some(n=>n.includes('토마토')||n==='케첩'), severity:"good", title:"리코펜(조리 토마토) — 전립선 산화 억제",
+        detail:()=>`리코펜은 전립선에 특이적으로 축적되는 항산화 카로티노이드입니다. 가열 조리 토마토는 생토마토보다 흡수율 4배.`,
+        tip:"올리브오일로 볶은 토마토 소스가 가장 효과적입니다."},
+      {check:(im)=>Object.keys(im).some(n=>['두부','두유','된장'].includes(n)), severity:"good", title:"대두 이소플라본 — DHT 생성 효소 억제",
+        detail:()=>`제니스테인은 5α-리덕테이스(DHT 생성 효소)를 억제합니다. 아시아 남성의 전립선암 발생률이 낮은 것과 연관됩니다.`,
+        tip:"두부·된장·두유를 식사에 정기적으로 포함하세요."},
+      {check:(im,c)=>c.saturatedFat>12, severity:"caution", title:"포화지방 과다 — 안드로겐 생성 촉진",
+        detail:()=>`고포화지방 식사는 혈중 테스토스테론·DHT를 높여 전립선암 세포 성장을 촉진할 수 있습니다.`,
+        tip:"붉은 고기·버터·전유 제품을 줄이고 식물성 지방·생선으로 대체하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['연어','고등어','청어'].includes(n)), severity:"good", title:"오메가3 DHA/EPA — 전립선암 세포 증식 억제",
+        detail:()=>`EPA·DHA는 COX-2 염증 경로를 억제하여 전립선암 세포 증식을 줄입니다.`,
+        tip:"주 3회 등푸른 생선을 섭취하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['마늘','브로콜리'].includes(n)), severity:"good", title:"알리신·설포라판 — 전립선 세포 아포토시스 유도",
+        detail:()=>`마늘의 알리신과 브로콜리의 설포라판은 전립선암 세포 자멸을 유도하고 암 줄기세포 억제 효과가 있습니다.`,
+        tip:"마늘 2-3쪽, 브로콜리 ½컵을 매일 목표로 하세요."},
+    ]
+  },
+
+  pancreatic_cancer: {
+    label:"췌장암", emoji:"🟡",
+    desc:"췌장 악성종양 — 예후 불량·조기 식이 관리 중요",
+    rules:[
+      {check:(im)=>Object.keys(im).some(n=>['베이컨','소시지','햄','핫도그'].includes(n)), severity:"danger", title:"가공육 — 췌장암 위험 최대 2배 증가",
+        detail:()=>`아질산염-니트로사민이 췌장 세포 DNA를 손상시킵니다. 매일 50g 가공육 섭취 시 췌장암 위험 19% 증가 (WCRF).`,
+        tip:"가공육을 제거하고 신선한 닭고기·생선·콩류로 대체하세요."},
+      {check:(im,c)=>c.fat>30, severity:"caution", title:"고지방 식사 — 췌장 소화효소 분비 부담",
+        detail:()=>`지방은 CCK를 통해 췌장을 자극합니다. 지속적 고지방 섭취는 췌장 세포 손상을 가속화합니다.`,
+        tip:"식사당 지방 10-15g 이하로 제한하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['블루베리','딸기','라즈베리','체리'].includes(n)), severity:"good", title:"베리류 — Nrf2 경로 통한 췌장 세포 보호",
+        detail:()=>`안토시아닌과 레스베라트롤은 산화 스트레스로부터 췌장 세포를 보호합니다.`,
+        tip:"냉동 베리도 신선 베리와 동등한 항산화 효과를 제공합니다."},
+      {check:(im,c)=>c.fiber>7, severity:"good", title:"풍부한 식이섬유 — 혈당 안정화로 췌장 인슐린 부담 감소",
+        detail:()=>`혈당 급등을 완화해 췌장 베타세포 부담을 줄입니다. 고혈당·인슐린 저항성은 췌장암 위험 증가와 연관됩니다.`,
+        tip:"콩류·귀리·통곡물로 식이섬유를 보충하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['녹차'].includes(n)), severity:"good", title:"녹차 EGCG — mTOR 신호 억제·암 세포 자가포식 유도",
+        detail:()=>`EGCG는 췌장암 세포의 mTOR 신호를 억제하고 자가포식을 유도합니다.`,
+        tip:"하루 3-4잔, 80°C 온도로 우려 마시면 EGCG가 보존됩니다."},
+    ]
+  },
+
+  // ── 정신건강 ──────────────────────────────────────────────────────────────
   depression_nutrition: {
     label: "우울증 / 정신건강", emoji: "💙",
     desc: "세로토닌·도파민 부족 — 식이로 뇌 기능 지원",
@@ -2618,6 +2782,17 @@ const CONDITIONS = {
         tip:"균형 잡힌 식사는 정신 건강의 기초입니다. 규칙적인 식사 패턴을 유지하세요."},
     ]
   },
+};
+
+// ── 질환 카테고리 그룹 (부모-자식 확장 구조) ──────────────────────────────
+const CONDITION_GROUPS = {
+  cancer:    {label:"암 / 종양",     emoji:"🎗️", children:['stomach_cancer','liver_cancer','colon_cancer','lung_cancer','breast_cancer','prostate_cancer','pancreatic_cancer']},
+  cardio:    {label:"심혈관",         emoji:"❤️",  children:['hypertension','heart','hyperlipidemia','metabolic_syndrome']},
+  metabolic: {label:"대사 / 내분비", emoji:"🔬",  children:['diabetes','obesity','pcos','thyroid_hypo','thyroid_hyper','gout']},
+  digestive: {label:"소화기",         emoji:"🫃",  children:['gerd','gastritis','ibs','crohns','celiac','gallstone','pancreatitis','fatty_liver']},
+  renal:     {label:"신장 / 혈액",   emoji:"🫘",  children:['kidney','liver','anemia']},
+  musculo:   {label:"근골격 / 면역", emoji:"🦴",  children:['osteoporosis','arthritis','sarcopenia']},
+  mental:    {label:"정신 / 뇌건강", emoji:"🧠",  children:['depression_nutrition']},
 };
 
 // ── 체질/특이사항 DB ──
@@ -3436,6 +3611,7 @@ let customTraits = {};     // {key: {label, emoji, desc, interactions, warningFo
 let customFamilyHx = {};   // {key: {label, emoji, desc}}
 let customSubstances = {}; // {key: {label, emoji, desc, category, interactions, warningFoods}}
 let customConditions = {}; // {key: {label, emoji, desc, avoidFoods, benefitFoods, notes}}
+let _condExpanded = new Set(); // 현재 펼쳐진 질환 그룹 키
 let activeMemberId = 1;
 let nextMemberId = 2;
 let profileOpen = false;
@@ -3626,13 +3802,83 @@ function renderConditions() {
   const container = document.getElementById("condGrid");
   const member = activeMember();
   container.innerHTML = "";
-  const allConds = {...CONDITIONS, ...customConditions};
-  container.appendChild(_healthGrid(
-    Object.entries(allConds), member,
-    k => member.conditions.includes(k),
-    k => toggleCondition(k),
-    'cond-active', k => !!customConditions[k]
-  ));
+  const wrap = document.createElement("div");
+  wrap.className = "ing-table";
+
+  // ── 그룹별 부모-자식 확장 렌더링 ──
+  Object.entries(CONDITION_GROUPS).forEach(([groupKey, group]) => {
+    const selCount = group.children.filter(k => member.conditions.includes(k)).length;
+    const isOpen = _condExpanded.has(groupKey);
+
+    // 그룹 헤더 (클릭하면 하위 질환 펼침)
+    const hdr = document.createElement("div");
+    hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
+    hdr.id = "cond-hdr-" + groupKey;
+    hdr.innerHTML = `<span class="cg-e">${group.emoji}</span><span>${group.label}</span>${selCount > 0 ? `<span class="cg-badge">${selCount}</span>` : ""}<span class="cg-arr">▶</span>`;
+    hdr.onclick = () => toggleCondParent(groupKey);
+    wrap.appendChild(hdr);
+
+    // 확장 패널 (하위 질환 4열 그리드)
+    const expand = document.createElement("div");
+    expand.className = "ing-expand" + (isOpen ? " open" : "");
+    expand.id = "cond-expand-" + groupKey;
+
+    const children = group.children.map(k => [k, CONDITIONS[k]]).filter(([, v]) => v);
+    for (let i = 0; i < children.length; i += 4) {
+      const subRow = document.createElement("div");
+      subRow.className = "ing-sub-row ing-row health-ing-row";
+      children.slice(i, i + 4).forEach(([k, cond]) => {
+        const isActive = member.conditions.includes(k);
+        const cell = document.createElement("div");
+        cell.className = "ing-cell" + (isActive ? " cond-active" : "");
+        cell.innerHTML = `<span class="ci-e">${cond.emoji}</span><span class="ci-n">${cond.label}</span>`;
+        cell.title = cond.desc || "";
+        cell.onclick = (e) => { e.stopPropagation(); toggleCondition(k); };
+        subRow.appendChild(cell);
+      });
+      expand.appendChild(subRow);
+    }
+    wrap.appendChild(expand);
+  });
+
+  // ── 직접 추가 (AI) 항목 ──
+  const customEntries = Object.entries(customConditions);
+  if (customEntries.length > 0) {
+    const gk = "_custom";
+    const selCount = customEntries.filter(([k]) => member.conditions.includes(k)).length;
+    const isOpen = _condExpanded.has(gk);
+    const hdr = document.createElement("div");
+    hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
+    hdr.innerHTML = `<span class="cg-e">🤖</span><span>직접 추가 항목</span>${selCount > 0 ? `<span class="cg-badge">${selCount}</span>` : ""}<span class="cg-arr">▶</span>`;
+    hdr.onclick = () => toggleCondParent(gk);
+    wrap.appendChild(hdr);
+    const expand = document.createElement("div");
+    expand.className = "ing-expand" + (isOpen ? " open" : "");
+    expand.id = "cond-expand-" + gk;
+    for (let i = 0; i < customEntries.length; i += 4) {
+      const subRow = document.createElement("div");
+      subRow.className = "ing-sub-row ing-row health-ing-row";
+      customEntries.slice(i, i + 4).forEach(([k, cond]) => {
+        const isActive = member.conditions.includes(k);
+        const cell = document.createElement("div");
+        cell.className = "ing-cell health-custom" + (isActive ? " cond-active" : "");
+        cell.innerHTML = `<span class="ci-e">${cond.emoji}</span><span class="ci-n">${cond.label}</span>`;
+        cell.title = cond.desc || "";
+        cell.onclick = (e) => { e.stopPropagation(); toggleCondition(k); };
+        subRow.appendChild(cell);
+      });
+      expand.appendChild(subRow);
+    }
+    wrap.appendChild(expand);
+  }
+
+  container.appendChild(wrap);
+}
+
+function toggleCondParent(groupKey) {
+  if (_condExpanded.has(groupKey)) _condExpanded.delete(groupKey);
+  else _condExpanded.add(groupKey);
+  renderConditions();
 }
 
 function toggleCondition(key) {
