@@ -2795,6 +2795,17 @@ const CONDITION_GROUPS = {
   mental:    {label:"정신 / 뇌건강", emoji:"🧠",  children:['depression_nutrition']},
 };
 
+// ── 가족력 카테고리 그룹 (질환 카테고리와 동일 구조 공유) ────────────────────
+const FAMILY_GROUPS = {
+  cancer:    {label:"암 / 종양",     emoji:"🎗️", children:['fam_cancer_stomach','fam_cancer_liver','fam_cancer_colon','fam_cancer_lung','fam_cancer_breast','fam_cancer_prostate','fam_cancer_pancreas','fam_cancer_cervical','fam_cancer_ovarian','fam_cancer_thyroid','fam_cancer_leukemia']},
+  cardio:    {label:"심혈관",         emoji:"❤️",  children:['fam_hypertension','fam_heart','fam_stroke','fam_hyperlipidemia']},
+  metabolic: {label:"대사 / 내분비", emoji:"🔬",  children:['fam_diabetes','fam_obesity','fam_gout','fam_thyroid','fam_pcos']},
+  digestive: {label:"소화기",         emoji:"🫃",  children:['fam_liver','fam_ibd','fam_celiac','fam_gerd']},
+  renal:     {label:"신장 / 혈액",   emoji:"🫘",  children:['fam_kidney','fam_anemia']},
+  musculo:   {label:"근골격 / 면역", emoji:"🦴",  children:['fam_osteoporosis','fam_arthritis','fam_autoimmune','fam_lupus','fam_allergy','fam_asthma']},
+  mental:    {label:"정신 / 뇌건강", emoji:"🧠",  children:['fam_alzheimer','fam_depression','fam_parkinson','fam_epilepsy','fam_schizophrenia']},
+};
+
 // ── 체질/특이사항 DB ──
 const TRAITS = {
   // 알레르기
@@ -2853,9 +2864,30 @@ const FAMILY_HISTORY = {
   fam_thyroid:         {label:"갑상선질환",   emoji:"🦋"},
   fam_osteoporosis:    {label:"골다공증",     emoji:"🦴"},
   fam_autoimmune:      {label:"자가면역질환", emoji:"🛡️"},
-  fam_alzheimer:       {label:"치매/알츠하이머", emoji:"🧠"},
-  fam_depression:      {label:"우울증/정신질환", emoji:"💙"},
-  fam_parkinson:       {label:"파킨슨병",     emoji:"🫳"},
+  fam_alzheimer:       {label:"치매/알츠하이머",  emoji:"🧠"},
+  fam_depression:      {label:"우울증/정신질환",  emoji:"💙"},
+  fam_parkinson:       {label:"파킨슨병",        emoji:"🫳"},
+  // 암 — 추가
+  fam_cancer_cervical: {label:"자궁경부암",       emoji:"🎗️"},
+  fam_cancer_ovarian:  {label:"난소암",           emoji:"🎗️"},
+  fam_cancer_thyroid:  {label:"갑상선암",         emoji:"🦋"},
+  fam_cancer_leukemia: {label:"백혈병/혈액암",    emoji:"🩸"},
+  // 대사
+  fam_pcos:            {label:"다낭성 난소 증후군",emoji:"🔬"},
+  // 소화기
+  fam_ibd:             {label:"염증성 장질환",    emoji:"🫃"},
+  fam_celiac:          {label:"셀리악병",         emoji:"🌾"},
+  fam_gerd:            {label:"역류성 식도염",    emoji:"🔥"},
+  // 신장·혈액
+  fam_anemia:          {label:"빈혈 (유전성)",    emoji:"🩸"},
+  // 근골격·면역
+  fam_arthritis:       {label:"류마티스 관절염",  emoji:"🦴"},
+  fam_lupus:           {label:"루푸스 (SLE)",     emoji:"🛡️"},
+  fam_allergy:         {label:"알레르기 질환",    emoji:"⚠️"},
+  fam_asthma:          {label:"천식/호흡기",      emoji:"💨"},
+  // 신경·정신
+  fam_epilepsy:        {label:"뇌전증 (간질)",   emoji:"⚡"},
+  fam_schizophrenia:   {label:"조현병",           emoji:"🧠"},
 };
 
 // ── 약물/영양제/생활습관 DB ──
@@ -3612,6 +3644,7 @@ let customFamilyHx = {};   // {key: {label, emoji, desc}}
 let customSubstances = {}; // {key: {label, emoji, desc, category, interactions, warningFoods}}
 let customConditions = {}; // {key: {label, emoji, desc, avoidFoods, benefitFoods, notes}}
 let _condExpanded = new Set(); // 현재 펼쳐진 질환 그룹 키
+let _famExpanded  = new Set(); // 현재 펼쳐진 가족력 그룹 키
 let activeMemberId = 1;
 let nextMemberId = 2;
 let profileOpen = false;
@@ -3954,13 +3987,90 @@ function renderFamilyHx() {
   const container = document.getElementById("familyGrid");
   const member = activeMember();
   container.innerHTML = "";
-  const allFamily = {...FAMILY_HISTORY, ...customFamilyHx};
-  container.appendChild(_healthGrid(
-    Object.entries(allFamily), member,
-    k => member.familyHx.includes(k),
-    k => { const i = member.familyHx.indexOf(k); if (i>=0) member.familyHx.splice(i,1); else member.familyHx.push(k); renderFamilyHx(); updateProfileSummary(); },
-    'active', k => !!customFamilyHx[k]
-  ));
+  const wrap = document.createElement("div");
+  wrap.className = "ing-table";
+
+  // ── 그룹별 부모-자식 확장 렌더링 (질환 섹션과 동일 구조) ──
+  Object.entries(FAMILY_GROUPS).forEach(([groupKey, group]) => {
+    const selCount = group.children.filter(k => member.familyHx.includes(k)).length;
+    const isOpen = _famExpanded.has(groupKey);
+
+    const hdr = document.createElement("div");
+    hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
+    hdr.innerHTML = `<span class="cg-e">${group.emoji}</span><span>${group.label}</span>${selCount > 0 ? `<span class="cg-badge">${selCount}</span>` : ""}<span class="cg-arr">▶</span>`;
+    hdr.onclick = () => toggleFamParent(groupKey);
+    wrap.appendChild(hdr);
+
+    const expand = document.createElement("div");
+    expand.className = "ing-expand" + (isOpen ? " open" : "");
+    expand.id = "fam-expand-" + groupKey;
+
+    const children = group.children.map(k => [k, FAMILY_HISTORY[k]]).filter(([, v]) => v);
+    for (let i = 0; i < children.length; i += 4) {
+      const subRow = document.createElement("div");
+      subRow.className = "ing-sub-row ing-row health-ing-row";
+      children.slice(i, i + 4).forEach(([k, item]) => {
+        const isActive = member.familyHx.includes(k);
+        const cell = document.createElement("div");
+        cell.className = "ing-cell" + (isActive ? " active" : "");
+        cell.innerHTML = `<span class="ci-e">${item.emoji}</span><span class="ci-n">${item.label}</span>`;
+        cell.onclick = () => {
+          const idx = member.familyHx.indexOf(k);
+          if (idx >= 0) member.familyHx.splice(idx, 1);
+          else member.familyHx.push(k);
+          renderFamilyHx();
+          updateProfileSummary();
+        };
+        subRow.appendChild(cell);
+      });
+      expand.appendChild(subRow);
+    }
+    wrap.appendChild(expand);
+  });
+
+  // ── 직접 추가 (AI) 항목 ──
+  const customEntries = Object.entries(customFamilyHx);
+  if (customEntries.length > 0) {
+    const gk = "_custom";
+    const selCount = customEntries.filter(([k]) => member.familyHx.includes(k)).length;
+    const isOpen = _famExpanded.has(gk);
+    const hdr = document.createElement("div");
+    hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
+    hdr.innerHTML = `<span class="cg-e">🤖</span><span>직접 추가 항목</span>${selCount > 0 ? `<span class="cg-badge">${selCount}</span>` : ""}<span class="cg-arr">▶</span>`;
+    hdr.onclick = () => toggleFamParent(gk);
+    wrap.appendChild(hdr);
+    const expand = document.createElement("div");
+    expand.className = "ing-expand" + (isOpen ? " open" : "");
+    expand.id = "fam-expand-" + gk;
+    for (let i = 0; i < customEntries.length; i += 4) {
+      const subRow = document.createElement("div");
+      subRow.className = "ing-sub-row ing-row health-ing-row";
+      customEntries.slice(i, i + 4).forEach(([k, item]) => {
+        const isActive = member.familyHx.includes(k);
+        const cell = document.createElement("div");
+        cell.className = "ing-cell health-custom" + (isActive ? " active" : "");
+        cell.innerHTML = `<span class="ci-e">${item.emoji}</span><span class="ci-n">${item.label}</span>`;
+        cell.onclick = () => {
+          const idx = member.familyHx.indexOf(k);
+          if (idx >= 0) member.familyHx.splice(idx, 1);
+          else member.familyHx.push(k);
+          renderFamilyHx();
+          updateProfileSummary();
+        };
+        subRow.appendChild(cell);
+      });
+      expand.appendChild(subRow);
+    }
+    wrap.appendChild(expand);
+  }
+
+  container.appendChild(wrap);
+}
+
+function toggleFamParent(groupKey) {
+  if (_famExpanded.has(groupKey)) _famExpanded.delete(groupKey);
+  else _famExpanded.add(groupKey);
+  renderFamilyHx();
 }
 
 function loadMemberForm() {
