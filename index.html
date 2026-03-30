@@ -99,6 +99,32 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard
 .method-modal-confirm{background:var(--accent);color:#fff}
 .method-modal-cancel{background:#f5f5f5;color:#404040}
 #methodModalStatus{margin-top:10px;font-size:13px;min-height:20px;text-align:center}
+/* 건강 항목 추가 버튼 */
+.add-health-btn{background:none;border:1px dashed #d4d4d4;color:#737373;border-radius:8px;padding:3px 10px;font-size:11px;cursor:pointer;transition:all .2s}
+.add-health-btn:hover{border-color:var(--accent);color:var(--accent);background:#f0fdf4}
+/* 사용자 추가 항목 표시 */
+.custom-item{border-style:dashed !important;position:relative}
+.custom-item::after{content:'AI';position:absolute;top:-5px;right:-5px;font-size:8px;background:var(--accent);color:#fff;border-radius:4px;padding:1px 3px;line-height:1.4}
+/* 건강 항목 추가 모달 */
+.health-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center}
+.health-modal-overlay.open{display:flex}
+.health-modal{background:#fff;border-radius:16px;padding:24px;width:min(400px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.health-modal h3{margin:0 0 4px;font-size:16px;font-weight:600}
+.health-modal .health-modal-sub{margin:0 0 16px;font-size:13px;color:#737373}
+.health-modal input{width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;outline:none}
+.health-modal input:focus{border-color:var(--accent)}
+.health-modal-status{margin-top:10px;font-size:13px;min-height:20px;text-align:center;color:#737373}
+.health-modal-status.error{color:#ef4444}
+.health-modal-status.success{color:var(--accent)}
+.health-modal-result{margin-top:12px;background:#f0fdf4;border-radius:10px;padding:12px;font-size:13px;display:none}
+.health-modal-result .result-name{font-weight:600;font-size:15px;margin-bottom:4px}
+.health-modal-result .result-desc{color:#525252;margin-bottom:6px}
+.health-modal-result .result-tags{display:flex;flex-wrap:wrap;gap:4px}
+.health-modal-result .result-tag{background:#fff;border:1px solid #d1fae5;border-radius:6px;padding:2px 7px;font-size:11px;color:#059669}
+.health-modal-actions{display:flex;gap:8px;margin-top:12px}
+.health-modal-actions button{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:500}
+.health-modal-confirm{background:var(--accent);color:#fff}
+.health-modal-cancel{background:#f5f5f5;color:#404040}
 .slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .slider-row label{font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;font-weight:500}
 input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:#e5e5e5;outline:none;margin-bottom:8px}
@@ -694,20 +720,32 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
       </div>
 
       <!-- 체질/특이사항 -->
-      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">🧬 체질 및 식이 특이사항</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
+        <p style="font-size:12px;color:#737373;margin:0">🧬 체질 및 식이 특이사항</p>
+        <button class="add-health-btn" onclick="openAddHealthModal('trait')">+ 직접 추가</button>
+      </div>
       <div class="family-grid" id="traitGrid"></div>
 
       <!-- 가족력 -->
-      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">👨‍👩‍👧‍👦 가족 병력 <span style="color:#737373">(직계 가족 중 해당 질환이 있는 경우)</span></p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
+        <p style="font-size:12px;color:#737373;margin:0">👨‍👩‍👧‍👦 가족 병력 <span style="color:#999;font-size:11px">(직계 가족 중 해당 질환)</span></p>
+        <button class="add-health-btn" onclick="openAddHealthModal('family')">+ 직접 추가</button>
+      </div>
       <div class="family-grid" id="familyGrid"></div>
 
       <!-- 약물/생활습관 -->
-      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">💊 약물 · 영양제 · 생활습관</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:16px">
+        <p style="font-size:12px;color:#737373;margin:0">💊 약물 · 영양제 · 생활습관</p>
+        <button class="add-health-btn" onclick="openAddHealthModal('substance')">+ 직접 추가</button>
+      </div>
       <p style="font-size:11px;color:#737373;margin-bottom:8px">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
       <div class="family-grid" id="substanceGrid"></div>
 
       <!-- 개인 질환 -->
-      <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:16px">🏥 현재 건강 상태 / 질환</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
+        <p style="font-size:12px;color:#737373;margin:0">🏥 현재 건강 상태 / 질환</p>
+        <button class="add-health-btn" onclick="openAddHealthModal('condition')">+ 직접 추가</button>
+      </div>
       <div class="condition-grid" id="condGrid"></div>
     </div>
     <p id="condNote" style="font-size:11px;color:#737373;margin-top:8px;display:none">⚠️ 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
@@ -2151,61 +2189,202 @@ const CONDITIONS = {
         tip:"채소를 먼저 먹고 탄수화물을 나중에 먹으면 혈당과 식욕 조절에 도움됩니다."},
     ]
   },
+  liver: {
+    label: "간질환", emoji: "🫀",
+    desc: "만성 간염·간경변·지방간 등 간 기능 저하",
+    rules: [
+      {check:(im,c)=>c.protein>35, severity:"danger", title:"단백질 과다 — 간성 혼수 위험",
+        detail:(im,c)=>`총 단백질 ${c.protein.toFixed(1)}g — 간경변 환자는 암모니아 대사 능력이 저하되어 과도한 단백질이 간성 뇌증을 유발할 수 있습니다.`,
+        tip:"1회 식사 단백질 20-25g으로 제한하고, 두부·두유 등 분지쇄 아미노산 공급원을 우선하세요."},
+      {check:(im,c)=>c.fat>30, severity:"caution", title:"고지방 — 지방간 악화 위험",
+        detail:(im,c)=>`총 지방 ${c.fat.toFixed(1)}g — 포화지방과 단순당은 간 내 중성지방 축적을 촉진합니다.`,
+        tip:"버터·삼겹살 대신 등푸른 생선·아보카도의 불포화지방을 선택하세요."},
+      {check:(im,c)=>c.sodium>800, severity:"caution", title:"고나트륨 — 복수 악화",
+        detail:(im,c)=>`나트륨 약 ${c.sodium.toFixed(0)}mg — 간경변 시 나트륨 과다는 복수와 부종을 악화시킵니다.`,
+        tip:"나트륨 1,500mg/일 이하로 제한하고 허브·식초로 맛을 보완하세요."},
+      {check:(im)=>Object.keys(im).some(n=>DB[n]?.compounds?.some(c=>c.includes('리코펜'))||DB[n]?.compounds?.some(c=>c.includes('설포라판'))), severity:"good", title:"항산화 성분이 간세포 보호",
+        detail:()=>`리코펜(토마토), 설포라판(브로콜리) 등 항산화 성분은 산화 스트레스로 인한 간세포 손상을 억제합니다.`,
+        tip:"토마토, 브로콜리, 베리류를 꾸준히 섭취하세요."},
+    ]
+  },
+  thyroid_hypo: {
+    label: "갑상선 기능저하증", emoji: "🦋",
+    desc: "갑상선 호르몬 부족 — 체중 증가·피로·냉증",
+    rules: [
+      {check:(im)=>['양배추','브로콜리','콜리플라워','케일'].some(n=>im[n]>80), severity:"caution", title:"생 십자화과 채소 — 갑상선 호르몬 방해",
+        detail:()=>`양배추·브로콜리의 고이트로겐(glucosinolate)은 생으로 대량 섭취 시 갑상선 호르몬 합성을 억제할 수 있습니다.`,
+        tip:"살짝 데치거나 가열 조리하면 고이트로겐이 60-90% 비활성화됩니다."},
+      {check:(im)=>['두부','두유'].some(n=>(im[n]||0)>100), severity:"caution", title:"대두 이소플라본 — 갑상선약 흡수 방해",
+        detail:()=>`대두 이소플라본은 갑상선 호르몬 합성 효소를 억제하고 레보티록신 흡수를 저해할 수 있습니다.`,
+        tip:"갑상선약 복용 후 최소 4시간 뒤 두부·두유를 섭취하세요."},
+      {check:(im,c)=>c.sodium>1000, severity:"caution", title:"고나트륨 — 부종 악화",
+        detail:(im,c)=>`갑상선 기능저하 시 신진대사가 저하되어 과다 나트륨이 부종을 악화시킵니다. 나트륨 ${c.sodium.toFixed(0)}mg 감지.`,
+        tip:"나트륨 섭취를 1,500mg/일 이하로 제한하세요."},
+      {check:(im,c)=>c.fiber>6, severity:"good", title:"식이섬유로 변비 완화",
+        detail:(im,c)=>`갑상선 기능저하 시 장운동 저하로 변비가 흔합니다. 식이섬유 ${c.fiber.toFixed(1)}g은 장운동 개선에 도움됩니다.`,
+        tip:"아침에 미지근한 물 + 고섬유질 식사로 장 기능을 활성화하세요."},
+    ]
+  },
+  anemia: {
+    label: "빈혈 (철결핍성)", emoji: "🩸",
+    desc: "철분 부족으로 인한 혈색소 감소",
+    rules: [
+      {check:(im)=>Object.keys(im).some(n=>['소고기','간','굴'].includes(n)), severity:"good", title:"헴철 식품 — 철분 흡수 최적",
+        detail:()=>`소고기·간·굴의 헴철(heme iron)은 비헴철보다 2-3배 흡수율이 높습니다 (흡수율 15-35%).`,
+        tip:"주 2-3회 적색 육류를 소량 섭취하면 철분 보충에 효과적입니다."},
+      {check:(im)=>Object.keys(im).some(n=>['토마토','파프리카','레몬','브로콜리'].includes(n)), severity:"good", title:"비타민C — 비헴철 흡수 3배 증가",
+        detail:()=>`비타민C는 비헴철(식물성 철분)을 흡수하기 쉬운 2가철로 환원시켜 흡수율을 크게 높입니다.`,
+        tip:"시금치나 콩을 먹을 때 레몬즙이나 파프리카를 함께 사용하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['녹차','홍차','커피'].includes(n)), severity:"caution", title:"탄닌이 철분 흡수 50% 감소",
+        detail:()=>`녹차·홍차·커피의 탄닌은 철분과 결합하여 흡수를 방해합니다.`,
+        tip:"철분 식품과 차·커피는 최소 1시간 간격을 두세요."},
+      {check:(im,c)=>c.protein<15, severity:"caution", title:"단백질 부족 — 헤모글로빈 합성 저하",
+        detail:(im,c)=>`총 단백질 ${c.protein.toFixed(1)}g — 헤모글로빈은 글로빈 단백질로 구성되어 있어 단백질 공급이 중요합니다.`,
+        tip:"소고기·달걀·콩류 등 양질의 단백질을 매 식사에 포함하세요."},
+    ]
+  },
+  ibs: {
+    label: "과민성 대장 증후군", emoji: "🫃",
+    desc: "장 과민 반응 — 복통·설사·변비 반복",
+    rules: [
+      {check:(im)=>['양파','마늘','양배추'].some(n=>(im[n]||0)>50), severity:"danger", title:"고FODMAP 채소 — 장 가스 유발",
+        detail:()=>`양파·마늘·양배추는 고FODMAP 식품으로, 대장에서 발효되어 가스·팽만·복통을 유발합니다.`,
+        tip:"마늘 대신 마늘향 오일, 양파 대신 파 녹색 부분을 사용하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['밀가루','빵','보리','호밀'].includes(n)), severity:"caution", title:"프럭탄 함유 곡물 — 복부 팽만",
+        detail:()=>`밀·보리·호밀의 프럭탄(fructan)은 과민성 대장 증후군의 주요 유발 인자입니다.`,
+        tip:"쌀·오트밀·퀴노아 등 저FODMAP 곡물로 대체하세요."},
+      {check:(im,c)=>c.fat>25, severity:"caution", title:"고지방 식사 — 장 수축 반응 유발",
+        detail:(im,c)=>`지방 ${c.fat.toFixed(1)}g — 고지방 식사는 위-대장 반사를 강화하여 복통과 설사 충동을 유발할 수 있습니다.`,
+        tip:"튀김·버터 사용을 줄이고, 조리유를 소량만 사용하세요."},
+      {check:(im)=>Object.keys(im).some(n=>['생강','강황','페퍼민트'].includes(n)), severity:"good", title:"생강·강황의 장 진정 효과",
+        detail:()=>`생강의 진저롤은 구역 완화, 강황의 커큐민은 장 염증 억제에 효과가 입증되어 있습니다.`,
+        tip:"생강차나 강황을 넣은 음식은 IBS 증상 완화에 도움이 됩니다."},
+    ]
+  },
 };
 
 // ── 체질/특이사항 DB ──
 const TRAITS = {
-  lactose_intolerant: {label:"유당불내증", emoji:"🥛", desc:"유제품 소화 어려움"},
-  gluten_sensitive: {label:"글루텐 민감", emoji:"🌾", desc:"밀가루 민감 반응"},
-  alcohol_flush: {label:"알코올 플러시", emoji:"🍷", desc:"음주 시 얼굴 홍조 (ALDH2 변이)"},
-  spice_sensitive: {label:"매운맛 민감", emoji:"🌶️", desc:"캡사이신 위장 자극 민감"},
-  allergy_egg: {label:"계란 알레르기", emoji:"🥚", desc:"계란 단백질 알레르기"},
-  allergy_seafood: {label:"해산물 알레르기", emoji:"🦐", desc:"갑각류/어류 알레르기"},
-  vegetarian: {label:"채식주의", emoji:"🥬", desc:"육류 제한"},
-  low_salt: {label:"저염식", emoji:"🧂", desc:"나트륨 제한 식이"},
-  pregnant: {label:"임신/수유 중", emoji:"🤰", desc:"태아/영아 영향 고려"},
-  cold_constitution: {label:"냉체질 (한성)", emoji:"❄️", desc:"몸이 차고 소화가 느린 체질"},
-  hot_constitution: {label:"열체질 (열성)", emoji:"🔥", desc:"열이 많고 땀이 많은 체질"},
+  // 알레르기
+  allergy_egg:      {label:"계란 알레르기",   emoji:"🥚", desc:"계란 단백질(오보알부민) 알레르기"},
+  allergy_milk:     {label:"우유 알레르기",   emoji:"🥛", desc:"우유 단백질(카세인·유청) 알레르기"},
+  allergy_nuts:     {label:"견과류 알레르기", emoji:"🥜", desc:"땅콩 및 트리너트 알레르기"},
+  allergy_soy:      {label:"대두 알레르기",   emoji:"🫘", desc:"콩 단백질 알레르기"},
+  allergy_wheat:    {label:"밀 알레르기",     emoji:"🌾", desc:"밀 단백질(글리아딘) 알레르기"},
+  allergy_seafood:  {label:"해산물 알레르기", emoji:"🦐", desc:"갑각류·연체류 알레르기"},
+  allergy_fish:     {label:"생선 알레르기",   emoji:"🐟", desc:"어류 단백질 알레르기"},
+  allergy_sulfite:  {label:"아황산염 과민",   emoji:"⚠️", desc:"와인·건과일·가공식품 아황산염 반응"},
+  // 소화·대사 특이사항
+  lactose_intolerant:    {label:"유당불내증",       emoji:"🥛", desc:"유당(락토스) 분해 효소 부족"},
+  gluten_sensitive:      {label:"글루텐 민감",       emoji:"🌾", desc:"셀리악병 또는 비셀리악 글루텐 민감증"},
+  histamine_intolerance: {label:"히스타민 불내증",   emoji:"⚠️", desc:"발효식품·숙성 치즈·적포도주 히스타민 반응"},
+  fodmap_sensitive:      {label:"FODMAP 민감",       emoji:"🫃", desc:"발효성 당류 소화 장애 (양파·마늘·밀 등)"},
+  caffeine_sensitive:    {label:"카페인 민감",       emoji:"☕", desc:"카페인 과민 반응 — 불면·두근거림"},
+  alcohol_flush:         {label:"알코올 플러시",     emoji:"🍷", desc:"음주 시 얼굴 홍조 (ALDH2 유전 변이)"},
+  spice_sensitive:       {label:"매운맛 민감",       emoji:"🌶️", desc:"캡사이신 위장 자극 민감"},
+  // 식이 원칙
+  vegan:       {label:"완전채식 (비건)", emoji:"🌱", desc:"동물성 식품 전체 제한"},
+  vegetarian:  {label:"채식주의 (베지)", emoji:"🥬", desc:"육류·어류 제한, 유제품·계란 허용"},
+  halal:       {label:"할랄 식이",       emoji:"☪️", desc:"이슬람 율법 허용 식품만 섭취"},
+  kosher:      {label:"코셔 식이",       emoji:"✡️", desc:"유대 율법 코셔 인증 식품만 섭취"},
+  low_salt:    {label:"저염식",           emoji:"🧂", desc:"나트륨 제한 (1,500mg/일 이하)"},
+  low_fat:     {label:"저지방식",         emoji:"🥗", desc:"포화지방 및 총지방 제한 식이"},
+  low_carb:    {label:"저탄수화물식",     emoji:"🥩", desc:"탄수화물 100g/일 이하 제한"},
+  low_purine:  {label:"저퓨린식",         emoji:"🦶", desc:"요산 생성 퓨린 섭취 제한"},
+  low_oxalate: {label:"저옥살레이트식",   emoji:"🫘", desc:"신장결석 예방을 위한 옥살산 제한"},
+  // 생애·신체 상태
+  pregnant:          {label:"임신/수유 중",       emoji:"🤰", desc:"태아·영아 영향 및 섭취 금지 식품 고려"},
+  elderly_nutrition: {label:"노인 영양 관리",     emoji:"👴", desc:"근감소 예방·소화력 저하·미량영양소 부족 고려"},
+  athlete:           {label:"고강도 운동",         emoji:"🏋️", desc:"고단백·고탄수화물 에너지 요구량 증가"},
+  // 한의학 체질
+  cold_constitution: {label:"냉체질 (한성)", emoji:"❄️", desc:"몸이 차고 소화가 느린 체질 — 따뜻한 음식 선호"},
+  hot_constitution:  {label:"열체질 (열성)", emoji:"🔥", desc:"열이 많고 땀이 많은 체질 — 서늘한 음식 선호"},
 };
 
 const FAMILY_HISTORY = {
-  fam_diabetes: {label:"당뇨병", emoji:"🩸"},
-  fam_hypertension: {label:"고혈압", emoji:"💉"},
-  fam_heart: {label:"심장질환", emoji:"❤️"},
-  fam_cancer_stomach: {label:"위암", emoji:"🔬"},
-  fam_cancer_colon: {label:"대장암", emoji:"🔬"},
-  fam_obesity: {label:"비만", emoji:"⚖️"},
-  fam_gout: {label:"통풍", emoji:"🦶"},
-  fam_kidney: {label:"신장질환", emoji:"🫘"},
-  fam_osteoporosis: {label:"골다공증", emoji:"🦴"},
-  fam_alzheimer: {label:"치매", emoji:"🧠"},
+  fam_diabetes:        {label:"당뇨병",       emoji:"🩸"},
+  fam_hypertension:    {label:"고혈압",       emoji:"💉"},
+  fam_hyperlipidemia:  {label:"고지혈증",     emoji:"🫀"},
+  fam_heart:           {label:"심장질환",     emoji:"❤️"},
+  fam_stroke:          {label:"뇌졸중",       emoji:"🧠"},
+  fam_cancer_stomach:  {label:"위암",         emoji:"🔬"},
+  fam_cancer_colon:    {label:"대장암",       emoji:"🔬"},
+  fam_cancer_liver:    {label:"간암",         emoji:"🔬"},
+  fam_cancer_lung:     {label:"폐암",         emoji:"🔬"},
+  fam_cancer_breast:   {label:"유방암",       emoji:"🎗️"},
+  fam_cancer_prostate: {label:"전립선암",     emoji:"🔬"},
+  fam_cancer_pancreas: {label:"췌장암",       emoji:"🔬"},
+  fam_obesity:         {label:"비만",         emoji:"⚖️"},
+  fam_gout:            {label:"통풍",         emoji:"🦶"},
+  fam_kidney:          {label:"신장질환",     emoji:"🫘"},
+  fam_liver:           {label:"간질환",       emoji:"🫀"},
+  fam_thyroid:         {label:"갑상선질환",   emoji:"🦋"},
+  fam_osteoporosis:    {label:"골다공증",     emoji:"🦴"},
+  fam_autoimmune:      {label:"자가면역질환", emoji:"🛡️"},
+  fam_alzheimer:       {label:"치매/알츠하이머", emoji:"🧠"},
+  fam_depression:      {label:"우울증/정신질환", emoji:"💙"},
+  fam_parkinson:       {label:"파킨슨병",     emoji:"🫳"},
 };
 
 // ── 약물/영양제/생활습관 DB ──
 const SUBSTANCES = {
-  alcohol_none: {label:"비음주", emoji:"🚫", desc:"음주하지 않음", category:"alcohol"},
-  alcohol_light: {label:"경도 음주", emoji:"🍷", desc:"주 1-2회", category:"alcohol"},
-  alcohol_moderate: {label:"중등도 음주", emoji:"🍷", desc:"주 3-4회", category:"alcohol"},
-  alcohol_heavy: {label:"다량 음주", emoji:"🍷", desc:"거의 매일", category:"alcohol"},
-  smoking_none: {label:"비흡연", emoji:"🚭", desc:"담배를 피우지 않음", category:"smoking"},
-  smoking_current: {label:"현재 흡연", emoji:"🚬", desc:"현재 흡연 중", category:"smoking"},
-  smoking_quit: {label:"금연 중", emoji:"✋", desc:"1년 이내 금연", category:"smoking"},
-  med_metformin: {label:"메트포르민", emoji:"💊", desc:"당뇨약 (메트포르민)", category:"medication"},
-  med_statin: {label:"스타틴계", emoji:"💊", desc:"고지혈증약 (스타틴)", category:"medication"},
-  med_bp_med: {label:"혈압약", emoji:"💊", desc:"ACE억제제/ARB", category:"medication"},
-  med_anticoagulant: {label:"항응고제", emoji:"💊", desc:"와파린 등", category:"medication"},
-  med_nsaid: {label:"소염진통제", emoji:"💊", desc:"NSAIDs (아스피린 등)", category:"medication"},
-  med_ppi: {label:"위산억제제", emoji:"💊", desc:"PPI (오메프라졸 등)", category:"medication"},
-  med_thyroid: {label:"갑상선약", emoji:"💊", desc:"레보티록신 등", category:"medication"},
-  med_obesity: {label:"비만치료제", emoji:"💊", desc:"GLP-1 등", category:"medication"},
-  sup_omega3: {label:"오메가3", emoji:"🐟", desc:"오메가3 영양제", category:"supplement"},
-  sup_vitamin_d: {label:"비타민D", emoji:"☀️", desc:"비타민D 영양제", category:"supplement"},
-  sup_calcium: {label:"칼슘", emoji:"🥛", desc:"칼슘 영양제", category:"supplement"},
-  sup_iron: {label:"철분제", emoji:"🔴", desc:"철분 영양제", category:"supplement"},
-  sup_probiotics: {label:"프로바이오틱스", emoji:"🦠", desc:"프로바이오틱스", category:"supplement"},
-  sup_multivitamin: {label:"종합비타민", emoji:"💊", desc:"종합비타민", category:"supplement"},
-  sup_magnesium: {label:"마그네슘", emoji:"⚖️", desc:"마그네슘 영양제", category:"supplement"},
-  sup_coq10: {label:"코엔자임Q10", emoji:"💪", desc:"CoQ10 영양제", category:"supplement"},
+  // 음주
+  alcohol_none:     {label:"비음주",     emoji:"🚫", desc:"음주하지 않음",       category:"alcohol"},
+  alcohol_light:    {label:"경도 음주",  emoji:"🍷", desc:"주 1-2회",           category:"alcohol"},
+  alcohol_moderate: {label:"중등도 음주",emoji:"🍷", desc:"주 3-4회",           category:"alcohol"},
+  alcohol_heavy:    {label:"다량 음주",  emoji:"🍷", desc:"거의 매일 음주",     category:"alcohol"},
+  // 흡연
+  smoking_none:    {label:"비흡연",   emoji:"🚭", desc:"담배를 피우지 않음",       category:"smoking"},
+  smoking_current: {label:"현재 흡연",emoji:"🚬", desc:"현재 연초 흡연 중",       category:"smoking"},
+  smoking_e_cig:   {label:"전자담배", emoji:"💨", desc:"전자담배(베이핑) 사용 중", category:"smoking"},
+  smoking_quit:    {label:"금연 중",  emoji:"✋", desc:"1년 이내 금연",           category:"smoking"},
+  // 약물
+  med_metformin:        {label:"메트포르민",         emoji:"💊", desc:"당뇨약 — 비타민B12 흡수 감소", category:"medication"},
+  med_insulin:          {label:"인슐린",             emoji:"💉", desc:"인슐린 주사 — 저혈당 식이 주의", category:"medication"},
+  med_statin:           {label:"스타틴계",           emoji:"💊", desc:"고지혈증약 — 자몽 상호작용",    category:"medication"},
+  med_bp_med:           {label:"혈압약",             emoji:"💊", desc:"ACE억제제/ARB — 칼륨 주의",    category:"medication"},
+  med_diuretic:         {label:"이뇨제",             emoji:"💊", desc:"이뇨제 — 칼륨·마그네슘 소실", category:"medication"},
+  med_anticoagulant:    {label:"항응고제 (와파린)",  emoji:"💊", desc:"와파린 — 비타민K 음식 주의",   category:"medication"},
+  med_nsaid:            {label:"소염진통제 (NSAIDs)",emoji:"💊", desc:"아스피린·이부프로펜 — 위장 자극", category:"medication"},
+  med_ppi:              {label:"위산억제제 (PPI)",   emoji:"💊", desc:"오메프라졸 — 마그네슘·B12 흡수↓", category:"medication"},
+  med_antidepressant:   {label:"항우울제",           emoji:"💊", desc:"SSRI/SNRI — 식욕 변화, 세로토닌 주의", category:"medication"},
+  med_maoi:             {label:"MAOI",               emoji:"💊", desc:"단아민산화효소억제제 — 티라민 음식 금지", category:"medication"},
+  med_corticosteroid:   {label:"스테로이드",         emoji:"💊", desc:"코르티코스테로이드 — 혈당·나트륨 상승", category:"medication"},
+  med_immunosuppressant:{label:"면역억제제",         emoji:"💊", desc:"타크로리무스 등 — 자몽·생식품 주의", category:"medication"},
+  med_antibiotic:       {label:"항생제",             emoji:"💊", desc:"현재 항생제 복용 — 프로바이오틱 병행 권장", category:"medication"},
+  med_antihistamine:    {label:"항히스타민제",       emoji:"💊", desc:"알레르기약 — 카페인·알코올 주의", category:"medication"},
+  med_thyroid:          {label:"갑상선약",           emoji:"💊", desc:"레보티록신 — 공복 복용, 칼슘·철분 주의", category:"medication"},
+  med_contraceptive:    {label:"경구 피임약",        emoji:"💊", desc:"엽산·마그네슘·B6 소진",          category:"medication"},
+  med_obesity:          {label:"비만치료제 (GLP-1)", emoji:"💊", desc:"세마글루타이드 — 소량 고단백 식사 권장", category:"medication"},
+  // 영양제
+  sup_omega3:       {label:"오메가3",       emoji:"🐟", desc:"EPA/DHA — 항응고 효과",                  category:"supplement"},
+  sup_vitamin_d:    {label:"비타민D",       emoji:"☀️", desc:"비타민D3 — 지방과 함께 섭취",           category:"supplement"},
+  sup_vitamin_b12:  {label:"비타민B12",     emoji:"🔵", desc:"코발라민 — 채식인·노인 결핍 주의",       category:"supplement"},
+  sup_vitamin_c:    {label:"비타민C",       emoji:"🍊", desc:"아스코르브산 — 철분 흡수 촉진",          category:"supplement"},
+  sup_calcium:      {label:"칼슘",           emoji:"🦴", desc:"칼슘 — 철분·갑상선약과 분리 복용",     category:"supplement"},
+  sup_iron:         {label:"철분제",         emoji:"🔴", desc:"철분 — 공복 복용, 탄닌 주의",           category:"supplement"},
+  sup_zinc:         {label:"아연",           emoji:"⚡", desc:"아연 — 구리 흡수 경쟁",                 category:"supplement"},
+  sup_folate:       {label:"엽산 (폴산)",   emoji:"💚", desc:"임신 전·중 필수 — DNA 합성",            category:"supplement"},
+  sup_magnesium:    {label:"마그네슘",       emoji:"💪", desc:"마그네슘 — 수면·근경련 완화",           category:"supplement"},
+  sup_coq10:        {label:"코엔자임Q10",   emoji:"⚡", desc:"CoQ10 — 스타틴 복용 시 보충 권장",     category:"supplement"},
+  sup_glutathione:  {label:"글루타티온",     emoji:"✨", desc:"항산화 — 비타민C와 병행 효과↑",        category:"supplement"},
+  sup_collagen:     {label:"콜라겐",         emoji:"💅", desc:"피부·관절 — 비타민C 병행 합성 촉진",   category:"supplement"},
+  sup_glucosamine:  {label:"글루코사민",     emoji:"🦴", desc:"관절 영양제 — 혈당 영향 주의",         category:"supplement"},
+  sup_curcumin:     {label:"커큐민 (강황)", emoji:"🌿", desc:"항염 — 피페린(후추) 병행 흡수↑",       category:"supplement"},
+  sup_melatonin:    {label:"멜라토닌",       emoji:"🌙", desc:"수면 — 저녁 식사 후 복용",              category:"supplement"},
+  sup_protein:      {label:"단백질 보충제", emoji:"💪", desc:"유청·식물성 단백질 — 신장 기능 주의",  category:"supplement"},
+  sup_creatine:     {label:"크레아틴",       emoji:"🏋️", desc:"운동 보충제 — 수분 섭취 충분히",       category:"supplement"},
+  sup_ginseng:      {label:"홍삼/인삼",     emoji:"🌿", desc:"홍삼 — 혈당·혈압 강하 효과",            category:"supplement"},
+  sup_milk_thistle: {label:"밀크시슬",       emoji:"🌿", desc:"간 보호 영양제 — 약물 대사 영향",      category:"supplement"},
+  sup_berberine:    {label:"베르베린",       emoji:"🌿", desc:"혈당·지질 개선 — 메트포르민 유사 작용", category:"supplement"},
+  sup_probiotics:   {label:"프로바이오틱스",emoji:"🦠", desc:"유익균 — 항생제와 2시간 간격",          category:"supplement"},
+  sup_multivitamin: {label:"종합비타민",     emoji:"💊", desc:"종합비타민 — 식사와 함께 복용",         category:"supplement"},
+  // 생활습관
+  life_exercise_regular: {label:"규칙적 운동",     emoji:"🏃", desc:"주 3회 이상 유산소·근력 운동", category:"lifestyle"},
+  life_sedentary:        {label:"주로 좌식 생활",  emoji:"💺", desc:"하루 대부분 앉아서 생활",       category:"lifestyle"},
+  life_night_shift:      {label:"야간·교대 근무",  emoji:"🌙", desc:"생체리듬 교란 — 식사 패턴 불규칙", category:"lifestyle"},
+  life_stress_high:      {label:"고스트레스",       emoji:"😓", desc:"만성 스트레스 — 코르티솔 과다·폭식 위험", category:"lifestyle"},
+  life_sleep_disorder:   {label:"수면장애",         emoji:"😴", desc:"불면증·수면무호흡 — 식욕호르몬 교란", category:"lifestyle"},
 };
 
 // ══════════════════════════════════════════════════
@@ -2895,6 +3074,11 @@ async function dbRPC(fn, params = {}) {
 let selected = {};  // {name: grams}
 let activeCategory = "all";
 let members = [{id:1, name:'나', age:null, gender:null, height:null, weight:null, ethnicity:null, country:null, activity:null, traits:[], familyHx:[], conditions:[], substances:[]}];
+// 사용자 추가 건강 항목 (AI 분석)
+let customTraits = {};     // {key: {label, emoji, desc, interactions, warningFoods}}
+let customFamilyHx = {};   // {key: {label, emoji, desc}}
+let customSubstances = {}; // {key: {label, emoji, desc, category, interactions, warningFoods}}
+let customConditions = {}; // {key: {label, emoji, desc, avoidFoods, benefitFoods, notes}}
 let activeMemberId = 1;
 let nextMemberId = 2;
 let profileOpen = false;
@@ -3092,6 +3276,14 @@ function renderConditions() {
     btn.onclick = () => toggleCondition(key);
     grid.appendChild(btn);
   });
+  Object.entries(customConditions).forEach(([key, c]) => {
+    const btn = document.createElement("button");
+    btn.className = "cond-btn custom-item" + (member.conditions.includes(key) ? " active" : "");
+    btn.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
+    btn.title = c.desc || '';
+    btn.onclick = () => toggleCondition(key);
+    grid.appendChild(btn);
+  });
 }
 
 function toggleCondition(key) {
@@ -3113,11 +3305,13 @@ function renderTraits() {
   const grid = document.getElementById("traitGrid");
   const member = activeMember();
   grid.innerHTML = "";
-  Object.entries(TRAITS).forEach(([key, t]) => {
+  const allTraits = {...TRAITS, ...customTraits};
+  Object.entries(allTraits).forEach(([key, t]) => {
     const btn = document.createElement("button");
-    btn.className = "family-btn" + (member.traits.includes(key) ? " active" : "");
+    const isCustom = !!customTraits[key];
+    btn.className = "family-btn" + (member.traits.includes(key) ? " active" : "") + (isCustom ? " custom-item" : "");
     btn.innerHTML = `${t.emoji} ${t.label}`;
-    btn.title = t.desc;
+    btn.title = t.desc || '';
     btn.onclick = () => {
       const idx = member.traits.indexOf(key);
       if (idx >= 0) member.traits.splice(idx, 1);
@@ -3133,10 +3327,13 @@ function renderFamilyHx() {
   const grid = document.getElementById("familyGrid");
   const member = activeMember();
   grid.innerHTML = "";
-  Object.entries(FAMILY_HISTORY).forEach(([key, f]) => {
+  const allFamily = {...FAMILY_HISTORY, ...customFamilyHx};
+  Object.entries(allFamily).forEach(([key, f]) => {
     const btn = document.createElement("button");
-    btn.className = "family-btn" + (member.familyHx.includes(key) ? " active" : "");
+    const isCustom = !!customFamilyHx[key];
+    btn.className = "family-btn" + (member.familyHx.includes(key) ? " active" : "") + (isCustom ? " custom-item" : "");
     btn.innerHTML = `${f.emoji} ${f.label}`;
+    btn.title = f.desc || '';
     btn.onclick = () => {
       const idx = member.familyHx.indexOf(key);
       if (idx >= 0) member.familyHx.splice(idx, 1);
@@ -3209,10 +3406,10 @@ function updateProfileSummary() {
   if (member.country) chips.push(countryLabels[member.country] || member.country);
   const actLabels = {sedentary:'비활동적',light:'가벼운 활동',moderate:'중간 활동',active:'활발',very_active:'매우 활발'};
   if (member.activity) chips.push(actLabels[member.activity]);
-  member.traits.forEach(t => chips.push(TRAITS[t]?.emoji + ' ' + TRAITS[t]?.label));
-  member.familyHx.forEach(f => chips.push('👨‍👩‍👧 ' + FAMILY_HISTORY[f]?.label));
-  member.conditions.forEach(c => chips.push(CONDITIONS[c]?.emoji + ' ' + CONDITIONS[c]?.label));
-  member.substances.forEach(s => chips.push(SUBSTANCES[s]?.emoji + ' ' + SUBSTANCES[s]?.label));
+  member.traits.forEach(t => { const d = TRAITS[t]||customTraits[t]; if(d) chips.push(d.emoji+' '+d.label); });
+  member.familyHx.forEach(f => { const d = FAMILY_HISTORY[f]||customFamilyHx[f]; if(d) chips.push('👨‍👩‍👧 '+d.label); });
+  member.conditions.forEach(c => { const d = CONDITIONS[c]||customConditions[c]; if(d) chips.push(d.emoji+' '+d.label); });
+  member.substances.forEach(s => { const d = SUBSTANCES[s]||customSubstances[s]; if(d) chips.push(d.emoji+' '+d.label); });
 
   if (chips.length > 0) {
     el.style.display = "flex";
@@ -3283,10 +3480,11 @@ function renderSubstances() {
   const member = activeMember();
   if (!grid) return;
   grid.innerHTML = "";
-  const categories = {alcohol: '음주', smoking: '흡연', medication: '약물', supplement: '영양제'};
-  const categoryOrder = ['alcohol', 'smoking', 'medication', 'supplement'];
+  const allSubstances = {...SUBSTANCES, ...customSubstances};
+  const categories = {alcohol: '음주', smoking: '흡연', medication: '약물', supplement: '영양제', lifestyle: '생활습관'};
+  const categoryOrder = ['alcohol', 'smoking', 'medication', 'supplement', 'lifestyle'];
   categoryOrder.forEach(cat => {
-    const items = Object.entries(SUBSTANCES).filter(([k,v]) => v.category === cat);
+    const items = Object.entries(allSubstances).filter(([k,v]) => v.category === cat);
     if (items.length > 0) {
       const header = document.createElement("div");
       header.className = "substance-category";
@@ -3294,9 +3492,10 @@ function renderSubstances() {
       grid.appendChild(header);
       items.forEach(([key, s]) => {
         const btn = document.createElement("button");
-        btn.className = "ing-btn" + (member.substances.includes(key) ? " active" : "");
+        const isCustom = !!customSubstances[key];
+        btn.className = "ing-btn" + (member.substances.includes(key) ? " active" : "") + (isCustom ? " custom-item" : "");
         btn.innerHTML = `<span>${s.emoji}</span><span>${s.label}</span>`;
-        btn.title = s.desc;
+        btn.title = s.desc || '';
         btn.onclick = () => {
           const idx = member.substances.indexOf(key);
           if (idx >= 0) member.substances.splice(idx, 1);
@@ -3395,6 +3594,30 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
       if (f.severity === 'info') score += 0;
     });
     score = Math.max(0, Math.min(100, score));
+    results.push({key:condKey, label:cond.label, emoji:cond.emoji, desc:cond.desc, score, findings, composition:comp});
+  });
+
+  // 1b) 사용자 추가 질환 (정적 노트 방식)
+  member.conditions.forEach(condKey => {
+    const cond = customConditions[condKey];
+    if (!cond) return;
+    const findings = [];
+    if (cond.avoidFoods?.length) {
+      const matched = cond.avoidFoods.filter(af => Object.keys(ingMap).some(n => n.includes(af.food) || af.food.includes(n)));
+      if (matched.length > 0) {
+        matched.forEach(af => findings.push({severity:'caution', title:`${af.food} 주의`, detail:af.reason, tip:'의사 또는 영양사와 상담하여 식이 계획을 조정하세요.'}));
+      }
+    }
+    if (cond.benefitFoods?.length) {
+      const matched = cond.benefitFoods.filter(bf => Object.keys(ingMap).some(n => n.includes(bf.food) || bf.food.includes(n)));
+      if (matched.length > 0) {
+        matched.forEach(bf => findings.push({severity:'good', title:`${bf.food} 효과`, detail:bf.benefit, tip:'균형 잡힌 식단의 일부로 꾸준히 섭취하세요.'}));
+      }
+    }
+    if (cond.notes?.length && findings.length === 0) {
+      cond.notes.slice(0, 2).forEach(n => findings.push({severity:'info', title:'식이 주의사항', detail:n, tip:''}));
+    }
+    const score = Math.max(0, Math.min(100, 70 - findings.filter(f=>f.severity==='caution'||f.severity==='danger').length * 10 + findings.filter(f=>f.severity==='good').length * 10));
     results.push({key:condKey, label:cond.label, emoji:cond.emoji, desc:cond.desc, score, findings, composition:comp});
   });
 
@@ -3889,6 +4112,130 @@ function dbMethodToMETHODS(m) {
 }
 
 // ── 모달 열기/닫기 ─────────────────────────────────────────────────────────
+// ── 건강 항목 AI 추가 ────────────────────────────────────────────────────────
+let _healthModalType = 'trait';
+let _healthModalPendingItem = null;
+
+const HEALTH_MODAL_CONFIG = {
+  trait:     {title:'🧬 체질/식이 특이사항 추가', placeholder:'예: 옥수수 알레르기, 저인산식, 프럭토스 불내증...'},
+  family:    {title:'👨‍👩‍👧‍👦 가족 병력 추가',         placeholder:'예: 췌장암, 파킨슨병, 다발성경화증...'},
+  substance: {title:'💊 약물·영양제·생활습관 추가',   placeholder:'예: 클로피도그렐, NAC, 간헐적 단식...'},
+  condition: {title:'🏥 질환/건강 상태 추가',         placeholder:'예: 크론병, 셀리악병, 루푸스, 갑상선 기능항진증...'},
+};
+
+function openAddHealthModal(type) {
+  _healthModalType = type;
+  _healthModalPendingItem = null;
+  const cfg = HEALTH_MODAL_CONFIG[type] || HEALTH_MODAL_CONFIG.trait;
+  document.getElementById('healthModalTitle').textContent = cfg.title;
+  document.getElementById('healthModalInput').placeholder = cfg.placeholder;
+  document.getElementById('healthModalInput').value = '';
+  document.getElementById('healthModalStatus').textContent = '';
+  document.getElementById('healthModalStatus').className = 'health-modal-status';
+  document.getElementById('healthModalResult').style.display = 'none';
+  document.getElementById('healthModalAnalyzeBtn').textContent = 'AI 분석';
+  document.getElementById('healthModalAnalyzeBtn').disabled = false;
+  document.getElementById('healthModalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('healthModalInput').focus(), 100);
+}
+
+function closeAddHealthModal() {
+  document.getElementById('healthModalOverlay').classList.remove('open');
+  _healthModalPendingItem = null;
+}
+
+async function analyzeHealthItem() {
+  const name = document.getElementById('healthModalInput').value.trim();
+  if (!name) return;
+
+  // 분석 결과가 있으면 추가 모드
+  if (_healthModalPendingItem) {
+    _addHealthItemToProfile(_healthModalPendingItem);
+    return;
+  }
+
+  const analyzeBtn = document.getElementById('healthModalAnalyzeBtn');
+  const statusEl = document.getElementById('healthModalStatus');
+  const resultEl = document.getElementById('healthModalResult');
+  analyzeBtn.disabled = true;
+  analyzeBtn.textContent = '분석 중...';
+  statusEl.className = 'health-modal-status';
+  statusEl.textContent = `⏳ AI가 "${name}" 분석 중...`;
+  resultEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/add-health-item`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({type: _healthModalType, name}),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.item) throw new Error(data.error || '분석 실패');
+
+    const item = data.item;
+    if (!item.valid) {
+      statusEl.className = 'health-modal-status error';
+      statusEl.textContent = `❌ ${item.reason || '유효하지 않은 항목입니다. 다시 입력하세요.'}`;
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = 'AI 분석';
+      return;
+    }
+
+    _healthModalPendingItem = item;
+    statusEl.textContent = '';
+
+    // 결과 미리보기
+    document.getElementById('hmResultName').textContent = `${item.emoji} ${item.label}`;
+    document.getElementById('hmResultDesc').textContent = item.desc || '';
+    const tagsEl = document.getElementById('hmResultTags');
+    tagsEl.innerHTML = '';
+    const tags = [...(item.interactions||[]), ...(item.warningFoods||[]), ...(item.notes||[])].slice(0,4);
+    tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'result-tag';
+      span.textContent = t;
+      tagsEl.appendChild(span);
+    });
+    resultEl.style.display = 'block';
+    analyzeBtn.textContent = '프로필에 추가';
+    analyzeBtn.disabled = false;
+  } catch(e) {
+    statusEl.className = 'health-modal-status error';
+    statusEl.textContent = `❌ ${e.message}`;
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = 'AI 분석';
+  }
+}
+
+function _addHealthItemToProfile(item) {
+  const key = item.key || ('custom_' + Date.now());
+  const type = _healthModalType;
+  const member = activeMember();
+
+  if (type === 'trait') {
+    customTraits[key] = {label:item.label, emoji:item.emoji, desc:item.desc, interactions:item.interactions, warningFoods:item.warningFoods};
+    if (!member.traits.includes(key)) member.traits.push(key);
+    renderTraits();
+  } else if (type === 'family') {
+    customFamilyHx[key] = {label:item.label, emoji:item.emoji, desc:item.desc};
+    if (!member.familyHx.includes(key)) member.familyHx.push(key);
+    renderFamilyHx();
+  } else if (type === 'substance') {
+    customSubstances[key] = {label:item.label, emoji:item.emoji, desc:item.desc, category:item.category||'medication', interactions:item.interactions, warningFoods:item.warningFoods};
+    if (!member.substances.includes(key)) member.substances.push(key);
+    renderSubstances();
+  } else if (type === 'condition') {
+    customConditions[key] = {label:item.label, emoji:item.emoji, desc:item.desc, avoidFoods:item.avoidFoods||[], benefitFoods:item.benefitFoods||[], notes:item.notes||[]};
+    if (!member.conditions.includes(key)) member.conditions.push(key);
+    renderConditions();
+    updateProfileNote();
+  }
+
+  updateProfileSummary();
+  closeAddHealthModal();
+  showToast(`✨ "${item.label}" 프로필에 추가되었습니다`);
+}
+
 function openMethodModal() {
   document.getElementById('methodModalOverlay').classList.add('open');
   document.getElementById('methodModalInput').value = '';
@@ -5427,6 +5774,26 @@ async function devRunSample() {
     </div>
     <div class="yt-iframe-wrap" id="ytIframeWrap"></div>
     <div class="yt-modal-hint">💡 자막 켜기: 영상 우측 하단 <strong style="color:rgba(255,255,255,.85)">CC</strong> 버튼 → <strong style="color:rgba(255,255,255,.85)">자동번역</strong> → 언어 선택 &nbsp;·&nbsp; 프로필 국적에 맞는 언어가 자동 설정됩니다</div>
+  </div>
+</div>
+
+<!-- 건강 항목 추가 모달 -->
+<div class="health-modal-overlay" id="healthModalOverlay" onclick="if(event.target===this)closeAddHealthModal()">
+  <div class="health-modal">
+    <h3 id="healthModalTitle">🔬 건강 항목 추가</h3>
+    <p class="health-modal-sub" id="healthModalSub">AI가 의학·영양학적으로 분석하여 건강 프로필에 추가합니다</p>
+    <input type="text" id="healthModalInput" placeholder="예: 크론병, 리피토 복용, 비타민K 알레르기..." maxlength="60"
+      onkeydown="if(event.key==='Enter')analyzeHealthItem()">
+    <div class="health-modal-status" id="healthModalStatus"></div>
+    <div class="health-modal-result" id="healthModalResult">
+      <div class="result-name" id="hmResultName"></div>
+      <div class="result-desc" id="hmResultDesc"></div>
+      <div class="result-tags" id="hmResultTags"></div>
+    </div>
+    <div class="health-modal-actions">
+      <button class="health-modal-cancel" onclick="closeAddHealthModal()">취소</button>
+      <button class="health-modal-confirm" id="healthModalAnalyzeBtn" onclick="analyzeHealthItem()">AI 분석</button>
+    </div>
   </div>
 </div>
 
