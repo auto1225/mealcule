@@ -226,17 +226,19 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .cond-group-hdr .cg-arr{margin-left:auto;font-size:9px;color:#c4c4c4;flex-shrink:0;transition:transform .15s}
 .cond-group-hdr.expanded .cg-arr{transform:rotate(90deg);color:var(--accent)}
 .cond-group-hdr.expanded{background:#f0fdf4}
-/* ── 나/가족 듀얼 버튼 셀 ───────────────────────────────────────────────── */
-.unified-cell{cursor:default}
-.ci-dual{display:flex;gap:2px;margin-top:3px;width:100%}
-.ci-me,.ci-fam{flex:1;font-size:8px;padding:2px 0;border-radius:3px;text-align:center;cursor:pointer;border:1px solid #e5e7eb;color:#a3a3a3;font-weight:700;line-height:1.2;transition:all .15s;user-select:none}
-.ci-me.disabled,.ci-fam.disabled{visibility:hidden}
-.ci-me:not(.disabled):hover{border-color:#059669;color:#059669;background:#f0fdf4}
-.ci-fam:not(.disabled):hover{border-color:#3b82f6;color:#3b82f6;background:#eff6ff}
-.ci-me.active{background:#ecfdf5;border-color:#059669;color:#059669}
-.ci-fam.active{background:#eff6ff;border-color:#3b82f6;color:#2563eb}
-.cg-badge-me{background:#059669;color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;line-height:1.6}
-.cg-badge-fam{background:#3b82f6;color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;line-height:1.6}
+/* ── 질환/가족력 탭 바 ─────────────────────────────────────────────────── */
+.cond-tab-bar{display:flex;border:1.5px solid #e5e5e5;border-radius:10px;overflow:hidden;margin-bottom:10px}
+.cond-tab{flex:1;padding:9px 12px;border:none;background:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit;color:#737373;line-height:1.2}
+.cond-tab:first-child{border-right:1px solid #e5e5e5}
+.cond-tab:hover:not(.active){background:#f9fafb}
+.cond-tab.me.active{background:#ecfdf5;color:#065f46;font-weight:700}
+.cond-tab.fam.active{background:#eff6ff;color:#1d4ed8;font-weight:700}
+/* 가족력 탭 활성 셀 */
+.ing-cell.fam-active{background:#eff6ff}
+.ing-cell.fam-active .ci-n{color:#1d4ed8;font-weight:600}
+.ing-sub-row .ing-cell.fam-active{background:#dbeafe;border-left-color:#3b82f6}
+/* 반대 탭에서 선택됨 표시 */
+.ci-cross-tag{font-size:8px;color:#9ca3af;margin-top:1px;line-height:1;white-space:nowrap}
 .ing-cell.health-custom .ci-n::after{content:'AI';font-size:7px;background:var(--accent);color:#fff;border-radius:3px;padding:0 3px;margin-left:3px;vertical-align:middle;font-weight:700}
 .toggle-btn{padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -755,15 +757,11 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
       <p style="font-size:11px;color:#737373;margin-bottom:8px">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
       <div class="family-grid" id="substanceGrid"></div>
 
-      <!-- 질환 + 가족력 통합 -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:16px">
+      <!-- 질환 + 가족력 통합 탭 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
         <p style="font-size:12px;color:#737373;margin:0">🏥 질환 · 가족력</p>
-        <div style="display:flex;gap:6px">
-          <button class="add-health-btn" onclick="openAddHealthModal('condition')" style="font-size:10px">+ 나</button>
-          <button class="add-health-btn" onclick="openAddHealthModal('family')" style="font-size:10px">+ 가족</button>
-        </div>
+        <button class="add-health-btn" onclick="openAddHealthModal(_condTab==='me'?'condition':'family')">+ 직접 추가</button>
       </div>
-      <p style="font-size:11px;color:#737373;margin-bottom:8px"><span style="display:inline-flex;align-items:center;gap:3px"><span style="background:#ecfdf5;border:1px solid #059669;color:#059669;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px">나</span> 본인 질환</span> &nbsp; <span style="display:inline-flex;align-items:center;gap:3px"><span style="background:#eff6ff;border:1px solid #3b82f6;color:#2563eb;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px">가족</span> 직계 가족 병력</span></p>
       <div class="condition-grid" id="condGrid"></div>
     </div>
     <p id="condNote" style="font-size:11px;color:#737373;margin-top:8px;display:none">⚠️ 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
@@ -3693,7 +3691,8 @@ let customTraits = {};     // {key: {label, emoji, desc, interactions, warningFo
 let customFamilyHx = {};   // {key: {label, emoji, desc}}
 let customSubstances = {}; // {key: {label, emoji, desc, category, interactions, warningFoods}}
 let customConditions = {}; // {key: {label, emoji, desc, avoidFoods, benefitFoods, notes}}
-let _condExpanded = new Set(); // 현재 펼쳐진 질환/가족력 통합 그룹 키
+let _condExpanded = new Set(); // 현재 펼쳐진 그룹 키
+let _condTab = 'me'; // 'me' | 'fam'
 let activeMemberId = 1;
 let nextMemberId = 2;
 let profileOpen = false;
@@ -3885,20 +3884,40 @@ function renderConditions() {
   if (!container) return;
   const member = activeMember();
   container.innerHTML = "";
+
+  // ── 탭 바 ──
+  const isMe = _condTab === 'me';
+  const tabBar = document.createElement("div");
+  tabBar.className = "cond-tab-bar";
+  tabBar.innerHTML = `
+    <button class="cond-tab me${isMe?' active':''}" onclick="switchCondTab('me')">🏥 본인 질환</button>
+    <button class="cond-tab fam${!isMe?' active':''}" onclick="switchCondTab('fam')">👨‍👩‍👧‍👦 직계 가족 병력</button>`;
+  container.appendChild(tabBar);
+
+  // 현재 탭 기준 배열
+  const myArr   = isMe ? member.conditions : member.familyHx;
+  const theirArr = isMe ? member.familyHx : member.conditions;
+  const myKey   = isMe ? 'ck' : 'fk';
+  const theirKey = isMe ? 'fk' : 'ck';
+  const activeClass = isMe ? 'cond-active' : 'fam-active';
+  const crossLabel  = isMe ? '가족✓' : '나✓';
+
   const wrap = document.createElement("div");
   wrap.className = "ing-table";
 
-  // ── UNIFIED_GROUPS: 질환+가족력 통합 그룹 렌더링 ──
+  // ── UNIFIED_GROUPS 렌더링 ──
   Object.entries(UNIFIED_GROUPS).forEach(([groupKey, group]) => {
-    const cCount = group.items.filter(it => it.ck && member.conditions.includes(it.ck)).length;
-    const fCount = group.items.filter(it => it.fk && member.familyHx.includes(it.fk)).length;
+    // 현재 탭에 해당하는 항목만 (key가 null이면 제외)
+    const items = group.items.filter(it => !!it[myKey]);
+    if (!items.length) return;
+
+    const selCount = items.filter(it => myArr.includes(it[myKey])).length;
     const isOpen = _condExpanded.has(groupKey);
 
     const hdr = document.createElement("div");
     hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
-    let badge = "";
-    if (cCount > 0) badge += `<span class="cg-badge-me">${cCount}나</span>`;
-    if (fCount > 0) badge += `<span class="cg-badge-fam">${fCount}가족</span>`;
+    const badge = selCount > 0
+      ? `<span class="cg-badge" style="background:${isMe?'#059669':'#3b82f6'}">${selCount}</span>` : '';
     hdr.innerHTML = `<span class="cg-e">${group.emoji}</span><span>${group.label}</span>${badge}<span class="cg-arr">▶</span>`;
     hdr.onclick = () => toggleCondParent(groupKey);
     wrap.appendChild(hdr);
@@ -3907,29 +3926,25 @@ function renderConditions() {
     expand.className = "ing-expand" + (isOpen ? " open" : "");
     expand.id = "cond-expand-" + groupKey;
 
-    for (let i = 0; i < group.items.length; i += 4) {
+    for (let i = 0; i < items.length; i += 4) {
       const subRow = document.createElement("div");
       subRow.className = "ing-sub-row ing-row health-ing-row";
-      group.items.slice(i, i + 4).forEach(it => {
-        const cActive = !!(it.ck && member.conditions.includes(it.ck));
-        const fActive = !!(it.fk && member.familyHx.includes(it.fk));
+      items.slice(i, i + 4).forEach(it => {
+        const key = it[myKey];
+        const crossKey = it[theirKey];
+        const isActive = myArr.includes(key);
+        const crossActive = !!(crossKey && theirArr.includes(crossKey));
+
         const cell = document.createElement("div");
-        cell.className = "ing-cell unified-cell";
-        cell.innerHTML = `
-          <span class="ci-e">${it.emoji}</span>
-          <span class="ci-n">${it.label}</span>
-          <div class="ci-dual">
-            <span class="ci-me${cActive?" active":""}${it.ck?"":" disabled"}">${it.ck?"나":""}</span>
-            <span class="ci-fam${fActive?" active":""}${it.fk?"":" disabled"}">${it.fk?"가족":""}</span>
-          </div>`;
-        const meSpan  = cell.querySelector(".ci-me:not(.disabled)");
-        const famSpan = cell.querySelector(".ci-fam:not(.disabled)");
-        if (meSpan)  meSpan.onclick  = e => { e.stopPropagation(); toggleCondition(it.ck); };
-        if (famSpan) famSpan.onclick = e => {
+        cell.className = "ing-cell" + (isActive ? " " + activeClass : "");
+        cell.innerHTML = `<span class="ci-e">${it.emoji}</span><span class="ci-n">${it.label}</span>${crossActive ? `<span class="ci-cross-tag">${crossLabel}</span>` : ''}`;
+        cell.onclick = e => {
           e.stopPropagation();
-          const idx = member.familyHx.indexOf(it.fk);
-          if (idx >= 0) member.familyHx.splice(idx, 1); else member.familyHx.push(it.fk);
-          renderConditions(); updateProfileSummary();
+          const idx = myArr.indexOf(key);
+          if (idx >= 0) myArr.splice(idx, 1); else myArr.push(key);
+          renderConditions();
+          updateProfileSummary();
+          updateProfileNote();
         };
         subRow.appendChild(cell);
       });
@@ -3938,17 +3953,16 @@ function renderConditions() {
     wrap.appendChild(expand);
   });
 
-  // ── 직접 추가(AI) 통합 그룹 ──
-  const ccE = Object.entries(customConditions);
-  const cfE = Object.entries(customFamilyHx);
-  if (ccE.length + cfE.length > 0) {
+  // ── 직접 추가(AI) 항목 ──
+  const customEntries = isMe
+    ? Object.entries(customConditions)
+    : Object.entries(customFamilyHx);
+  if (customEntries.length > 0) {
     const gk = "_custom";
+    const selCount = customEntries.filter(([k]) => myArr.includes(k)).length;
     const isOpen = _condExpanded.has(gk);
-    const cC = ccE.filter(([k]) => member.conditions.includes(k)).length;
-    const fC = cfE.filter(([k]) => member.familyHx.includes(k)).length;
-    let badge = "";
-    if (cC > 0) badge += `<span class="cg-badge-me">${cC}나</span>`;
-    if (fC > 0) badge += `<span class="cg-badge-fam">${fC}가족</span>`;
+    const badge = selCount > 0
+      ? `<span class="cg-badge" style="background:${isMe?'#059669':'#3b82f6'}">${selCount}</span>` : '';
     const hdr = document.createElement("div");
     hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
     hdr.innerHTML = `<span class="cg-e">🤖</span><span>직접 추가</span>${badge}<span class="cg-arr">▶</span>`;
@@ -3957,34 +3971,21 @@ function renderConditions() {
     const expand = document.createElement("div");
     expand.className = "ing-expand" + (isOpen ? " open" : "");
     expand.id = "cond-expand-" + gk;
-    // 나(조건) 항목
-    const allCustom = [
-      ...ccE.map(([k, v]) => ({...v, ck:k, fk:null})),
-      ...cfE.map(([k, v]) => ({...v, ck:null, fk:k})),
-    ];
-    for (let i = 0; i < allCustom.length; i += 4) {
+    for (let i = 0; i < customEntries.length; i += 4) {
       const subRow = document.createElement("div");
       subRow.className = "ing-sub-row ing-row health-ing-row";
-      allCustom.slice(i, i + 4).forEach(it => {
-        const cActive = !!(it.ck && member.conditions.includes(it.ck));
-        const fActive = !!(it.fk && member.familyHx.includes(it.fk));
+      customEntries.slice(i, i + 4).forEach(([k, item]) => {
+        const isActive = myArr.includes(k);
         const cell = document.createElement("div");
-        cell.className = "ing-cell unified-cell health-custom";
-        cell.innerHTML = `
-          <span class="ci-e">${it.emoji}</span>
-          <span class="ci-n">${it.label}</span>
-          <div class="ci-dual">
-            <span class="ci-me${cActive?" active":""}${it.ck?"":" disabled"}">${it.ck?"나":""}</span>
-            <span class="ci-fam${fActive?" active":""}${it.fk?"":" disabled"}">${it.fk?"가족":""}</span>
-          </div>`;
-        const meSpan  = cell.querySelector(".ci-me:not(.disabled)");
-        const famSpan = cell.querySelector(".ci-fam:not(.disabled)");
-        if (meSpan)  meSpan.onclick  = e => { e.stopPropagation(); toggleCondition(it.ck); };
-        if (famSpan) famSpan.onclick = e => {
+        cell.className = "ing-cell health-custom" + (isActive ? " " + activeClass : "");
+        cell.innerHTML = `<span class="ci-e">${item.emoji}</span><span class="ci-n">${item.label}</span>`;
+        cell.onclick = e => {
           e.stopPropagation();
-          const idx = member.familyHx.indexOf(it.fk);
-          if (idx >= 0) member.familyHx.splice(idx, 1); else member.familyHx.push(it.fk);
-          renderConditions(); updateProfileSummary();
+          const idx = myArr.indexOf(k);
+          if (idx >= 0) myArr.splice(idx, 1); else myArr.push(k);
+          renderConditions();
+          updateProfileSummary();
+          updateProfileNote();
         };
         subRow.appendChild(cell);
       });
@@ -3994,6 +3995,11 @@ function renderConditions() {
   }
 
   container.appendChild(wrap);
+}
+
+function switchCondTab(tab) {
+  _condTab = tab;
+  renderConditions();
 }
 
 function toggleCondParent(groupKey) {
