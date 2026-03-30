@@ -58,9 +58,16 @@ function toRow(name, d) {
 
 // ── 3. Claude Sonnet으로 정밀 성분 분석 (배치 20개) ──────────────────────────
 async function analyzeNutrition(nameList) {
-  const prompt = `You are a food science expert using USDA FoodData Central and peer-reviewed nutritional databases.
-For each food ingredient below, provide accurate nutritional data per 100g.
-Return ONLY valid JSON (no markdown, no explanation):
+  const prompt = `You are a food science expert. Provide precise nutritional data per 100g for each ingredient.
+Use USDA FoodData Central as primary source. For Korean ingredients, use Korean National Food Composition Database.
+
+CRITICAL RULES:
+- NEVER use 0 as a placeholder. Use the real measured value, even if very small (e.g. 0.1, 0.02).
+- Only use 0 if the ingredient TRULY contains zero of that nutrient (e.g. pure table salt has 0 protein).
+- Use null ONLY for nutrients that genuinely cannot be measured for that ingredient type.
+- Be precise: apple has calcium ~6mg, banana ~5mg, egg ~56mg — use the actual value.
+
+Return ONLY valid JSON (no markdown):
 {
   "ingredient_name": {
     "sodium": <mg/100g>, "potassium": <mg/100g>, "calcium": <mg/100g>, "iron": <mg/100g>,
@@ -71,7 +78,6 @@ Return ONLY valid JSON (no markdown, no explanation):
     "amino_acids": ["dominant amino acid1", "amino2"]
   }
 }
-Be precise. Use real USDA values. For Korean ingredients not in USDA, use Korean National Food Composition Database values.
 Ingredients: ${JSON.stringify(nameList)}`;
 
   const res  = await fetch('https://api.anthropic.com/v1/messages', {

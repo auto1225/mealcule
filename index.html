@@ -2646,28 +2646,97 @@ async function exportReport() {
   if (userPlan === 'free') { openPricingModal(); return; }
   const exportAllowed = await checkDailyLimit('export');
   if (!exportAllowed) { alert('오늘의 보고서 다운로드 횟수를 초과했습니다.'); return; }
-  const results = document.getElementById('results');
-  if (!results || !results.innerHTML.trim()) { alert('먼저 분석을 실행해주세요'); return; }
-  // Generate text report
+  if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
+
+  const { rxns, warns, nutrition, flavor, temp, time } = lastAnalysisResult;
   const now = new Date().toLocaleString('ko-KR');
+  const methodInfo = METHODS[method] || {};
+  const VNAMES = {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',
+    folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',
+    calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
+
   let report = `═══════════════════════════════════════\n`;
   report += `  MEALCULE 분석 보고서\n`;
   report += `  생성일: ${now}\n`;
   report += `═══════════════════════════════════════\n\n`;
+
+  // ── 1. 재료 ──
   report += `[재료]\n`;
   for (const [name, g] of Object.entries(selected)) {
     report += `  - ${name}: ${g}g\n`;
   }
+
+  // ── 2. 조리 조건 ──
   report += `\n[조리 조건]\n`;
-  report += `  방법: ${method}\n`;
-  report += `  온도: ${document.getElementById('tempSlider').value}°C\n`;
-  report += `  시간: ${document.getElementById('timeSlider').value}분\n\n`;
-  report += `[과학적 출처]\n`;
+  report += `  방법: ${methodInfo.label || method} (${method})\n`;
+  report += `  온도: ${temp}°C\n`;
+  report += `  시간: ${time}분\n`;
+  if (methodInfo.medium) {
+    const medLabel = {dry:'건열',water:'수침',steam:'증기',oil:'유지',mw:'마이크로파',smoke:'훈연',none:'가열없음'};
+    report += `  열전달 매체: ${medLabel[methodInfo.medium] || methodInfo.medium}\n`;
+  }
+
+  // ── 3. 경고 & 주의 ──
+  if (warns.length > 0) {
+    report += `\n[경고 및 주의사항]\n`;
+    warns.forEach(w => {
+      report += `  [${w.type}] ${w.msg}\n`;
+    });
+  }
+
+  // ── 4. 화학 반응 ──
+  report += `\n[화학 반응 분석]\n`;
+  if (rxns.length === 0) {
+    report += `  특별한 화학 반응이 예측되지 않습니다.\n`;
+  } else {
+    rxns.forEach(r => {
+      report += `\n  ◆ ${r.name} (반응 강도: ${r.intensity}%)\n`;
+      report += `    ${r.desc}\n`;
+      if (r.effects && r.effects.length > 0) {
+        report += `    효과: ${r.effects.join(' · ')}\n`;
+      }
+      if (r.health) {
+        report += `    건강 영향: ${r.health}\n`;
+      }
+      if (r.science) {
+        report += `    과학 모델: ${r.science}\n`;
+      }
+    });
+  }
+
+  // ── 5. 영양소 보존률 ──
+  const nutriKeys = Object.keys(nutrition);
+  if (nutriKeys.length > 0) {
+    report += `\n[영양소 변화 (조리 후 보존률)]\n`;
+    // 보존률 낮은 순서로 정렬
+    const sorted = nutriKeys.sort((a, b) => (nutrition[a].ret || 100) - (nutrition[b].ret || 100));
+    sorted.forEach(k => {
+      const n = nutrition[k];
+      const label = VNAMES[k] || k;
+      const bar = '█'.repeat(Math.round((n.ret || 0) / 10)) + '░'.repeat(10 - Math.round((n.ret || 0) / 10));
+      report += `  ${label.padEnd(12)}: ${String(n.ret || 0).padStart(3)}% [${bar}]  ${(n.orig||0).toFixed(2)} → ${(n.cooked||0).toFixed(2)} (단위: mg/μg)\n`;
+    });
+  }
+
+  // ── 6. 맛 프로파일 ──
+  if (flavor) {
+    report += `\n[맛 프로파일 예측]\n`;
+    const flavorNames = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+    Object.entries(flavor).forEach(([k, v]) => {
+      const score = Math.round(v);
+      const bar = '█'.repeat(Math.round(score / 10)) + '░'.repeat(10 - Math.round(score / 10));
+      report += `  ${(flavorNames[k] || k).padEnd(6)}: ${String(score).padStart(3)}% [${bar}]\n`;
+    });
+  }
+
+  // ── 7. 과학적 출처 ──
+  report += `\n[과학적 출처]\n`;
   for (const [key, ref] of Object.entries(REFERENCES)) {
     ref.papers.forEach(p => {
       report += `  - ${p.authors} (${p.year}) "${p.title}" ${p.journal}\n`;
     });
   }
+
   report += `\n═══════════════════════════════════════\n`;
   report += `  Mealcule v2.0 · mealcule.com\n`;
   report += `  이 보고서는 이론적 모델에 기반하며\n  의학적 조언을 대체하지 않습니다.\n`;
@@ -4405,6 +4474,7 @@ function predictFlavor(ingMap, method, temp, time) {
 
 // ── Render Results ──
 let currentTab = "reactions";
+let lastAnalysisResult = null; // 마지막 분석 결과 저장 (보고서용)
 
 async function runAnalysis() {
   if (!selCount()) return;
@@ -4420,6 +4490,9 @@ async function runAnalysis() {
   const {rxns, warns} = analyze(selected, method, temp, time);
   const nutrition = calcNutrition(selected, method, temp, time);
   const flavor = predictFlavor(selected, method, temp, time);
+
+  // 분석 결과 보고서용 전역 저장
+  lastAnalysisResult = { rxns, warns, nutrition, flavor, temp, time };
 
   // 분석 결과 DB에 저장 (비동기 — UI 블로킹 없음)
   saveAnalysisToHistory({ reactions: rxns, nutrition, flavor, health: null }).catch(e => console.warn('히스토리 저장 실패:', e));
