@@ -392,26 +392,15 @@ async function renderRecipeBox() {
   const container = document.getElementById('recipeBoxContent');
   if (!container) return;
 
-  if (isGuest || !currentUser) {
-    container.innerHTML = `
-      <div style="text-align:center;padding:40px 20px;color:#888;">
-        <div style="font-size:48px;margin-bottom:12px;">📦</div>
-        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">
-          ${_t('레시피 박스', 'Recipe Box')}
-        </div>
-        <div style="font-size:13px;margin-bottom:16px;">
-          ${_t('로그인하면 레시피를 저장하고 관리할 수 있습니다.', 'Log in to save and organize your recipes.')}
-        </div>
-      </div>`;
-    return;
-  }
-
   container.innerHTML = `<div style="text-align:center;padding:40px;color:#aaa;">${_t('불러오는 중...', 'Loading...')}</div>`;
 
-  const [dbRecipes, dbCollections] = await Promise.all([
-    loadSavedRecipes(_recipeBoxCollection),
-    loadCollections(),
-  ]);
+  let dbRecipes = [], dbCollections = [];
+  if (!isGuest && currentUser) {
+    [dbRecipes, dbCollections] = await Promise.all([
+      loadSavedRecipes(_recipeBoxCollection),
+      loadCollections(),
+    ]);
+  }
 
   // Fallback to demo content when database is empty
   const showingDemo = dbRecipes.length === 0;

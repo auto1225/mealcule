@@ -256,14 +256,17 @@ async function loadFeedRecipes(tab, offset) {
         page_limit: CF_PAGE_SIZE,
       }) || [];
     } else if (tab === 'following') {
-      if (isGuest || !currentUser) return [];
-      result = await dbRPC('get_community_feed', {
-        feed_type: 'following',
-        follower_id: currentUser.id,
-        search_query: _cfSearchQuery || null,
-        page_offset: offset,
-        page_limit: CF_PAGE_SIZE,
-      }) || [];
+      if (isGuest || !currentUser) {
+        result = [];
+      } else {
+        result = await dbRPC('get_community_feed', {
+          feed_type: 'following',
+          follower_id: currentUser.id,
+          search_query: _cfSearchQuery || null,
+          page_offset: offset,
+          page_limit: CF_PAGE_SIZE,
+        }) || [];
+      }
     } else {
       // Default: latest
       let query = {

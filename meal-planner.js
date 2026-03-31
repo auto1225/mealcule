@@ -99,7 +99,8 @@ function _mealLabel(type) {
 // ── Open / Close ──
 
 function openMealPlanner() {
-  if (userPlan === 'free') {
+  const hasRealUser = typeof currentUser !== 'undefined' && currentUser && !isGuest;
+  if (userPlan === 'free' && hasRealUser) {
     _renderProGate();
     return;
   }

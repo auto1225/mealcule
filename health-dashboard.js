@@ -218,11 +218,12 @@ function openHealthDashboard() {
     document.body.appendChild(overlay);
   }
 
-  // Pro-only gate
+  // Pro-only gate (skip in demo/dev mode to show sample data)
   const isFree = typeof isGuest !== 'undefined' && isGuest
     || (typeof userPlan !== 'undefined' && userPlan === 'free');
+  const hasRealUser = typeof currentUser !== 'undefined' && currentUser && !isGuest;
 
-  if (isFree) {
+  if (isFree && hasRealUser) {
     overlay.innerHTML = `
       <div class="hd-header">
         <h1>${_t('건강 대시보드', 'Health Dashboard')}</h1>
