@@ -17,7 +17,8 @@
     "modePro": "Pro Mode",
     "pricing": "Pricing",
     "login": "Log in",
-    "logout": "Log out"
+    "logout": "Log out",
+    "user": "User"
   },
   "login": {
     "title": "Log in",
@@ -42,6 +43,7 @@
     "loginLink": "Log in",
     "termsText": "By signing in, you agree to our",
     "termsLink": "Terms of Service",
+    "termsAnd": "and",
     "privacyLink": "Privacy Policy",
     "termsAgreement": ".",
     "errorDefault": "An error occurred",
@@ -123,7 +125,11 @@
     "tabFamily": "Family History",
     "basicStep": "Basic Info",
     "healthStep": "Health Status",
-    "advancedStep": "Advanced"
+    "advancedStep": "Advanced",
+    "stepNextHealth": "Health status →",
+    "stepBackBasic": "← Basic info",
+    "stepNextAdvanced": "Advanced →",
+    "stepBackHealth": "← Health status"
   },
   "results": {
     "tabReactions": "Reactions",
@@ -141,8 +147,61 @@
     "empty": "No history yet. Run an analysis to save it automatically."
   },
   "methodology": {
-    "banner": "Research-based scientific analysis — USDA, WHO/FDA, peer-reviewed data",
-    "bannerLink": "Learn more ▸"
+    "bannerTitle": "Research-based scientific analysis",
+    "bannerSub": "USDA, WHO/FDA, peer-reviewed data",
+    "bannerLink": "Learn more ▸",
+    "dataTitle": "Data Sources",
+    "dataBody": "Built on 1,300+ ingredient nutrition data from USDA FoodData Central, WHO dietary guidelines, and regional nutrition databases (FDA, EFSA, KFDA, and others).",
+    "reactionTitle": "Chemical Reaction Models",
+    "reactionBody": "Major reactions — Maillard (Hodge, 1953; Martins et al., 2000), Caramelization (Kroh, 1994), Protein denaturation (Tornberg, 2005), Starch gelatinization (Ratnayake & Jackson, 2006) — use Arrhenius kinetics. Activation energy (Ea) and frequency factor (A) values are derived from original experimental data.",
+    "nutrientTitle": "Nutrient Retention Models",
+    "nutrientBody": "Nutrient retention rates by cooking method are calculated based on USDA Table of Nutrient Retention Factors, Release 6 (2007) and Santos & Silva (2008) vitamin C degradation kinetics.",
+    "confidenceTitle": "Confidence Levels",
+    "confidenceBody": "Each reaction model includes a literature-validated Confidence Level. High confidence (90%+) indicates models reproduced in multiple independent studies; moderate (80–89%) indicates models validated under limited conditions.",
+    "limitTitle": "Limitations",
+    "limitBody": "This analysis is based on theoretical models. Actual results may vary depending on cooking environment (equipment, humidity, ingredient conditions, etc.). This does not replace medical advice."
+  },
+  "pricing": {
+    "title": "Choose a Plan",
+    "subtitle": "A new standard in scientific food analysis",
+    "freeName": "Free",
+    "freeDesc": "Get started",
+    "freePrice": "$0/mo",
+    "freeFeatures": "✓ 5 analyses per day<br>✓ Basic chemical reactions<br>✓ Basic nutrient changes<br>✗ Health analysis<br>✗ Expert mode<br>✗ Export reports",
+    "currentPlan": "Current plan",
+    "proName": "Pro",
+    "proDesc": "Professional analysis",
+    "proPrice": "$7.99/mo",
+    "proFeatures": "✓ Unlimited analyses<br>✓ Full reaction models<br>✓ Detailed health analysis<br>✓ Expert mode<br>✓ PDF report export<br>✓ Full paper sources",
+    "proBtn": "Start Pro",
+    "entName": "Enterprise",
+    "entDesc": "For teams & research",
+    "entPrice": "$39.99/mo",
+    "entFeatures": "✓ Everything in Pro<br>✓ API access<br>✓ Batch analysis<br>✓ Custom reports<br>✓ White-label<br>✓ Dedicated support",
+    "entBtn": "Contact sales"
+  },
+  "feedback": {
+    "title": "💬 Send Feedback",
+    "general": "General feedback",
+    "bug": "Bug report",
+    "feature": "Feature request",
+    "dataFix": "Data correction",
+    "placeholder": "Share your feedback...",
+    "send": "Send"
+  },
+  "methodModal": {
+    "title": "🍳 Add Cooking Method",
+    "desc": "Enter any cooking method from around the world. AI will analyze the physicochemical factors and share with all users.",
+    "placeholder": "e.g., Infrared grill, Robata, Plancha...",
+    "cancel": "Cancel",
+    "confirm": "AI Analyze & Add"
+  },
+  "healthModal": {
+    "title": "🔬 Add Health Item",
+    "desc": "AI analyzes medical and nutritional aspects and adds to your health profile",
+    "placeholder": "e.g., Crohn's disease, Lipitor, Vitamin K allergy...",
+    "cancel": "Cancel",
+    "confirm": "AI Analyze"
   },
   "footer": {
     "methodology": "Scientific Methodology",
