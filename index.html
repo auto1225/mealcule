@@ -145,8 +145,10 @@
     </div>
   </div>
   <div class="header-actions">
-    <button class="mode-toggle" id="modeToggle" onclick="toggleProMode()" data-i18n="header.modeNormal">일반 모드</button>
-    <button class="pricing-btn" onclick="openPricingModal()" data-i18n="header.pricing">요금제</button>
+    <button class="mode-toggle" id="modeToggle" onclick="toggleProMode()" data-i18n="header.modeNormal">Standard Mode</button>
+    <button class="community-btn" onclick="typeof openCommunityFeed==='function'&&openCommunityFeed()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;cursor:pointer" data-i18n="community.title">Community</button>
+    <button class="dashboard-btn" onclick="typeof openHealthDashboard==='function'&&openHealthDashboard()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;cursor:pointer">📊</button>
+    <button class="pricing-btn" onclick="openPricingModal()" data-i18n="header.pricing">Pricing</button>
     <button class="auth-btn" id="authBtn" onclick="openAuthModal()" data-i18n="header.login">로그인</button>
     <div class="user-avatar" id="userAvatar" style="display:none" onclick="openUserMenu()">
       <div class="circle" id="avatarInitial">?</div>
