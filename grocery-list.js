@@ -1,7 +1,8 @@
 // ── Grocery List Module ──
 // Depends on globals from app.js: sbClient, dbQuery, dbRPC, currentUser, userPlan, showToast, CATEGORIES, DB, I18n
 
-const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+// _t defined in recipe-box.js; fallback if loaded standalone
+if (typeof _t === 'undefined') var _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
 
 // ── State ──
 let _groceryItems = [];

@@ -2,7 +2,8 @@
 // Depends on: sbClient, dbQuery, dbRPC, currentUser, userPlan, isGuest, showToast (app.js)
 //             loadSavedRecipes (recipe-box.js)
 
-const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+// _t defined in recipe-box.js; fallback if loaded standalone
+if (typeof _t === 'undefined') var _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
 
 const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
 const MEAL_LABELS = {

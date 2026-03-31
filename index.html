@@ -454,6 +454,9 @@
 
 <script src="i18n.js"></script>
 <script src="app.js"></script>
+<script src="recipe-box.js"></script>
+<script src="meal-planner.js"></script>
+<script src="grocery-list.js"></script>
 <!-- Trust Footer -->
 <footer class="trust-footer">
   <div style="margin-bottom:8px"><strong>Mealcule</strong> v2.0 · <span data-i18n="app.tagline">Molecular Cooking Science Platform</span></div>
@@ -461,6 +464,8 @@
   <a href="#" onclick="toggleMethodology();window.scrollTo(0,0);return false" data-i18n="footer.methodology">Scientific Methodology</a> ·
   <a href="#" onclick="openPricingModal();return false" data-i18n="footer.pricing">Pricing</a> ·
   <a href="#" onclick="toggleHistory();return false" data-i18n="footer.history">History</a> ·
+  <a href="#" onclick="openMealPlanner();return false" data-i18n="nav.planner">Planner</a> ·
+  <a href="#" onclick="toggleRecipeBox();return false" data-i18n="nav.recipeBox">Recipes</a> ·
   <a href="#" onclick="openFeedbackModal();return false" data-i18n="footer.feedback">Feedback</a> ·
   <a href="mailto:contact@mealcule.com" data-i18n="app.contact">Contact</a> ·
   <a href="#" data-i18n="app.terms">Terms of Service</a> ·
@@ -486,9 +491,13 @@
     <span class="mnav-icon">🔬</span>
     <span class="mnav-label" data-i18n="nav.results">결과</span>
   </button>
-  <button class="mobile-nav-btn" id="mnav-history" onclick="mobileNavTo('history')" data-i18n-aria="nav.history">
-    <span class="mnav-icon">📋</span>
-    <span class="mnav-label" data-i18n="nav.history">기록</span>
+  <button class="mobile-nav-btn" id="mnav-planner" onclick="openMealPlanner()" data-i18n-aria="nav.planner">
+    <span class="mnav-icon">📅</span>
+    <span class="mnav-label" data-i18n="nav.planner">Planner</span>
+  </button>
+  <button class="mobile-nav-btn" id="mnav-recipes" onclick="toggleRecipeBox()" data-i18n-aria="nav.recipeBox">
+    <span class="mnav-icon">📦</span>
+    <span class="mnav-label" data-i18n="nav.recipeBox">Recipes</span>
   </button>
 </nav>
 

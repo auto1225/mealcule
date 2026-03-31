@@ -6346,16 +6346,17 @@ function renderRecipeList(recipes) {
         ${r.usedIngredients?.length ? `<div class="recipe-ings">${r.usedIngredients.map(ing=>`<span class="recipe-ing">${ing}</span>`).join('')}</div>` : ''}
       </div>
       <div class="recipe-yt-footer">
-        <button class="yt-open-btn" id="yt-btn-${i}" onclick="event.stopPropagation();toggleYtPanel(${i})">${ytIcon} YouTube 레시피 영상 보기</button>
+        <button class="recipe-save-btn" onclick="event.stopPropagation();typeof saveRecipe==='function'?saveRecipe(${i}):showToast('Recipe Box not loaded')">💾 ${(window.I18n&&I18n.lang==='en')?'Save':'저장'}</button>
+        <button class="yt-open-btn" id="yt-btn-${i}" onclick="event.stopPropagation();toggleYtPanel(${i})">${ytIcon} YouTube ${(window.I18n&&I18n.lang==='en')?'Videos':'레시피 영상 보기'}</button>
       </div>
       <div class="yt-panel" id="yt-panel-${i}">
         <div class="yt-panel-inner">
           <div class="yt-sort-bar">
-            <span class="yt-sort-label">정렬:</span>
-            <button class="yt-sort-btn active" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','relevance',this)">🔍 관련도순</button>
-            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','date',this)">📅 최신순</button>
-            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','viewCount',this)">👁 조회수순</button>
-            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','rating',this)">👍 좋아요순</button>
+            <span class="yt-sort-label">${(window.I18n&&I18n.lang==='en')?'Sort:':'정렬:'}</span>
+            <button class="yt-sort-btn active" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','relevance',this)">🔍 ${(window.I18n&&I18n.lang==='en')?'Relevant':'관련도순'}</button>
+            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','date',this)">📅 ${(window.I18n&&I18n.lang==='en')?'Newest':'최신순'}</button>
+            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','viewCount',this)">👁 ${(window.I18n&&I18n.lang==='en')?'Views':'조회수순'}</button>
+            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','rating',this)">👍 ${(window.I18n&&I18n.lang==='en')?'Likes':'좋아요순'}</button>
           </div>
           <div id="yt-videos-${i}"></div>
         </div>
