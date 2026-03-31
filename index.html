@@ -146,6 +146,7 @@
   </div>
   <div class="header-actions">
     <button class="mode-toggle" id="modeToggle" onclick="toggleProMode()" data-i18n="header.modeNormal">Standard Mode</button>
+    <button class="calorie-btn" onclick="typeof openCalorieTracker==='function'&&openCalorieTracker()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.15);color:#fff;font-size:12px;font-weight:600;cursor:pointer">🔥 Calories</button>
     <button class="community-btn" onclick="typeof openCommunityFeed==='function'&&openCommunityFeed()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;cursor:pointer" data-i18n="community.title">Community</button>
     <button class="dashboard-btn" onclick="typeof openHealthDashboard==='function'&&openHealthDashboard()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;cursor:pointer">📊</button>
     <button class="pricing-btn" onclick="openPricingModal()" data-i18n="header.pricing">Pricing</button>
@@ -464,6 +465,7 @@
 <script src="meal-planner.js"></script>
 <script src="grocery-list.js"></script>
 <script src="community-feed.js"></script>
+<script src="calorie-tracker.js"></script>
 <script src="health-dashboard.js"></script>
 <script src="smart-integrations.js"></script>
 <!-- Trust Footer -->
@@ -501,6 +503,10 @@
   <button class="mobile-nav-btn" id="mnav-results" onclick="mobileNavTo('results')" data-i18n-aria="nav.results">
     <span class="mnav-icon">🔬</span>
     <span class="mnav-label" data-i18n="nav.results">결과</span>
+  </button>
+  <button class="mobile-nav-btn" id="mnav-calories" onclick="openCalorieTracker()" data-i18n-aria="nav.calories">
+    <span class="mnav-icon">🔥</span>
+    <span class="mnav-label">Calories</span>
   </button>
   <button class="mobile-nav-btn" id="mnav-planner" onclick="openMealPlanner()" data-i18n-aria="nav.planner">
     <span class="mnav-icon">📅</span>
