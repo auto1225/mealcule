@@ -3170,16 +3170,16 @@ const RXN_REF_MAP = {
 let currentUser = null;      // { id, email, name, avatar_url }
 let userProfile = null;      // DB profiles row
 let userPlan = 'free';       // 'free', 'pro', 'enterprise'
-let proMode = false;
+let proMode = true;          // 테스트: 전문가 모드 기본 활성화
 let dailyUsage = { analysis_count: 0, search_count: 0, export_count: 0 };
 let isGuest = false;
 let authSession = null;      // Supabase auth session
 
-// 플랜별 제한
+// 플랜별 제한 — 테스트: 모든 플랜 무제한
 const PLAN_LIMITS = {
-  free:       { analysis: 5,  export: 0,  history: 10, members: 1 },
-  pro:        { analysis: 100, export: 50, history: 1000, members: 10 },
-  enterprise: { analysis: 10000, export: 10000, history: -1, members: -1 }
+  free:       { analysis: -1, export: -1, history: -1, members: -1 },
+  pro:        { analysis: -1, export: -1, history: -1, members: -1 },
+  enterprise: { analysis: -1, export: -1, history: -1, members: -1 }
 };
 
 function getPlanLimit(type) {
@@ -3589,9 +3589,8 @@ function contactSales() { window.open('mailto:contact@mealcule.com?subject=엔�
 
 // ── Professional Mode ──
 function toggleProMode() {
-  if (!currentUser || userPlan === 'free') {
-    openPricingModal(); return;
-  }
+  // 테스트: 플랜 제한 비활성화
+  // if (!currentUser || userPlan === 'free') { openPricingModal(); return; }
   proMode = !proMode;
   updateModeUI();
 }
@@ -3617,7 +3616,8 @@ function toggleRef(id) {
 
 // ── Export Report ──
 async function exportReport() {
-  if (userPlan === 'free') { openPricingModal(); return; }
+  // 테스트: 플랜 제한 비활성화
+  // if (userPlan === 'free') { openPricingModal(); return; }
   const exportAllowed = await checkDailyLimit('export');
   if (!exportAllowed) { alert('오늘의 보고서 다운로드 횟수를 초과했습니다.'); return; }
   if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
