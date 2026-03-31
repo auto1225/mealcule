@@ -24,7 +24,51 @@ let _mpState = {
   items: [],
   selectedDay: 0,       // mobile single-day view index
   moveItem: null,        // mobile touch-move source item
+  showingDemo: false,    // true when displaying demo data
 };
+
+// ── Demo Data (shown when DB is empty) ──
+
+const _DEMO_MEALS = [
+  // Monday (day 0) — 1850 kcal
+  { id:'demo_0b', day_of_week:0, meal_type:'breakfast', custom_name:'아보카도 토스트', custom_name_en:'Avocado Toast', custom_emoji:'🥑', calories:350, protein:12, fat:18, carbs:36, fiber:7 },
+  { id:'demo_0l', day_of_week:0, meal_type:'lunch', custom_name:'그릴드 치킨 샐러드', custom_name_en:'Grilled Chicken Salad', custom_emoji:'🥗', calories:480, protein:38, fat:22, carbs:28, fiber:5 },
+  { id:'demo_0d', day_of_week:0, meal_type:'dinner', custom_name:'수비드 스테이크', custom_name_en:'Sous Vide Steak', custom_emoji:'🥩', calories:650, protein:52, fat:38, carbs:12, fiber:2 },
+  { id:'demo_0s', day_of_week:0, meal_type:'snack', custom_name:'그릭 요거트 + 베리', custom_name_en:'Greek Yogurt + Berries', custom_emoji:'🫐', calories:180, protein:15, fat:4, carbs:22, fiber:3 },
+
+  // Tuesday (day 1) — 1720 kcal
+  { id:'demo_1b', day_of_week:1, meal_type:'breakfast', custom_name:'오버나이트 오츠', custom_name_en:'Overnight Oats', custom_emoji:'🥣', calories:320, protein:14, fat:10, carbs:44, fiber:6 },
+  { id:'demo_1l', day_of_week:1, meal_type:'lunch', custom_name:'참치 포케 보울', custom_name_en:'Tuna Poke Bowl', custom_emoji:'🍣', calories:520, protein:36, fat:18, carbs:52, fiber:4 },
+  { id:'demo_1d', day_of_week:1, meal_type:'dinner', custom_name:'레몬 허브 연어', custom_name_en:'Lemon Herb Salmon', custom_emoji:'🐟', calories:580, protein:44, fat:32, carbs:18, fiber:3 },
+  { id:'demo_1s', day_of_week:1, meal_type:'snack', custom_name:'아몬드 한 줌', custom_name_en:'Handful of Almonds', custom_emoji:'🥜', calories:160, protein:6, fat:14, carbs:6, fiber:4 },
+
+  // Wednesday (day 2) — 1680 kcal (no snack — realistic gap)
+  { id:'demo_2b', day_of_week:2, meal_type:'breakfast', custom_name:'스크램블 에그 + 토스트', custom_name_en:'Scrambled Eggs + Toast', custom_emoji:'🍳', calories:380, protein:22, fat:20, carbs:28, fiber:2 },
+  { id:'demo_2l', day_of_week:2, meal_type:'lunch', custom_name:'터키 랩', custom_name_en:'Turkey Wrap', custom_emoji:'🌯', calories:450, protein:32, fat:16, carbs:42, fiber:4 },
+  { id:'demo_2d', day_of_week:2, meal_type:'dinner', custom_name:'치킨 스터프라이', custom_name_en:'Chicken Stir-Fry', custom_emoji:'🍜', calories:620, protein:40, fat:22, carbs:58, fiber:6 },
+
+  // Thursday (day 3) — 2050 kcal
+  { id:'demo_3b', day_of_week:3, meal_type:'breakfast', custom_name:'바나나 팬케이크', custom_name_en:'Banana Pancakes', custom_emoji:'🥞', calories:420, protein:12, fat:14, carbs:60, fiber:3 },
+  { id:'demo_3l', day_of_week:3, meal_type:'lunch', custom_name:'퀴노아 버거', custom_name_en:'Quinoa Burger', custom_emoji:'🍔', calories:550, protein:24, fat:22, carbs:58, fiber:8 },
+  { id:'demo_3d', day_of_week:3, meal_type:'dinner', custom_name:'쉬림프 파스타', custom_name_en:'Shrimp Pasta', custom_emoji:'🍝', calories:680, protein:34, fat:24, carbs:72, fiber:4 },
+  { id:'demo_3s', day_of_week:3, meal_type:'snack', custom_name:'프로틴 스무디', custom_name_en:'Protein Smoothie', custom_emoji:'🥤', calories:220, protein:25, fat:5, carbs:22, fiber:2 },
+
+  // Friday (day 4) — 1880 kcal (no breakfast — skipped)
+  { id:'demo_4l', day_of_week:4, meal_type:'lunch', custom_name:'지중해식 보울', custom_name_en:'Mediterranean Bowl', custom_emoji:'🥙', calories:510, protein:28, fat:24, carbs:46, fiber:7 },
+  { id:'demo_4d', day_of_week:4, meal_type:'dinner', custom_name:'비프 타코', custom_name_en:'Beef Tacos', custom_emoji:'🌮', calories:720, protein:42, fat:34, carbs:56, fiber:5 },
+  { id:'demo_4s', day_of_week:4, meal_type:'snack', custom_name:'후무스 + 야채스틱', custom_name_en:'Hummus + Veggie Sticks', custom_emoji:'🥕', calories:190, protein:8, fat:10, carbs:18, fiber:6 },
+
+  // Saturday (day 5) — 2180 kcal
+  { id:'demo_5b', day_of_week:5, meal_type:'breakfast', custom_name:'풀 잉글리시 브렉퍼스트', custom_name_en:'Full English Breakfast', custom_emoji:'🍳', calories:550, protein:30, fat:34, carbs:32, fiber:4 },
+  { id:'demo_5l', day_of_week:5, meal_type:'lunch', custom_name:'카프레제 파니니', custom_name_en:'Caprese Panini', custom_emoji:'🥪', calories:460, protein:22, fat:20, carbs:44, fiber:3 },
+  { id:'demo_5d', day_of_week:5, meal_type:'dinner', custom_name:'그릴드 램 찹', custom_name_en:'Grilled Lamb Chops', custom_emoji:'🍖', calories:700, protein:50, fat:42, carbs:16, fiber:2 },
+  { id:'demo_5s', day_of_week:5, meal_type:'snack', custom_name:'다크 초콜릿 + 견과류', custom_name_en:'Dark Chocolate + Nuts', custom_emoji:'🍫', calories:210, protein:5, fat:16, carbs:18, fiber:3 },
+
+  // Sunday (day 6) — 1760 kcal (no snack)
+  { id:'demo_6b', day_of_week:6, meal_type:'breakfast', custom_name:'블루베리 와플', custom_name_en:'Blueberry Waffles', custom_emoji:'🧇', calories:400, protein:10, fat:16, carbs:54, fiber:3 },
+  { id:'demo_6l', day_of_week:6, meal_type:'lunch', custom_name:'미소 라멘', custom_name_en:'Miso Ramen', custom_emoji:'🍜', calories:580, protein:28, fat:22, carbs:62, fiber:4 },
+  { id:'demo_6d', day_of_week:6, meal_type:'dinner', custom_name:'로스트 치킨', custom_name_en:'Roast Chicken', custom_emoji:'🍗', calories:620, protein:48, fat:30, carbs:24, fiber:3 },
+];
 
 // ── Helpers ──
 
@@ -174,16 +218,26 @@ function navigateWeek(direction) {
 
 // ── Render Calendar ──
 
+function _getActiveItems() {
+  if (_mpState.items.length > 0) {
+    _mpState.showingDemo = false;
+    return _mpState.items;
+  }
+  _mpState.showingDemo = true;
+  return _DEMO_MEALS;
+}
+
 function renderMealCalendar() {
+  const activeItems = _getActiveItems();
   const isMobile = window.innerWidth <= 768;
   if (isMobile) {
     _renderDayTabs();
-    _renderSingleDay(_mpState.selectedDay);
+    _renderSingleDay(_mpState.selectedDay, activeItems);
   } else {
     _hideDayTabs();
-    _renderFullGrid();
+    _renderFullGrid(activeItems);
   }
-  _renderWeeklySummary();
+  _renderWeeklySummary(activeItems);
 }
 
 function _hideDayTabs() {
@@ -211,17 +265,24 @@ function _selectDay(i) {
   renderMealCalendar();
 }
 
-function _renderSingleDay(dayIndex) {
+function _renderSingleDay(dayIndex, activeItems) {
   const cal = document.getElementById('mpCalendar');
   if (!cal) return;
-  const dayItems = _mpState.items.filter(it => it.day_of_week === dayIndex);
+  const items = activeItems || _getActiveItems();
+  const dayItems = items.filter(it => it.day_of_week === dayIndex);
   let html = '';
+  if (_mpState.showingDemo) {
+    html += `<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:13px;color:#92400e">
+      <span style="font-size:18px">✨</span>
+      <span>${_t('샘플 식단입니다. 직접 추가해 보세요!', 'Sample meals shown. Add your own!')}</span>
+    </div>`;
+  }
   MEAL_TYPES.forEach(type => {
     const typeItems = dayItems.filter(it => it.meal_type === type);
     html += `<div style="margin-bottom:12px">
       <div style="font-weight:600;font-size:14px;margin-bottom:6px;padding:4px 0">${_mealLabel(type)}</div>
       <div class="mp-drop-zone" data-day="${dayIndex}" data-meal="${type}" style="min-height:48px;background:#fff;border-radius:10px;padding:8px;border:1px dashed #ddd">
-        ${typeItems.map(it => _renderMealItemCard(it)).join('')}
+        ${typeItems.map(it => _renderMealItemCard(it, _mpState.showingDemo)).join('')}
         <button onclick="addMealItem(${dayIndex},'${type}')" style="width:100%;padding:8px;border:1px dashed #ccc;border-radius:8px;background:none;color:#888;cursor:pointer;font-size:13px;margin-top:4px">+ ${_t('추가', 'Add')}</button>
       </div>
     </div>`;
@@ -231,10 +292,18 @@ function _renderSingleDay(dayIndex) {
   _setupDropZones();
 }
 
-function _renderFullGrid() {
+function _renderFullGrid(activeItems) {
   const cal = document.getElementById('mpCalendar');
   if (!cal) return;
-  let html = '<div style="display:grid;grid-template-columns:80px repeat(7,1fr);gap:1px;background:#e5e7eb;border-radius:10px;overflow:hidden">';
+  const items = activeItems || _getActiveItems();
+  let html = '';
+  if (_mpState.showingDemo) {
+    html += `<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:8px;font-size:13px;color:#92400e">
+      <span style="font-size:18px">✨</span>
+      <span>${_t('샘플 식단이 표시됩니다. + 버튼으로 직접 식단을 추가해 보세요!', 'Showing sample meals. Tap + to add your own!')}</span>
+    </div>`;
+  }
+  html += '<div style="display:grid;grid-template-columns:80px repeat(7,1fr);gap:1px;background:#e5e7eb;border-radius:10px;overflow:hidden">';
   // Header row
   html += '<div style="background:#f9fafb;padding:8px;font-size:12px;color:#888"></div>';
   for (let d = 0; d < 7; d++) {
@@ -247,9 +316,10 @@ function _renderFullGrid() {
   MEAL_TYPES.forEach(type => {
     html += `<div style="background:#f9fafb;padding:8px;font-size:12px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-lr;text-orientation:mixed">${_mealLabel(type)}</div>`;
     for (let d = 0; d < 7; d++) {
-      const cellItems = _mpState.items.filter(it => it.day_of_week === d && it.meal_type === type);
-      html += `<div class="mp-drop-zone" data-day="${d}" data-meal="${type}" style="background:#fff;padding:6px;min-height:80px;position:relative">
-        ${cellItems.map(it => _renderMealItemCard(it)).join('')}
+      const cellItems = items.filter(it => it.day_of_week === d && it.meal_type === type);
+      const dimStyle = _mpState.showingDemo ? 'opacity:0.7;' : '';
+      html += `<div class="mp-drop-zone" data-day="${d}" data-meal="${type}" style="background:#fff;padding:6px;min-height:80px;position:relative;${dimStyle}">
+        ${cellItems.map(it => _renderMealItemCard(it, _mpState.showingDemo)).join('')}
         <button onclick="addMealItem(${d},'${type}')" style="width:100%;padding:4px;border:1px dashed #ddd;border-radius:6px;background:none;color:#bbb;cursor:pointer;font-size:16px;margin-top:2px">+</button>
       </div>`;
     }
@@ -257,7 +327,7 @@ function _renderFullGrid() {
   // Day nutrition footer
   html += '<div style="background:#f9fafb;padding:6px;font-size:11px;text-align:center;color:#888">${_t("합계","Total")}</div>';
   for (let d = 0; d < 7; d++) {
-    const dayItems = _mpState.items.filter(it => it.day_of_week === d);
+    const dayItems = items.filter(it => it.day_of_week === d);
     html += `<div style="background:#fafafa;padding:6px">${renderDayNutrition(d, dayItems)}</div>`;
   }
   html += '</div>';
@@ -266,21 +336,23 @@ function _renderFullGrid() {
   _setupDragHandlers();
 }
 
-function _renderMealItemCard(item) {
+function _renderMealItemCard(item, isDemo) {
   const name = _t(item.custom_name || '', item.custom_name_en || item.custom_name || '');
   const emoji = item.custom_emoji || '🍽️';
   const cal = item.calories ? `${Math.round(item.calories)} kcal` : '';
   const isMobile = window.innerWidth <= 768;
-  const moveAttr = isMobile ? `onclick="_startMoveItem('${item.id}')"` : '';
-  return `<div class="mp-item" draggable="true" data-item-id="${item.id}"
-    style="display:flex;align-items:center;gap:6px;padding:6px 8px;margin-bottom:4px;background:#f8f8ff;border-radius:8px;font-size:13px;cursor:grab;position:relative"
+  const moveAttr = (!isDemo && isMobile) ? `onclick="_startMoveItem('${item.id}')"` : '';
+  const draggable = isDemo ? 'false' : 'true';
+  const deleteBtn = isDemo ? '' : `<button onclick="event.stopPropagation();removeMealItem('${item.id}')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;padding:2px">&times;</button>`;
+  return `<div class="mp-item" draggable="${draggable}" data-item-id="${item.id}"
+    style="display:flex;align-items:center;gap:6px;padding:6px 8px;margin-bottom:4px;background:#f8f8ff;border-radius:8px;font-size:13px;cursor:${isDemo ? 'default' : 'grab'};position:relative"
     ${moveAttr}>
     <span>${emoji}</span>
     <div style="flex:1;min-width:0">
       <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
       <div style="font-size:11px;color:#888">${cal}</div>
     </div>
-    <button onclick="event.stopPropagation();removeMealItem('${item.id}')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;padding:2px">&times;</button>
+    ${deleteBtn}
   </div>`;
 }
 
@@ -313,12 +385,13 @@ function renderDayNutrition(dayOfWeek, items) {
 
 // ── Weekly Summary ──
 
-function _renderWeeklySummary() {
+function _renderWeeklySummary(activeItems) {
   const el = document.getElementById('mpWeeklySummary');
   if (!el) return;
+  const items = activeItems || _getActiveItems();
   const totals = { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, days: 0 };
   for (let d = 0; d < 7; d++) {
-    const dayItems = _mpState.items.filter(it => it.day_of_week === d);
+    const dayItems = items.filter(it => it.day_of_week === d);
     if (dayItems.length === 0) continue;
     totals.days++;
     dayItems.forEach(it => {
