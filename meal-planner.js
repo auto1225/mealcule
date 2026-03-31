@@ -109,7 +109,7 @@ function _buildPlannerShell() {
         <span id="mpWeekLabel" style="font-weight:600;font-size:15px"></span>
         <button onclick="navigateWeek(1)" style="background:none;border:none;font-size:18px;cursor:pointer">&rsaquo;</button>
       </div>
-      <div style="width:30px"></div>
+      <button onclick="_openAiMealPlanGenerator()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">✨ ${_t('AI 생성', 'AI Generate')}</button>
     </div>
     <div id="mpDayTabs" style="display:none;overflow-x:auto;background:#fff;border-bottom:1px solid #e5e7eb;flex-shrink:0"></div>
     <div id="mpCalendar" style="flex:1;overflow-y:auto;padding:8px"></div>
@@ -699,6 +699,168 @@ function initMealPlanner() {
       }
     }
   });
+}
+
+// ── AI Meal Plan Generator ──
+
+function _openAiMealPlanGenerator() {
+  let modal = document.getElementById('aiMealPlanModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'aiMealPlanModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
+    modal.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+    document.body.appendChild(modal);
+  }
+  modal.style.display = 'flex';
+
+  const CUISINE_OPTIONS = [
+    { v: '', l: _t('상관없음', 'Any style') },
+    { v: 'Korean', l: _t('한식', 'Korean') },
+    { v: 'Japanese', l: _t('일식', 'Japanese') },
+    { v: 'Chinese', l: _t('중식', 'Chinese') },
+    { v: 'Italian', l: _t('이탈리안', 'Italian') },
+    { v: 'American', l: _t('미국식', 'American') },
+    { v: 'Mediterranean', l: _t('지중해식', 'Mediterranean') },
+    { v: 'Mexican', l: _t('멕시칸', 'Mexican') },
+    { v: 'Indian', l: _t('인도식', 'Indian') },
+    { v: 'Thai', l: _t('태국식', 'Thai') },
+  ];
+  const optionsHtml = CUISINE_OPTIONS.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;max-width:420px;width:100%;padding:24px;max-height:85vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0;font-size:17px">✨ ${_t('AI 식단 자동 생성', 'AI Meal Plan Generator')}</h3>
+        <button onclick="document.getElementById('aiMealPlanModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
+      </div>
+      <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('건강 프로필 기반 맞춤형 7일 식단을 자동 생성합니다', 'Generate a personalized 7-day meal plan based on your health profile')}</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#555">${_t('일일 칼로리 목표', 'Daily calorie target')}</label>
+          <input id="aiPlanCalories" type="number" value="2000" min="1200" max="4000" step="100" style="width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;margin-top:4px">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#555">${_t('요리 스타일', 'Cuisine preference')}</label>
+          <select id="aiPlanCuisine" style="width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;margin-top:4px">${optionsHtml}</select>
+        </div>
+      </div>
+      <button id="aiPlanGenBtn" onclick="_runAiMealPlanGeneration()" style="width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:14px;font-weight:700;cursor:pointer">
+        ${_t('7일 식단 생성', 'Generate 7-Day Plan')}
+      </button>
+      <div id="aiPlanResults" style="margin-top:16px"></div>
+    </div>`;
+}
+
+async function _runAiMealPlanGeneration() {
+  const btn = document.getElementById('aiPlanGenBtn');
+  const results = document.getElementById('aiPlanResults');
+  const calories = parseInt(document.getElementById('aiPlanCalories')?.value) || 2000;
+  const cuisine = document.getElementById('aiPlanCuisine')?.value || '';
+
+  if (btn) { btn.disabled = true; btn.textContent = _t('생성 중...', 'Generating...'); }
+  results.innerHTML = `<div style="text-align:center;padding:20px;color:#888"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('AI가 식단을 생성하고 있습니다...', 'AI is generating your meal plan...')}</div>`;
+
+  // Collect health profile from app.js globals
+  const profile = window._healthProfile || {};
+  const savedRecipes = typeof loadSavedRecipes === 'function' ? (await loadSavedRecipes()) : [];
+
+  try {
+    const res = await fetch('/api/generate-meal-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        savedRecipes: savedRecipes.slice(0, 20).map(r => ({
+          name: r.name, name_en: r.name_en, cuisine: r.cuisine,
+          nutrition_snapshot: r.nutrition_snapshot,
+        })),
+        conditions: profile.conditions || [],
+        traits: profile.traits || [],
+        substances: profile.substances || [],
+        age: profile.age, gender: profile.gender,
+        weight: profile.weight, height: profile.height,
+        activityLevel: profile.activity,
+        ethnicity: profile.ethnicity, country: profile.country,
+        preferences: { targetCalories: calories, cuisinePreference: cuisine },
+        userLang: I18n?.lang || 'en',
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Generation failed');
+
+    if (!data.plan?.length) throw new Error('Empty plan returned');
+
+    // Render preview
+    let html = `<div style="font-size:14px;font-weight:700;margin-bottom:10px">${_t('생성된 식단', 'Generated Plan')}</div>`;
+    data.plan.forEach(day => {
+      html += `<div style="margin-bottom:10px;padding:10px;background:#fafafa;border-radius:8px">
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px">${day.dayLabel}</div>`;
+      (day.meals || []).forEach(meal => {
+        html += `<div style="display:flex;gap:6px;align-items:center;font-size:12px;padding:2px 0">
+          <span>${meal.emoji || '🍽️'}</span>
+          <span style="flex:1">${meal.name} <span style="color:#888">${Math.round(meal.calories||0)}kcal</span></span>
+        </div>`;
+      });
+      if (day.dailyTotal) {
+        html += `<div style="font-size:11px;color:#888;margin-top:4px;border-top:1px solid #eee;padding-top:4px">${_t('합계', 'Total')}: ${Math.round(day.dailyTotal.calories||0)}kcal · P${Math.round(day.dailyTotal.protein||0)}g · F${Math.round(day.dailyTotal.fat||0)}g · C${Math.round(day.dailyTotal.carbs||0)}g</div>`;
+      }
+      html += `</div>`;
+    });
+    if (data.weeklyNotes) {
+      html += `<div style="font-size:12px;color:#555;padding:8px;background:#ecfdf5;border-radius:8px;margin-bottom:10px">💡 ${data.weeklyNotes}</div>`;
+    }
+    html += `<button onclick="_applyAiPlanToPlanner()" style="width:100%;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('플래너에 적용', 'Apply to Planner')}</button>`;
+
+    results.innerHTML = html;
+    results._generatedPlan = data.plan;
+  } catch (err) {
+    results.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444">${err.message}</div>`;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = _t('7일 식단 생성', 'Generate 7-Day Plan'); }
+  }
+}
+
+async function _applyAiPlanToPlanner() {
+  const results = document.getElementById('aiPlanResults');
+  const plan = results?._generatedPlan;
+  if (!plan?.length) return;
+
+  for (const day of plan) {
+    for (const meal of (day.meals || [])) {
+      const itemData = {
+        meal_plan_id: _mpState.planId,
+        user_id: currentUser?.id,
+        day_of_week: day.day,
+        meal_type: meal.type,
+        recipe_id: null,
+        custom_name: meal.name,
+        custom_name_en: meal.name_en || meal.name,
+        custom_emoji: meal.emoji || '🍽️',
+        custom_ingredients: meal.ingredients ? meal.ingredients.map(i => ({ name: i, grams: 0 })) : null,
+        calories: meal.calories || 0,
+        protein: meal.protein || 0,
+        fat: meal.fat || 0,
+        carbs: meal.carbs || 0,
+        fiber: meal.fiber || 0,
+        sort_order: 0,
+        notes: meal.tip || '',
+      };
+
+      if (!currentUser || isGuest) {
+        itemData.id = 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        _mpState.items.push(itemData);
+      } else {
+        const inserted = await dbQuery('meal_plan_items', 'insert', { data: itemData });
+        if (inserted?.[0]) _mpState.items.push(inserted[0]);
+      }
+    }
+  }
+
+  if (!currentUser || isGuest) _saveLocalItems();
+  renderMealCalendar();
+  _dispatchUpdate();
+  document.getElementById('aiMealPlanModal').style.display = 'none';
+  showToast(_t('식단이 플래너에 적용되었습니다!', 'Meal plan applied to planner!'));
 }
 
 // Auto-init when DOM ready

@@ -511,3 +511,10 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .recipe-tag.diff-easy{background:#dbeafe;color:#1e40af}
 .recipe-tag.diff-medium{background:#fef3c7;color:#92400e}
 .recipe-tag.diff-hard{background:#fee2e2;color:#991b1b}
+
+/* ── Photo Scan Button (in search bar) ──────────────────────────────────── */
+.photo-scan-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:1px solid #e5e5e5;border-radius:8px;padding:5px 8px;font-size:16px;cursor:pointer;transition:all .2s;line-height:1;color:#555}
+.photo-scan-btn:hover{background:#ecfdf5;border-color:var(--accent);color:var(--accent)}
+/* Loading spinner for AI modals */
+.loading-spinner{width:24px;height:24px;border:3px solid #e5e5e5;border-top-color:#059669;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}

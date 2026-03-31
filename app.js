@@ -6661,6 +6661,260 @@ function devTab(tab) {
   }
 }
 
+// ══════════════════════════════════════════════════════════════
+// Phase 2: AI Features — Photo Scanner, URL Import
+// ══════════════════════════════════════════════════════════════
+
+function openPhotoScanner() {
+  const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+  let overlay = document.getElementById('photoScanOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'photoScanOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.onclick = e => { if (e.target === overlay) overlay.style.display = 'none'; };
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0;font-size:17px">📷 ${_t('사진으로 재료 인식', 'Photo Ingredient Scanner')}</h3>
+        <button onclick="document.getElementById('photoScanOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
+      </div>
+      <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('재료 사진을 촬영하거나 업로드하면 AI가 자동 인식합니다', 'Take or upload a photo of ingredients — AI identifies them automatically')}</p>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#555;transition:border-color .2s" onmouseenter="this.style.borderColor='#059669'" onmouseleave="this.style.borderColor='#ddd'">
+          📁 ${_t('사진 선택', 'Choose photo')}
+          <input type="file" accept="image/*" style="display:none" onchange="_handlePhotoSelect(this)">
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#555;transition:border-color .2s" onmouseenter="this.style.borderColor='#059669'" onmouseleave="this.style.borderColor='#ddd'">
+          📸 ${_t('촬영', 'Take photo')}
+          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="_handlePhotoSelect(this)">
+        </label>
+      </div>
+      <div id="photoPreview" style="display:none;text-align:center;margin-bottom:16px">
+        <img id="photoPreviewImg" style="max-width:100%;max-height:200px;border-radius:10px;border:1px solid #eee">
+      </div>
+      <div id="photoResults"></div>
+    </div>`;
+}
+
+async function _handlePhotoSelect(input) {
+  const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+  const file = input.files?.[0];
+  if (!file) return;
+
+  // Show preview
+  const preview = document.getElementById('photoPreview');
+  const img = document.getElementById('photoPreviewImg');
+  const results = document.getElementById('photoResults');
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUri = e.target.result;
+    if (preview) { preview.style.display = 'block'; img.src = dataUri; }
+    if (results) results.innerHTML = `<div style="text-align:center;padding:20px;color:#888"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('사진 분석 중...', 'Analyzing photo...')}</div>`;
+
+    try {
+      const res = await fetch('/api/photo-ingredient', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataUri, userLang: I18n?.lang || 'en' }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Analysis failed');
+
+      if (!data.ingredients?.length) {
+        results.innerHTML = `<div style="text-align:center;padding:16px;color:#888">${_t('이미지에서 식재료를 찾을 수 없습니다', 'No food ingredients detected')}</div>`;
+        return;
+      }
+
+      let html = `<div style="font-size:13px;font-weight:600;margin-bottom:8px">${_t(data.count + '개 재료 인식', data.count + ' ingredients found')}</div>`;
+      html += `<div style="display:flex;flex-direction:column;gap:6px">`;
+      data.ingredients.forEach((ing, i) => {
+        const conf = ing.confidence === 'high' ? '🟢' : ing.confidence === 'medium' ? '🟡' : '🔴';
+        html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">
+          <span>${ing.emoji || '🥬'}</span>
+          <span style="flex:1">${I18n?.lang === 'en' ? ing.name_en : ing.name} <span style="color:#888;font-size:11px">~${ing.estimatedGrams}g ${conf}</span></span>
+          <button onclick="_addPhotoIngredient('${(ing.name_en || ing.name).replace(/'/g,"\\'")}',${ing.estimatedGrams})" style="padding:4px 10px;border:1px solid #059669;border-radius:6px;background:#fff;color:#059669;font-size:12px;cursor:pointer;font-weight:600">${_t('추가', 'Add')}</button>
+        </div>`;
+      });
+      html += `</div>`;
+      html += `<button onclick="_addAllPhotoIngredients()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('전체 추가', 'Add all to selection')}</button>`;
+      results.innerHTML = html;
+      results._ingredients = data.ingredients;
+    } catch (err) {
+      results.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444">${err.message}</div>`;
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function _addPhotoIngredient(name, grams) {
+  // Try to match in DB first
+  const dbKey = Object.keys(DB).find(k => {
+    const entry = DB[k];
+    return k === name || entry.en?.toLowerCase() === name.toLowerCase();
+  });
+  if (dbKey) {
+    selected[dbKey] = grams;
+  } else {
+    selected[name] = grams;
+  }
+  renderIngredients();
+  showToast(`${name} ${grams}g added`);
+}
+
+function _addAllPhotoIngredients() {
+  const results = document.getElementById('photoResults');
+  const ingredients = results?._ingredients;
+  if (!ingredients?.length) return;
+  ingredients.forEach(ing => {
+    const name = ing.name_en || ing.name;
+    const dbKey = Object.keys(DB).find(k => k === name || DB[k].en?.toLowerCase() === name.toLowerCase());
+    selected[dbKey || name] = ing.estimatedGrams;
+  });
+  renderIngredients();
+  showToast((window.I18n && I18n.lang === 'en') ? `${ingredients.length} ingredients added` : `${ingredients.length}개 재료 추가됨`);
+  document.getElementById('photoScanOverlay').style.display = 'none';
+}
+
+// ── URL Recipe Import ──
+
+function openUrlImport() {
+  const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+  let overlay = document.getElementById('urlImportOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'urlImportOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.onclick = e => { if (e.target === overlay) overlay.style.display = 'none'; };
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0;font-size:17px">🔗 ${_t('URL에서 레시피 가져오기', 'Import Recipe from URL')}</h3>
+        <button onclick="document.getElementById('urlImportOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
+      </div>
+      <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('레시피 URL을 붙여넣으면 AI가 재료, 단계, 영양 정보를 추출합니다', 'Paste a recipe URL and AI will extract ingredients, steps, and nutrition')}</p>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input id="urlImportInput" type="url" placeholder="https://..." style="flex:1;padding:10px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px">
+        <button onclick="_runUrlImport()" style="padding:10px 18px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">${_t('가져오기', 'Import')}</button>
+      </div>
+      <div id="urlImportResults"></div>
+    </div>`;
+}
+
+async function _runUrlImport() {
+  const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+  const input = document.getElementById('urlImportInput');
+  const results = document.getElementById('urlImportResults');
+  const url = input?.value?.trim();
+  if (!url) { showToast(_t('URL을 입력하세요', 'Enter a URL')); return; }
+
+  results.innerHTML = `<div style="text-align:center;padding:20px;color:#888"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('레시피 추출 중...', 'Extracting recipe...')}</div>`;
+
+  try {
+    const res = await fetch('/api/import-recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, userLang: I18n?.lang || 'en' }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Import failed');
+
+    const nutr = data.nutrition || {};
+    let html = `<div style="border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px">${data.name}</div>
+      ${data.name_en ? `<div style="font-size:13px;color:#888">${data.name_en}</div>` : ''}
+      ${data.description ? `<div style="font-size:13px;color:#555;margin-top:8px">${data.description}</div>` : ''}
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        ${data.cuisine ? `<span class="recipe-tag cuisine">${data.cuisine}</span>` : ''}
+        ${data.difficulty ? `<span class="recipe-tag">${data.difficulty}</span>` : ''}
+        ${data.duration ? `<span class="recipe-tag">⏱ ${data.duration}min</span>` : ''}
+        ${data.servings ? `<span class="recipe-tag">🍽 ${data.servings} servings</span>` : ''}
+      </div>
+      ${nutr.calories ? `<div style="font-size:12px;color:#666;margin-top:8px">${nutr.calories}kcal · P${nutr.protein||0}g · F${nutr.fat||0}g · C${nutr.carbs||0}g</div>` : ''}
+    </div>`;
+
+    if (data.ingredients?.length) {
+      html += `<div style="font-size:13px;font-weight:600;margin-bottom:6px">${_t('재료', 'Ingredients')} (${data.ingredients.length})</div>`;
+      html += `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">`;
+      data.ingredients.forEach(ing => {
+        html += `<span style="font-size:11px;background:#f5f5f5;padding:3px 8px;border-radius:6px">${ing.emoji||''} ${I18n?.lang==='en' ? ing.name_en||ing.name : ing.name} ${ing.grams}g</span>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `<div style="display:flex;gap:8px">
+      <button onclick="_importToAnalysis()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('Mealcule로 분석', 'Analyze with Mealcule')}</button>
+      <button onclick="_importToRecipeBox()" style="flex:1;padding:10px;border:1px solid #059669;border-radius:8px;background:#fff;color:#059669;font-size:13px;font-weight:600;cursor:pointer">${_t('레시피 박스에 저장', 'Save to Recipe Box')}</button>
+    </div>`;
+
+    results.innerHTML = html;
+    results._importedRecipe = data;
+  } catch (err) {
+    results.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444">${err.message}</div>`;
+  }
+}
+
+function _importToAnalysis() {
+  const results = document.getElementById('urlImportResults');
+  const recipe = results?._importedRecipe;
+  if (!recipe?.ingredients) return;
+  selected = {};
+  recipe.ingredients.forEach(ing => {
+    const name = ing.name_en || ing.name;
+    const dbKey = Object.keys(DB).find(k => k === name || DB[k].en?.toLowerCase() === name.toLowerCase());
+    selected[dbKey || name] = ing.grams || 100;
+  });
+  if (recipe.cookingMethod) {
+    const methodKey = Object.keys(METHODS || {}).find(k => k.toLowerCase().includes(recipe.cookingMethod.toLowerCase()));
+    if (methodKey) method = methodKey;
+  }
+  renderIngredients();
+  renderMethods();
+  document.getElementById('urlImportOverlay').style.display = 'none';
+  showToast((window.I18n && I18n.lang === 'en') ? 'Ingredients loaded — ready to analyze!' : '재료 로드 완료 — 분석 준비됨!');
+}
+
+async function _importToRecipeBox() {
+  const results = document.getElementById('urlImportResults');
+  const recipe = results?._importedRecipe;
+  if (!recipe) return;
+  if (typeof saveRecipe !== 'function' || isGuest || !currentUser) {
+    showToast((window.I18n && I18n.lang === 'en') ? 'Please log in to save recipes' : '로그인 후 저장 가능합니다');
+    return;
+  }
+  const row = {
+    user_id: currentUser.id,
+    name: recipe.name,
+    name_en: recipe.name_en || recipe.name,
+    description: recipe.description || '',
+    cuisine: recipe.cuisine || '',
+    difficulty: recipe.difficulty || '',
+    health_note: recipe.healthNote || '',
+    allergens: recipe.allergens || [],
+    youtube_query: recipe.youtubeQuery || '',
+    ingredients: (recipe.ingredients || []).map(i => ({ name: i.name, grams: i.grams, en: i.name_en })),
+    method: recipe.cookingMethod || '',
+    temperature: recipe.temperature || null,
+    duration: recipe.duration || null,
+    nutrition_snapshot: recipe.nutrition || null,
+    source: 'import',
+    source_url: recipe.sourceUrl || '',
+  };
+  const result = await dbQuery('saved_recipes', 'insert', { data: row });
+  if (result) {
+    showToast((window.I18n && I18n.lang === 'en') ? 'Saved to Recipe Box!' : '레시피 박스에 저장됨!');
+    document.dispatchEvent(new CustomEvent('recipe:saved', { detail: result[0] || result }));
+  } else {
+    showToast((window.I18n && I18n.lang === 'en') ? 'Save failed' : '저장 실패');
+  }
+}
+
 async function devRunSample() {
   devGoMain();
   // Reset and pre-select sample ingredients

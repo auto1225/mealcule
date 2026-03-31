@@ -148,7 +148,10 @@ async function renderRecipeBox() {
   let html = `
     <div class="rb-header">
       <div class="rb-title">${_t('레시피 박스', 'Recipe Box')} <span class="rb-count">${recipes.length}${limit !== Infinity ? `/${limit}` : ''}</span></div>
-      <button class="rb-new-col-btn" onclick="promptNewCollection()">+ ${_t('새 컬렉션', 'New Collection')}</button>
+      <div style="display:flex;gap:6px">
+        <button class="rb-new-col-btn" onclick="typeof openUrlImport==='function'&&openUrlImport()">🔗 ${_t('URL 가져오기', 'Import URL')}</button>
+        <button class="rb-new-col-btn" onclick="promptNewCollection()">+ ${_t('새 컬렉션', 'New Collection')}</button>
+      </div>
     </div>`;
 
   // Collection tabs
