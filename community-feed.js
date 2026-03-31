@@ -16,6 +16,110 @@ let _cfSearchQuery = '';
 let _cfSearchDebounce = null;
 const CF_PAGE_SIZE = 20;
 
+// ── Demo Data (shown when DB is empty) ──────────────────────────────────────
+const CF_DEMO_RECIPES = [
+  {
+    id: 'demo-1', title: 'Sous Vide Wagyu Steak with Maillard Crust',
+    description: 'Perfect medium-rare wagyu using precise 54.5°C sous vide for 2 hours, finished with a 230°C cast-iron sear. Maillard reaction creates 500+ flavor compounds.',
+    cuisine: 'steak', tags: ['Sous Vide', 'Molecular', 'Premium'],
+    like_count: 342, comment_count: 47, created_at: new Date(Date.now() - 3600000).toISOString(),
+    author: { display_name: 'Chef Marco', avatar_url: null },
+    ingredients: ['Wagyu A5 ribeye 300g', 'Fleur de sel', 'Black pepper', 'Thyme', 'Garlic', 'Butter'],
+    featured: true,
+  },
+  {
+    id: 'demo-2', title: 'Kimchi Jjigae — Optimal Fermentation Chemistry',
+    description: 'Using 3-week fermented kimchi (pH 4.2) for peak lactic acid flavor. Pork belly collagen breaks down at 95°C over 40 min for silky broth.',
+    cuisine: 'korean', tags: ['Korean', 'Fermentation', 'Science'],
+    like_count: 289, comment_count: 31, created_at: new Date(Date.now() - 7200000).toISOString(),
+    author: { display_name: 'Dr. Yoon', avatar_url: null },
+    ingredients: ['Aged kimchi 400g', 'Pork belly 200g', 'Soft tofu 1 block', 'Gochugaru', 'Doenjang', 'Scallions'],
+    featured: true,
+  },
+  {
+    id: 'demo-3', title: 'Spherified Mango Ravioli',
+    description: 'Reverse spherification using calcium chloride bath and sodium alginate. Creates a thin gel membrane encasing liquid mango puree — bursts in your mouth.',
+    cuisine: 'dessert', tags: ['Molecular', 'Spherification', 'Dessert'],
+    like_count: 215, comment_count: 28, created_at: new Date(Date.now() - 14400000).toISOString(),
+    author: { display_name: 'MolecularArts', avatar_url: null },
+    ingredients: ['Mango puree 200ml', 'Sodium alginate 2g', 'Calcium chloride 5g', 'Sugar 30g', 'Lime juice'],
+    featured: true,
+  },
+  {
+    id: 'demo-4', title: 'Tonkotsu Ramen — 18-Hour Bone Broth',
+    description: 'Collagen extraction maximized at 100°C rolling boil. Pork bones release gelatin, creating creamy white emulsion. Fat-to-water ratio 1:8 for optimal mouthfeel.',
+    cuisine: 'japanese', tags: ['Japanese', 'Slow Cook', 'Broth Science'],
+    like_count: 478, comment_count: 63, created_at: new Date(Date.now() - 28800000).toISOString(),
+    author: { display_name: 'RamenLab Tokyo', avatar_url: null },
+    ingredients: ['Pork femur bones 2kg', 'Fatback 300g', 'Chashu pork belly 500g', 'Tare sauce', 'Noodles', 'Ajitama egg'],
+    featured: true,
+  },
+  {
+    id: 'demo-5', title: 'Sourdough Bread — Wild Yeast Fermentation',
+    description: 'Natural levain at 78% hydration. 24h cold retard at 4°C develops acetic acid for tangy flavor. Ear formation via precise scoring angle (30°).',
+    cuisine: 'bread', tags: ['Baking', 'Fermentation', 'Artisan'],
+    like_count: 356, comment_count: 42, created_at: new Date(Date.now() - 43200000).toISOString(),
+    author: { display_name: 'BreadChemist', avatar_url: null },
+    ingredients: ['Bread flour 500g', 'Sourdough starter 100g', 'Water 390ml', 'Salt 10g'],
+  },
+  {
+    id: 'demo-6', title: 'Butter Chicken — Tandoori Maillard Optimization',
+    description: 'Yogurt marinade (pH 4.5) tenderizes chicken via acid denaturation. Tandoori at 260°C triggers rapid Maillard. Tomato-cashew sauce emulsified with butter.',
+    cuisine: 'indian', tags: ['Indian', 'Tandoori', 'Emulsion'],
+    like_count: 198, comment_count: 22, created_at: new Date(Date.now() - 57600000).toISOString(),
+    author: { display_name: 'SpiceMolecule', avatar_url: null },
+    ingredients: ['Chicken thigh 600g', 'Yogurt 200ml', 'Garam masala', 'Tomato puree 400g', 'Cashews 50g', 'Butter 80g', 'Cream 100ml'],
+  },
+  {
+    id: 'demo-7', title: 'Ceviche — Acid Denaturation of Proteins',
+    description: 'Lime juice (pH 2.0) denatures fish proteins without heat, mimicking cooking. 15-min cure for translucent center. Habanero adds capsaicin kick.',
+    cuisine: 'mexican', tags: ['Raw', 'Acid Cooking', 'Seafood'],
+    like_count: 167, comment_count: 19, created_at: new Date(Date.now() - 72000000).toISOString(),
+    author: { display_name: 'OceanChef', avatar_url: null },
+    ingredients: ['Sea bass 400g', 'Lime juice 150ml', 'Red onion', 'Cilantro', 'Habanero', 'Avocado', 'Sweet potato'],
+  },
+  {
+    id: 'demo-8', title: 'Crème Brûlée — Caramelization vs Pyrolysis',
+    description: 'Custard set at exactly 82°C (egg protein coagulation). Sugar torched at 160°C for caramel, avoiding 190°C+ bitter pyrolysis zone.',
+    cuisine: 'dessert', tags: ['French', 'Caramelization', 'Precision'],
+    like_count: 231, comment_count: 35, created_at: new Date(Date.now() - 86400000).toISOString(),
+    author: { display_name: 'PâtissierLab', avatar_url: null },
+    ingredients: ['Heavy cream 500ml', 'Egg yolks 6', 'Vanilla bean 1', 'Sugar 120g'],
+  },
+  {
+    id: 'demo-9', title: 'Smoked Salmon — Cold Smoke Flavor Chemistry',
+    description: 'Salt-cured 24h for osmotic dehydration. Cold-smoked at 25°C — phenols and carbonyls from wood combustion create 200+ aromatic compounds.',
+    cuisine: 'fish', tags: ['Smoking', 'Curing', 'Preservation'],
+    like_count: 145, comment_count: 18, created_at: new Date(Date.now() - 100800000).toISOString(),
+    author: { display_name: 'SmokeScience', avatar_url: null },
+    ingredients: ['Salmon fillet 1kg', 'Sea salt 200g', 'Brown sugar 100g', 'Dill', 'Apple wood chips'],
+  },
+  {
+    id: 'demo-10', title: 'Pasta Aglio e Olio — Emulsion Physics',
+    description: 'Starch water + olive oil create stable emulsion coating each strand. Garlic infused at 60°C (below 120°C browning) preserves allicin for health benefits.',
+    cuisine: 'pasta', tags: ['Italian', 'Emulsion', 'Minimalist'],
+    like_count: 312, comment_count: 38, created_at: new Date(Date.now() - 115200000).toISOString(),
+    author: { display_name: 'PastaPhysics', avatar_url: null },
+    ingredients: ['Spaghetti 400g', 'Garlic 8 cloves', 'Extra virgin olive oil 80ml', 'Chili flakes', 'Parsley', 'Parmesan'],
+  },
+  {
+    id: 'demo-11', title: 'Thai Green Curry — Capsaicin & Aromatic Volatiles',
+    description: 'Fresh curry paste releases terpenes (lemongrass, galangal). Coconut cream at 85°C extracts fat-soluble flavors. Basil added last to preserve linalool.',
+    cuisine: 'thai', tags: ['Thai', 'Aromatics', 'Spice Science'],
+    like_count: 203, comment_count: 25, created_at: new Date(Date.now() - 129600000).toISOString(),
+    author: { display_name: 'AromaKitchen', avatar_url: null },
+    ingredients: ['Green curry paste 60g', 'Coconut cream 400ml', 'Chicken thigh 400g', 'Thai basil', 'Thai eggplant', 'Fish sauce', 'Palm sugar'],
+  },
+  {
+    id: 'demo-12', title: 'Chocolate Tempering — Crystal Polymorphism',
+    description: 'Form V crystals (32°C) give perfect snap and sheen. Seed method: melt to 50°C → cool to 27°C → reheat to 31.5°C. Beta crystals dominate for ideal texture.',
+    cuisine: 'dessert', tags: ['Chocolate', 'Crystallization', 'Precision'],
+    like_count: 276, comment_count: 41, created_at: new Date(Date.now() - 144000000).toISOString(),
+    author: { display_name: 'ChocolateCrystal', avatar_url: null },
+    ingredients: ['Couverture dark chocolate 500g', 'Cocoa butter 50g'],
+  },
+];
+
 // ── 1. Open Community Feed ──────────────────────────────────────────────────
 
 function openCommunityFeed() {
@@ -118,41 +222,61 @@ function closeCommunityFeed() {
 
 async function loadFeedRecipes(tab, offset) {
   try {
+    let result = [];
+
     if (tab === 'featured') {
-      const result = await dbRPC('get_community_feed', {
+      result = await dbRPC('get_community_feed', {
         feed_type: 'featured',
         search_query: _cfSearchQuery || null,
         page_offset: offset,
         page_limit: CF_PAGE_SIZE,
-      });
-      return result || [];
-    }
-
-    if (tab === 'following') {
+      }) || [];
+    } else if (tab === 'following') {
       if (isGuest || !currentUser) return [];
-      const result = await dbRPC('get_community_feed', {
+      result = await dbRPC('get_community_feed', {
         feed_type: 'following',
         follower_id: currentUser.id,
         search_query: _cfSearchQuery || null,
         page_offset: offset,
         page_limit: CF_PAGE_SIZE,
-      });
-      return result || [];
+      }) || [];
+    } else {
+      // Default: latest
+      let query = {
+        select: '*, author:profiles(id, display_name, avatar_url)',
+        order: { column: 'created_at', ascending: false },
+        range: [offset, offset + CF_PAGE_SIZE - 1],
+      };
+      if (_cfSearchQuery) {
+        query.ilike = { title: `%${_cfSearchQuery}%` };
+      }
+      result = await dbQuery('shared_recipes', 'select', query) || [];
     }
 
-    // Default: latest
-    let query = {
-      select: '*, author:profiles(id, display_name, avatar_url)',
-      order: { column: 'created_at', ascending: false },
-      range: [offset, offset + CF_PAGE_SIZE - 1],
-    };
-    if (_cfSearchQuery) {
-      query.ilike = { title: `%${_cfSearchQuery}%` };
+    // Fallback to demo data when DB is empty
+    if (result.length === 0 && offset === 0) {
+      let demos = CF_DEMO_RECIPES;
+      if (tab === 'featured') demos = demos.filter(r => r.featured);
+      if (_cfSearchQuery) {
+        const q = _cfSearchQuery.toLowerCase();
+        demos = demos.filter(r =>
+          r.title.toLowerCase().includes(q) ||
+          (r.description || '').toLowerCase().includes(q) ||
+          (r.tags || []).some(t => t.toLowerCase().includes(q))
+        );
+      }
+      return demos;
     }
-    const result = await dbQuery('shared_recipes', 'select', query);
-    return result || [];
+
+    return result;
   } catch (err) {
     console.error('loadFeedRecipes error:', err);
+    // Return demo data on error too
+    if (offset === 0) {
+      let demos = CF_DEMO_RECIPES;
+      if (tab === 'featured') demos = demos.filter(r => r.featured);
+      return demos;
+    }
     return [];
   }
 }
@@ -319,17 +443,21 @@ async function openSharedRecipeDetail(id, scrollTo) {
   modal.style.display = 'flex';
 
   try {
-    const recipes = await dbQuery('shared_recipes', 'select', {
-      select: '*, author:profiles(id, display_name, avatar_url, bio)',
-      eq: { id },
-    });
-    const recipe = recipes?.[0];
+    // Check demo data first
+    let recipe = CF_DEMO_RECIPES.find(r => r.id === id);
+    if (!recipe) {
+      const recipes = await dbQuery('shared_recipes', 'select', {
+        select: '*, author:profiles(id, display_name, avatar_url, bio)',
+        eq: { id },
+      });
+      recipe = recipes?.[0];
+    }
     if (!recipe) {
       modal.querySelector('.cf-detail-loading').innerHTML = `<div style="color:#888;padding:40px;">${_t('레시피를 찾을 수 없습니다.', 'Recipe not found.')}</div>`;
       return;
     }
 
-    const comments = await loadComments(id);
+    const comments = id.startsWith('demo-') ? [] : await loadComments(id);
     const authorName = recipe.author?.display_name || _t('익명', 'Anonymous');
     const avatarUrl = recipe.author?.avatar_url;
     const avatarHtml = avatarUrl
@@ -338,9 +466,10 @@ async function openSharedRecipeDetail(id, scrollTo) {
     const liked = recipe.user_liked ? 'liked' : '';
     const emoji = _getRecipeEmoji(recipe.cuisine || recipe.title || '');
 
-    const ingredientsHtml = (recipe.ingredients || []).map(ing =>
-      `<span class="cf-det-ing">${_escCf(ing.name)} ${ing.grams ? `(${ing.grams}g)` : ''}</span>`
-    ).join('');
+    const ingredientsHtml = (recipe.ingredients || []).map(ing => {
+      if (typeof ing === 'string') return `<span class="cf-det-ing">${_escCf(ing)}</span>`;
+      return `<span class="cf-det-ing">${_escCf(ing.name)} ${ing.grams ? `(${ing.grams}g)` : ''}</span>`;
+    }).join('');
 
     const nutritionHtml = recipe.nutrition_snapshot ? `
       <div class="cf-det-section">
