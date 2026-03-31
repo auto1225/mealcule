@@ -10,6 +10,81 @@ let _hdGoals = { calories: 2000, protein: 50, fat: 65, carbs: 300, fiber: 25 };
 let _hdHealthScore = null;
 let _healthProfile = null;
 
+// ── Demo Data Generator ──
+// Returns realistic sample nutrition logs when no real data exists.
+
+function _generateDemoNutritionData(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const data = [];
+
+  // Daily targets: cal 1850, protein 72g, fat 55g, carbs 245g, fiber 18g
+  // Spread across 4 meals to hit those totals
+  const meals = [
+    { type: 'breakfast', names: [
+        _t('토스트와 계란', 'Toast & Eggs'),
+        _t('오트밀과 바나나', 'Oatmeal & Banana'),
+        _t('그릭 요거트 볼', 'Greek Yogurt Bowl'),
+      ], cal: 420, pro: 18, fat: 14, carbs: 52, fiber: 4 },
+    { type: 'lunch', names: [
+        _t('닭가슴살 샐러드', 'Chicken Salad'),
+        _t('비빔밥', 'Bibimbap'),
+        _t('참치 샌드위치', 'Tuna Sandwich'),
+      ], cal: 580, pro: 28, fat: 18, carbs: 72, fiber: 6 },
+    { type: 'dinner', names: [
+        _t('연어 스테이크', 'Salmon Steak'),
+        _t('파스타 볼로네제', 'Pasta Bolognese'),
+        _t('두부 볶음밥', 'Tofu Fried Rice'),
+      ], cal: 650, pro: 22, fat: 18, carbs: 95, fiber: 5 },
+    { type: 'snack', names: [
+        _t('견과류 믹스', 'Mixed Nuts'),
+        _t('사과와 땅콩버터', 'Apple & Peanut Butter'),
+        _t('프로틴 바', 'Protein Bar'),
+      ], cal: 200, pro: 4, fat: 5, carbs: 26, fiber: 3 },
+  ];
+  // Sum per day: 1850 cal, 72 pro, 55 fat, 245 carbs, 18 fiber
+
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const dateStr = d.toISOString().slice(0, 10);
+    // Small daily variation (0.92 - 1.08) to keep totals realistic
+    const dayVar = 0.92 + Math.random() * 0.16;
+    meals.forEach(meal => {
+      const idx = Math.floor(Math.random() * meal.names.length);
+      data.push({
+        date: dateStr,
+        meal_type: meal.type,
+        meal_name: meal.names[idx],
+        calories: Math.round(meal.cal * dayVar),
+        protein:  Math.round(meal.pro * dayVar * 10) / 10,
+        fat:      Math.round(meal.fat * dayVar * 10) / 10,
+        carbs:    Math.round(meal.carbs * dayVar * 10) / 10,
+        fiber:    Math.round(meal.fiber * dayVar * 10) / 10,
+      });
+    });
+  }
+  return data;
+}
+
+// Demo health score matching the target of 78/100
+function _getDemoHealthScore() {
+  return {
+    total: 78,
+    balance: 32,
+    variety: 24,
+    conditions: 22,
+    factors: [
+      { label: _t('칼로리 목표 달성', 'Calories on target'), value: 5 },
+      { label: _t('적정 단백질', 'Good protein intake'), value: 3 },
+      { label: _t('높은 식이섬유', 'High fiber'), value: 5 },
+      { label: _t('다양한 식단', 'Diverse diet'), value: 5 },
+      { label: _t('지방 불균형', 'Fat imbalance'), value: -6 },
+    ],
+  };
+}
+
+// Demo weekly trend scores
+const _demoWeeklyScores = [65, 72, 75, 78];
+
 // ── CSS Injection ──
 function _injectHDStyles() {
   if (document.getElementById('hd-styles')) return;
@@ -120,6 +195,10 @@ function _injectHDStyles() {
     }
     .hd-form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
     .hd-trend-chart { width: 100%; }
+    .hd-demo-banner {
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      padding: 12px 20px; text-align: center;
+    }
     @keyframes hd-ring-anim {
       from { stroke-dasharray: 0 999; }
     }
@@ -272,10 +351,26 @@ async function renderDashboard(period) {
   const { start, end } = _hdDateRange(period);
   _hdNutritionData = await loadNutritionData(start, end);
 
-  const score = calculateHealthScore(_hdNutritionData, _hdGoals);
+  // Use demo data when there is no real nutrition data
+  const _usingDemo = _hdNutritionData.length === 0;
+  if (_usingDemo) {
+    _hdNutritionData = _generateDemoNutritionData(start, end);
+  }
+
+  const score = _usingDemo ? _getDemoHealthScore() : calculateHealthScore(_hdNutritionData, _hdGoals);
   _hdHealthScore = score;
 
   body.innerHTML = '';
+
+  // Show demo banner when using sample data
+  if (_usingDemo) {
+    body.innerHTML += `<div class="hd-card full-width" style="background:#f0fdf4;border:1px solid #bbf7d0;padding:12px 20px;text-align:center;">
+      <span style="font-size:13px;color:#15803d;">
+        ${_t('샘플 데이터가 표시 중입니다. 식사를 기록하면 실제 데이터로 대체됩니다.', 'Showing sample data. Log meals to see your real data.')}
+      </span>
+    </div>`;
+  }
+
   body.innerHTML += renderNutritionGoalCard();
   body.innerHTML += renderHealthScoreCard();
   body.innerHTML += renderDailyIntakeChart(period);
@@ -489,12 +584,28 @@ function renderWeeklyTrend() {
   // Compute 4-week health score trend (simulated from available data)
   const weeks = [];
   const now = new Date();
+
+  // Check if we are using demo data (no real weekly data will span 4 weeks)
+  const hasRealWeeklyData = _hdNutritionData.some(r => {
+    const d = r.date || r.logged_at?.slice(0, 10);
+    const weekAgo = new Date(now);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return d && d < weekAgo.toISOString().slice(0, 10);
+  });
+
   for (let w = 3; w >= 0; w--) {
     const weekEnd = new Date(now);
     weekEnd.setDate(weekEnd.getDate() - w * 7);
     const weekStart = new Date(weekEnd);
     weekStart.setDate(weekStart.getDate() - 6);
     const label = `${weekStart.toISOString().slice(5, 10)}`;
+
+    if (!hasRealWeeklyData) {
+      // Use demo weekly scores [65, 72, 75, 78]
+      weeks.push({ label, score: _demoWeeklyScores[3 - w] });
+      continue;
+    }
+
     // Filter nutrition data for this week
     const startStr = weekStart.toISOString().slice(0, 10);
     const endStr = weekEnd.toISOString().slice(0, 10);
