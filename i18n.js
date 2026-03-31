@@ -48,6 +48,22 @@
   // Shorthand alias used throughout app.js
   window.t = (key, vars) => window.I18n.t(key, vars);
 
+  /**
+   * Translate a data object's label based on current language.
+   * Usage: tl(obj)          → obj.label_en (if en) or obj.label
+   *        tl(obj, 'desc')  → obj.desc_en  (if en) or obj.desc
+   *        tl(obj, 'en')    → obj.en (ingredient English name) or key fallback
+   */
+  window.tl = function(obj, field) {
+    if (!obj) return '';
+    if (field === 'en') {
+      // For DB ingredients: return obj.en if English, else the Korean key is used as-is
+      return (_lang === 'en' && obj.en) ? obj.en : null;
+    }
+    const base = field || 'label';
+    return (_lang === 'en' && obj[base + '_en']) ? obj[base + '_en'] : obj[base] || '';
+  };
+
   // ── Init ─────────────────────────────────────────────────────────────────
   loadStrings(_lang).then(() => {
     document.documentElement.lang = _lang;
