@@ -4658,8 +4658,8 @@ function renderIngredientsFromData(items, grid, bypassGrouping = false) {
 
   if (entries.length === 0) return Object.keys(items).length > 0 ? -1 : 0;
 
-  for (let i = 0; i < entries.length; i += 5) {
-    const rowEntries = entries.slice(i, i + 5);
+  for (let i = 0; i < entries.length; i += 4) {
+    const rowEntries = entries.slice(i, i + 4);
     const row = document.createElement("div");
     row.className = "ing-row";
     const parentsInRow = [];
@@ -4689,10 +4689,10 @@ function renderIngredientsFromData(items, grid, bypassGrouping = false) {
       expand.className = "ing-expand";
       expand.id = `ing-expand-${parentName}`;
       const children = (PARENT_GROUPS[parentName] || []).filter(c => DB[c]);
-      for (let ci = 0; ci < children.length; ci += 5) {
+      for (let ci = 0; ci < children.length; ci += 4) {
         const subRow = document.createElement("div");
         subRow.className = "ing-row ing-sub-row";
-        children.slice(ci, ci + 5).forEach(cname => {
+        children.slice(ci, ci + 4).forEach(cname => {
           const cdata = DB[cname];
           if (!cdata) return;
           const subCell = document.createElement("div");
