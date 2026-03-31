@@ -25,6 +25,8 @@ const CF_DEMO_RECIPES = [
     like_count: 342, comment_count: 47, created_at: new Date(Date.now() - 3600000).toISOString(),
     author: { display_name: 'Chef Marco', avatar_url: null },
     ingredients: ['Wagyu A5 ribeye 300g', 'Fleur de sel', 'Black pepper', 'Thyme', 'Garlic', 'Butter'],
+    image_url: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop',
+    video_id: 'eoV7lOWBsiE',
     featured: true,
   },
   {
@@ -34,6 +36,8 @@ const CF_DEMO_RECIPES = [
     like_count: 289, comment_count: 31, created_at: new Date(Date.now() - 7200000).toISOString(),
     author: { display_name: 'Dr. Yoon', avatar_url: null },
     ingredients: ['Aged kimchi 400g', 'Pork belly 200g', 'Soft tofu 1 block', 'Gochugaru', 'Doenjang', 'Scallions'],
+    image_url: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=600&h=400&fit=crop',
+    video_id: 'SgEeBaHxMjE',
     featured: true,
   },
   {
@@ -43,6 +47,8 @@ const CF_DEMO_RECIPES = [
     like_count: 215, comment_count: 28, created_at: new Date(Date.now() - 14400000).toISOString(),
     author: { display_name: 'MolecularArts', avatar_url: null },
     ingredients: ['Mango puree 200ml', 'Sodium alginate 2g', 'Calcium chloride 5g', 'Sugar 30g', 'Lime juice'],
+    image_url: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=400&fit=crop',
+    video_id: 'MHm2JF-MYxs',
     featured: true,
   },
   {
@@ -52,6 +58,8 @@ const CF_DEMO_RECIPES = [
     like_count: 478, comment_count: 63, created_at: new Date(Date.now() - 28800000).toISOString(),
     author: { display_name: 'RamenLab Tokyo', avatar_url: null },
     ingredients: ['Pork femur bones 2kg', 'Fatback 300g', 'Chashu pork belly 500g', 'Tare sauce', 'Noodles', 'Ajitama egg'],
+    image_url: 'https://images.unsplash.com/photo-1557872943-16a5ac26437e?w=600&h=400&fit=crop',
+    video_id: '_1eJMqpdzjE',
     featured: true,
   },
   {
@@ -61,6 +69,8 @@ const CF_DEMO_RECIPES = [
     like_count: 356, comment_count: 42, created_at: new Date(Date.now() - 43200000).toISOString(),
     author: { display_name: 'BreadChemist', avatar_url: null },
     ingredients: ['Bread flour 500g', 'Sourdough starter 100g', 'Water 390ml', 'Salt 10g'],
+    image_url: 'https://images.unsplash.com/photo-1585478259715-876acc5be8eb?w=600&h=400&fit=crop',
+    video_id: '2FVfJTGpXnU',
   },
   {
     id: 'demo-6', title: 'Butter Chicken — Tandoori Maillard Optimization',
@@ -69,6 +79,8 @@ const CF_DEMO_RECIPES = [
     like_count: 198, comment_count: 22, created_at: new Date(Date.now() - 57600000).toISOString(),
     author: { display_name: 'SpiceMolecule', avatar_url: null },
     ingredients: ['Chicken thigh 600g', 'Yogurt 200ml', 'Garam masala', 'Tomato puree 400g', 'Cashews 50g', 'Butter 80g', 'Cream 100ml'],
+    image_url: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=400&fit=crop',
+    video_id: 'a03U45jFxOI',
   },
   {
     id: 'demo-7', title: 'Ceviche — Acid Denaturation of Proteins',
@@ -77,6 +89,8 @@ const CF_DEMO_RECIPES = [
     like_count: 167, comment_count: 19, created_at: new Date(Date.now() - 72000000).toISOString(),
     author: { display_name: 'OceanChef', avatar_url: null },
     ingredients: ['Sea bass 400g', 'Lime juice 150ml', 'Red onion', 'Cilantro', 'Habanero', 'Avocado', 'Sweet potato'],
+    image_url: 'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=600&h=400&fit=crop',
+    video_id: 'rDKQ5fM4p6E',
   },
   {
     id: 'demo-8', title: 'Crème Brûlée — Caramelization vs Pyrolysis',
@@ -85,6 +99,8 @@ const CF_DEMO_RECIPES = [
     like_count: 231, comment_count: 35, created_at: new Date(Date.now() - 86400000).toISOString(),
     author: { display_name: 'PâtissierLab', avatar_url: null },
     ingredients: ['Heavy cream 500ml', 'Egg yolks 6', 'Vanilla bean 1', 'Sugar 120g'],
+    image_url: 'https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=600&h=400&fit=crop',
+    video_id: 'FUkEbgWfCDY',
   },
   {
     id: 'demo-9', title: 'Smoked Salmon — Cold Smoke Flavor Chemistry',
@@ -93,6 +109,8 @@ const CF_DEMO_RECIPES = [
     like_count: 145, comment_count: 18, created_at: new Date(Date.now() - 100800000).toISOString(),
     author: { display_name: 'SmokeScience', avatar_url: null },
     ingredients: ['Salmon fillet 1kg', 'Sea salt 200g', 'Brown sugar 100g', 'Dill', 'Apple wood chips'],
+    image_url: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=400&fit=crop',
+    video_id: '823kx_bNEJg',
   },
   {
     id: 'demo-10', title: 'Pasta Aglio e Olio — Emulsion Physics',
@@ -101,6 +119,8 @@ const CF_DEMO_RECIPES = [
     like_count: 312, comment_count: 38, created_at: new Date(Date.now() - 115200000).toISOString(),
     author: { display_name: 'PastaPhysics', avatar_url: null },
     ingredients: ['Spaghetti 400g', 'Garlic 8 cloves', 'Extra virgin olive oil 80ml', 'Chili flakes', 'Parsley', 'Parmesan'],
+    image_url: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&h=400&fit=crop',
+    video_id: 'bJUiWdM__Qw',
   },
   {
     id: 'demo-11', title: 'Thai Green Curry — Capsaicin & Aromatic Volatiles',
@@ -109,6 +129,8 @@ const CF_DEMO_RECIPES = [
     like_count: 203, comment_count: 25, created_at: new Date(Date.now() - 129600000).toISOString(),
     author: { display_name: 'AromaKitchen', avatar_url: null },
     ingredients: ['Green curry paste 60g', 'Coconut cream 400ml', 'Chicken thigh 400g', 'Thai basil', 'Thai eggplant', 'Fish sauce', 'Palm sugar'],
+    image_url: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&h=400&fit=crop',
+    video_id: 'BnJFnOmYKhI',
   },
   {
     id: 'demo-12', title: 'Chocolate Tempering — Crystal Polymorphism',
@@ -117,6 +139,8 @@ const CF_DEMO_RECIPES = [
     like_count: 276, comment_count: 41, created_at: new Date(Date.now() - 144000000).toISOString(),
     author: { display_name: 'ChocolateCrystal', avatar_url: null },
     ingredients: ['Couverture dark chocolate 500g', 'Cocoa butter 50g'],
+    image_url: 'https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=600&h=400&fit=crop',
+    video_id: 'GtbOENfMwz8',
   },
 ];
 
@@ -338,6 +362,14 @@ function renderFeedCard(recipe) {
     ? (recipe.description.length > 100 ? recipe.description.slice(0, 100) + '...' : recipe.description)
     : '';
 
+  const imageHtml = recipe.image_url
+    ? `<img src="${recipe.image_url}" alt="${_escCf(recipe.title || '')}" class="cf-card-photo" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'cf-card-emoji\\'>${emoji}</span>'" />`
+    : `<span class="cf-card-emoji">${emoji}</span>`;
+
+  const videoBtn = recipe.video_id
+    ? `<button class="cf-video-btn" onclick="event.stopPropagation();_playRecipeVideo('${recipe.video_id}')" title="${_t('영상 보기', 'Watch Video')}">▶</button>`
+    : '';
+
   return `
     <div class="cf-card" data-id="${recipe.id}" onclick="openSharedRecipeDetail('${recipe.id}')">
       <div class="cf-card-header">
@@ -348,7 +380,8 @@ function renderFeedCard(recipe) {
         <span class="cf-card-time">${_timeAgoCf(recipe.created_at)}</span>
       </div>
       <div class="cf-card-image">
-        <span class="cf-card-emoji">${emoji}</span>
+        ${imageHtml}
+        ${videoBtn}
       </div>
       <div class="cf-card-body">
         <div class="cf-card-title">${_escCf(recipe.title || recipe.name || '')}</div>
@@ -416,6 +449,23 @@ function _copyShareLink(id) {
   }).catch(() => {
     showToast(_t('링크 복사에 실패했습니다.', 'Failed to copy link.'));
   });
+}
+
+function _playRecipeVideo(videoId) {
+  let overlay = document.getElementById('cf-video-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'cf-video-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:12000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;flex-direction:column;';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = `
+    <button onclick="this.parentElement.remove()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;z-index:10">&times;</button>
+    <div style="width:min(90vw,800px);aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);">
+      <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" style="width:100%;height:100%;border:none;" allow="autoplay;encrypted-media" allowfullscreen></iframe>
+    </div>
+  `;
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
 }
 
 // ── 5. Shared Recipe Detail ─────────────────────────────────────────────────
@@ -497,7 +547,10 @@ async function openSharedRecipeDetail(id, scrollTo) {
     modal.querySelector('.cf-detail-modal').innerHTML = `
       <button class="cf-modal-close" onclick="_closeCfDetail()">&times;</button>
       <div class="cf-det-image">
-        <span style="font-size:64px;">${emoji}</span>
+        ${recipe.image_url
+          ? `<img src="${recipe.image_url}" alt="${_escCf(recipe.title || '')}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<span style=font-size:64px>${emoji}</span>'" />`
+          : `<span style="font-size:64px;">${emoji}</span>`}
+        ${recipe.video_id ? `<button class="cf-video-btn" onclick="_playRecipeVideo('${recipe.video_id}')" style="position:absolute;bottom:16px;right:16px;width:52px;height:52px;font-size:20px;">▶</button>` : ''}
       </div>
       <div class="cf-det-header">
         <h2 class="cf-det-title">${_escCf(recipe.title || recipe.name || '')}</h2>
@@ -1070,13 +1123,27 @@ function _injectCommunityFeedStyles() {
     .cf-author-name { font-size:13px; font-weight:600; color:#333; }
     .cf-card-time { font-size:11px; color:#aaa; }
 
-    /* Card Image placeholder */
+    /* Card Image */
     .cf-card-image {
-      display:flex; align-items:center; justify-content:center;
-      height:120px; background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
-      margin:12px 16px 0; border-radius:10px;
+      position:relative; display:flex; align-items:center; justify-content:center;
+      height:200px; background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
+      margin:12px 16px 0; border-radius:10px; overflow:hidden;
     }
+    .cf-card-photo {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform 0.3s ease;
+    }
+    .cf-card:hover .cf-card-photo { transform:scale(1.05); }
     .cf-card-emoji { font-size:48px; }
+    .cf-video-btn {
+      position:absolute; bottom:10px; right:10px;
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(0,0,0,0.7); color:#fff; border:2px solid rgba(255,255,255,0.8);
+      font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:all 0.2s ease; backdrop-filter:blur(4px);
+      padding-left:3px;
+    }
+    .cf-video-btn:hover { background:rgba(220,38,38,0.9); transform:scale(1.1); }
 
     /* Card Body */
     .cf-card-body { padding:12px 16px 8px; }
@@ -1143,9 +1210,9 @@ function _injectCommunityFeedStyles() {
 
     /* Detail Content */
     .cf-det-image {
-      display:flex; align-items:center; justify-content:center;
-      height:100px; background:linear-gradient(135deg,#f0fdf4,#d1fae5);
-      border-radius:12px; margin-bottom:16px;
+      position:relative; display:flex; align-items:center; justify-content:center;
+      height:220px; background:linear-gradient(135deg,#f0fdf4,#d1fae5);
+      border-radius:12px; margin-bottom:16px; overflow:hidden;
     }
     .cf-det-header { margin-bottom:12px; }
     .cf-det-title { font-size:20px; font-weight:700; margin:0; color:#111; }
