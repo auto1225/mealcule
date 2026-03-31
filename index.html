@@ -409,9 +409,12 @@
   </div>
 
   <!-- ── Analyze Button (below all inputs) ── -->
-  <button class="analyze-btn analyze-btn--main" id="analyzeBtn" disabled onclick="runAnalysis()">
-    🧪 <span data-i18n="cooking.analyzeBtn">화학 반응 분석 시작 →</span>
-  </button>
+  <div style="display:flex;gap:8px">
+    <button class="analyze-btn analyze-btn--main" id="analyzeBtn" disabled onclick="runAnalysis()" style="flex:1">
+      🧪 <span data-i18n="cooking.analyzeBtn">Analyze Chemical Reactions →</span>
+    </button>
+    <button class="analyze-btn" onclick="typeof sendToAppliance==='function'&&sendToAppliance(document.getElementById('tempSlider')?.value,document.getElementById('timeSlider')?.value,method)" style="padding:12px 16px;border-radius:12px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;font-size:16px" title="Send to smart appliance" data-i18n-title="smartIntegrations.sendToDevice">🏠</button>
+  </div>
 
   <!-- Results -->
   <div id="results" style="display:none"></div>
@@ -458,6 +461,9 @@
 <script src="recipe-box.js"></script>
 <script src="meal-planner.js"></script>
 <script src="grocery-list.js"></script>
+<script src="community-feed.js"></script>
+<script src="health-dashboard.js"></script>
+<script src="smart-integrations.js"></script>
 <!-- Trust Footer -->
 <footer class="trust-footer">
   <div style="margin-bottom:8px"><strong>Mealcule</strong> v2.0 · <span data-i18n="app.tagline">Molecular Cooking Science Platform</span></div>
@@ -467,6 +473,8 @@
   <a href="#" onclick="toggleHistory();return false" data-i18n="footer.history">History</a> ·
   <a href="#" onclick="openMealPlanner();return false" data-i18n="nav.planner">Planner</a> ·
   <a href="#" onclick="toggleRecipeBox();return false" data-i18n="nav.recipeBox">Recipes</a> ·
+  <a href="#" onclick="typeof openCommunityFeed==='function'&&openCommunityFeed();return false" data-i18n="community.title">Community</a> ·
+  <a href="#" onclick="typeof openHealthDashboard==='function'&&openHealthDashboard();return false" data-i18n="healthDashboard.title">Health Dashboard</a> ·
   <a href="#" onclick="openFeedbackModal();return false" data-i18n="footer.feedback">Feedback</a> ·
   <a href="mailto:contact@mealcule.com" data-i18n="app.contact">Contact</a> ·
   <a href="#" data-i18n="app.terms">Terms of Service</a> ·

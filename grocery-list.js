@@ -95,6 +95,7 @@ function renderGroceryList(items) {
     <button class="grocery-close-btn" onclick="closeGroceryList()">&times;</button>
     <h2>${_t('장보기 목록', 'Grocery List')}</h2>
     <div class="grocery-actions">
+      <button onclick="typeof orderGroceryItems==='function'&&orderGroceryItems(_groceryItems.filter(i=>!i.is_checked))" title="${_t('온라인 주문', 'Order online')}">&#x1F6D2;</button>
       <button onclick="shareGroceryList('${_activeListId}')" title="${_t('공유', 'Share')}">&#x1F517;</button>
       <button onclick="copyGroceryAsText('${_activeListId}')" title="${_t('텍스트 복사', 'Copy as text')}">&#x1F4CB;</button>
     </div>

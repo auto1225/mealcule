@@ -381,6 +381,9 @@ async function openRecipeDetail(id) {
         <button class="rb-action-btn fav" onclick="toggleFavorite('${recipe.id}')">
           ${recipe.is_favorite ? '★' : '☆'} ${_t('즐겨찾기', 'Favorite')}
         </button>
+        <button class="rb-action-btn" onclick="typeof shareMyRecipe==='function'?shareMyRecipe('${recipe.id}'):showToast('Community not loaded')" style="color:#7c3aed">
+          🌐 ${_t('공유', 'Share')}
+        </button>
         <button class="rb-action-btn del" onclick="deleteRecipe('${recipe.id}')">
           🗑 ${_t('삭제', 'Delete')}
         </button>
