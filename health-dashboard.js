@@ -298,8 +298,8 @@ async function _loadProfileAndGoals() {
   if (!currentUser) return;
   try {
     const [goalsRes, profileRes] = await Promise.all([
-      dbQuery('nutrition_goals', 'select', { filters: { user_id: currentUser.id }, single: true }),
-      dbQuery('health_profiles', 'select', { filters: { user_id: currentUser.id }, single: true }),
+      dbQuery('nutrition_goals', 'select', { filters: { user_id: currentUser?.id || 'guest' }, single: true }),
+      dbQuery('health_profiles', 'select', { filters: { user_id: currentUser?.id || 'guest' }, single: true }),
     ]);
     if (goalsRes && goalsRes.calories) {
       _hdGoals = {
@@ -697,7 +697,7 @@ function editNutritionGoals() {
     try {
       if (currentUser) {
         await dbQuery('nutrition_goals', 'upsert', {
-          data: { user_id: currentUser.id, ...newGoals, updated_at: new Date().toISOString() },
+          data: { user_id: currentUser?.id || 'guest', ...newGoals, updated_at: new Date().toISOString() },
           onConflict: 'user_id',
         });
       }
@@ -807,7 +807,7 @@ async function loadNutritionData(startDate, endDate) {
   if (!currentUser) return [];
   try {
     const res = await dbQuery('nutrition_logs', 'select', {
-      filters: { user_id: currentUser.id },
+      filters: { user_id: currentUser?.id || 'guest' },
       gte: { date: startDate },
       lte: { date: endDate },
       order: { column: 'date', ascending: true },

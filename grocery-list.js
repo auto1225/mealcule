@@ -40,7 +40,7 @@ async function generateGroceryList(mealPlanId) {
   showToast(_t('장보기 목록 생성 중...', 'Generating grocery list...'));
   const listId = await dbRPC('generate_grocery_from_plan', {
     p_plan_id: mealPlanId,
-    p_user_id: currentUser.id
+    p_user_id: currentUser?.id || 'guest'
   });
   if (!listId) {
     showToast(_t('목록 생성에 실패했습니다', 'Failed to generate list'));

@@ -2418,6 +2418,15 @@ var _tabRendered = {};
 
 function switchTab(tabName) {
   _currentTab = tabName;
+  // Close all full-screen overlays/modals before switching
+  ['photoScanOverlay', 'urlImportOverlay', 'cf-overlay', 'cf-detail-overlay', 'hdOverlay', 'mpOverlay', 'pricingModal'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.style.display = 'none'; el.classList.remove('active'); }
+  });
+  // Close overlays that use class names instead of IDs
+  document.querySelectorAll('.ct-overlay, .hd-overlay').forEach(function(el) { el.style.display = 'none'; });
+  if (typeof closeCalorieTracker === 'function') closeCalorieTracker();
+  if (typeof closeHealthDashboard === 'function') closeHealthDashboard();
   document.querySelectorAll('.tab-section').forEach(function(s) { s.classList.remove('active'); });
   var target = document.getElementById('tab-' + tabName);
   if (target) target.classList.add('active');
@@ -2636,8 +2645,16 @@ function showProfileSection(section) {
       container.querySelector('#profilePanel').style.display = 'block';
     }
   } else if (section === 'calories') {
+    // Close dashboard overlay if open
+    if (typeof closeHealthDashboard === 'function') closeHealthDashboard();
+    document.querySelectorAll('.hd-overlay').forEach(function(el) { el.style.display = 'none'; });
+    var hdOv = document.getElementById('hdOverlay');
+    if (hdOv) hdOv.style.display = 'none';
     if (typeof openCalorieTracker === 'function') openCalorieTracker();
   } else if (section === 'dashboard') {
+    // Close calorie tracker overlay if open
+    if (typeof closeCalorieTracker === 'function') closeCalorieTracker();
+    document.querySelectorAll('.ct-overlay').forEach(function(el) { el.style.display = 'none'; });
     if (typeof openHealthDashboard === 'function') openHealthDashboard();
   } else if (section === 'settings') {
     var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
@@ -2647,7 +2664,7 @@ function showProfileSection(section) {
         '<div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
             '<span style="font-size:13px;color:var(--text)">' + _t('언어', 'Language') + '</span>' +
-            '<button onclick="if(window.I18n)I18n.toggle()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px">' + (window.I18n && I18n.lang === 'en' ? '한국어로 전환' : 'Switch to English') + '</button>' +
+            '<button onclick="if(window.I18n){I18n.setLang(I18n.lang===\'en\'?\'ko\':\'en\');renderProfileTab();showProfileSection(\'settings\')}" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px">' + (window.I18n && I18n.lang === 'en' ? '한국어로 전환' : 'Switch to English') + '</button>' +
           '</div>' +
           '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
             '<span style="font-size:13px;color:var(--text)">' + _t('분석 모드', 'Analysis Mode') + '</span>' +
@@ -2672,8 +2689,10 @@ function showLoginPage() {
 }
 
 function hideLoginPage() {
-  document.getElementById('loginPage').classList.add('hidden');
-  switchTab('home');
+  var lp = document.getElementById('loginPage');
+  lp.classList.add('hidden');
+  // Delay tab switch to prevent click-through during transition
+  setTimeout(function() { switchTab('home'); }, 100);
 }
 
 function showLoginError(msg) {
@@ -2853,7 +2872,7 @@ async function loadMemberProfiles() {
   if (!sbClient || !currentUser?.id || isGuest) return;
 
   const data = await dbQuery('member_profiles', 'select', {
-    eq: { user_id: currentUser.id },
+    eq: { user_id: currentUser?.id || 'guest' },
     order: { col: 'sort_order', asc: true }
   });
 
@@ -2884,7 +2903,7 @@ async function saveMemberToDB(member) {
   if (!sbClient || !currentUser?.id || isGuest) return;
 
   const data = {
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     name: member.name,
     age: member.age,
     gender: member.gender,
@@ -3049,7 +3068,7 @@ async function selectPlan(plan) {
   if (sbClient && authSession) {
     // DB에 구독 정보 저장
     const subData = {
-      user_id: currentUser.id,
+      user_id: currentUser?.id || 'guest',
       plan: plan,
       status: plan === 'free' ? 'active' : 'trial',
       amount: plan === 'pro' ? 9900 : plan === 'enterprise' ? 49900 : 0,
@@ -3059,7 +3078,7 @@ async function selectPlan(plan) {
     };
     await dbQuery('subscriptions', 'insert', { data: subData });
     // 프로필 플랜 업데이트 (trigger가 자동으로 하지만 UI 즉시 반영)
-    await dbQuery('profiles', 'update', { data: { plan }, eq: { id: currentUser.id } });
+    await dbQuery('profiles', 'update', { data: { plan }, eq: { id: currentUser?.id || 'guest' } });
   }
 
   userPlan = plan;
@@ -3385,7 +3404,7 @@ async function saveAnalysisToHistory(analysisResult) {
   const oil = parseInt(document.getElementById('oilSlider')?.value || 0);
 
   const data = {
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     ingredients: selected,
     method: method,
     temperature: temp,
@@ -3406,7 +3425,7 @@ async function saveAnalysisToHistory(analysisResult) {
 async function loadAnalysisHistory(limit = 20) {
   if (!sbClient || !currentUser?.id) return [];
   const data = await dbQuery('analysis_history', 'select', {
-    eq: { user_id: currentUser.id },
+    eq: { user_id: currentUser?.id || 'guest' },
     order: { col: 'created_at', asc: false },
     limit: limit
   });
@@ -3429,7 +3448,7 @@ async function toggleBookmark(analysisId) {
 async function sendFeedback(type, message) {
   if (!sbClient || !currentUser?.id) return false;
   const result = await dbQuery('feedback', 'insert', {
-    data: { user_id: currentUser.id, type, message }
+    data: { user_id: currentUser?.id || 'guest', type, message }
   });
   return !!result;
 }
@@ -5044,6 +5063,14 @@ function renderIngredients(filter = "") {
   if (count === 0 && !!sbClient && lower) {
     const _srMsg = (window.I18n && I18n.lang === 'en') ? 'Searching database...' : 'DB에서 검색 중...';
     grid.innerHTML = `<div style="padding:12px;text-align:center;color:rgba(255,255,255,0.6);font-size:13px"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"> ${_srMsg}</div>`;
+    // Timeout: show "no results" if API search takes too long
+    var _searchFilter = lower;
+    setTimeout(function() {
+      if (grid && grid.textContent.indexOf(_srMsg) !== -1) {
+        var _nrMsg2 = (window.I18n && I18n.lang === 'en') ? 'No results found for "' + _searchFilter + '"' : '"' + _searchFilter + '" 검색 결과 없음';
+        grid.innerHTML = '<div style="padding:16px;text-align:center;color:rgba(255,255,255,0.6);font-size:13px">' + _nrMsg2 + '</div>';
+      }
+    }, 5000);
   }
 }
 
@@ -7192,7 +7219,7 @@ async function _importToRecipeBox() {
     return;
   }
   const row = {
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     name: recipe.name,
     name_en: recipe.name_en || recipe.name,
     description: recipe.description || '',

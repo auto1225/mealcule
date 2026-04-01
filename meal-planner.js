@@ -185,14 +185,14 @@ async function loadOrCreateWeekPlan(weekStart) {
 
   // Fetch existing plan
   let plans = await dbQuery('meal_plans', 'select', {
-    eq: { user_id: currentUser.id, week_start: weekStart },
+    eq: { user_id: currentUser?.id || 'guest', week_start: weekStart },
     limit: 1,
   });
 
   let plan = plans?.[0];
   if (!plan) {
     const inserted = await dbQuery('meal_plans', 'insert', {
-      data: { user_id: currentUser.id, week_start: weekStart, name: `Week ${weekStart}`, is_active: true, metadata: {} },
+      data: { user_id: currentUser?.id || 'guest', week_start: weekStart, name: `Week ${weekStart}`, is_active: true, metadata: {} },
     });
     plan = inserted?.[0];
   }

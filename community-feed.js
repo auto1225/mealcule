@@ -272,7 +272,7 @@ async function loadFeedRecipes(tab, offset) {
       } else {
         result = await dbRPC('get_community_feed', {
           feed_type: 'following',
-          follower_id: currentUser.id,
+          follower_id: currentUser?.id || 'guest',
           search_query: _cfSearchQuery || null,
           page_offset: offset,
           page_limit: CF_PAGE_SIZE,
@@ -466,11 +466,25 @@ function _timeAgoCf(dateStr) {
 
 function _copyShareLink(id) {
   const url = `${location.origin}?shared=${id}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast(_t('링크가 복사되었습니다!', 'Link copied!'));
-  }).catch(() => {
-    showToast(_t('링크 복사에 실패했습니다.', 'Failed to copy link.'));
-  });
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast(_t('링크가 복사되었습니다!', 'Link copied!'));
+    }).catch(() => {
+      _fallbackCopyShareLink(url);
+    });
+  } else {
+    _fallbackCopyShareLink(url);
+  }
+}
+function _fallbackCopyShareLink(url) {
+  var ta = document.createElement('textarea');
+  ta.value = url;
+  ta.style.cssText = 'position:fixed;left:-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast(_t('링크가 복사되었습니다!', 'Link copied!')); }
+  catch (e) { showToast(_t('링크 복사에 실패했습니다.', 'Failed to copy link.')); }
+  document.body.removeChild(ta);
 }
 
 function _playRecipeVideo(videoId) {
@@ -647,7 +661,7 @@ async function shareMyRecipe(savedRecipeId) {
   // Fetch the saved recipe
   const saved = await dbQuery('saved_recipes', 'select', {
     select: '*',
-    eq: { id: savedRecipeId, user_id: currentUser.id },
+    eq: { id: savedRecipeId, user_id: currentUser?.id || 'guest' },
   });
   const recipe = saved?.[0];
   if (!recipe) {
@@ -692,13 +706,13 @@ async function _submitShare(savedRecipeId) {
 
   const saved = await dbQuery('saved_recipes', 'select', {
     select: '*',
-    eq: { id: savedRecipeId, user_id: currentUser.id },
+    eq: { id: savedRecipeId, user_id: currentUser?.id || 'guest' },
   });
   const recipe = saved?.[0];
   if (!recipe) return;
 
   const row = {
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     saved_recipe_id: savedRecipeId,
     title: recipe.name,
     title_en: recipe.name_en || recipe.name,
@@ -796,7 +810,7 @@ async function addComment(sharedRecipeId, body, parentId = null) {
 
   const row = {
     shared_recipe_id: sharedRecipeId,
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     body,
     parent_id: parentId || null,
     created_at: new Date().toISOString(),
@@ -944,7 +958,7 @@ async function toggleFollow(userId, btnEl) {
 
   try {
     await dbRPC('toggle_follow', {
-      p_follower_id: currentUser.id,
+      p_follower_id: currentUser?.id || 'guest',
       p_following_id: userId,
     });
   } catch (err) {

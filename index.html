@@ -101,7 +101,7 @@
         <span data-i18n="login.googleLogin">Google로 계속하기</span>
       </button>
 
-      <button class="login-guest" onclick="handleGuestEntry()" data-i18n="login.guestEntry">
+      <button class="login-guest" onclick="event.stopPropagation();handleGuestEntry()" data-i18n="login.guestEntry">
         둘러보기 (게스트 모드)
       </button>
     </div>

@@ -306,7 +306,7 @@ async function saveRecipe(recipeIndex) {
   const r = recipes[recipeIndex];
   const now = new Date().toISOString();
   const row = {
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     name: r.name,
     name_en: r.name_en || r.name,
     description: r.description || '',
@@ -350,7 +350,7 @@ async function saveRecipe(recipeIndex) {
 async function loadSavedRecipes(collectionId) {
   if (!currentUser) return [];
   const params = {
-    eq: { user_id: currentUser.id },
+    eq: { user_id: currentUser?.id || 'guest' },
     order: { col: 'created_at', asc: false },
   };
   if (collectionId === '__favorites__') {
@@ -368,7 +368,7 @@ async function loadSavedRecipes(collectionId) {
 async function loadCollections() {
   if (!currentUser) return [];
   const data = await dbQuery('recipe_collections', 'select', {
-    eq: { user_id: currentUser.id },
+    eq: { user_id: currentUser?.id || 'guest' },
     order: { col: 'sort_order', asc: true },
   });
   _collectionsCache = data || [];
@@ -424,6 +424,7 @@ async function renderRecipeBox() {
   html += _rbTab(null, `<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='📋'"> ${_t('전체', 'All')}`);
   html += _rbTab('__favorites__', `<img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⭐'"> ${_t('즐겨찾기', 'Favorites')}`);
   for (const c of collections) {
+    if (c.id === 'demo-col-fav') continue; // skip: already shown as __favorites__ tab above
     html += _rbTab(c.id, `${c.emoji || '<img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'📁\'">'} ${_t(c.name, c.name_en || c.name)}`);
   }
   html += `</div>`;
@@ -499,7 +500,7 @@ async function createCollection(name, emoji) {
   if (!currentUser) return null;
   const now = new Date().toISOString();
   const row = {
-    user_id: currentUser.id,
+    user_id: currentUser?.id || 'guest',
     name,
     name_en: name,
     description: '',
@@ -532,7 +533,7 @@ function promptNewCollection() {
 async function deleteRecipe(id) {
   if (typeof confirmAction === 'function') {
     confirmAction(_t('이 레시피를 삭제하시겠습니까?', 'Delete this recipe?'), async () => {
-      const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser.id } });
+      const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser?.id || 'guest' } });
       if (result === null) {
         showToast(_t('삭제에 실패했습니다.', 'Failed to delete.'));
         return;
@@ -544,7 +545,7 @@ async function deleteRecipe(id) {
   } else {
     const yes = confirm(_t('이 레시피를 삭제하시겠습니까?', 'Delete this recipe?'));
     if (!yes) return;
-    const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser.id } });
+    const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser?.id || 'guest' } });
     if (result === null) {
       showToast(_t('삭제에 실패했습니다.', 'Failed to delete.'));
       return;
@@ -563,7 +564,7 @@ async function toggleFavorite(id) {
   const newVal = !recipe.is_favorite;
   await dbQuery('saved_recipes', 'update', {
     data: { is_favorite: newVal, updated_at: new Date().toISOString() },
-    eq: { id, user_id: currentUser.id },
+    eq: { id, user_id: currentUser?.id || 'guest' },
   });
   recipe.is_favorite = newVal;
   showToast(newVal
@@ -580,7 +581,7 @@ async function openRecipeDetail(id) {
   let recipe = _recipeBoxCache.find(r => r.id === id);
   if (!recipe && isDemo) recipe = _demoRecipes.find(r => r.id === id);
   if (!recipe && !isDemo) {
-    const data = await dbQuery('saved_recipes', 'select', { eq: { id, user_id: currentUser.id } });
+    const data = await dbQuery('saved_recipes', 'select', { eq: { id, user_id: currentUser?.id || 'guest' } });
     recipe = data?.[0];
   }
   if (!recipe) {
@@ -710,7 +711,7 @@ function _debounceSaveNotes(id) {
 async function updateRecipeNotes(id, notes) {
   await dbQuery('saved_recipes', 'update', {
     data: { notes, updated_at: new Date().toISOString() },
-    eq: { id, user_id: currentUser.id },
+    eq: { id, user_id: currentUser?.id || 'guest' },
   });
   const recipe = _recipeBoxCache.find(r => r.id === id);
   if (recipe) recipe.notes = notes;
@@ -722,7 +723,7 @@ async function updateRecipeRating(id, rating) {
   if (rating < 1 || rating > 5) return;
   await dbQuery('saved_recipes', 'update', {
     data: { rating, updated_at: new Date().toISOString() },
-    eq: { id, user_id: currentUser.id },
+    eq: { id, user_id: currentUser?.id || 'guest' },
   });
   const recipe = _recipeBoxCache.find(r => r.id === id);
   if (recipe) recipe.rating = rating;
