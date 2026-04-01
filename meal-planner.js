@@ -855,7 +855,7 @@ async function _runAiMealPlanGeneration() {
   const savedRecipes = typeof loadSavedRecipes === 'function' ? (await loadSavedRecipes()) : [];
 
   try {
-    const res = await fetch('/api/generate-meal-plan', {
+    const res = await fetch((typeof API_BASE!=='undefined'?API_BASE:'') + '/api/generate-meal-plan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

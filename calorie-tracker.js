@@ -543,45 +543,64 @@ function _ctPhotoScan() {
 
     if (typeof showToast === 'function') showToast(_t('사진 분석 중...', 'Analyzing photo...'));
 
-    try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64 = reader.result.split(',')[1];
-        const resp = await fetch('/api/photo-ingredient', {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const dataUri = reader.result; // full data:image/...;base64,... format
+        const _apiBase = (typeof API_BASE !== 'undefined') ? API_BASE : '';
+        const _abort = new AbortController();
+        const _timeout = setTimeout(function() { _abort.abort(); }, 30000);
+        const resp = await fetch(_apiBase + '/api/photo-ingredient', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: base64 }),
+          body: JSON.stringify({ image: dataUri, userLang: (typeof I18n !== 'undefined' && I18n.lang) || 'en' }),
+          signal: _abort.signal,
         });
-        if (!resp.ok) throw new Error('API error');
+        clearTimeout(_timeout);
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.error || 'API error');
+        }
         const data = await resp.json();
 
-        if (data.foods && data.foods.length > 0) {
-          // AI returned recognized foods with calories
-          data.foods.forEach(food => {
+        // Server returns { ingredients: [...], count, hasFood }
+        if (data.ingredients && data.ingredients.length > 0) {
+          data.ingredients.forEach(ing => {
+            // Estimate calories from ingredient DB if available
+            const name = ing.name_en || ing.name;
+            const grams = ing.estimatedGrams || 100;
+            const dbKey = (typeof DB !== 'undefined') ? Object.keys(DB).find(k => k === name || (DB[k].en && DB[k].en.toLowerCase() === name.toLowerCase())) : null;
+            const dbEntry = dbKey ? DB[dbKey] : null;
+            const cal = dbEntry ? Math.round((dbEntry.comp.calories || 0) * grams / 100) : Math.round(grams * 1.2);
+            const protein = dbEntry ? Math.round((dbEntry.comp.protein || 0) * grams / 100) : 0;
+            const fat = dbEntry ? Math.round((dbEntry.comp.fat || 0) * grams / 100) : 0;
+            const carbs = dbEntry ? Math.round((dbEntry.comp.carbs || 0) * grams / 100) : 0;
             _ctMeals.push({
               id: 'ct-' + Date.now() + Math.random().toString(36).slice(2, 5),
               meal_type: _guessCurrentMealType(),
-              name: food.name || _t('인식된 음식', 'Recognized Food'),
-              cal: food.calories || 0,
-              protein: food.protein || 0,
-              fat: food.fat || 0,
-              carbs: food.carbs || 0,
+              name: (typeof I18n !== 'undefined' && I18n.lang === 'en') ? (ing.name_en || ing.name) : ing.name,
+              cal: cal,
+              protein: protein,
+              fat: fat,
+              carbs: carbs,
               time: new Date().toTimeString().slice(0, 5),
-              icon: '📷',
-              img: 'https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=36&h=36&fit=crop',
+              icon: ing.emoji || '📷',
             });
           });
           _saveMeals();
           _renderCT();
-          if (typeof showToast === 'function') showToast(_t(`${data.foods.length}개 음식 인식됨!`, `${data.foods.length} food(s) recognized!`));
+          if (typeof showToast === 'function') showToast(_t(data.ingredients.length + '개 음식 인식됨!', data.ingredients.length + ' food(s) recognized!'));
         } else {
           if (typeof showToast === 'function') showToast(_t('음식을 인식하지 못했습니다. 직접 입력해주세요.', 'Could not recognize food. Please enter manually.'));
         }
-      };
-      reader.readAsDataURL(file);
-    } catch(err) {
-      if (typeof showToast === 'function') showToast(_t('사진 분석 실패. 네트워크를 확인해주세요.', 'Photo analysis failed. Check your network.'));
-    }
+      } catch(err) {
+        var msg = err.name === 'AbortError'
+          ? _t('서버 응답 시간이 초과되었습니다. 다시 시도해주세요.', 'Server timed out. Please try again.')
+          : _t('사진 분석 실패. 네트워크를 확인해주세요.', 'Photo analysis failed. Check your network.');
+        if (typeof showToast === 'function') showToast(msg);
+      }
+    };
+    reader.readAsDataURL(file);
   };
   input.click();
 }

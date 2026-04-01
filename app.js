@@ -7702,8 +7702,8 @@ async function _handlePhotoSelect(input) {
 
     try {
       var _photoAbort = new AbortController();
-      var _photoTimeout = setTimeout(function() { _photoAbort.abort(); }, 15000);
-      const res = await fetch('/api/photo-ingredient', {
+      var _photoTimeout = setTimeout(function() { _photoAbort.abort(); }, 30000);
+      const res = await fetch((typeof API_BASE!=='undefined'?API_BASE:'') + '/api/photo-ingredient', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: dataUri, userLang: I18n?.lang || 'en' }),
@@ -7814,7 +7814,7 @@ async function _runUrlImport() {
   results.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.45)"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('레시피 추출 중...', 'Extracting recipe...')}</div>`;
 
   try {
-    const res = await fetch('/api/import-recipe', {
+    const res = await fetch((typeof API_BASE!=='undefined'?API_BASE:'') + '/api/import-recipe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url, userLang: I18n?.lang || 'en' }),
