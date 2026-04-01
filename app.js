@@ -3203,7 +3203,7 @@ async function init() {
       ]);
       if (dbCategories) {
         const _en = window.I18n && I18n.lang === 'en';
-        statusEl.innerHTML = `<span style="color:#059669">● ${_en ? 'Online' : '온라인'}</span> · ${count.toLocaleString()}+ ${_en ? 'ingredients' : '식재료'}`;
+        statusEl.innerHTML = `<span style="color:#10B981">● ${_en ? 'Online' : '온라인'}</span> · ${count.toLocaleString()}+ ${_en ? 'ingredients' : '식재료'}`;
       } else {
         statusEl.innerHTML = `<span style="color:#f97316">● 로컬</span> · ${Object.keys(DB).length}+ 식재료`;
       }
@@ -3212,7 +3212,7 @@ async function init() {
       console.warn('DB 연결 실패, 로컬 모드:', e);
     }
   } else {
-    statusEl.innerHTML = '<span style="color:#737373">○ 로컬</span> · ' + Object.keys(DB).length + '+ 식재료';
+    statusEl.innerHTML = '<span style="color:rgba(255,255,255,0.6)">○ 로컬</span> · ' + Object.keys(DB).length + '+ 식재료';
   }
 
   renderCategoryTabs();
@@ -3262,7 +3262,7 @@ function renderConditions() {
     const hdr = document.createElement("div");
     hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
     const badge = selCount > 0
-      ? `<span class="cg-badge" style="background:${isMe?'#059669':'#3b82f6'}">${selCount}</span>` : '';
+      ? `<span class="cg-badge" style="background:${isMe?'#10B981':'#3b82f6'}">${selCount}</span>` : '';
     hdr.innerHTML = `<span class="cg-e">${group.img ? '<img src="'+group.img+'" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\''+group.emoji+'\'">': group.emoji}</span><span>${tl(group)}</span>${badge}<span class="cg-arr">▶</span>`;
     hdr.onclick = () => toggleCondParent(groupKey);
     wrap.appendChild(hdr);
@@ -3304,7 +3304,7 @@ function renderConditions() {
     const selCount = customEntries.filter(([k]) => myArr.includes(k)).length;
     const isOpen = _condExpanded.has(gk);
     const badge = selCount > 0
-      ? `<span class="cg-badge" style="background:${isMe?'#059669':'#3b82f6'}">${selCount}</span>` : '';
+      ? `<span class="cg-badge" style="background:${isMe?'#10B981':'#3b82f6'}">${selCount}</span>` : '';
     const hdr = document.createElement("div");
     hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
     hdr.innerHTML = `<span class="cg-e"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🤖'"></span><span>${_en ? 'Custom Added' : '직접 추가'}</span>${badge}<span class="cg-arr">▶</span>`;
@@ -4819,11 +4819,11 @@ function renderIngredients(filter = "") {
 
   if (count === 0 && !!!sbClient) {
     const _nrMsg = (window.I18n && I18n.lang === 'en') ? 'No results found' : '검색 결과 없음';
-    grid.innerHTML = `<div style="padding:16px;text-align:center;color:#737373;font-size:13px">${_nrMsg}</div>`;
+    grid.innerHTML = `<div style="padding:16px;text-align:center;color:rgba(255,255,255,0.6);font-size:13px">${_nrMsg}</div>`;
   }
   if (count === 0 && !!sbClient && lower) {
     const _srMsg = (window.I18n && I18n.lang === 'en') ? 'Searching database...' : 'DB에서 검색 중...';
-    grid.innerHTML = `<div style="padding:12px;text-align:center;color:#737373;font-size:13px"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"> ${_srMsg}</div>`;
+    grid.innerHTML = `<div style="padding:12px;text-align:center;color:rgba(255,255,255,0.6);font-size:13px"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"> ${_srMsg}</div>`;
   }
 }
 
@@ -5082,7 +5082,7 @@ async function confirmAddMethod() {
   const name = document.getElementById('methodModalInput').value.trim();
   if (!name) return;
   document.getElementById('methodModalConfirmBtn').disabled = true;
-  document.getElementById('methodModalStatus').innerHTML = `<span style="color:#737373"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> AI가 '${name.replace(/</g,'&lt;')}' 분석 중...</span>`;
+  document.getElementById('methodModalStatus').innerHTML = `<span style="color:rgba(255,255,255,0.6)"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> AI가 '${name.replace(/</g,'&lt;')}' 분석 중...</span>`;
   await addMethodWithAI(name);
 }
 
@@ -5232,12 +5232,12 @@ function showAIAddButton(query) {
   const _en = window.I18n && I18n.lang === 'en';
   grid.innerHTML = `
     <div style="text-align:center;padding:24px 16px">
-      <div style="color:#737373;font-size:13px;margin-bottom:14px">'${safe}' ${_en ? 'not found' : '검색 결과 없음'}</div>
+      <div style="color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:14px">'${safe}' ${_en ? 'not found' : '검색 결과 없음'}</div>
       <button id="aiAddBtn" onclick="addIngredientWithAI('${query.replace(/'/g,"\\'")}')"
-        style="background:#10b981;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;font-weight:600">
+        style="background:#10B981;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;font-weight:600">
         <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🤖'"> ${_en ? `Add '${safe}' with AI` : `AI로 '${safe}' 추가하기`}
       </button>
-      <div style="color:#a3a3a3;font-size:11px;margin-top:8px">${_en ? 'AI analyzes nutrition data and saves to database' : 'AI가 영양 데이터를 분석해 DB에 저장합니다'}</div>
+      <div style="color:rgba(255,255,255,0.35);font-size:11px;margin-top:8px">${_en ? 'AI analyzes nutrition data and saves to database' : 'AI가 영양 데이터를 분석해 DB에 저장합니다'}</div>
     </div>`;
 }
 
@@ -5245,7 +5245,7 @@ async function addIngredientWithAI(name) {
   const grid = document.getElementById("ingGrid");
   const safe = name.replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const _aiMsg = (window.I18n && I18n.lang === 'en') ? `AI analyzing '${safe}'...` : `AI가 '${safe}' 분석 중...`;
-  grid.innerHTML = `<div style="text-align:center;padding:24px;color:#737373;font-size:13px"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> ${_aiMsg}</div>`;
+  grid.innerHTML = `<div style="text-align:center;padding:24px;color:rgba(255,255,255,0.6);font-size:13px"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> ${_aiMsg}</div>`;
 
   try {
     const res = await fetch(`${API_BASE}/api/add-ingredient?name=${encodeURIComponent(name)}`);
@@ -6006,7 +6006,7 @@ async function runAnalysis() {
   // Reactions tab
   html += `<div id="tab-reactions" style="display:${currentTab==='reactions'?'block':'none'}">`;
   if (rxns.length === 0) {
-    html += `<div class="empty-state"><div class="big-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='🧪'"></div><p style="color:#737373;margin-top:12px">특별한 화학 반응이 예측되지 않습니다</p><p style="font-size:13px;color:#737373">온도를 높이거나 재료를 추가해보세요</p></div>`;
+    html += `<div class="empty-state"><div class="big-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='🧪'"></div><p style="color:rgba(255,255,255,0.6);margin-top:12px">특별한 화학 반응이 예측되지 않습니다</p><p style="font-size:13px;color:rgba(255,255,255,0.6)">온도를 높이거나 재료를 추가해보세요</p></div>`;
   } else {
     rxns.forEach((r, idx) => {
       const barColor = r.intensity>70 ? "linear-gradient(90deg,#f97316,#ef4444)" : r.intensity>40 ? "linear-gradient(90deg,#eab308,#f97316)" : "linear-gradient(90deg,#22c55e,#eab308)";
@@ -6024,16 +6024,16 @@ async function runAnalysis() {
           <div style="display:flex;align-items:center;gap:10px">
             ${ref ? `<button class="ref-toggle" onclick="toggleRef('rxn${idx}')"><img src="https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📖'"> 출처</button>` : ''}
             <div style="text-align:right;min-width:80px">
-              <div style="font-size:11px;color:#737373;margin-bottom:4px">반응 강도</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px">반응 강도</div>
               <div class="intensity-bar"><div class="intensity-fill" style="width:${r.intensity}%;background:${barColor}"></div></div>
-              <div style="font-size:11px;color:#737373;margin-top:2px">${r.intensity}%${proMode && uncert ? ` (±${uncert}%)` : ''}</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px">${r.intensity}%${proMode && uncert ? ` (±${uncert}%)` : ''}</div>
             </div>
           </div>
         </div>
-        <p style="font-size:13px;color:#737373;line-height:1.6;margin-bottom:12px">${r.desc}</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:12px">${r.desc}</p>
         <div style="margin-bottom:12px">${r.effects.map(e => `<span class="effect-tag">${e}</span>`).join("")}</div>
         <div class="science-box"><h4>과학적 메커니즘</h4><p>${r.science}</p></div>
-        ${proMode ? `<div class="science-box" style="border-color:#ddd6fe;background:#faf5ff"><h4 style="color:#7c3aed">전문가 상세</h4><p>${r.proDetail || '상세 동역학 데이터는 해당 반응의 원문 논문을 참조하세요.'}</p></div>` : ''}
+        ${proMode ? `<div class="science-box" style="border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.1)"><h4 style="color:#a78bfa">전문가 상세</h4><p>${r.proDetail || '상세 동역학 데이터는 해당 반응의 원문 논문을 참조하세요.'}</p></div>` : ''}
         <div class="health-box"><h4>건강 영향</h4><p>${r.health}</p></div>
         ${ref ? `<div class="ref-detail" id="ref-rxn${idx}">
           <strong>📖 참고 문헌</strong><br>
@@ -6047,20 +6047,20 @@ async function runAnalysis() {
   // Nutrition tab
   html += `<div id="tab-nutrition" style="display:${currentTab==='nutrition'?'block':'none'}">
     <div class="grid2">
-      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">영양소 조리 전후 비교</h3>
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#F5F5F5">영양소 조리 전후 비교</h3>
         <div class="chart-wrap"><canvas id="nutChart" height="300"></canvas></div>
       </div>
-      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">시간별 비타민 잔존율 (%)</h3>
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#F5F5F5">시간별 비타민 잔존율 (%)</h3>
         <div class="chart-wrap"><canvas id="timeChart" height="300"></canvas></div>
       </div>
     </div>
     <div class="card" style="margin-top:16px">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">상세 영양소 변화</h3>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#F5F5F5">상세 영양소 변화</h3>
       <table>
         <thead><tr><th>영양소</th><th style="text-align:right">조리 전</th><th style="text-align:right">조리 후</th><th style="text-align:right">잔존율</th><th style="width:35%">시각화</th></tr></thead>
         <tbody>${Object.entries(nutrition).filter(([,v])=>v.orig>0).map(([k,v]) => {
           const color = v.ret>=80?"#22c55e":v.ret>=60?"#eab308":"#ef4444";
-          return `<tr><td style="color:#171717">${k}</td><td style="text-align:right;color:#737373">${Math.round(v.orig*10)/10}</td><td style="text-align:right;color:#171717;font-weight:500">${Math.round(v.cooked*10)/10}</td><td style="text-align:right;font-weight:600;color:${color}">${v.ret}%</td><td><div class="ret-bar"><div class="ret-fill" style="width:${v.ret}%;background:${color}"></div></div></td></tr>`;
+          return `<tr><td style="color:#F5F5F5">${k}</td><td style="text-align:right;color:rgba(255,255,255,0.6)">${Math.round(v.orig*10)/10}</td><td style="text-align:right;color:#F5F5F5;font-weight:500">${Math.round(v.cooked*10)/10}</td><td style="text-align:right;font-weight:600;color:${color}">${v.ret}%</td><td><div class="ret-bar"><div class="ret-fill" style="width:${v.ret}%;background:${color}"></div></div></td></tr>`;
         }).join("")}</tbody>
       </table>
     </div>
@@ -6073,10 +6073,10 @@ async function runAnalysis() {
 
   html += `<div id="tab-flavor" style="display:${currentTab==='flavor'?'block':'none'}">
     <div class="grid2">
-      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:#171717">예상 맛 프로파일</h3>
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:#F5F5F5">예상 맛 프로파일</h3>
         <div class="chart-wrap"><canvas id="flavorChart" height="320"></canvas></div>
       </div>
-      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">맛 분석 상세</h3>
+      <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#F5F5F5">맛 분석 상세</h3>
         ${Object.entries(flavor).map(([k,v]) => `<div class="flavor-detail">
           <div class="flavor-label"><span style="font-size:14px;font-weight:600;color:${flavorColors[k]}">${flavorNames[k]}</span><span style="font-size:20px;font-weight:700;color:${flavorColors[k]}">${v}</span></div>
           <div class="flavor-bar"><div class="flavor-fill" style="width:${v}%;background:${flavorColors[k]}"></div></div>
@@ -6085,10 +6085,10 @@ async function runAnalysis() {
       </div>
     </div>
     <div class="card" style="margin-top:16px">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#171717">재료별 핵심 풍미 화합물</h3>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#F5F5F5">재료별 핵심 풍미 화합물</h3>
       <div class="compound-grid">
         ${selNames().map(n => { const d=DB[n]; if(!d) return ""; return `<div class="compound-card">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:22px">${d.emoji}</span><span style="font-weight:600;color:#171717;font-size:14px">${n} (${selected[n]}g)</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:22px">${d.emoji}</span><span style="font-weight:600;color:#F5F5F5;font-size:14px">${n} (${selected[n]}g)</span></div>
           <div>${d.compounds.map(c => `<span class="compound-tag">${c}</span>`).join("")}</div>
         </div>`; }).join("")}
       </div>
@@ -6103,7 +6103,7 @@ async function runAnalysis() {
     const firstResults = Object.values(allMembersHealth)[0];
     const comp = firstResults.results[0].composition;
     html += `<div class="card" style="margin-bottom:16px">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#171717"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> 투입 재료 총 성분 요약</h3>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#F5F5F5"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> 투입 재료 총 성분 요약</h3>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px">
         ${[
           {l:'칼로리',v:comp.calories.toFixed(0)+'kcal',c:'#f97316'},
@@ -6114,8 +6114,8 @@ async function runAnalysis() {
           {l:'나트륨',v:comp.sodium.toFixed(0)+'mg',c:'#a855f7'},
           {l:'칼륨',v:comp.potassium.toFixed(0)+'mg',c:'#06b6d4'},
           {l:'포화지방',v:comp.saturatedFat.toFixed(1)+'g',c:'#f43f5e'},
-        ].map(n => `<div style="background:#fafafa;border-radius:10px;padding:10px;text-align:center;border:1px solid #e5e5e5">
-          <div style="font-size:11px;color:#737373;margin-bottom:4px">${n.l}</div>
+        ].map(n => `<div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,0.08)">
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px">${n.l}</div>
           <div style="font-size:16px;font-weight:700;color:${n.c}">${n.v}</div>
         </div>`).join('')}
       </div>
@@ -6127,8 +6127,8 @@ async function runAnalysis() {
       const healthResults = memberData.results;
 
       // 멤버 헤더
-      html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;margin-bottom:12px">
-        <div style="font-size:14px;font-weight:600;color:#047857"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"> ${member.name}${member.age ? ' (' + member.age + '세)' : ''}</div>
+      html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);margin-bottom:12px">
+        <div style="font-size:14px;font-weight:600;color:#10B981"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"> ${member.name}${member.age ? ' (' + member.age + '세)' : ''}</div>
       </div>`;
 
       healthResults.forEach(hr => {
@@ -6147,16 +6147,16 @@ async function runAnalysis() {
         </svg>`;
 
         html += `<div class="health-score" style="background:${scoreBg};border:1px solid ${scoreColor}30">
-          <div class="score-circle" style="position:relative;background:#fafafa;border:none;display:flex;align-items:center;justify-content:center">${svgHtml}</div>
+          <div class="score-circle" style="position:relative;background:rgba(255,255,255,0.04);border:none;display:flex;align-items:center;justify-content:center">${svgHtml}</div>
           <div>
             <div style="font-size:16px;font-weight:700;color:${scoreColor}">${hr.emoji} ${hr.label} 적합도: ${scoreLabel}</div>
-            <div style="font-size:12px;color:#525252;margin-top:2px">${hr.desc} · ${hr.findings.length}개 항목 분석됨</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">${hr.desc} · ${hr.findings.length}개 항목 분석됨</div>
           </div>
         </div>`;
 
         // 개별 findings
         if (hr.findings.length === 0) {
-          html += `<div class="card" style="margin-bottom:12px;text-align:center;color:#737373;padding:30px">
+          html += `<div class="card" style="margin-bottom:12px;text-align:center;color:rgba(255,255,255,0.45);padding:30px">
             <p>현재 재료 조합에서 ${hr.label} 관련 특이사항이 없습니다.</p>
           </div>`;
         } else {
@@ -6167,7 +6167,7 @@ async function runAnalysis() {
             html += `<div class="health-card ${sevClass}">
               <div style="display:flex;align-items:center;margin-bottom:6px">
                 <span class="health-severity sev-${sevClass}">${sevIcon} ${sevLabel}</span>
-                <span style="font-size:14px;font-weight:600;color:#171717">${f.title}</span>
+                <span style="font-size:14px;font-weight:600;color:#F5F5F5">${f.title}</span>
               </div>
               <div class="health-detail">${f.detail}</div>
               ${f.tip ? `<div class="health-tip"><img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💡'"> <strong>개선 팁:</strong> ${f.tip}</div>` : ''}
@@ -6177,7 +6177,7 @@ async function runAnalysis() {
       });
     });
 
-    html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;font-size:12px;color:#047857">
+    html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);font-size:12px;color:#10B981">
       ⚕️ 이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며, 개인의 건강 상태에 따라 다를 수 있습니다. 구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.
     </div>`;
     html += "</div>";
@@ -6228,11 +6228,11 @@ async function runAnalysis() {
           data: {
             labels: nutEntries.map(([k])=>k),
             datasets: [
-              {label:"조리 전", data:nutEntries.map(([,v])=>Math.round(v.orig*10)/10), backgroundColor:"#a3a3a3", borderRadius:4},
-              {label:"조리 후", data:nutEntries.map(([,v])=>Math.round(v.cooked*10)/10), backgroundColor:"#059669", borderRadius:4},
+              {label:"조리 전", data:nutEntries.map(([,v])=>Math.round(v.orig*10)/10), backgroundColor:"rgba(255,255,255,0.3)", borderRadius:4},
+              {label:"조리 후", data:nutEntries.map(([,v])=>Math.round(v.cooked*10)/10), backgroundColor:"#10B981", borderRadius:4},
             ]
           },
-          options: {responsive:true, plugins:{legend:{labels:{color:"#525252"}}}, scales:{x:{ticks:{color:"#525252"},grid:{color:"#e5e5e5"}},y:{ticks:{color:"#525252"},grid:{color:"#e5e5e5"}}}}
+          options: {responsive:true, plugins:{legend:{labels:{color:"rgba(255,255,255,0.6)"}}}, scales:{x:{ticks:{color:"rgba(255,255,255,0.6)"},grid:{color:"rgba(255,255,255,0.06)"}},y:{ticks:{color:"rgba(255,255,255,0.6)"},grid:{color:"rgba(255,255,255,0.06)"}}}}
         });
       }
     }
@@ -6254,7 +6254,7 @@ async function runAnalysis() {
         charts.time = new Chart(ctx2, {
           type:"line",
           data:{labels:times.map(t=>t+"분"), datasets},
-          options:{responsive:true, plugins:{legend:{labels:{color:"#525252"}}}, scales:{x:{ticks:{color:"#525252"},grid:{color:"#e5e5e5"}},y:{min:0,max:100,ticks:{color:"#525252"},grid:{color:"#e5e5e5"}}}}
+          options:{responsive:true, plugins:{legend:{labels:{color:"rgba(255,255,255,0.6)"}}}, scales:{x:{ticks:{color:"rgba(255,255,255,0.6)"},grid:{color:"rgba(255,255,255,0.06)"}},y:{min:0,max:100,ticks:{color:"rgba(255,255,255,0.6)"},grid:{color:"rgba(255,255,255,0.06)"}}}}
         });
       }
     }
@@ -6269,11 +6269,11 @@ async function runAnalysis() {
           datasets: [{
             label: "맛 강도",
             data: Object.values(flavor),
-            backgroundColor: "rgba(5,150,105,.12)",
-            borderColor: "#059669",
+            backgroundColor: "rgba(16,185,129,.12)",
+            borderColor: "#10B981",
             borderWidth: 2,
-            pointBackgroundColor: "#059669",
-            pointBorderColor: "#fff",
+            pointBackgroundColor: "#10B981",
+            pointBorderColor: "#161819",
             pointRadius: 4,
           }]
         },
@@ -6282,13 +6282,13 @@ async function runAnalysis() {
           scales: {
             r: {
               beginAtZero: true, max: 100,
-              grid: {color:"#e5e5e5"},
-              angleLines: {color:"#e5e5e5"},
-              pointLabels: {color:"#525252", font:{size:13}},
-              ticks: {color:"#737373", backdropColor:"transparent", stepSize:25}
+              grid: {color:"rgba(255,255,255,0.06)"},
+              angleLines: {color:"rgba(255,255,255,0.06)"},
+              pointLabels: {color:"rgba(255,255,255,0.6)", font:{size:13}},
+              ticks: {color:"rgba(255,255,255,0.45)", backdropColor:"transparent", stepSize:25}
             }
           },
-          plugins: {legend:{labels:{color:"#525252"}}}
+          plugins: {legend:{labels:{color:"rgba(255,255,255,0.6)"}}}
         }
       });
     }
@@ -6403,7 +6403,7 @@ function renderRecipeList(recipes) {
           <div class="recipe-meta">
             <span class="recipe-tag cuisine">${r.cuisine}</span>
             <span class="recipe-tag diff-${r.difficulty}">${r.difficulty}</span>
-            ${r.allergens?.length ? `<span class="recipe-tag" style="background:#fff7ed;color:#9a3412;border:1px solid #fdba74"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠'"> ${r.allergens.join(', ')}</span>` : ''}
+            ${r.allergens?.length ? `<span class="recipe-tag" style="background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠'"> ${r.allergens.join(', ')}</span>` : ''}
           </div>
         </div>
       </div>
@@ -6613,11 +6613,11 @@ async function renderHistory() {
     const methodIcon = methodImg
       ? `<img src="${methodImg}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='${methodEmoji} '">`
       : `<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='${methodEmoji} '">`;
-    return `<div class="history-item" style="padding:12px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .2s" onclick="replayAnalysis('${h.id}')" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
+    return `<div class="history-item" style="padding:12px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:background .2s" onclick="replayAnalysis('${h.id}')" onmouseover="this.style.background='rgba(16,185,129,0.08)'" onmouseout="this.style.background=''">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-size:14px;font-weight:500">${methodIcon}${ings}${more}</div>
-          <div style="font-size:12px;color:#737373;margin-top:2px">${h.temperature}°C · ${h.duration}분 · ${date}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">${h.temperature}°C · ${h.duration}분 · ${date}</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
           ${h.is_bookmarked ? '<span style="color:#eab308"><img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'⭐\'"></span>' : ''}
@@ -6749,24 +6749,24 @@ function openPhotoScanner() {
   }
   overlay.style.display = 'flex';
   overlay.innerHTML = `
-    <div style="background:#fff;border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
+    <div style="background:#161819;border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📷'"> ${_t('사진으로 재료 인식', 'Photo Ingredient Scanner')}</h3>
         <button onclick="document.getElementById('photoScanOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
-      <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('재료 사진을 촬영하거나 업로드하면 AI가 자동 인식합니다', 'Take or upload a photo of ingredients — AI identifies them automatically')}</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:16px">${_t('재료 사진을 촬영하거나 업로드하면 AI가 자동 인식합니다', 'Take or upload a photo of ingredients — AI identifies them automatically')}</p>
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#555;transition:border-color .2s" onmouseenter="this.style.borderColor='#059669'" onmouseleave="this.style.borderColor='#ddd'">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.6);transition:border-color .2s" onmouseenter="this.style.borderColor='#10B981'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.15)'">
           <img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📁'"> ${_t('사진 선택', 'Choose photo')}
           <input type="file" accept="image/*" style="display:none" onchange="_handlePhotoSelect(this)">
         </label>
-        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#555;transition:border-color .2s" onmouseenter="this.style.borderColor='#059669'" onmouseleave="this.style.borderColor='#ddd'">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.6);transition:border-color .2s" onmouseenter="this.style.borderColor='#10B981'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.15)'">
           <img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📸'"> ${_t('촬영', 'Take photo')}
           <input type="file" accept="image/*" capture="environment" style="display:none" onchange="_handlePhotoSelect(this)">
         </label>
       </div>
       <div id="photoPreview" style="display:none;text-align:center;margin-bottom:16px">
-        <img id="photoPreviewImg" style="max-width:100%;max-height:200px;border-radius:10px;border:1px solid #eee">
+        <img id="photoPreviewImg" style="max-width:100%;max-height:200px;border-radius:10px;border:1px solid rgba(255,255,255,0.08)">
       </div>
       <div id="photoResults"></div>
     </div>`;
@@ -6785,7 +6785,7 @@ async function _handlePhotoSelect(input) {
   reader.onload = async (e) => {
     const dataUri = e.target.result;
     if (preview) { preview.style.display = 'block'; img.src = dataUri; }
-    if (results) results.innerHTML = `<div style="text-align:center;padding:20px;color:#888"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('사진 분석 중...', 'Analyzing photo...')}</div>`;
+    if (results) results.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.45)"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('사진 분석 중...', 'Analyzing photo...')}</div>`;
 
     try {
       const res = await fetch('/api/photo-ingredient', {
@@ -6797,7 +6797,7 @@ async function _handlePhotoSelect(input) {
       if (!res.ok) throw new Error(data.error || 'Analysis failed');
 
       if (!data.ingredients?.length) {
-        results.innerHTML = `<div style="text-align:center;padding:16px;color:#888">${_t('이미지에서 식재료를 찾을 수 없습니다', 'No food ingredients detected')}</div>`;
+        results.innerHTML = `<div style="text-align:center;padding:16px;color:rgba(255,255,255,0.45)">${_t('이미지에서 식재료를 찾을 수 없습니다', 'No food ingredients detected')}</div>`;
         return;
       }
 
@@ -6805,14 +6805,14 @@ async function _handlePhotoSelect(input) {
       html += `<div style="display:flex;flex-direction:column;gap:6px">`;
       data.ingredients.forEach((ing, i) => {
         const conf = ing.confidence === 'high' ? '🟢' : ing.confidence === 'medium' ? '🟡' : '<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>🔴</span>\'">';
-        html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">
+        html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:13px">
           ${typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(ing.name_en || ing.name, ing.emoji || '🥬', 'fi-photo-result', 28) : '<img src="https://images.pexels.com/photos/2325843/pexels-photo-2325843.jpeg?auto=compress&cs=tinysrgb&w=28&h=28&fit=crop" style="width:28px;height:28px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>🥬</span>\'">'}
-          <span style="flex:1">${I18n?.lang === 'en' ? ing.name_en : ing.name} <span style="color:#888;font-size:11px">~${ing.estimatedGrams}g ${conf}</span></span>
-          <button onclick="_addPhotoIngredient('${(ing.name_en || ing.name).replace(/'/g,"\\'")}',${ing.estimatedGrams})" style="padding:4px 10px;border:1px solid #059669;border-radius:6px;background:#fff;color:#059669;font-size:12px;cursor:pointer;font-weight:600">${_t('추가', 'Add')}</button>
+          <span style="flex:1">${I18n?.lang === 'en' ? ing.name_en : ing.name} <span style="color:rgba(255,255,255,0.45);font-size:11px">~${ing.estimatedGrams}g ${conf}</span></span>
+          <button onclick="_addPhotoIngredient('${(ing.name_en || ing.name).replace(/'/g,"\\'")}',${ing.estimatedGrams})" style="padding:4px 10px;border:1px solid #10B981;border-radius:6px;background:transparent;color:#10B981;font-size:12px;cursor:pointer;font-weight:600">${_t('추가', 'Add')}</button>
         </div>`;
       });
       html += `</div>`;
-      html += `<button onclick="_addAllPhotoIngredients()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('전체 추가', 'Add all to selection')}</button>`;
+      html += `<button onclick="_addAllPhotoIngredients()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:8px;background:#10B981;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('전체 추가', 'Add all to selection')}</button>`;
       results.innerHTML = html;
       results._ingredients = data.ingredients;
       if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.scheduleScan();
@@ -6866,15 +6866,15 @@ function openUrlImport() {
   }
   overlay.style.display = 'flex';
   overlay.innerHTML = `
-    <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
+    <div style="background:#161819;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔗'"> ${_t('URL에서 레시피 가져오기', 'Import Recipe from URL')}</h3>
         <button onclick="document.getElementById('urlImportOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
-      <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('레시피 URL을 붙여넣으면 AI가 재료, 단계, 영양 정보를 추출합니다', 'Paste a recipe URL and AI will extract ingredients, steps, and nutrition')}</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:16px">${_t('레시피 URL을 붙여넣으면 AI가 재료, 단계, 영양 정보를 추출합니다', 'Paste a recipe URL and AI will extract ingredients, steps, and nutrition')}</p>
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <input id="urlImportInput" type="url" placeholder="https://..." style="flex:1;padding:10px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px">
-        <button onclick="_runUrlImport()" style="padding:10px 18px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">${_t('가져오기', 'Import')}</button>
+        <input id="urlImportInput" type="url" placeholder="https://..." style="flex:1;padding:10px 14px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:14px;background:rgba(255,255,255,0.04);color:#F5F5F5">
+        <button onclick="_runUrlImport()" style="padding:10px 18px;border:none;border-radius:8px;background:#10B981;color:#fff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">${_t('가져오기', 'Import')}</button>
       </div>
       <div id="urlImportResults"></div>
     </div>`;
@@ -6887,7 +6887,7 @@ async function _runUrlImport() {
   const url = input?.value?.trim();
   if (!url) { showToast(_t('URL을 입력하세요', 'Enter a URL')); return; }
 
-  results.innerHTML = `<div style="text-align:center;padding:20px;color:#888"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('레시피 추출 중...', 'Extracting recipe...')}</div>`;
+  results.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.45)"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('레시피 추출 중...', 'Extracting recipe...')}</div>`;
 
   try {
     const res = await fetch('/api/import-recipe', {
@@ -6899,31 +6899,31 @@ async function _runUrlImport() {
     if (!res.ok) throw new Error(data.error || 'Import failed');
 
     const nutr = data.nutrition || {};
-    let html = `<div style="border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-bottom:12px">
+    let html = `<div style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:12px">
       <div style="font-size:16px;font-weight:700;margin-bottom:4px">${data.name}</div>
-      ${data.name_en ? `<div style="font-size:13px;color:#888">${data.name_en}</div>` : ''}
-      ${data.description ? `<div style="font-size:13px;color:#555;margin-top:8px">${data.description}</div>` : ''}
+      ${data.name_en ? `<div style="font-size:13px;color:rgba(255,255,255,0.45)">${data.name_en}</div>` : ''}
+      ${data.description ? `<div style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:8px">${data.description}</div>` : ''}
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
         ${data.cuisine ? `<span class="recipe-tag cuisine">${data.cuisine}</span>` : ''}
         ${data.difficulty ? `<span class="recipe-tag">${data.difficulty}</span>` : ''}
         ${data.duration ? `<span class="recipe-tag"><img src="https://images.pexels.com/photos/2784135/pexels-photo-2784135.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏱'"> ${data.duration}min</span>` : ''}
         ${data.servings ? `<span class="recipe-tag"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽'"> ${data.servings} servings</span>` : ''}
       </div>
-      ${nutr.calories ? `<div style="font-size:12px;color:#666;margin-top:8px">${nutr.calories}kcal · P${nutr.protein||0}g · F${nutr.fat||0}g · C${nutr.carbs||0}g</div>` : ''}
+      ${nutr.calories ? `<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:8px">${nutr.calories}kcal · P${nutr.protein||0}g · F${nutr.fat||0}g · C${nutr.carbs||0}g</div>` : ''}
     </div>`;
 
     if (data.ingredients?.length) {
       html += `<div style="font-size:13px;font-weight:600;margin-bottom:6px">${_t('재료', 'Ingredients')} (${data.ingredients.length})</div>`;
       html += `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">`;
       data.ingredients.forEach(ing => {
-        html += `<span style="font-size:11px;background:#f5f5f5;padding:3px 8px;border-radius:6px">${ing.emoji||''} ${I18n?.lang==='en' ? ing.name_en||ing.name : ing.name} ${ing.grams}g</span>`;
+        html += `<span style="font-size:11px;background:rgba(255,255,255,0.06);padding:3px 8px;border-radius:6px">${ing.emoji||''} ${I18n?.lang==='en' ? ing.name_en||ing.name : ing.name} ${ing.grams}g</span>`;
       });
       html += `</div>`;
     }
 
     html += `<div style="display:flex;gap:8px">
-      <button onclick="_importToAnalysis()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('Mealcule로 분석', 'Analyze with Mealcule')}</button>
-      <button onclick="_importToRecipeBox()" style="flex:1;padding:10px;border:1px solid #059669;border-radius:8px;background:#fff;color:#059669;font-size:13px;font-weight:600;cursor:pointer">${_t('레시피 박스에 저장', 'Save to Recipe Box')}</button>
+      <button onclick="_importToAnalysis()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#10B981;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('Mealcule로 분석', 'Analyze with Mealcule')}</button>
+      <button onclick="_importToRecipeBox()" style="flex:1;padding:10px;border:1px solid #10B981;border-radius:8px;background:transparent;color:#10B981;font-size:13px;font-weight:600;cursor:pointer">${_t('레시피 박스에 저장', 'Save to Recipe Box')}</button>
     </div>`;
 
     results.innerHTML = html;

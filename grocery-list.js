@@ -404,39 +404,39 @@ function initGroceryList() {
     const style = document.createElement('style');
     style.id = 'groceryListStyles';
     style.textContent = `
-      .grocery-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5000;display:flex;align-items:center;justify-content:center;padding:16px}
-      .grocery-panel{background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:20px}
+      .grocery-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:16px}
+      .grocery-panel{background:#161819;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.5);padding:20px}
       .grocery-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
       .grocery-header h2{flex:1;margin:0;font-size:18px}
-      .grocery-close-btn{background:none;border:none;font-size:24px;cursor:pointer;padding:0 4px;color:#888}
+      .grocery-close-btn{background:none;border:none;font-size:24px;cursor:pointer;padding:0 4px;color:rgba(255,255,255,0.4)}
       .grocery-actions button{background:none;border:none;font-size:18px;cursor:pointer;padding:4px}
-      .grocery-summary{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #eee;margin-bottom:12px;font-size:13px;color:#666}
-      .grocery-summary strong{color:#333}
-      .grocery-progress{flex-basis:100%;height:4px;background:#eee;border-radius:2px;overflow:hidden}
-      .grocery-progress-bar{height:100%;background:linear-gradient(90deg,#4caf50,#81c784);border-radius:2px;transition:width 0.4s}
-      .grocery-outdated-banner{background:#fff3cd;color:#856404;padding:8px 12px;border-radius:8px;margin-bottom:12px;font-size:12px;display:flex;align-items:center;gap:8px}
-      .grocery-outdated-banner button{background:none;border:none;cursor:pointer;font-size:11px;text-decoration:underline;color:#856404;padding:0}
+      .grocery-summary{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px;font-size:13px;color:rgba(255,255,255,0.6)}
+      .grocery-summary strong{color:#F5F5F5}
+      .grocery-progress{flex-basis:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+      .grocery-progress-bar{height:100%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:2px;transition:width 0.4s}
+      .grocery-outdated-banner{background:rgba(245,158,11,0.15);color:#F59E0B;padding:8px 12px;border-radius:8px;margin-bottom:12px;font-size:12px;display:flex;align-items:center;gap:8px}
+      .grocery-outdated-banner button{background:none;border:none;cursor:pointer;font-size:11px;text-decoration:underline;color:#F59E0B;padding:0}
       .grocery-category{margin-bottom:10px}
-      .grocery-category-header{font-weight:600;font-size:14px;padding:6px 0;color:#444;border-bottom:1px solid #f0f0f0;margin-bottom:4px}
+      .grocery-category-header{font-weight:600;font-size:14px;padding:6px 0;color:#F5F5F5;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:4px}
       .grocery-checked-section{opacity:0.55}
       .grocery-item{display:flex;align-items:center;gap:8px;padding:7px 4px;border-radius:8px;transition:background 0.15s}
-      .grocery-item:hover{background:#f8f8f8}
-      .grocery-item-checked .grocery-item-name{text-decoration:line-through;color:#aaa}
+      .grocery-item:hover{background:rgba(255,255,255,0.04)}
+      .grocery-item-checked .grocery-item-name{text-decoration:line-through;color:rgba(255,255,255,0.35)}
       .grocery-check{display:flex;align-items:center;cursor:pointer}
-      .grocery-check input{width:16px;height:16px;accent-color:#4caf50;cursor:pointer}
+      .grocery-check input{width:16px;height:16px;accent-color:#10B981;cursor:pointer}
       .grocery-item-emoji{font-size:16px;min-width:20px;text-align:center}
-      .grocery-item-name{flex:1;font-size:13px;color:#333}
-      .grocery-item-qty{font-size:12px;color:#888;white-space:nowrap}
-      .grocery-item-remove{background:none;border:none;color:#ccc;cursor:pointer;font-size:16px;padding:2px 4px;opacity:0;transition:opacity 0.15s}
+      .grocery-item-name{flex:1;font-size:13px;color:#F5F5F5}
+      .grocery-item-qty{font-size:12px;color:rgba(255,255,255,0.4);white-space:nowrap}
+      .grocery-item-remove{background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;font-size:16px;padding:2px 4px;opacity:0;transition:opacity 0.15s}
       .grocery-item:hover .grocery-item-remove{opacity:1}
-      .grocery-add-section{padding:12px 0;border-top:1px solid #eee;margin-top:8px}
-      .grocery-add-btn{background:none;border:1px dashed #ccc;border-radius:8px;padding:8px 16px;width:100%;cursor:pointer;color:#888;font-size:13px;transition:border-color 0.2s}
-      .grocery-add-btn:hover{border-color:#4caf50;color:#4caf50}
+      .grocery-add-section{padding:12px 0;border-top:1px solid rgba(255,255,255,0.08);margin-top:8px}
+      .grocery-add-btn{background:none;border:1px dashed rgba(255,255,255,0.15);border-radius:8px;padding:8px 16px;width:100%;cursor:pointer;color:rgba(255,255,255,0.4);font-size:13px;transition:border-color 0.2s}
+      .grocery-add-btn:hover{border-color:#10B981;color:#10B981}
       .grocery-manual-input{display:flex;gap:6px;align-items:center}
-      .grocery-manual-input input{border:1px solid #ddd;border-radius:6px;padding:6px 8px;font-size:13px}
+      .grocery-manual-input input{border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:6px 8px;font-size:13px;background:rgba(255,255,255,0.04);color:#F5F5F5}
       .grocery-manual-input input[type="text"]{flex:2}
       .grocery-manual-input input[type="number"]{flex:1;width:60px}
-      .grocery-manual-input button{background:none;border:1px solid #ddd;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:16px}
+      .grocery-manual-input button{background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:16px;color:#F5F5F5}
     `;
     document.head.appendChild(style);
   }

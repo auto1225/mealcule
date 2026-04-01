@@ -392,7 +392,7 @@ async function renderRecipeBox() {
   const container = document.getElementById('recipeBoxContent');
   if (!container) return;
 
-  container.innerHTML = `<div style="text-align:center;padding:40px;color:#aaa;">${_t('불러오는 중...', 'Loading...')}</div>`;
+  container.innerHTML = `<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.35);">${_t('불러오는 중...', 'Loading...')}</div>`;
 
   let dbRecipes = [], dbCollections = [];
   if (!isGuest && currentUser) {
@@ -424,7 +424,7 @@ async function renderRecipeBox() {
   // Demo banner
   if (showingDemo) {
     html += `
-      <div style="background:linear-gradient(135deg,#ede9fe,#dbeafe);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#4338ca;display:flex;align-items:center;gap:8px;">
+      <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#a78bfa;display:flex;align-items:center;gap:8px;">
         <span style="font-size:16px;"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🧪'"></span>
         <span>${_t('샘플 레시피를 둘러보세요! 분석 후 나만의 레시피를 저장해 보세요.', 'Explore sample recipes! Save your own recipes after running an analysis.')}</span>
       </div>`;
@@ -630,14 +630,14 @@ async function openRecipeDetail(id) {
   overlay.innerHTML = `
     <div class="rb-detail-modal">
       <button class="rb-modal-close" onclick="_closeDetailModal()">✕</button>
-      ${recipe.image_url ? `<div style="width:100%;height:160px;border-radius:12px;margin-bottom:14px;background:url('${recipe.image_url}') center/cover no-repeat #f0f0f0;"></div>` : ''}
+      ${recipe.image_url ? `<div style="width:100%;height:160px;border-radius:12px;margin-bottom:14px;background:url('${recipe.image_url}') center/cover no-repeat rgba(255,255,255,0.04);"></div>` : ''}
       <div class="rb-det-header">
         <h2 class="rb-det-name">${recipe.name}</h2>
         <div class="rb-det-name-en">${recipe.name_en || ''}</div>
         <div class="rb-det-tags">
           ${recipe.cuisine ? `<span class="recipe-tag cuisine">${recipe.cuisine}</span>` : ''}
           ${recipe.difficulty ? `<span class="recipe-tag diff-${recipe.difficulty}">${recipe.difficulty}</span>` : ''}
-          ${recipe.is_favorite ? `<span class="recipe-tag" style="background:#fef3c7;color:#92400e;"><img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⭐'"> ${_t('즐겨찾기', 'Favorite')}</span>` : ''}
+          ${recipe.is_favorite ? `<span class="recipe-tag" style="background:rgba(245,158,11,0.12);color:#F59E0B;"><img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⭐'"> ${_t('즐겨찾기', 'Favorite')}</span>` : ''}
         </div>
       </div>
 
@@ -677,7 +677,7 @@ async function openRecipeDetail(id) {
 
       <div class="rb-det-actions">
         ${isDemo ? `
-        <div style="width:100%;text-align:center;font-size:12px;color:#7c3aed;background:#f5f3ff;padding:10px;border-radius:8px;">
+        <div style="width:100%;text-align:center;font-size:12px;color:#a78bfa;background:rgba(139,92,246,0.1);padding:10px;border-radius:8px;">
           <img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🧪'"> ${_t('이것은 샘플 레시피입니다. 분석 후 나만의 레시피를 저장해 보세요!', 'This is a sample recipe. Save your own recipes after running an analysis!')}
         </div>
         ` : `
@@ -803,7 +803,7 @@ function _injectRecipeBoxStyles() {
     /* Panel */
     .rb-panel {
       position:fixed; top:0; right:-420px; width:400px; max-width:95vw;
-      height:100vh; background:#fff; box-shadow:-4px 0 24px rgba(0,0,0,.12);
+      height:100vh; background:#161819; box-shadow:-4px 0 24px rgba(0,0,0,.4);
       z-index:8000; transition:right .3s ease; display:flex; flex-direction:column;
       font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     }
@@ -811,51 +811,51 @@ function _injectRecipeBoxStyles() {
     .rb-panel-header {
       display:flex; justify-content:space-between; align-items:center;
       padding:16px 20px; font-size:16px; font-weight:700;
-      border-bottom:1px solid #eee; flex-shrink:0;
+      border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0;
     }
     .rb-panel-close {
       background:none; border:none; font-size:20px; cursor:pointer;
-      color:#888; padding:4px 8px; border-radius:6px;
+      color:rgba(255,255,255,0.4); padding:4px 8px; border-radius:6px;
     }
-    .rb-panel-close:hover { background:#f3f3f3; }
+    .rb-panel-close:hover { background:rgba(255,255,255,0.07); }
     .rb-panel-body { flex:1; overflow-y:auto; padding:16px; }
 
     /* Header */
     .rb-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
     .rb-title { font-size:15px; font-weight:700; }
-    .rb-count { font-size:12px; color:#888; font-weight:400; margin-left:4px; }
+    .rb-count { font-size:12px; color:rgba(255,255,255,0.4); font-weight:400; margin-left:4px; }
     .rb-new-col-btn {
-      font-size:12px; padding:5px 10px; border-radius:8px; border:1px solid #e0e0e0;
-      background:#fafafa; cursor:pointer; color:#555; font-weight:500;
+      font-size:12px; padding:5px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.04); cursor:pointer; color:rgba(255,255,255,0.6); font-weight:500;
     }
-    .rb-new-col-btn:hover { background:#f0f0f0; }
+    .rb-new-col-btn:hover { background:rgba(255,255,255,0.07); }
 
     /* Tabs */
-    .rb-tabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:10px; margin-bottom:12px; border-bottom:1px solid #f0f0f0; }
+    .rb-tabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:10px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08); }
     .rb-tab {
       white-space:nowrap; padding:5px 12px; border-radius:16px; font-size:12px;
-      border:1px solid #e5e5e5; background:#fafafa; cursor:pointer; color:#555;
+      border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); cursor:pointer; color:rgba(255,255,255,0.6);
     }
-    .rb-tab.active { background:#111; color:#fff; border-color:#111; }
-    .rb-tab:hover:not(.active) { background:#f0f0f0; }
+    .rb-tab.active { background:#10B981; color:#fff; border-color:#10B981; }
+    .rb-tab:hover:not(.active) { background:rgba(255,255,255,0.07); }
 
     /* Grid */
     .rb-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .rb-card {
-      position:relative; background:#fafafa; border:1px solid #eee; border-radius:12px;
+      position:relative; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px;
       padding:12px; cursor:pointer; transition:box-shadow .15s;
     }
-    .rb-card:hover { box-shadow:0 2px 12px rgba(0,0,0,.08); }
+    .rb-card:hover { box-shadow:0 2px 12px rgba(0,0,0,.3); background:rgba(255,255,255,0.07); }
     .rb-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:4px; }
     .rb-card-name { font-size:13px; font-weight:600; line-height:1.3; flex:1; }
     .rb-fav-btn {
       background:none; border:none; font-size:16px; cursor:pointer;
-      color:#ccc; padding:0; line-height:1;
+      color:rgba(255,255,255,0.35); padding:0; line-height:1;
     }
     .rb-fav-btn.active { color:#f59e0b; }
-    .rb-card-meta { display:flex; gap:6px; margin-top:6px; font-size:11px; color:#888; }
-    .rb-card-cuisine { background:#f0fdf4; color:#15803d; padding:1px 6px; border-radius:8px; }
-    .rb-card-cal { color:#aaa; }
+    .rb-card-meta { display:flex; gap:6px; margin-top:6px; font-size:11px; color:rgba(255,255,255,0.4); }
+    .rb-card-cuisine { background:rgba(16,185,129,0.08); color:#10B981; padding:1px 6px; border-radius:8px; }
+    .rb-card-cal { color:rgba(255,255,255,0.35); }
     .rb-del-btn {
       position:absolute; bottom:8px; right:8px; background:none; border:none;
       font-size:13px; cursor:pointer; opacity:0; transition:opacity .15s;
@@ -866,71 +866,71 @@ function _injectRecipeBoxStyles() {
     /* Card image */
     .rb-card-img {
       width:100%; height:80px; border-radius:8px; margin-bottom:8px;
-      background-size:cover; background-position:center; background-color:#f0f0f0;
+      background-size:cover; background-position:center; background-color:rgba(255,255,255,0.04);
     }
     .rb-card-rating { font-size:10px; color:#f59e0b; letter-spacing:1px; margin-top:2px; }
     .rb-card-tags { display:flex; gap:3px; flex-wrap:wrap; margin-top:4px; }
-    .rb-card-tag { font-size:10px; color:#7c3aed; background:#f5f3ff; padding:1px 5px; border-radius:4px; }
-    .rb-demo-card { border:1px dashed #c4b5fd; background:#faf5ff; }
+    .rb-card-tag { font-size:10px; color:#a78bfa; background:rgba(139,92,246,0.1); padding:1px 5px; border-radius:4px; }
+    .rb-demo-card { border:1px dashed rgba(139,92,246,0.3); background:rgba(139,92,246,0.05); }
 
     /* Empty state */
-    .rb-empty { text-align:center; padding:32px 12px; color:#999; font-size:13px; }
+    .rb-empty { text-align:center; padding:32px 12px; color:rgba(255,255,255,0.35); font-size:13px; }
 
     /* Upgrade banner */
     .rb-upgrade-banner {
       display:flex; align-items:center; justify-content:space-between; gap:8px;
-      background:linear-gradient(135deg,#fef3c7,#fde68a); border-radius:10px;
-      padding:10px 14px; margin-bottom:14px; font-size:12px; color:#92400e;
+      background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.2); border-radius:10px;
+      padding:10px 14px; margin-bottom:14px; font-size:12px; color:#F59E0B;
     }
     .rb-upgrade-banner button {
-      background:#111; color:#fff; border:none; padding:5px 12px; border-radius:8px;
+      background:#10B981; color:#fff; border:none; padding:5px 12px; border-radius:8px;
       font-size:11px; cursor:pointer; font-weight:600; white-space:nowrap;
     }
 
     /* Overlay & Detail Modal */
     .rb-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9000;
+      position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9000;
       display:none; align-items:center; justify-content:center;
     }
     .rb-detail-modal {
-      position:relative; background:#fff; border-radius:16px; width:90vw; max-width:480px;
-      max-height:85vh; overflow-y:auto; padding:24px; box-shadow:0 12px 40px rgba(0,0,0,.2);
+      position:relative; background:#161819; border-radius:16px; width:90vw; max-width:480px;
+      max-height:85vh; overflow-y:auto; padding:24px; box-shadow:0 12px 40px rgba(0,0,0,.5);
     }
     .rb-modal-close {
       position:absolute; top:12px; right:14px; background:none; border:none;
-      font-size:18px; cursor:pointer; color:#888; z-index:1;
+      font-size:18px; cursor:pointer; color:rgba(255,255,255,0.4); z-index:1;
     }
     .rb-det-header { margin-bottom:14px; }
-    .rb-det-name { font-size:18px; font-weight:700; margin:0; }
-    .rb-det-name-en { font-size:13px; color:#888; margin-top:2px; }
+    .rb-det-name { font-size:18px; font-weight:700; margin:0; color:#F5F5F5; }
+    .rb-det-name-en { font-size:13px; color:rgba(255,255,255,0.4); margin-top:2px; }
     .rb-det-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-    .rb-det-desc { font-size:13px; color:#555; line-height:1.5; margin-bottom:14px; }
-    .rb-det-health { font-size:12px; color:#15803d; background:#f0fdf4; padding:8px 12px; border-radius:8px; margin-bottom:14px; }
+    .rb-det-desc { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.5; margin-bottom:14px; }
+    .rb-det-health { font-size:12px; color:#10B981; background:rgba(16,185,129,0.08); padding:8px 12px; border-radius:8px; margin-bottom:14px; }
     .rb-det-section { margin-bottom:14px; }
-    .rb-det-section strong { display:block; font-size:12px; color:#555; margin-bottom:6px; }
+    .rb-det-section strong { display:block; font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:6px; }
     .rb-det-ings { display:flex; flex-wrap:wrap; gap:4px; }
-    .rb-det-ing { font-size:11px; background:#f5f5f5; padding:3px 8px; border-radius:6px; }
-    .rb-det-cook { display:flex; gap:10px; font-size:12px; color:#666; flex-wrap:wrap; }
-    .rb-det-nutr { font-size:12px; color:#666; }
+    .rb-det-ing { font-size:11px; background:rgba(255,255,255,0.04); padding:3px 8px; border-radius:6px; }
+    .rb-det-cook { display:flex; gap:10px; font-size:12px; color:rgba(255,255,255,0.6); flex-wrap:wrap; }
+    .rb-det-nutr { font-size:12px; color:rgba(255,255,255,0.6); }
     .rb-rating { display:flex; gap:2px; }
-    .rb-star { font-size:22px; cursor:pointer; color:#ddd; transition:color .1s; }
+    .rb-star { font-size:22px; cursor:pointer; color:rgba(255,255,255,0.15); transition:color .1s; }
     .rb-star.active { color:#f59e0b; }
     .rb-star:hover { color:#fbbf24; }
     .rb-notes-input {
-      width:100%; min-height:60px; border:1px solid #e5e5e5; border-radius:8px;
+      width:100%; min-height:60px; border:1px solid rgba(255,255,255,0.08); border-radius:8px;
       padding:8px 10px; font-size:13px; resize:vertical; font-family:inherit;
-      outline:none; box-sizing:border-box;
+      outline:none; box-sizing:border-box; background:rgba(255,255,255,0.04); color:#F5F5F5;
     }
-    .rb-notes-input:focus { border-color:#aaa; }
+    .rb-notes-input:focus { border-color:rgba(255,255,255,0.15); }
     .rb-det-actions { display:flex; gap:8px; margin-top:16px; }
     .rb-action-btn {
-      flex:1; padding:8px; border-radius:8px; border:1px solid #e5e5e5;
-      background:#fafafa; font-size:13px; cursor:pointer; text-align:center;
+      flex:1; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.04); color:#F5F5F5; font-size:13px; cursor:pointer; text-align:center;
     }
-    .rb-action-btn.fav:hover { background:#fef3c7; }
-    .rb-action-btn.del { color:#dc2626; }
-    .rb-action-btn.del:hover { background:#fef2f2; }
-    .rb-det-footer { text-align:center; font-size:11px; color:#bbb; margin-top:14px; }
+    .rb-action-btn.fav:hover { background:rgba(245,158,11,0.12); }
+    .rb-action-btn.del { color:#EF4444; }
+    .rb-action-btn.del:hover { background:rgba(239,68,68,0.1); }
+    .rb-det-footer { text-align:center; font-size:11px; color:rgba(255,255,255,0.35); margin-top:14px; }
 
     @media (max-width:500px) {
       .rb-panel { width:100vw; right:-100vw; }

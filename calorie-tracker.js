@@ -148,7 +148,7 @@ function _renderCT() {
       <div class="ct-ring-section">
         <div class="ct-ring-container">
           <svg class="ct-ring-svg" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="52" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
             <circle cx="60" cy="60" r="52" fill="none" stroke="${remaining >= 0 ? '#10b981' : '#ef4444'}" stroke-width="10"
               stroke-dasharray="${2 * Math.PI * 52}" stroke-dashoffset="${2 * Math.PI * 52 * (1 - pct / 100)}"
               stroke-linecap="round" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .6s ease"/>
@@ -614,7 +614,7 @@ function _ctOpenGoalSettings() {
           <span><img src="https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💧'"> ${_t('수분', 'Water')} (ml)</span>
           <input type="number" id="ctGoalWater" value="${_ctGoals.water}" min="500" max="10000">
         </label>
-        <div style="margin-top:12px;padding:12px;background:#f0fdf4;border-radius:10px;font-size:11px;color:#166534">
+        <div style="margin-top:12px;padding:12px;background:rgba(16,185,129,0.08);border-radius:10px;font-size:11px;color:#10B981">
           <img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💡'"> ${_t('일반 성인 권장: 2,000kcal · 단백질 50g · 지방 65g · 탄수화물 300g · 수분 2L', 'Recommended: 2,000kcal · Protein 50g · Fat 65g · Carbs 300g · Water 2L')}
         </div>
         <button class="ct-add-btn" style="margin-top:16px" onclick="_ctSaveGoals()">
@@ -660,7 +660,7 @@ function _injectCTStyles() {
     overflow-y:auto; padding:20px 10px;
   }
   .ct-panel {
-    background:#fff; border-radius:20px; width:100%; max-width:480px;
+    background:#161819; border-radius:20px; width:100%; max-width:480px;
     box-shadow:0 20px 60px rgba(0,0,0,0.2); padding:0 0 24px;
     animation: ctSlideUp .3s ease;
   }
@@ -669,28 +669,28 @@ function _injectCTStyles() {
   /* Header */
   .ct-header {
     display:flex; justify-content:space-between; align-items:center;
-    padding:16px 20px; border-bottom:1px solid #f3f4f6;
+    padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .ct-header-left { display:flex; align-items:center; gap:12px; }
   .ct-close {
-    background:none; border:none; font-size:20px; cursor:pointer; color:#6b7280; padding:0 4px;
+    background:none; border:none; font-size:20px; cursor:pointer; color:rgba(255,255,255,0.4); padding:0 4px;
     font-weight:600;
   }
-  .ct-close:hover { color:#111; }
-  .ct-title { font-size:17px; font-weight:700; color:#111; margin:0; }
+  .ct-close:hover { color:#F5F5F5; }
+  .ct-title { font-size:17px; font-weight:700; color:#F5F5F5; margin:0; }
   .ct-date-nav { display:flex; align-items:center; gap:8px; }
   .ct-date-btn {
-    background:none; border:1px solid #e5e7eb; border-radius:8px;
-    width:28px; height:28px; cursor:pointer; font-size:16px; color:#6b7280;
+    background:none; border:1px solid rgba(255,255,255,0.08); border-radius:8px;
+    width:28px; height:28px; cursor:pointer; font-size:16px; color:rgba(255,255,255,0.4);
     display:flex; align-items:center; justify-content:center;
   }
-  .ct-date-btn:hover { background:#f9fafb; color:#111; }
-  .ct-date-label { font-size:13px; font-weight:600; color:#374151; }
+  .ct-date-btn:hover { background:rgba(255,255,255,0.07); color:#F5F5F5; }
+  .ct-date-label { font-size:13px; font-weight:600; color:#F5F5F5; }
 
   /* Demo Banner */
   .ct-demo-banner {
-    margin:12px 20px 0; padding:8px 14px; background:#ecfdf5; border-radius:10px;
-    font-size:11px; color:#065f46; text-align:center;
+    margin:12px 20px 0; padding:8px 14px; background:rgba(16,185,129,0.08); border-radius:10px;
+    font-size:11px; color:#10B981; text-align:center;
   }
 
   /* Calorie Ring */
@@ -702,19 +702,19 @@ function _injectCTStyles() {
     align-items:center; justify-content:center;
   }
   .ct-ring-remaining { font-size:24px; font-weight:800; line-height:1; }
-  .ct-ring-label { font-size:10px; color:#9ca3af; margin-top:2px; }
+  .ct-ring-label { font-size:10px; color:rgba(255,255,255,0.35); margin-top:2px; }
   .ct-ring-stats { display:flex; flex-direction:column; gap:8px; }
   .ct-stat { text-align:center; }
-  .ct-stat-val { font-size:18px; font-weight:700; color:#111; }
-  .ct-stat-lbl { font-size:10px; color:#9ca3af; }
+  .ct-stat-val { font-size:18px; font-weight:700; color:#F5F5F5; }
+  .ct-stat-lbl { font-size:10px; color:rgba(255,255,255,0.35); }
 
   /* Macro Bars */
   .ct-macros { padding:0 20px 12px; display:flex; flex-direction:column; gap:8px; }
   .ct-macro-header { display:flex; justify-content:space-between; margin-bottom:2px; }
-  .ct-macro-name { font-size:12px; font-weight:600; color:#374151; }
-  .ct-macro-val { font-size:11px; color:#9ca3af; }
+  .ct-macro-name { font-size:12px; font-weight:600; color:#F5F5F5; }
+  .ct-macro-val { font-size:11px; color:rgba(255,255,255,0.35); }
   .ct-macro-bar {
-    height:8px; background:#f3f4f6; border-radius:4px; overflow:hidden;
+    height:8px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;
   }
   .ct-macro-fill {
     height:100%; border-radius:4px; transition:width .4s ease;
@@ -727,16 +727,16 @@ function _injectCTStyles() {
   .ct-water { padding:12px 20px; }
   .ct-water-header {
     display:flex; justify-content:space-between; margin-bottom:4px;
-    font-size:13px; font-weight:600; color:#374151;
+    font-size:13px; font-weight:600; color:#F5F5F5;
   }
-  .ct-water-val { font-size:11px; color:#9ca3af; font-weight:400; }
+  .ct-water-val { font-size:11px; color:rgba(255,255,255,0.35); font-weight:400; }
   .ct-water-fill { background:linear-gradient(90deg,#3b82f6,#60a5fa); }
   .ct-water-btns { display:flex; gap:8px; margin-top:8px; }
   .ct-water-btn {
-    flex:1; padding:6px; border-radius:8px; border:1px solid #e5e7eb;
-    background:#f9fafb; font-size:12px; font-weight:600; color:#374151; cursor:pointer;
+    flex:1; padding:6px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.04); font-size:12px; font-weight:600; color:#F5F5F5; cursor:pointer;
   }
-  .ct-water-btn:hover { background:#eff6ff; border-color:#93c5fd; }
+  .ct-water-btn:hover { background:rgba(59,130,246,0.1); border-color:rgba(59,130,246,0.3); }
   .ct-water-undo { flex:0 0 auto; padding:6px 12px; }
   .ct-water-custom { flex:0 0 auto; padding:6px 12px; }
 
@@ -750,56 +750,56 @@ function _injectCTStyles() {
   }
   .ct-add-btn:hover { filter:brightness(1.05); transform:translateY(-1px); }
   .ct-photo-btn {
-    padding:12px 16px; border-radius:12px; border:1px solid #e5e7eb;
-    background:#fff; font-size:13px; font-weight:600; color:#374151; cursor:pointer;
+    padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.04); font-size:13px; font-weight:600; color:#F5F5F5; cursor:pointer;
   }
-  .ct-photo-btn:hover { background:#f9fafb; }
+  .ct-photo-btn:hover { background:rgba(255,255,255,0.07); }
 
   /* Meal Groups */
   .ct-meals { padding:0 20px; }
   .ct-meal-group { margin-bottom:12px; }
   .ct-meal-group-header {
     display:flex; align-items:center; justify-content:space-between;
-    padding:8px 0; cursor:pointer; font-size:13px; font-weight:700; color:#374151;
+    padding:8px 0; cursor:pointer; font-size:13px; font-weight:700; color:#F5F5F5;
   }
-  .ct-meal-group-cal { font-size:12px; color:#9ca3af; font-weight:500; }
+  .ct-meal-group-cal { font-size:12px; color:rgba(255,255,255,0.35); font-weight:500; }
   .ct-meal-add-small {
-    width:24px; height:24px; border-radius:6px; border:1px dashed #d1d5db;
-    background:none; font-size:14px; color:#9ca3af; cursor:pointer;
+    width:24px; height:24px; border-radius:6px; border:1px dashed rgba(255,255,255,0.15);
+    background:none; font-size:14px; color:rgba(255,255,255,0.35); cursor:pointer;
     display:flex; align-items:center; justify-content:center;
   }
-  .ct-meal-add-small:hover { background:#f9fafb; color:#111; }
+  .ct-meal-add-small:hover { background:rgba(255,255,255,0.07); color:#F5F5F5; }
   .ct-meal-item {
     display:flex; align-items:center; gap:10px; padding:8px 12px;
     border-radius:10px; margin-bottom:4px; cursor:pointer;
-    background:#f9fafb; transition:background .15s;
+    background:rgba(255,255,255,0.04); transition:background .15s;
   }
-  .ct-meal-item:hover { background:#fee2e2; }
+  .ct-meal-item:hover { background:rgba(239,68,68,0.1); }
   .ct-meal-icon { font-size:20px; }
   .ct-meal-thumb, .ct-food-thumb {
     width:36px; height:36px; border-radius:10px; object-fit:cover;
-    background:#f3f4f6; flex-shrink:0;
+    background:rgba(255,255,255,0.04); flex-shrink:0;
   }
   .ct-food-thumb {
     width:40px; height:40px;
   }
   .ct-meal-info { flex:1; min-width:0; }
-  .ct-meal-name { font-size:13px; font-weight:600; color:#111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .ct-meal-meta { font-size:10px; color:#9ca3af; margin-top:1px; }
-  .ct-meal-cal { font-size:14px; font-weight:700; color:#374151; white-space:nowrap; }
+  .ct-meal-name { font-size:13px; font-weight:600; color:#F5F5F5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ct-meal-meta { font-size:10px; color:rgba(255,255,255,0.35); margin-top:1px; }
+  .ct-meal-cal { font-size:14px; font-weight:700; color:#F5F5F5; white-space:nowrap; }
   .ct-meal-empty {
-    padding:12px; text-align:center; border:1px dashed #e5e7eb; border-radius:10px;
-    font-size:12px; color:#9ca3af; cursor:pointer; margin-bottom:4px;
+    padding:12px; text-align:center; border:1px dashed rgba(255,255,255,0.08); border-radius:10px;
+    font-size:12px; color:rgba(255,255,255,0.35); cursor:pointer; margin-bottom:4px;
   }
-  .ct-meal-empty:hover { background:#f9fafb; border-color:#d1d5db; }
+  .ct-meal-empty:hover { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.15); }
 
   /* Settings */
   .ct-settings-btn {
     display:block; margin:12px auto 0; padding:8px 20px; border-radius:10px;
-    border:1px solid #e5e7eb; background:#fff; font-size:12px; font-weight:500;
-    color:#6b7280; cursor:pointer;
+    border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); font-size:12px; font-weight:500;
+    color:rgba(255,255,255,0.4); cursor:pointer;
   }
-  .ct-settings-btn:hover { background:#f9fafb; }
+  .ct-settings-btn:hover { background:rgba(255,255,255,0.07); }
 
   /* ── Quick Add Modal ── */
   .ct-quickadd-overlay {
@@ -809,35 +809,35 @@ function _injectCTStyles() {
     overflow-y:auto; padding:40px 10px;
   }
   .ct-quickadd-panel {
-    background:#fff; border-radius:20px; width:100%; max-width:500px;
+    background:#161819; border-radius:20px; width:100%; max-width:500px;
     box-shadow:0 20px 60px rgba(0,0,0,0.2); padding:0 0 20px;
     animation: ctSlideUp .25s ease;
   }
   .ct-quickadd-header {
     display:flex; justify-content:space-between; align-items:center;
-    padding:16px 20px; border-bottom:1px solid #f3f4f6;
+    padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .ct-quickadd-header h3 { font-size:15px; font-weight:700; margin:0; }
   .ct-meal-tabs { display:flex; gap:4px; padding:12px 20px; }
   .ct-meal-tab {
-    flex:1; padding:6px; border-radius:8px; border:1px solid #e5e7eb;
-    background:#fff; font-size:11px; font-weight:600; color:#6b7280; cursor:pointer;
+    flex:1; padding:6px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.04); font-size:11px; font-weight:600; color:rgba(255,255,255,0.4); cursor:pointer;
     text-align:center;
   }
   .ct-meal-tab.active { background:#10b981; color:#fff; border-color:#10b981; }
   .ct-search-wrap { padding:0 20px 8px; }
   .ct-search-input {
-    width:100%; padding:10px 14px; border:1px solid #e5e7eb; border-radius:10px;
-    font-size:13px; outline:none; box-sizing:border-box;
+    width:100%; padding:10px 14px; border:1px solid rgba(255,255,255,0.08); border-radius:10px;
+    font-size:13px; outline:none; box-sizing:border-box; background:rgba(255,255,255,0.04); color:#F5F5F5;
   }
-  .ct-search-input:focus { border-color:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
+  .ct-search-input:focus { border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
   .ct-quick-entry {
     display:flex; gap:6px; padding:0 20px 12px; align-items:center; flex-wrap:wrap;
   }
-  .ct-quick-label { font-size:11px; color:#6b7280; font-weight:600; width:100%; margin-bottom:2px; }
+  .ct-quick-label { font-size:11px; color:rgba(255,255,255,0.4); font-weight:600; width:100%; margin-bottom:2px; }
   .ct-quick-cal, .ct-quick-name {
-    flex:1; padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px;
-    font-size:13px; min-width:0; box-sizing:border-box;
+    flex:1; padding:8px 10px; border:1px solid rgba(255,255,255,0.08); border-radius:8px;
+    font-size:13px; min-width:0; box-sizing:border-box; background:rgba(255,255,255,0.04); color:#F5F5F5;
   }
   .ct-quick-cal { max-width:80px; }
   .ct-quick-add-btn {
@@ -849,27 +849,27 @@ function _injectCTStyles() {
     display:flex; align-items:center; gap:10px; padding:10px 12px;
     border-radius:10px; cursor:pointer; transition:background .15s;
   }
-  .ct-food-item:hover { background:#ecfdf5; }
+  .ct-food-item:hover { background:rgba(16,185,129,0.08); }
   .ct-food-icon { font-size:22px; }
   .ct-food-info { flex:1; min-width:0; }
-  .ct-food-name { font-size:13px; font-weight:600; color:#111; }
-  .ct-food-macros { font-size:10px; color:#9ca3af; margin-top:1px; }
-  .ct-food-cal { font-size:14px; font-weight:700; color:#059669; white-space:nowrap; }
-  .ct-food-cal small { font-size:9px; color:#9ca3af; font-weight:400; margin-left:1px; }
-  .ct-food-empty { padding:20px; text-align:center; font-size:12px; color:#9ca3af; }
+  .ct-food-name { font-size:13px; font-weight:600; color:#F5F5F5; }
+  .ct-food-macros { font-size:10px; color:rgba(255,255,255,0.35); margin-top:1px; }
+  .ct-food-cal { font-size:14px; font-weight:700; color:#10B981; white-space:nowrap; }
+  .ct-food-cal small { font-size:9px; color:rgba(255,255,255,0.35); font-weight:400; margin-left:1px; }
+  .ct-food-empty { padding:20px; text-align:center; font-size:12px; color:rgba(255,255,255,0.35); }
 
   /* Goal Settings Form */
   .ct-goal-form { padding:16px 20px; }
   .ct-goal-row {
     display:flex; justify-content:space-between; align-items:center;
-    padding:10px 0; border-bottom:1px solid #f3f4f6;
+    padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.08);
   }
-  .ct-goal-row span { font-size:13px; font-weight:600; color:#374151; }
+  .ct-goal-row span { font-size:13px; font-weight:600; color:#F5F5F5; }
   .ct-goal-row input {
-    width:100px; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px;
-    font-size:14px; font-weight:600; text-align:right; box-sizing:border-box;
+    width:100px; padding:6px 10px; border:1px solid rgba(255,255,255,0.08); border-radius:8px;
+    font-size:14px; font-weight:600; text-align:right; box-sizing:border-box; background:rgba(255,255,255,0.04); color:#F5F5F5;
   }
-  .ct-goal-row input:focus { border-color:#10b981; outline:none; }
+  .ct-goal-row input:focus { border-color:#10B981; outline:none; }
 
   /* ── Mobile Responsive ── */
   @media (max-width:600px) {

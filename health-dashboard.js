@@ -93,33 +93,33 @@ function _injectHDStyles() {
   style.textContent = `
     .hd-overlay {
       position: fixed; inset: 0; z-index: 8000;
-      background: #f5f5f5; overflow-y: auto;
+      background: #0F1113; overflow-y: auto;
       display: none; flex-direction: column;
     }
     .hd-overlay.active { display: flex; }
     .hd-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px; background: #fff;
-      border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10;
+      padding: 16px 20px; background: #161819;
+      border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 10;
     }
-    .hd-header h1 { font-size: 20px; font-weight: 700; margin: 0; color: #111; }
+    .hd-header h1 { font-size: 20px; font-weight: 700; margin: 0; color: #F5F5F5; }
     .hd-close-btn {
       width: 36px; height: 36px; border-radius: 50%; border: none;
-      background: #f3f4f6; cursor: pointer; font-size: 20px;
-      display: flex; align-items: center; justify-content: center; color: #374151;
+      background: rgba(255,255,255,0.04); cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4);
     }
-    .hd-close-btn:hover { background: #e5e7eb; }
+    .hd-close-btn:hover { background: rgba(255,255,255,0.07); }
     .hd-period-tabs {
-      display: flex; gap: 8px; padding: 12px 20px; background: #fff;
-      border-bottom: 1px solid #e5e7eb;
+      display: flex; gap: 8px; padding: 12px 20px; background: #161819;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .hd-period-tab {
-      padding: 6px 16px; border-radius: 20px; border: 1px solid #d1d5db;
-      background: #fff; cursor: pointer; font-size: 13px; color: #374151;
+      padding: 6px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04); cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.6);
       transition: all .15s;
     }
     .hd-period-tab.active {
-      background: #059669; color: #fff; border-color: #059669;
+      background: #10B981; color: #fff; border-color: #10B981;
     }
     .hd-body {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -130,73 +130,73 @@ function _injectHDStyles() {
       .hd-body { grid-template-columns: 1fr; padding: 12px; gap: 12px; }
     }
     .hd-card {
-      background: #fff; border-radius: 14px; padding: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden;
+      background: rgba(255,255,255,0.04); border-radius: 14px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,0.08); overflow: hidden;
     }
     .hd-card.full-width { grid-column: 1 / -1; }
     .hd-card h2 {
-      font-size: 15px; font-weight: 600; margin: 0 0 14px 0; color: #111;
+      font-size: 15px; font-weight: 600; margin: 0 0 14px 0; color: #F5F5F5;
     }
     .hd-ring-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
     .hd-ring-item { text-align: center; }
-    .hd-ring-label { font-size: 11px; color: #6b7280; margin-top: 4px; }
-    .hd-ring-value { font-size: 13px; font-weight: 600; color: #111; }
+    .hd-ring-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .hd-ring-value { font-size: 13px; font-weight: 600; color: #F5F5F5; }
     .hd-btn {
       padding: 8px 16px; border-radius: 8px; border: none;
       font-size: 13px; font-weight: 500; cursor: pointer;
       transition: background .15s;
     }
-    .hd-btn-primary { background: #059669; color: #fff; }
-    .hd-btn-primary:hover { background: #047857; }
-    .hd-btn-outline { background: #fff; color: #059669; border: 1px solid #059669; }
-    .hd-btn-outline:hover { background: #ecfdf5; }
+    .hd-btn-primary { background: #10B981; color: #fff; }
+    .hd-btn-primary:hover { background: #34D399; }
+    .hd-btn-outline { background: transparent; color: #10B981; border: 1px solid #10B981; }
+    .hd-btn-outline:hover { background: rgba(16,185,129,0.08); }
     .hd-upgrade-prompt {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; padding: 60px 20px; text-align: center;
       min-height: 60vh;
     }
-    .hd-upgrade-prompt h2 { font-size: 22px; margin-bottom: 12px; color: #111; }
-    .hd-upgrade-prompt p { color: #6b7280; max-width: 400px; margin-bottom: 20px; }
+    .hd-upgrade-prompt h2 { font-size: 22px; margin-bottom: 12px; color: #F5F5F5; }
+    .hd-upgrade-prompt p { color: rgba(255,255,255,0.4); max-width: 400px; margin-bottom: 20px; }
     .hd-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 160px; }
     .hd-bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; }
-    .hd-bar-label { font-size: 10px; color: #6b7280; margin-top: 4px; white-space: nowrap; }
+    .hd-bar-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 4px; white-space: nowrap; }
     .hd-bar-value { font-size: 10px; font-weight: 600; margin-bottom: 2px; }
     .hd-macro-pie {
       width: 140px; height: 140px; border-radius: 50%; margin: 0 auto;
     }
     .hd-macro-legend { display: flex; gap: 16px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
-    .hd-macro-legend-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #374151; }
+    .hd-macro-legend-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: rgba(255,255,255,0.6); }
     .hd-macro-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
     .hd-score-gauge { text-align: center; }
     .hd-score-factors { margin-top: 12px; }
     .hd-factor-row {
       display: flex; justify-content: space-between; padding: 6px 0;
-      font-size: 13px; border-bottom: 1px solid #f3f4f6;
+      font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .hd-factor-positive { color: #059669; }
-    .hd-factor-negative { color: #ef4444; }
+    .hd-factor-positive { color: #10B981; }
+    .hd-factor-negative { color: #EF4444; }
     .hd-modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,.4);
+      position: fixed; inset: 0; background: rgba(0,0,0,.6);
       z-index: 8500; display: flex; align-items: center; justify-content: center;
     }
     .hd-modal {
-      background: #fff; border-radius: 14px; padding: 24px;
+      background: #161819; border-radius: 14px; padding: 24px;
       max-width: 420px; width: 90%; max-height: 90vh; overflow-y: auto;
     }
-    .hd-modal h2 { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+    .hd-modal h2 { font-size: 18px; font-weight: 600; margin: 0 0 16px; color: #F5F5F5; }
     .hd-form-group { margin-bottom: 14px; }
     .hd-form-group label {
       display: block; font-size: 13px; font-weight: 500;
-      color: #374151; margin-bottom: 4px;
+      color: rgba(255,255,255,0.6); margin-bottom: 4px;
     }
     .hd-form-group input, .hd-form-group select {
-      width: 100%; padding: 8px 12px; border: 1px solid #d1d5db;
-      border-radius: 8px; font-size: 14px; box-sizing: border-box;
+      width: 100%; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; font-size: 14px; box-sizing: border-box; background: rgba(255,255,255,0.04); color: #F5F5F5;
     }
     .hd-form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
     .hd-trend-chart { width: 100%; }
     .hd-demo-banner {
-      background: #f0fdf4; border: 1px solid #bbf7d0;
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
       padding: 12px 20px; text-align: center;
     }
     @keyframes hd-ring-anim {
@@ -346,7 +346,7 @@ async function renderDashboard(period) {
   if (!body) return;
 
   body.innerHTML = `<div class="hd-card full-width" style="text-align:center;padding:40px;">
-    <p style="color:#6b7280;">${_t('로딩 중...', 'Loading...')}</p>
+    <p style="color:rgba(255,255,255,0.4);">${_t('로딩 중...', 'Loading...')}</p>
   </div>`;
 
   const { start, end } = _hdDateRange(period);
@@ -365,8 +365,8 @@ async function renderDashboard(period) {
 
   // Show demo banner when using sample data
   if (_usingDemo) {
-    body.innerHTML += `<div class="hd-card full-width" style="background:#f0fdf4;border:1px solid #bbf7d0;padding:12px 20px;text-align:center;">
-      <span style="font-size:13px;color:#15803d;">
+    body.innerHTML += `<div class="hd-card full-width" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);padding:12px 20px;text-align:center;">
+      <span style="font-size:13px;color:#10B981;">
         ${_t('샘플 데이터가 표시 중입니다. 식사를 기록하면 실제 데이터로 대체됩니다.', 'Showing sample data. Log meals to see your real data.')}
       </span>
     </div>`;
@@ -405,7 +405,7 @@ function renderNutritionGoalCard() {
   };
 
   const rings = [
-    { key: 'calories', label: _t('칼로리', 'Calories'), actual: avg.calories, goal: _hdGoals.calories, unit: 'kcal', color: '#059669' },
+    { key: 'calories', label: _t('칼로리', 'Calories'), actual: avg.calories, goal: _hdGoals.calories, unit: 'kcal', color: '#10B981' },
     { key: 'protein',  label: _t('단백질', 'Protein'),  actual: avg.protein,  goal: _hdGoals.protein,  unit: 'g',    color: '#3b82f6' },
     { key: 'fat',      label: _t('지방', 'Fat'),        actual: avg.fat,      goal: _hdGoals.fat,      unit: 'g',    color: '#f59e0b' },
     { key: 'carbs',    label: _t('탄수화물', 'Carbs'),   actual: avg.carbs,    goal: _hdGoals.carbs,    unit: 'g',    color: '#8b5cf6' },
@@ -419,12 +419,12 @@ function renderNutritionGoalCard() {
     return `
       <div class="hd-ring-item">
         <svg width="80" height="80" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="${radius}" fill="none" stroke="#e5e7eb" stroke-width="6"/>
+          <circle cx="40" cy="40" r="${radius}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
           <circle cx="40" cy="40" r="${radius}" fill="none" stroke="${r.color}" stroke-width="6"
             stroke-dasharray="${dash} ${circ}" stroke-linecap="round"
             transform="rotate(-90 40 40)" style="animation: hd-ring-anim .8s ease-out;"/>
-          <text x="40" y="38" text-anchor="middle" font-size="12" font-weight="600" fill="#111">${Math.round(pct * 100)}%</text>
-          <text x="40" y="51" text-anchor="middle" font-size="8" fill="#6b7280">${r.actual}/${r.goal}</text>
+          <text x="40" y="38" text-anchor="middle" font-size="12" font-weight="600" fill="#F5F5F5">${Math.round(pct * 100)}%</text>
+          <text x="40" y="51" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.4)">${r.actual}/${r.goal}</text>
         </svg>
         <div class="hd-ring-label">${r.label}</div>
       </div>`;
@@ -484,7 +484,7 @@ function renderDailyIntakeChart(period) {
     const label = date.slice(5); // MM-DD
     return `
       <rect x="${x}" y="${barHeight - h}" width="${barW}" height="${h}" rx="3" fill="${color}" opacity=".85"/>
-      <text x="${x + barW / 2}" y="${barHeight + 14}" text-anchor="middle" font-size="9" fill="#6b7280">${label}</text>
+      <text x="${x + barW / 2}" y="${barHeight + 14}" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.4)">${label}</text>
       ${cal > 0 ? `<text x="${x + barW / 2}" y="${barHeight - h - 4}" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">${cal}</text>` : ''}`;
   }).join('');
 
@@ -567,7 +567,7 @@ function renderHealthScoreCard() {
             stroke-dasharray="${dash} ${circ}" stroke-linecap="round"
             transform="rotate(-90 70 70)" style="animation: hd-ring-anim 1s ease-out;"/>
           <text x="70" y="66" text-anchor="middle" font-size="32" font-weight="700" fill="${scoreColor}">${total}</text>
-          <text x="70" y="84" text-anchor="middle" font-size="11" fill="#6b7280">/100</text>
+          <text x="70" y="84" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.4)">/100</text>
         </svg>
       </div>
       <div style="display:flex;gap:8px;justify-content:center;margin:10px 0;font-size:12px;color:#6b7280;">
@@ -636,7 +636,7 @@ function renderWeeklyTrend() {
   const dots = points.map(p =>
     `<circle cx="${p.x}" cy="${p.y}" r="4" fill="#059669"/>
      <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" font-size="10" font-weight="600" fill="#059669">${p.score}</text>
-     <text x="${p.x}" y="${chartH}" text-anchor="middle" font-size="9" fill="#6b7280">${p.label}</text>`
+     <text x="${p.x}" y="${chartH}" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.4)">${p.label}</text>`
   ).join('');
 
   return `
