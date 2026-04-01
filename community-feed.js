@@ -325,7 +325,7 @@ async function _loadAndRenderFeed() {
   if (_cfOffset === recipes.length && recipes.length === 0) {
     list.innerHTML = `
       <div class="cf-empty">
-        <div style="font-size:48px;margin-bottom:12px;">🌱</div>
+        <div style="margin-bottom:12px;"><img src="https://images.pexels.com/photos/1105019/pexels-photo-1105019.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='🌱'"></div>
         <div style="font-weight:600;margin-bottom:4px;">
           ${_t('아직 공유된 레시피가 없습니다', 'No shared recipes yet')}
         </div>
@@ -394,14 +394,14 @@ function renderFeedCard(recipe) {
       </div>
       <div class="cf-card-actions">
         <button class="cf-like-btn ${liked}" data-id="${recipe.id}" onclick="event.stopPropagation();toggleLike('${recipe.id}',this)">
-          <span class="cf-heart">${liked ? '❤️' : '🤍'}</span>
+          <span class="cf-heart">${liked ? '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">' : '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">'}</span>
           <span class="cf-like-count">${likeCount}</span>
         </button>
         <button class="cf-comment-btn" onclick="event.stopPropagation();openSharedRecipeDetail('${recipe.id}','comments')">
-          💬 <span>${commentCount}</span>
+          <img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💬'"> <span>${commentCount}</span>
         </button>
         <button class="cf-share-btn" onclick="event.stopPropagation();_copyShareLink('${recipe.id}')">
-          🔗 ${_t('공유', 'Share')}
+          <img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔗'"> ${_t('공유', 'Share')}
         </button>
       </div>
     </div>
@@ -593,7 +593,7 @@ async function openSharedRecipeDetail(id, scrollTo) {
       ${nutritionHtml}
       <div class="cf-det-actions-row">
         <button class="cf-like-btn-lg ${liked}" id="cf-like-btn-${id}" onclick="toggleLike('${id}',this)">
-          <span class="cf-heart">${liked ? '❤️' : '🤍'}</span>
+          <span class="cf-heart">${liked ? '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">' : '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">'}</span>
           <span class="cf-like-count">${recipe.like_count || 0}</span> ${_t('좋아요', 'likes')}
         </button>
       </div>
@@ -704,7 +704,7 @@ async function _submitShare(savedRecipeId) {
 
   const result = await dbQuery('shared_recipes', 'insert', { data: row });
   if (result) {
-    showToast(_t('레시피가 공유되었습니다! 🎉', 'Recipe shared! 🎉'));
+    showToast(_t('레시피가 공유되었습니다! <img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🎉\'">', 'Recipe shared! <img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🎉\'">'));
     document.getElementById('cf-share-overlay').style.display = 'none';
   } else {
     showToast(_t('공유에 실패했습니다.', 'Failed to share recipe.'));
@@ -727,11 +727,11 @@ async function toggleLike(sharedRecipeId, btnEl) {
 
   if (isLiked) {
     btnEl.classList.remove('liked');
-    heartEl.textContent = '🤍';
+    heartEl.innerHTML = '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">';
     count = Math.max(0, count - 1);
   } else {
     btnEl.classList.add('liked');
-    heartEl.textContent = '❤️';
+    heartEl.innerHTML = '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">';
     btnEl.classList.add('cf-heart-pop');
     setTimeout(() => btnEl.classList.remove('cf-heart-pop'), 400);
     count += 1;
@@ -744,7 +744,7 @@ async function toggleLike(sharedRecipeId, btnEl) {
     const c = el.querySelector('.cf-like-count');
     const h = el.querySelector('.cf-heart');
     if (c) c.textContent = count;
-    if (h) h.textContent = isLiked ? '🤍' : '❤️';
+    if (h) h.innerHTML = isLiked ? '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">' : '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">';
     if (isLiked) el.classList.remove('liked');
     else el.classList.add('liked');
   });
@@ -759,11 +759,11 @@ async function toggleLike(sharedRecipeId, btnEl) {
     // Revert on error
     if (isLiked) {
       btnEl.classList.add('liked');
-      heartEl.textContent = '❤️';
+      heartEl.innerHTML = '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">';
       if (countEl) countEl.textContent = count + 1;
     } else {
       btnEl.classList.remove('liked');
-      heartEl.textContent = '🤍';
+      heartEl.innerHTML = '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">';
       if (countEl) countEl.textContent = Math.max(0, count - 1);
     }
   }
@@ -875,7 +875,7 @@ function _renderCommentsSection(recipeId, comments) {
 
   return `
     <div class="cf-comments-header">
-      <strong>💬 ${_t('댓글', 'Comments')} (${comments.length})</strong>
+      <strong><img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💬'"> ${_t('댓글', 'Comments')} (${comments.length})</strong>
     </div>
     <div class="cf-comments-list">${commentsHtml}</div>
     <div class="cf-add-comment">
