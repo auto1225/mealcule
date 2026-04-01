@@ -2372,6 +2372,16 @@ function getPlanLimit(type) {
   return PLAN_LIMITS[userPlan]?.[type] ?? PLAN_LIMITS.free[type];
 }
 
+// ── Safe localStorage helpers ──
+function safeGetLS(key, defaultValue) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : defaultValue; }
+  catch(e) { return defaultValue; }
+}
+function safeSetLS(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch(e) { return false; }
+}
+
 async function checkDailyLimit(type = 'analysis') {
   const limit = getPlanLimit(type);
   if (limit === -1) return true; // unlimited
@@ -2971,18 +2981,36 @@ async function dbQuery(table, method = 'select', params = {}) {
       query = query.delete();
     }
     const { data, error } = await query;
-    if (error) { console.warn(`DB ${method} ${table}:`, error.message); return null; }
+    if (error) {
+      console.warn(`DB ${method} ${table}:`, error.message);
+      if (typeof showToast === 'function' && (method === 'insert' || method === 'update' || method === 'upsert' || method === 'delete')) {
+        showToast(`Save failed: ${error.message}`, 'error');
+      }
+      return null;
+    }
     return data;
-  } catch(e) { console.warn('DB error:', e); return null; }
+  } catch(e) {
+    console.warn('DB error:', e);
+    if (typeof showToast === 'function') showToast('Database connection error', 'error');
+    return null;
+  }
 }
 
 async function dbRPC(fn, params = {}) {
   if (!sbClient) return null;
   try {
     const { data, error } = await sbClient.rpc(fn, params);
-    if (error) { console.warn(`RPC ${fn}:`, error.message); return null; }
+    if (error) {
+      console.warn(`RPC ${fn}:`, error.message);
+      if (typeof showToast === 'function') showToast(`Operation failed: ${error.message}`, 'error');
+      return null;
+    }
     return data;
-  } catch(e) { console.warn('RPC error:', e); return null; }
+  } catch(e) {
+    console.warn('RPC error:', e);
+    if (typeof showToast === 'function') showToast('Database connection error', 'error');
+    return null;
+  }
 }
 
 // ── State ──

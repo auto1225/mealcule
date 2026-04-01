@@ -233,12 +233,12 @@ function openCommunityFeed() {
 // ── 2. Close Community Feed ─────────────────────────────────────────────────
 
 function closeCommunityFeed() {
+  _cfOpen = false;
   const overlay = document.getElementById('cf-overlay');
   if (!overlay) return;
   overlay.classList.remove('open');
   setTimeout(() => {
     overlay.style.display = 'none';
-    _cfOpen = false;
   }, 300);
 }
 
