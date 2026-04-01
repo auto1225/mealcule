@@ -15,8 +15,8 @@ let _collectionsCache = [];        // loaded collections
 // ── Demo/Sample Recipes (shown when database is empty) ─────────────────────
 const _demoCollections = [
   { id: 'demo-col-fav', name: '즐겨찾기', name_en: 'Favorites', emoji: '⭐', sort_order: 0 },
-  { id: 'demo-col-mol', name: '분자요리', name_en: 'Molecular', emoji: '🔬', sort_order: 1 },
-  { id: 'demo-col-quick', name: '간단 요리', name_en: 'Quick Meals', emoji: '⚡', sort_order: 2 },
+  { id: 'demo-col-mol', name: '분자요리', name_en: 'Molecular', emoji: '<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;" onerror="this.outerHTML=\'🔬\'">', sort_order: 1 },
+  { id: 'demo-col-quick', name: '간단 요리', name_en: 'Quick Meals', emoji: '<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;" onerror="this.outerHTML=\'⚡\'">', sort_order: 2 },
 ];
 
 const _demoRecipes = [

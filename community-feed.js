@@ -165,7 +165,7 @@ function openCommunityFeed() {
     overlay.innerHTML = `
       <div class="cf-panel">
         <div class="cf-header">
-          <span class="cf-header-title">🍽️ ${_t('커뮤니티 레시피', 'Community Recipes')}</span>
+          <span class="cf-header-title"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" alt="" style="width:20px;height:20px;border-radius:4px;vertical-align:middle;margin-right:4px;" onerror="this.outerHTML='🍽️'"> ${_t('커뮤니티 레시피', 'Community Recipes')}</span>
           <button class="cf-close-btn" onclick="closeCommunityFeed()" aria-label="Close">&times;</button>
         </div>
         <div class="cf-search-bar">
@@ -365,8 +365,9 @@ function renderFeedCard(recipe) {
     ? (recipe.description.length > 100 ? recipe.description.slice(0, 100) + '...' : recipe.description)
     : '';
 
-  const imageHtml = recipe.image_url
-    ? `<img src="${recipe.image_url}" alt="${_escCf(recipe.title || '')}" class="cf-card-photo" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'cf-card-emoji\\'>${emoji}</span>'" />`
+  var _fallbackId = 1640777;
+  var imageHtml = recipe.image_url
+    ? `<img src="${recipe.image_url}" alt="${_escCf(recipe.title || '')}" class="cf-card-photo" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'cf-card-emoji\\'><img src=\\'https://images.pexels.com/photos/${_fallbackId}/pexels-photo-${_fallbackId}.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop\\' alt=\\'\\'style=\\'width:48px;height:48px;border-radius:8px;object-fit:cover;\\' onerror=\\'this.outerHTML=&quot;🍽️&quot;\\'></span>'" />`
     : `<span class="cf-card-emoji">${emoji}</span>`;
 
   const videoBtn = recipe.video_id
@@ -408,22 +409,29 @@ function renderFeedCard(recipe) {
 }
 
 function _getRecipeEmoji(hint) {
-  const h = hint.toLowerCase();
-  if (/chicken|닭/.test(h)) return '🍗';
-  if (/beef|소고기|steak/.test(h)) return '🥩';
-  if (/fish|생선|salmon|연어/.test(h)) return '🐟';
-  if (/salad|샐러드/.test(h)) return '🥗';
-  if (/pasta|파스타|noodle|면/.test(h)) return '🍝';
-  if (/soup|수프|찌개|탕/.test(h)) return '🍲';
-  if (/rice|밥|볶음밥/.test(h)) return '🍚';
-  if (/bread|빵|bake/.test(h)) return '🍞';
-  if (/cake|케이크|dessert|디저트/.test(h)) return '🍰';
-  if (/korean|한식/.test(h)) return '🇰🇷';
-  if (/japanese|일식/.test(h)) return '🇯🇵';
-  if (/chinese|중식/.test(h)) return '🇨🇳';
-  if (/indian|인도/.test(h)) return '🇮🇳';
-  if (/mexican|멕시코/.test(h)) return '🇲🇽';
-  return '🍽️';
+  var h = hint.toLowerCase();
+  var _recipePhotoMap = [
+    { re: /chicken|닭/, id: 616354 },
+    { re: /beef|소고기|steak/, id: 65175 },
+    { re: /fish|생선|salmon|연어/, id: 1409050 },
+    { re: /salad|샐러드/, id: 1640777 },
+    { re: /pasta|파스타|noodle|면/, id: 1279330 },
+    { re: /soup|수프|찌개|탕|stew/, id: 2641886 },
+    { re: /rice|밥|볶음밥/, id: 1311771 },
+    { re: /bread|빵|bake/, id: 1775043 },
+    { re: /cake|케이크|dessert|디저트/, id: 806363 },
+    { re: /korean|한식/, id: 2641886 },
+    { re: /japanese|일식/, id: 12984979 },
+    { re: /chinese|중식/, id: 1640777 },
+    { re: /indian|인도/, id: 2474661 },
+    { re: /mexican|멕시코/, id: 1640777 },
+  ];
+  var defaultId = 1640777;
+  var matchedId = defaultId;
+  for (var i = 0; i < _recipePhotoMap.length; i++) {
+    if (_recipePhotoMap[i].re.test(h)) { matchedId = _recipePhotoMap[i].id; break; }
+  }
+  return '<img src="https://images.pexels.com/photos/' + matchedId + '/pexels-photo-' + matchedId + '.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" alt="" style="width:48px;height:48px;border-radius:8px;object-fit:cover;" onerror="this.outerHTML=\'🍽️\'">';
 }
 
 function _escCf(str) {
@@ -551,8 +559,8 @@ async function openSharedRecipeDetail(id, scrollTo) {
       <button class="cf-modal-close" onclick="_closeCfDetail()">&times;</button>
       <div class="cf-det-image">
         ${recipe.image_url
-          ? `<img src="${recipe.image_url}" alt="${_escCf(recipe.title || '')}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<span style=font-size:64px>${emoji}</span>'" />`
-          : `<span style="font-size:64px;">${emoji}</span>`}
+          ? `<img src="${recipe.image_url}" alt="${_escCf(recipe.title || '')}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<img src=\\'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop\\' alt=\\'\\'style=\\'width:120px;height:120px;border-radius:12px;object-fit:cover;\\' onerror=\\'this.outerHTML=&quot;🍽️&quot;\\'>'" />`
+          : `<div style="padding:20px;">${emoji}</div>`}
         ${recipe.video_id ? `<button class="cf-video-btn" onclick="_playRecipeVideo('${recipe.video_id}')" style="position:absolute;bottom:16px;right:16px;width:52px;height:52px;font-size:20px;">▶</button>` : ''}
       </div>
       <div class="cf-det-header">
@@ -650,7 +658,7 @@ async function shareMyRecipe(savedRecipeId) {
       <button class="cf-modal-close" onclick="document.getElementById('cf-share-overlay').style.display='none'">&times;</button>
       <h3 class="cf-share-heading">${_t('레시피 공유하기', 'Share Recipe')}</h3>
       <div class="cf-share-preview">
-        <span style="font-size:32px;">${_getRecipeEmoji(recipe.cuisine || recipe.name || '')}</span>
+        <span style="display:inline-block;">${_getRecipeEmoji(recipe.cuisine || recipe.name || '')}</span>
         <strong>${_escCf(recipe.name || '')}</strong>
       </div>
       <label class="cf-share-label">${_t('설명', 'Description')}</label>
