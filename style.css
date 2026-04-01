@@ -713,6 +713,39 @@ select option{background:var(--bg-secondary);color:var(--text)}
 .home-primary-btn--secondary{background:var(--card);border:1px solid var(--border);color:var(--text)}
 .home-primary-btn--secondary:hover{background:var(--card-hover);border-color:var(--border-hover);filter:none}
 
+/* ── Home Feature Showcase ── */
+.home-features{margin:24px 0 16px}
+.hf-section{margin-bottom:16px}
+.hf-section-header{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px 12px 0 0;border-bottom:2px solid var(--hf-color, var(--accent))}
+.hf-section-icon{display:flex;align-items:center;color:var(--hf-color, var(--accent))}
+.hf-section-title{font-size:14px;font-weight:700;color:var(--text)}
+.hf-section-count{margin-left:auto;font-size:11px;color:var(--text-tertiary);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px}
+.hf-items{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;overflow:hidden}
+.hf-item{display:block;width:100%;text-align:left;padding:12px 14px;border:none;background:var(--card);color:var(--text);cursor:pointer;transition:background .15s;font-family:inherit}
+.hf-item:hover{background:var(--card-hover)}
+.hf-item-label{font-size:13px;font-weight:600;margin-bottom:2px}
+.hf-item-desc{font-size:11px;color:var(--text-tertiary);line-height:1.4}
+@media(min-width:600px){.hf-items{grid-template-columns:1fr 1fr}}
+
+/* ── App Map Overlay ── */
+.appmap-overlay{position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:600px){.appmap-overlay{align-items:center}}
+.appmap-modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:540px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;animation:slideUp .25s ease}
+@media(min-width:600px){.appmap-modal{border-radius:20px;max-height:80vh}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.appmap-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border)}
+.appmap-header h2{font-size:18px;font-weight:700;margin:0}
+.appmap-close{width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.appmap-body{overflow-y:auto;padding:16px 20px 24px;-webkit-overflow-scrolling:touch}
+.appmap-section{margin-bottom:20px}
+.appmap-sec-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.appmap-sec-items{display:grid;gap:6px}
+.appmap-link{display:block;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;text-decoration:none;transition:all .15s;color:var(--text)}
+.appmap-link:hover{background:var(--card-hover);border-color:var(--border-hover)}
+.appmap-link-label{font-size:13px;font-weight:600;display:block}
+.appmap-link-desc{font-size:11px;color:var(--text-tertiary);display:block;margin-top:2px}
+@media(min-width:480px){.appmap-sec-items{grid-template-columns:1fr 1fr}}
+
 /* ══════════════════════════════════════════════════════════════════
    ANALYZE STEP WIZARD
    ══════════════════════════════════════════════════════════════════ */

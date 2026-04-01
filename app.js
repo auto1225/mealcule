@@ -2512,23 +2512,7 @@ function renderHomeDashboard() {
           '</button>' +
         '</div>' +
 
-        '<div class="home-how-it-works">' +
-          '<div class="home-section-title">' + _t('어떻게 작동하나요?', 'How does it work?') + '</div>' +
-          '<div class="how-steps">' +
-            '<div class="how-step">' +
-              '<div class="how-step-num">1</div>' +
-              '<div class="how-step-text"><strong>' + _t('재료 선택', 'Pick Ingredients') + '</strong><br>' + _t(ingCount + '+ 식재료 데이터베이스에서 선택', 'Choose from ' + ingCount + '+ ingredients') + '</div>' +
-            '</div>' +
-            '<div class="how-step">' +
-              '<div class="how-step-num">2</div>' +
-              '<div class="how-step-text"><strong>' + _t('조리 조건 설정', 'Set Cooking Conditions') + '</strong><br>' + _t('온도, 시간, 조리법 선택', 'Temperature, time, method') + '</div>' +
-            '</div>' +
-            '<div class="how-step">' +
-              '<div class="how-step-num">3</div>' +
-              '<div class="how-step-text"><strong>' + _t('과학 분석 결과', 'Get Science Results') + '</strong><br>' + _t('화학 반응, 영양 변화, 건강 영향', 'Reactions, nutrition, health impacts') + '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
+        _buildFeatureShowcase(_t) +
 
         '<div class="home-stats">' +
           '<span class="home-stat"><strong>' + ingCount + '+</strong> ' + _t('식재료', 'ingredients') + '</span>' +
@@ -2628,8 +2612,82 @@ function renderHomeDashboard() {
   // Recent analyses
   html += recentHtml;
 
+  // Feature showcase (returning users too)
+  html += _buildFeatureShowcase(_t);
+
   container.innerHTML = html;
   _tabRendered.home = true;
+}
+
+// ── Feature Showcase for Home Tab ──
+function _buildFeatureShowcase(_t) {
+  var sections = [
+    {
+      title: _t('분석', 'Analyze'),
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l3 7-6 11-6-11 3-7z"/></svg>',
+      color: '#10b981',
+      items: [
+        { label: _t('재료 선택 분석', 'Ingredient Analysis'), desc: _t('939+ 식재료 데이터베이스', '939+ ingredient database'), action: "switchTab('analyze')" },
+        { label: _t('사진 스캔', 'Photo Scan'), desc: _t('AI가 음식 사진에서 재료 인식', 'AI identifies ingredients from food photos'), action: "switchTab('analyze');setTimeout(function(){if(typeof openPhotoScanner==='function')openPhotoScanner()},300)" },
+        { label: _t('레시피 URL 가져오기', 'Import Recipe URL'), desc: _t('웹 레시피 자동 분석', 'Auto-analyze web recipes'), action: "switchTab('analyze');setTimeout(function(){if(typeof openUrlImport==='function')openUrlImport()},300)" },
+        { label: _t('화학 반응 분석', 'Chemical Reactions'), desc: _t('마이야르, 캐러멜화, 단백질 변성 등', 'Maillard, caramelization, denaturation...'), action: "switchTab('analyze')" },
+        { label: _t('건강 영향 분석', 'Health Impact'), desc: _t('질환별 맞춤 분석 · 약물-음식 상호작용', 'Condition-specific · drug-food interactions'), action: "switchTab('analyze')" },
+      ]
+    },
+    {
+      title: _t('식단 플래너', 'Meal Planner'),
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1"/><circle cx="12" cy="15" r="1"/><circle cx="16" cy="15" r="1"/></svg>',
+      color: '#8b5cf6',
+      items: [
+        { label: _t('주간 식단 계획', 'Weekly Meal Plan'), desc: _t('7일 × 4끼 드래그&드롭 캘린더', '7 days × 4 meals drag & drop calendar'), action: "switchTab('plan')" },
+        { label: _t('일일 영양 요약', 'Daily Nutrition Summary'), desc: _t('날짜별 칼로리 · 매크로 합산', 'Per-day calorie & macro totals'), action: "switchTab('plan')" },
+        { label: _t('AI 식단 생성', 'AI Meal Generation'), desc: _t('목표에 맞는 식단 자동 생성', 'Auto-generate meals for your goals'), action: "switchTab('plan')" },
+      ]
+    },
+    {
+      title: _t('레시피', 'Recipes'),
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="13" y2="11"/></svg>',
+      color: '#f59e0b',
+      items: [
+        { label: _t('레시피 보관함', 'Recipe Box'), desc: _t('분석 결과를 레시피로 저장 · 컬렉션 관리', 'Save analyses as recipes · manage collections'), action: "switchTab('recipes')" },
+        { label: _t('커뮤니티', 'Community'), desc: _t('다른 사용자의 레시피 탐색 · 좋아요 · 댓글', 'Explore others\' recipes · like · comment'), action: "switchTab('recipes');setTimeout(function(){var ct=document.querySelector('.sub-tab[data-subtab=\"community\"]');if(ct)ct.click()},300)" },
+      ]
+    },
+    {
+      title: _t('건강 관리', 'Health & Tracking'),
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>',
+      color: '#ef4444',
+      items: [
+        { label: _t('칼로리 트래커', 'Calorie Tracker'), desc: _t('일일 칼로리 · 매크로 · 수분 섭취 추적', 'Daily calories · macros · water intake tracking'), action: "switchTab('profile');setTimeout(function(){showProfileSection('calories')},200)" },
+        { label: _t('건강 대시보드', 'Health Dashboard'), desc: _t('주간/월간 영양 트렌드 · 건강 점수', 'Weekly/monthly nutrition trends · health score'), action: "switchTab('profile');setTimeout(function(){showProfileSection('dashboard')},200)" },
+        { label: _t('건강 프로필', 'Health Profile'), desc: _t('질환 · 알레르기 · 복용약 · 식단 설정', 'Conditions · allergies · medications · diet'), action: "switchTab('profile');setTimeout(function(){showProfileSection('health')},200)" },
+        { label: _t('빠른 식사 기록', 'Quick Food Log'), desc: _t('텍스트로 간편하게 식사 기록', 'Log meals quickly with text input'), action: "if(typeof openQuickTextLog==='function')openQuickTextLog()" },
+      ]
+    }
+  ];
+
+  var html = '<div class="home-features">' +
+    '<div class="home-section-title">' + _t('주요 기능', 'Features') + '</div>';
+
+  sections.forEach(function(sec) {
+    html += '<div class="hf-section">' +
+      '<div class="hf-section-header" style="--hf-color:' + sec.color + '">' +
+        '<span class="hf-section-icon">' + sec.icon + '</span>' +
+        '<span class="hf-section-title">' + sec.title + '</span>' +
+        '<span class="hf-section-count">' + sec.items.length + '</span>' +
+      '</div>' +
+      '<div class="hf-items">';
+    sec.items.forEach(function(item) {
+      html += '<button class="hf-item" onclick="' + item.action.replace(/'/g, "\\'") + '">' +
+        '<div class="hf-item-label">' + item.label + '</div>' +
+        '<div class="hf-item-desc">' + item.desc + '</div>' +
+      '</button>';
+    });
+    html += '</div></div>';
+  });
+
+  html += '</div>';
+  return html;
 }
 
 /** 데이터 관리 UI 렌더링 */
@@ -7617,6 +7675,79 @@ function updateSliderLabels() {
 // ══════════════════════════════════════════════════
 // FEEDBACK UI
 // ══════════════════════════════════════════════════
+// ── App Map (Sitemap) Overlay ──
+function openAppMap() {
+  var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+  var existing = document.getElementById('appMapOverlay');
+  if (existing) { existing.style.display = 'flex'; return; }
+
+  var overlay = document.createElement('div');
+  overlay.id = 'appMapOverlay';
+  overlay.className = 'appmap-overlay';
+  overlay.onclick = function(e) { if (e.target === overlay) overlay.style.display = 'none'; };
+
+  var sections = [
+    { title: _t('홈', 'Home'), icon: '🏠', items: [
+      { label: _t('오늘의 영양', "Today's Nutrition"), action: "switchTab('home')" },
+      { label: _t('연속 기록', 'Streak Tracker'), action: "switchTab('home')" },
+      { label: _t('오늘의 팁', 'Daily Tip'), action: "switchTab('home')" },
+      { label: _t('최근 분석', 'Recent Analyses'), action: "switchTab('home')" },
+    ]},
+    { title: _t('분석', 'Analyze'), icon: '🔬', items: [
+      { label: _t('재료 선택', 'Ingredient Selection'), desc: _t('939+ 식재료', '939+ ingredients'), action: "switchTab('analyze')" },
+      { label: _t('사진 스캔', 'Photo Scan'), desc: _t('AI 재료 인식', 'AI ingredient detection'), action: "switchTab('analyze');setTimeout(function(){if(typeof openPhotoScanner==='function')openPhotoScanner()},300)" },
+      { label: _t('레시피 URL 가져오기', 'Import Recipe URL'), desc: _t('웹 레시피 자동 분석', 'Auto-analyze web recipes'), action: "switchTab('analyze');setTimeout(function(){if(typeof openUrlImport==='function')openUrlImport()},300)" },
+      { label: _t('조리 조건 설정', 'Cooking Conditions'), desc: _t('온도 · 시간 · 조리법', 'Temperature · time · method'), action: "switchTab('analyze');setTimeout(function(){switchAnalyzeStep(2)},200)" },
+      { label: _t('건강 프로필 적용', 'Apply Health Profile'), desc: _t('질환 · 약물 상호작용', 'Conditions · drug interactions'), action: "switchTab('analyze');setTimeout(function(){switchAnalyzeStep(3)},200)" },
+      { label: _t('분석 결과', 'Analysis Results'), desc: _t('화학 반응 · 영양 · 풍미 · 건강', 'Reactions · nutrition · flavor · health'), action: "switchTab('analyze');setTimeout(function(){switchAnalyzeStep(4)},200)" },
+    ]},
+    { title: _t('플랜', 'Plan'), icon: '📅', items: [
+      { label: _t('주간 식단 캘린더', 'Weekly Meal Calendar'), desc: _t('7일 × 4끼', '7 days × 4 meals'), action: "switchTab('plan')" },
+      { label: _t('일일 영양 요약', 'Daily Nutrition Summary'), action: "switchTab('plan')" },
+      { label: _t('AI 식단 생성', 'AI Meal Generation'), action: "switchTab('plan')" },
+    ]},
+    { title: _t('레시피', 'Recipes'), icon: '📖', items: [
+      { label: _t('내 레시피', 'My Recipes'), desc: _t('저장된 레시피 · 컬렉션 관리', 'Saved recipes · collection management'), action: "switchTab('recipes')" },
+      { label: _t('커뮤니티', 'Community'), desc: _t('공유 레시피 · 좋아요 · 댓글', 'Shared recipes · likes · comments'), action: "switchTab('recipes');setTimeout(function(){var ct=document.querySelector('.sub-tab[data-subtab=\"community\"]');if(ct)ct.click()},300)" },
+    ]},
+    { title: _t('프로필', 'Profile'), icon: '👤', items: [
+      { label: _t('건강 프로필', 'Health Profile'), desc: _t('질환 · 알레르기 · 복용약 · 식단', 'Conditions · allergies · medications · diet'), action: "switchTab('profile');setTimeout(function(){showProfileSection('health')},200)" },
+      { label: _t('칼로리 트래커', 'Calorie Tracker'), desc: _t('일일 칼로리 · 매크로 · 수분', 'Daily calories · macros · water'), action: "switchTab('profile');setTimeout(function(){showProfileSection('calories')},200)" },
+      { label: _t('건강 대시보드', 'Health Dashboard'), desc: _t('영양 트렌드 · 건강 점수', 'Nutrition trends · health score'), action: "switchTab('profile');setTimeout(function(){showProfileSection('dashboard')},200)" },
+      { label: _t('내 데이터', 'My Data'), desc: _t('백업 · 복원 · 삭제', 'Backup · restore · delete'), action: "switchTab('profile');setTimeout(function(){showProfileSection('data')},200)" },
+      { label: _t('설정', 'Settings'), desc: _t('테마 · 언어 · 계정', 'Theme · language · account'), action: "switchTab('profile');setTimeout(function(){showProfileSection('settings')},200)" },
+    ]},
+    { title: _t('도구', 'Tools'), icon: '⚡', items: [
+      { label: _t('빠른 식사 기록', 'Quick Food Log'), desc: _t('텍스트로 간편 기록', 'Log meals with text'), action: "if(typeof openQuickTextLog==='function')openQuickTextLog()" },
+      { label: _t('사진으로 칼로리 기록', 'Photo Calorie Log'), desc: _t('사진 찍어서 바로 기록', 'Snap and log instantly'), action: "switchTab('analyze');setTimeout(function(){if(typeof openPhotoScanner==='function')openPhotoScanner()},300)" },
+    ]},
+  ];
+
+  var html = '<div class="appmap-modal">' +
+    '<div class="appmap-header">' +
+      '<h2>' + _t('앱 맵', 'App Map') + '</h2>' +
+      '<button class="appmap-close" onclick="document.getElementById(\'appMapOverlay\').style.display=\'none\'">✕</button>' +
+    '</div>' +
+    '<div class="appmap-body">';
+
+  sections.forEach(function(sec) {
+    html += '<div class="appmap-section">' +
+      '<div class="appmap-sec-title"><span>' + sec.icon + '</span> ' + sec.title + '</div>' +
+      '<div class="appmap-sec-items">';
+    sec.items.forEach(function(item) {
+      html += '<a class="appmap-link" href="#" onclick="document.getElementById(\'appMapOverlay\').style.display=\'none\';' + item.action.replace(/'/g, "\\'") + ';return false">' +
+        '<span class="appmap-link-label">' + item.label + '</span>' +
+        (item.desc ? '<span class="appmap-link-desc">' + item.desc + '</span>' : '') +
+      '</a>';
+    });
+    html += '</div></div>';
+  });
+
+  html += '</div></div>';
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
+}
+
 function openFeedbackModal() {
   document.getElementById('feedbackModal').style.display = 'flex';
 }

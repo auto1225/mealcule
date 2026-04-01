@@ -207,7 +207,8 @@
     "methodology": "Scientific Methodology",
     "pricing": "Pricing",
     "history": "History",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "appmap": "App Map"
   },
   "modal": {
     "addMethodTitle": "Add Cooking Method",

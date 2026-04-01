@@ -207,7 +207,8 @@
     "methodology": "과학적 방법론",
     "pricing": "요금제",
     "history": "분석 기록",
-    "feedback": "피드백"
+    "feedback": "피드백",
+    "appmap": "앱 맵"
   },
   "modal": {
     "addMethodTitle": "조리 방법 추가",
