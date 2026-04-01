@@ -54,6 +54,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard
 .sel-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px 4px 8px;background:#f0fdf4;border:1px solid #a7f3d0;border-radius:3px;transition:border-color .15s}
 .sel-chip:hover{border-color:var(--accent)}
 .sel-chip .sc-e{font-size:13px;line-height:1}
+.sel-chip .sc-img{width:24px;height:24px;border-radius:4px;object-fit:cover;flex-shrink:0}
+.sel-chip .fi-lazy{font-size:13px;line-height:1;display:inline-block}
+.sel-chip .fi-emoji{font-size:13px}
 .sel-chip .sc-n{font-size:11px;color:#065f46;font-weight:500;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sel-chip .sc-g{width:30px;border:none;background:transparent;color:#059669;font-size:11px;font-weight:700;text-align:center;outline:none;padding:0}
 .sel-chip .sc-u{font-size:10px;color:#6ee7b7;margin-right:2px}
@@ -455,6 +458,9 @@ td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:var(--text)}
 .ing-cell:nth-child(4n){border-right:none}
 .ing-cell:last-child{border-right:none}
 .ing-cell .ci-e{font-size:16px;flex-shrink:0;line-height:1}
+.ing-cell .ci-img{width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0}
+.ing-cell .fi-lazy{font-size:16px;flex-shrink:0;line-height:1;display:inline-block;width:36px;height:36px;text-align:center;line-height:36px}
+.ing-cell .fi-emoji{font-size:16px}
 .ing-cell .ci-n{font-size:11px;color:#525252;line-height:1.3;word-break:keep-all;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;max-width:100%}
 
 /* ── Analyze button (main, below all inputs) ─────────────────────────────── */

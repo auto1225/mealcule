@@ -4722,12 +4722,14 @@ function renderIngredientsFromData(items, grid, bypassGrouping = false) {
       if (isParent) {
         cell.dataset.parentKey = name;
         const pLabel = tl(data, 'en') || name;
-        cell.innerHTML = `<span class="ci-e">${data.emoji}</span><span class="ci-n">${pLabel}</span><span class="ci-arr">▶</span>`;
+        const pImgHtml = typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(data.en || pLabel, data.emoji, 'ci-img', 36) : `<span class="ci-e">${data.emoji}</span>`;
+        cell.innerHTML = `${pImgHtml}<span class="ci-n">${pLabel}</span><span class="ci-arr">▶</span>`;
         cell.onclick = () => toggleParentExpand(name);
         parentsInRow.push(name);
       } else {
         const iLabel = tl(data, 'en') || name;
-        cell.innerHTML = `<span class="ci-e">${data.emoji}</span><span class="ci-n">${iLabel}</span>`;
+        const iImgHtml = typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(data.en || iLabel, data.emoji, 'ci-img', 36) : `<span class="ci-e">${data.emoji}</span>`;
+        cell.innerHTML = `${iImgHtml}<span class="ci-n">${iLabel}</span>`;
         cell.onclick = () => toggleIngredient(name);
       }
       row.appendChild(cell);
@@ -4750,7 +4752,8 @@ function renderIngredientsFromData(items, grid, bypassGrouping = false) {
           const subCell = document.createElement("div");
           subCell.className = "ing-cell" + (cname in selected ? " active" : "");
           const cLabel = tl(cdata, 'en') || cname;
-          subCell.innerHTML = `<span class="ci-e">${cdata.emoji}</span><span class="ci-n">${cLabel}</span>`;
+          const cImgHtml = typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(cdata.en || cLabel, cdata.emoji, 'ci-img', 36) : `<span class="ci-e">${cdata.emoji}</span>`;
+          subCell.innerHTML = `${cImgHtml}<span class="ci-n">${cLabel}</span>`;
           subCell.onclick = () => toggleIngredient(cname);
           subRow.appendChild(subCell);
         });
@@ -4759,6 +4762,7 @@ function renderIngredientsFromData(items, grid, bypassGrouping = false) {
       grid.appendChild(expand);
     });
   }
+  if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.scheduleScan();
   return entries.length;
 }
 
@@ -4887,6 +4891,7 @@ async function loadCustomMethods() {
         uniformity: m.uniformity || 'medium',
         _fromDB: true,
       };
+      if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.autoAssignMethodImage(METHODS[m.key]);
       added++;
     });
     customMethodsLoaded = true;
@@ -5087,6 +5092,8 @@ async function addMethodWithAI(name) {
 
     const m = data.method;
     METHODS[m.key] = dbMethodToMETHODS(m);
+    // 커스텀 방법에 자동으로 Pexels 이미지 할당
+    if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.autoAssignMethodImage(METHODS[m.key]);
 
     // 새 방법 선택
     method = m.key;
@@ -5171,8 +5178,9 @@ function renderSelected() {
   badge.textContent = selCount();
   tags.innerHTML = selNames().map(n => {
     const d = DB[n]; if (!d) return '';
+    const scImg = typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(d.en || n, d.emoji, 'sc-img', 24) : `<span class="sc-e">${d.emoji}</span>`;
     return `<div class="sel-chip">
-      <span class="sc-e">${d.emoji}</span>
+      ${scImg}
       <span class="sc-n">${tl(d, 'en') || n}</span>
       <input type="number" class="sc-g" value="${selected[n]}" min="1" max="9999"
         onchange="updateGrams('${n}',this.value)" onkeyup="updateGrams('${n}',this.value)">
@@ -5180,6 +5188,7 @@ function renderSelected() {
       <span class="sc-rm" onclick="toggleIngredient('${n}')" title="제거">×</span>
     </div>`;
   }).join("");
+  if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.scheduleScan();
 }
 
 function clearAllIngredients() {
@@ -6772,7 +6781,7 @@ async function _handlePhotoSelect(input) {
       data.ingredients.forEach((ing, i) => {
         const conf = ing.confidence === 'high' ? '🟢' : ing.confidence === 'medium' ? '🟡' : '🔴';
         html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">
-          <span>${ing.emoji || '🥬'}</span>
+          ${typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(ing.name_en || ing.name, ing.emoji || '🥬', 'fi-photo-result', 28) : '<span>' + (ing.emoji || '🥬') + '</span>'}
           <span style="flex:1">${I18n?.lang === 'en' ? ing.name_en : ing.name} <span style="color:#888;font-size:11px">~${ing.estimatedGrams}g ${conf}</span></span>
           <button onclick="_addPhotoIngredient('${(ing.name_en || ing.name).replace(/'/g,"\\'")}',${ing.estimatedGrams})" style="padding:4px 10px;border:1px solid #059669;border-radius:6px;background:#fff;color:#059669;font-size:12px;cursor:pointer;font-weight:600">${_t('추가', 'Add')}</button>
         </div>`;
@@ -6781,6 +6790,7 @@ async function _handlePhotoSelect(input) {
       html += `<button onclick="_addAllPhotoIngredients()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('전체 추가', 'Add all to selection')}</button>`;
       results.innerHTML = html;
       results._ingredients = data.ingredients;
+      if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.scheduleScan();
     } catch (err) {
       results.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444">${err.message}</div>`;
     }
