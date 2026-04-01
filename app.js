@@ -3275,13 +3275,13 @@ document.addEventListener('i18n:applied', () => {
     if (_tabName === 'recipes' && typeof renderRecipesTab === 'function') renderRecipesTab();
     if (_tabName === 'profile' && typeof renderProfileTab === 'function') renderProfileTab();
   }
-  // Re-render mobile nav labels
+  // Re-render mobile nav labels (target .mnav-label only, not .mnav-icon)
   document.querySelectorAll('.mobile-nav-btn').forEach(function(btn) {
     var tab = btn.dataset.tab;
-    var labels = {home:'홈',analyze:'분석',plan:'식단',recipes:'레시피',profile:'프로필'};
-    var labelsEn = {home:'Home',analyze:'Analyze',plan:'Plan',recipes:'Recipes',profile:'Profile'};
-    var span = btn.querySelector('span');
-    if (span && tab) span.textContent = (window.I18n && I18n.lang === 'en') ? (labelsEn[tab]||tab) : (labels[tab]||tab);
+    var labelEl = btn.querySelector('.mnav-label');
+    if (labelEl && labelEl.dataset.i18n) {
+      labelEl.textContent = window.I18n.t(labelEl.dataset.i18n);
+    }
   });
   _i18nRendering = false;
 });
