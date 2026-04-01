@@ -4182,7 +4182,7 @@ async function exportReport(format = 'txt') {
   report += `═══════════════════════════════════════════════════\n`;
 
   if (format === 'pdf') {
-    exportReportPDF(report);
+    exportReportPDF();
   } else {
     const blob = new Blob([report], {type: 'text/plain;charset=utf-8'});
     const a = document.createElement('a');
@@ -4192,115 +4192,576 @@ async function exportReport(format = 'txt') {
   }
 }
 
-// ── PDF Export (html2canvas 기반 — 화면 캡처 방식) ──
-async function exportReportPDF(reportText) {
+// ── PDF Export (텍스트 기반 — 한국어 폰트 지원) ──
+let _pdfFontCache = null; // 폰트 캐시
+
+async function _loadKoreanFont() {
+  if (_pdfFontCache) return _pdfFontCache;
+  const resp = await fetch('https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothic.ttf');
+  const buf = await resp.arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  let binary = '';
+  const chunk = 8192;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  _pdfFontCache = btoa(binary);
+  return _pdfFontCache;
+}
+
+async function exportReportPDF() {
   if (typeof window.jspdf === 'undefined') {
     alert('PDF 라이브러리를 로딩 중입니다. 잠시 후 다시 시도해주세요.');
     return;
   }
-
-  // 방법: 현재 분석 결과 화면을 캡처하여 PDF로 변환
-  const resultsEl = document.getElementById('results');
-  if (!resultsEl || resultsEl.style.display === 'none') {
-    alert('분석 결과가 표시된 상태에서 PDF를 다운로드해주세요.');
-    return;
-  }
-
-  // Show all tabs temporarily for full capture
-  const tabs = ['tab-reactions', 'tab-nutrition', 'tab-flavor', 'tab-health', 'tab-recipes'];
-  const origDisplay = {};
-  tabs.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { origDisplay[id] = el.style.display; el.style.display = 'block'; }
-  });
+  if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
 
   // 로딩 표시
   const loadingEl = document.createElement('div');
   loadingEl.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:99999;color:white;font-size:18px;font-weight:600';
-  loadingEl.textContent = 'PDF 생성 중...';
+  loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:12px;font-size:32px">📄</div>PDF 생성 중...<br><span style="font-size:13px;opacity:0.7">한국어 폰트 로딩 포함</span></div>';
   document.body.appendChild(loadingEl);
 
   try {
+    const fontB64 = await _loadKoreanFont();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 10;
-    const usableW = pageW - margin * 2;
 
-    // Capture results area
-    const canvas = await html2canvas(resultsEl, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#0F1113',
-      logging: false,
-      windowWidth: 800,
-    });
+    // 한국어 폰트 등록
+    doc.addFileToVFS('NanumGothic.ttf', fontB64);
+    doc.addFont('NanumGothic.ttf', 'NanumGothic', 'normal');
+    doc.setFont('NanumGothic');
 
-    // Restore original tab displays
-    tabs.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && origDisplay[id] !== undefined) el.style.display = origDisplay[id];
-    });
+    const W = doc.internal.pageSize.getWidth();   // 210
+    const H = doc.internal.pageSize.getHeight();   // 297
+    const M = 15; // margin
+    const UW = W - M * 2; // usable width
+    let y = 0;
+    let pageNum = 1;
 
-    // Calculate image dimensions
-    const imgW = usableW;
-    const imgH = (canvas.height * imgW) / canvas.width;
-    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const { rxns, warns, nutrition, flavor, temp, time, health } = lastAnalysisResult;
+    const methodInfo = METHODS[method] || {};
+    const VNAMES = {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
+    const flavorNm = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+    const flavorDsc = {umami:'글루탐산, 이노신산',sweet:'당류, 마이야르 반응 산물',salty:'나트륨, 미네랄',sour:'유기산(시트르산 등)',bitter:'폴리페놀, 캐러멜화 산물'};
 
-    // Split into pages
-    let yOffset = 0;
-    const pageImgH = pageH - margin * 2 - 12; // leave room for header/footer
-
-    // First page header
-    doc.setFillColor(16, 185, 129);
-    doc.rect(0, 0, pageW, 14, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(12);
-    doc.text('Mealcule Analysis Report', margin, 10);
-    doc.setFontSize(8);
-    doc.text(new Date().toLocaleString(), pageW - margin, 10, { align: 'right' });
-
-    let currentY = 16;
-    const totalPages = Math.ceil(imgH / pageImgH);
-
-    for (let page = 0; page < totalPages; page++) {
-      if (page > 0) {
+    // ── 헬퍼 함수 ──
+    function checkPage(need) {
+      if (y + need > H - 15) {
+        addFooter();
         doc.addPage();
-        currentY = margin;
+        pageNum++;
+        y = M;
+      }
+    }
+
+    function addFooter() {
+      doc.setFontSize(7);
+      doc.setTextColor(160, 160, 160);
+      doc.text('Mealcule v2.0  |  mealcule.com  |  Page ' + pageNum, W / 2, H - 8, { align: 'center' });
+      doc.text('This report is based on theoretical models and does not replace medical advice.', W / 2, H - 4, { align: 'center' });
+    }
+
+    function drawText(text, x, fontSize, color, maxW, lineH) {
+      doc.setFontSize(fontSize);
+      doc.setTextColor(...color);
+      const lines = doc.splitTextToSize(text, maxW || (UW - (x - M)));
+      lines.forEach(line => {
+        checkPage(lineH || fontSize * 0.4);
+        doc.text(line, x, y);
+        y += lineH || fontSize * 0.4;
+      });
+    }
+
+    function drawSectionHeader(title) {
+      checkPage(14);
+      y += 4;
+      doc.setFillColor(16, 185, 129);
+      doc.roundedRect(M, y - 5, UW, 9, 2, 2, 'F');
+      doc.setFontSize(11);
+      doc.setTextColor(255, 255, 255);
+      doc.text(title, M + 4, y);
+      y += 8;
+    }
+
+    function drawSubHeader(title) {
+      checkPage(10);
+      y += 2;
+      doc.setFillColor(245, 245, 245);
+      doc.roundedRect(M, y - 4.5, UW, 7, 1.5, 1.5, 'F');
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      doc.text(title, M + 3, y);
+      y += 6;
+    }
+
+    function drawBar(x, barY, width, pct, color) {
+      doc.setFillColor(230, 230, 230);
+      doc.roundedRect(x, barY, width, 3, 1, 1, 'F');
+      if (pct > 0) {
+        doc.setFillColor(...color);
+        doc.roundedRect(x, barY, width * Math.min(pct, 100) / 100, 3, 1, 1, 'F');
+      }
+    }
+
+    function drawDivider() {
+      y += 2;
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.3);
+      doc.line(M, y, W - M, y);
+      y += 3;
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 표지 헤더
+    // ═══════════════════════════════════════════════════
+    doc.setFillColor(15, 17, 19);
+    doc.rect(0, 0, W, 50, 'F');
+    doc.setFillColor(16, 185, 129);
+    doc.rect(0, 0, W, 3, 'F');
+
+    doc.setFontSize(24);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Mealcule', M, 22);
+    doc.setFontSize(10);
+    doc.setTextColor(16, 185, 129);
+    doc.text('Analysis Report', M + 53, 22);
+
+    doc.setFontSize(9);
+    doc.setTextColor(180, 180, 180);
+    doc.text(new Date().toLocaleString('ko-KR'), M, 34);
+    const ingNames = Object.keys(selected).join(', ');
+    const ingLine = doc.splitTextToSize(ingNames, UW);
+    doc.text(ingLine[0] + (ingLine.length > 1 ? ' ...' : ''), M, 42);
+
+    y = 56;
+
+    // ═══════════════════════════════════════════════════
+    // 1. 재료 & 조리 조건
+    // ═══════════════════════════════════════════════════
+    drawSectionHeader('1. 재료 및 조리 조건');
+
+    // 재료 테이블
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text('재료', M + 2, y); doc.text('용량', M + 80, y); doc.text('분류', M + 105, y);
+    y += 1;
+    drawDivider();
+
+    doc.setTextColor(40, 40, 40);
+    for (const [name, g] of Object.entries(selected)) {
+      checkPage(6);
+      const d = DB[name];
+      doc.setFontSize(9);
+      doc.text(name, M + 2, y);
+      doc.text(g + 'g', M + 80, y);
+      doc.setTextColor(120, 120, 120);
+      doc.text(d?.category || '-', M + 105, y);
+      doc.setTextColor(40, 40, 40);
+      y += 5;
+    }
+
+    y += 3;
+    drawSubHeader('조리 조건');
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
+    doc.text(`방법: ${methodInfo.label || method}    온도: ${temp}\u00B0C    시간: ${time}분`, M + 3, y);
+    y += 6;
+
+    // 경고
+    if (warns.length > 0) {
+      warns.forEach(w => {
+        checkPage(10);
+        doc.setFillColor(254, 243, 199);
+        doc.roundedRect(M, y - 4, UW, 8, 1.5, 1.5, 'F');
+        doc.setFontSize(8);
+        doc.setTextColor(180, 80, 0);
+        const warnLines = doc.splitTextToSize('[' + w.type + '] ' + w.msg, UW - 8);
+        doc.text(warnLines[0], M + 3, y);
+        y += 6;
+        if (warnLines.length > 1) {
+          warnLines.slice(1).forEach(wl => {
+            checkPage(5);
+            doc.text(wl, M + 3, y);
+            y += 4;
+          });
+        }
+        y += 2;
+      });
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 2. 화학 반응 분석
+    // ═══════════════════════════════════════════════════
+    drawSectionHeader('2. 화학 반응 분석 (' + rxns.length + '건)');
+
+    if (rxns.length === 0) {
+      drawText('특별한 화학 반응이 예측되지 않습니다.', M + 3, 9, [120,120,120], UW - 6, 5);
+    }
+
+    rxns.forEach((r, idx) => {
+      checkPage(30);
+      const refKey = RXN_REF_MAP[r.key] || null;
+      const ref = refKey ? REFERENCES[refKey] : null;
+      const conf = ref ? ref.confidence : null;
+
+      // 반응 이름 + 강도 바
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(M, y - 4, UW, 9, 2, 2, 'F');
+      doc.setFontSize(10);
+      doc.setTextColor(30, 30, 30);
+      doc.text(r.name, M + 3, y);
+      if (conf) {
+        doc.setFontSize(7);
+        doc.setTextColor(16, 185, 129);
+        doc.text('신뢰도 ' + conf + '%', M + 3 + doc.getTextWidth(r.name) + 4, y);
+      }
+      // 강도 바 (우측)
+      const barX = W - M - 50;
+      doc.setFontSize(7);
+      doc.setTextColor(120, 120, 120);
+      doc.text('강도 ' + r.intensity + '%', barX, y - 1);
+      const barColor = r.intensity > 70 ? [239,68,68] : r.intensity > 40 ? [234,179,8] : [34,197,94];
+      drawBar(barX, y + 1, 45, r.intensity, barColor);
+      y += 9;
+
+      // 설명
+      drawText(r.desc, M + 3, 9, [60,60,60], UW - 6, 4);
+      y += 1;
+
+      // 효과 태그
+      if (r.effects.length > 0) {
+        checkPage(6);
+        doc.setFontSize(7.5);
+        doc.setTextColor(16, 185, 129);
+        doc.text(r.effects.join('  |  '), M + 3, y);
+        y += 5;
       }
 
-      // Clip and draw portion of image
-      const srcY = (page * pageImgH / imgH) * canvas.height;
-      const srcH = (pageImgH / imgH) * canvas.height;
+      // 왜 이런 변화가?
+      checkPage(12);
+      doc.setFillColor(240, 249, 255);
+      const sciLines = doc.splitTextToSize(r.science, UW - 12);
+      const sciH = sciLines.length * 3.8 + 8;
+      doc.roundedRect(M + 2, y - 2, UW - 4, sciH, 1.5, 1.5, 'F');
+      doc.setFontSize(8);
+      doc.setTextColor(30, 100, 180);
+      doc.text('왜 이런 변화가 일어나나요?', M + 5, y + 2);
+      y += 6;
+      doc.setFontSize(8);
+      doc.setTextColor(60, 80, 120);
+      sciLines.forEach(sl => {
+        checkPage(4);
+        doc.text(sl, M + 5, y);
+        y += 3.8;
+      });
+      y += 3;
 
-      // Create clipped canvas for this page
-      const pageCanvas = document.createElement('canvas');
-      pageCanvas.width = canvas.width;
-      pageCanvas.height = Math.min(srcH, canvas.height - srcY);
-      const ctx = pageCanvas.getContext('2d');
-      ctx.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
+      // 전문가 상세 (프로모드)
+      if (proMode && r.proDetail) {
+        checkPage(12);
+        doc.setFillColor(245, 240, 255);
+        const proLines = doc.splitTextToSize(r.proDetail, UW - 12);
+        const proH = proLines.length * 3.5 + 8;
+        doc.roundedRect(M + 2, y - 2, UW - 4, proH, 1.5, 1.5, 'F');
+        doc.setFontSize(8);
+        doc.setTextColor(139, 92, 246);
+        doc.text('전문가 상세', M + 5, y + 2);
+        y += 6;
+        doc.setFontSize(7.5);
+        doc.setTextColor(80, 60, 140);
+        proLines.forEach(pl => {
+          checkPage(4);
+          doc.text(pl, M + 5, y);
+          y += 3.5;
+        });
+        y += 3;
+      }
 
-      const pageData = pageCanvas.toDataURL('image/jpeg', 0.92);
-      const drawH = (pageCanvas.height * imgW) / canvas.width;
-      doc.addImage(pageData, 'JPEG', margin, currentY, imgW, drawH);
+      // 건강 팁
+      checkPage(10);
+      doc.setFillColor(255, 241, 242);
+      const hLines = doc.splitTextToSize(r.health, UW - 12);
+      const hH = hLines.length * 3.8 + 8;
+      doc.roundedRect(M + 2, y - 2, UW - 4, hH, 1.5, 1.5, 'F');
+      doc.setFontSize(8);
+      doc.setTextColor(220, 38, 38);
+      doc.text('건강 팁', M + 5, y + 2);
+      y += 6;
+      doc.setFontSize(8);
+      doc.setTextColor(140, 40, 40);
+      hLines.forEach(hl => {
+        checkPage(4);
+        doc.text(hl, M + 5, y);
+        y += 3.8;
+      });
+      y += 3;
 
-      // Footer
-      doc.setFontSize(7);
-      doc.setTextColor(150, 150, 150);
-      doc.text(`Mealcule v2.0 | Page ${page + 1}/${totalPages}`, pageW / 2, pageH - 5, { align: 'center' });
+      // 참고 문헌
+      if (ref) {
+        checkPage(8);
+        doc.setFontSize(7);
+        doc.setTextColor(140, 140, 140);
+        ref.papers.forEach(p => {
+          const cite = `${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.doi ? '. DOI: ' + p.doi : ''}`;
+          const citeLines = doc.splitTextToSize(cite, UW - 10);
+          citeLines.forEach(cl => {
+            checkPage(3.5);
+            doc.text(cl, M + 5, y);
+            y += 3.2;
+          });
+        });
+        y += 2;
+      }
+
+      if (idx < rxns.length - 1) drawDivider();
+    });
+
+    // ═══════════════════════════════════════════════════
+    // 3. 영양소 변화
+    // ═══════════════════════════════════════════════════
+    drawSectionHeader('3. 영양소 변화 분석');
+
+    const nutriEntries = Object.entries(nutrition).filter(([,v]) => v.orig > 0);
+    if (nutriEntries.length > 0) {
+      const avgRet = Math.round(nutriEntries.reduce((a,[,v]) => a + v.ret, 0) / nutriEntries.length);
+      drawText('총 ' + nutriEntries.length + '가지 영양소 분석 | 평균 보존율 ' + avgRet + '%', M + 3, 9, [60,60,60], UW, 5);
+      y += 2;
+
+      // 테이블 헤더
+      doc.setFillColor(248, 250, 252);
+      doc.rect(M, y - 4, UW, 7, 'F');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('영양소', M + 3, y);
+      doc.text('조리 전', M + 60, y);
+      doc.text('조리 후', M + 85, y);
+      doc.text('보존율', M + 110, y);
+      doc.text('시각화', M + 135, y);
+      y += 5;
+
+      const sorted = [...nutriEntries].sort((a, b) => a[1].ret - b[1].ret);
+      sorted.forEach(([k, n]) => {
+        checkPage(6);
+        const color = n.ret >= 80 ? [34,197,94] : n.ret >= 60 ? [234,179,8] : [239,68,68];
+        doc.setFontSize(8);
+        doc.setTextColor(40, 40, 40);
+        doc.text(VNAMES[k] || k, M + 3, y);
+        doc.setTextColor(120, 120, 120);
+        doc.text((n.orig || 0).toFixed(2), M + 60, y);
+        doc.setTextColor(40, 40, 40);
+        doc.text((n.cooked || 0).toFixed(2), M + 85, y);
+        doc.setTextColor(...color);
+        doc.text(n.ret + '%', M + 110, y);
+        drawBar(M + 135, y - 2, 40, n.ret, color);
+        y += 5;
+      });
     }
+
+    // ═══════════════════════════════════════════════════
+    // 4. 맛 프로파일
+    // ═══════════════════════════════════════════════════
+    drawSectionHeader('4. 맛 프로파일 분석');
+
+    if (flavor) {
+      const fSorted = Object.entries(flavor).sort((a,b) => b[1] - a[1]);
+      drawText('가장 강한 맛: ' + flavorNm[fSorted[0][0]] + ' (' + fSorted[0][1] + '점)', M + 3, 9, [60,60,60], UW, 5);
+      y += 2;
+
+      const flavorColors = {umami:[99,102,241],sweet:[249,115,22],salty:[59,130,246],sour:[234,179,8],bitter:[139,92,246]};
+      Object.entries(flavor).forEach(([k, v]) => {
+        checkPage(10);
+        doc.setFontSize(9);
+        doc.setTextColor(...(flavorColors[k] || [60,60,60]));
+        doc.text(flavorNm[k] || k, M + 3, y);
+        doc.setFontSize(12);
+        doc.text(Math.round(v) + '', M + 30, y);
+        drawBar(M + 45, y - 2.5, 80, v, flavorColors[k] || [100,100,100]);
+        doc.setFontSize(7);
+        doc.setTextColor(140, 140, 140);
+        doc.text(flavorDsc[k] || '', M + 130, y);
+        y += 7;
+      });
+
+      // 재료별 풍미 화합물
+      y += 2;
+      drawSubHeader('재료별 핵심 풍미 화합물');
+      selNames().forEach(n => {
+        const d = DB[n];
+        if (d && d.compounds && d.compounds.length > 0) {
+          checkPage(6);
+          doc.setFontSize(8);
+          doc.setTextColor(40, 40, 40);
+          doc.text(n + ':', M + 3, y);
+          doc.setTextColor(100, 100, 100);
+          doc.text(d.compounds.join(', '), M + 3 + doc.getTextWidth(n + ': '), y);
+          y += 4.5;
+        }
+      });
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 5. 건강 분석
+    // ═══════════════════════════════════════════════════
+    if (health && Object.keys(health).length > 0) {
+      drawSectionHeader('5. 건강 영향 분석');
+
+      // 총 성분 요약
+      const firstResults = Object.values(health)[0];
+      const comp = firstResults.results[0]?.composition;
+      if (comp) {
+        drawSubHeader('투입 재료 총 성분');
+        const nutrients = [
+          ['칼로리', comp.calories.toFixed(0) + 'kcal', [249,115,22]],
+          ['단백질', comp.protein.toFixed(1) + 'g', [239,68,68]],
+          ['지방', comp.fat.toFixed(1) + 'g', [234,179,8]],
+          ['탄수화물', comp.carbs.toFixed(1) + 'g', [59,130,246]],
+          ['식이섬유', comp.fiber.toFixed(1) + 'g', [34,197,94]],
+          ['나트륨', comp.sodium.toFixed(0) + 'mg', [168,85,247]],
+          ['칼륨', comp.potassium.toFixed(0) + 'mg', [6,182,212]],
+          ['포화지방', comp.saturatedFat.toFixed(1) + 'g', [244,63,94]],
+        ];
+        checkPage(12);
+        let nx = M + 3;
+        nutrients.forEach((n, i) => {
+          if (i === 4) { y += 6; nx = M + 3; }
+          doc.setFontSize(7);
+          doc.setTextColor(120, 120, 120);
+          doc.text(n[0], nx, y);
+          doc.setFontSize(9);
+          doc.setTextColor(...n[2]);
+          doc.text(n[1], nx, y + 4);
+          nx += 44;
+        });
+        y += 10;
+      }
+
+      // 멤버별 결과
+      Object.entries(health).forEach(([, memberData]) => {
+        const member = memberData.member;
+        const healthResults = memberData.results;
+
+        checkPage(12);
+        doc.setFillColor(236, 253, 245);
+        doc.roundedRect(M, y - 3, UW, 8, 1.5, 1.5, 'F');
+        doc.setFontSize(10);
+        doc.setTextColor(16, 185, 129);
+        doc.text(member.name + (member.age ? ' (' + member.age + '세)' : ''), M + 4, y + 1);
+        y += 9;
+
+        healthResults.forEach(hr => {
+          checkPage(16);
+          const scoreColor = hr.score >= 70 ? [34,197,94] : hr.score >= 40 ? [234,179,8] : [239,68,68];
+          const scoreLabel = hr.score >= 70 ? '양호' : hr.score >= 40 ? '주의 필요' : '위험';
+
+          // 점수 원형 표시
+          doc.setDrawColor(...scoreColor);
+          doc.setLineWidth(1.2);
+          doc.circle(M + 12, y + 4, 8);
+          doc.setFontSize(14);
+          doc.setTextColor(...scoreColor);
+          doc.text(hr.score + '', M + 12, y + 6, { align: 'center' });
+
+          // 라벨
+          doc.setFontSize(10);
+          doc.text(hr.label + ' 적합도: ' + scoreLabel, M + 24, y + 2);
+          doc.setFontSize(8);
+          doc.setTextColor(120, 120, 120);
+          doc.text(hr.desc + ' | ' + hr.findings.length + '개 항목', M + 24, y + 7);
+          y += 14;
+
+          // Findings
+          const sevKo = {danger:'위험',caution:'주의',good:'긍정',info:'참고'};
+          const sevColors = {danger:[239,68,68],caution:[234,179,8],good:[34,197,94],info:[59,130,246]};
+
+          hr.findings.forEach(f => {
+            checkPage(14);
+            const sc = sevColors[f.severity] || [100,100,100];
+
+            // 좌측 세버리티 마커
+            doc.setFillColor(...sc);
+            doc.rect(M + 2, y - 3, 1.5, 10, 'F');
+
+            // 세버리티 뱃지
+            doc.setFillColor(sc[0], sc[1], sc[2]);
+            doc.roundedRect(M + 6, y - 3.5, 12, 5, 1, 1, 'F');
+            doc.setFontSize(7);
+            doc.setTextColor(255, 255, 255);
+            doc.text(sevKo[f.severity] || '', M + 12, y - 0.5, { align: 'center' });
+
+            // 제목
+            doc.setFontSize(9);
+            doc.setTextColor(40, 40, 40);
+            doc.text(f.title, M + 20, y);
+            y += 5;
+
+            // 상세
+            doc.setFontSize(8);
+            doc.setTextColor(80, 80, 80);
+            const detLines = doc.splitTextToSize(f.detail, UW - 25);
+            detLines.forEach(dl => {
+              checkPage(4);
+              doc.text(dl, M + 8, y);
+              y += 3.5;
+            });
+
+            // 개선 팁
+            if (f.tip) {
+              checkPage(8);
+              doc.setFillColor(255, 251, 235);
+              const tipLines = doc.splitTextToSize('개선 팁: ' + f.tip, UW - 18);
+              doc.roundedRect(M + 6, y - 1, UW - 10, tipLines.length * 3.5 + 4, 1, 1, 'F');
+              doc.setFontSize(7.5);
+              doc.setTextColor(140, 100, 20);
+              y += 2;
+              tipLines.forEach(tl => {
+                doc.text(tl, M + 9, y);
+                y += 3.5;
+              });
+              y += 2;
+            }
+            y += 3;
+          });
+        });
+      });
+
+      // 면책 고지
+      checkPage(12);
+      doc.setFillColor(240, 253, 244);
+      doc.roundedRect(M, y, UW, 10, 1.5, 1.5, 'F');
+      doc.setFontSize(7);
+      doc.setTextColor(16, 150, 100);
+      doc.text('이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며, 개인의 건강 상태에 따라 다를 수 있습니다.', M + 3, y + 4);
+      doc.text('구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.', M + 3, y + 8);
+      y += 14;
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 6. 과학적 출처
+    // ═══════════════════════════════════════════════════
+    drawSectionHeader('참고 문헌');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 100, 100);
+    for (const [, ref] of Object.entries(REFERENCES)) {
+      ref.papers.forEach(p => {
+        const cite = `${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.doi ? '. DOI: ' + p.doi : ''}`;
+        const citeLines = doc.splitTextToSize(cite, UW - 6);
+        citeLines.forEach(cl => {
+          checkPage(3.5);
+          doc.text(cl, M + 3, y);
+          y += 3.2;
+        });
+        y += 1;
+      });
+    }
+
+    // 마지막 페이지 푸터
+    addFooter();
 
     doc.save(`mealcule-report-${Date.now()}.pdf`);
   } catch(e) {
     console.error('PDF export error:', e);
     alert('PDF 생성 중 오류가 발생했습니다: ' + e.message);
-    // Restore tabs on error too
-    tabs.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && origDisplay[id] !== undefined) el.style.display = origDisplay[id];
-    });
   } finally {
     loadingEl.remove();
   }
