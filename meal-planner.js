@@ -101,11 +101,8 @@ function _mealLabel(type) {
 // ── Open / Close ──
 
 function openMealPlanner() {
-  const hasRealUser = typeof currentUser !== 'undefined' && currentUser && !isGuest;
-  if (userPlan === 'free' && hasRealUser) {
-    _renderProGate();
-    return;
-  }
+  if (typeof isGuest !== 'undefined' && isGuest) { _renderProGate(); return; }
+  if (typeof userPlan !== 'undefined' && userPlan === 'free') { _renderProGate(); return; }
   let overlay = document.getElementById('mealPlannerOverlay');
   if (!overlay) {
     overlay = document.createElement('div');

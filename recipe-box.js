@@ -3,7 +3,7 @@
 // userPlan, isGuest, showToast, selected, method, lastAnalysisResult,
 // _cachedRecipes, CATEGORIES, DB, I18n
 
-var _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+if (typeof _t === 'undefined') var _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
 
 const RECIPE_BOX_LIMITS = { free: 10, pro: Infinity, enterprise: Infinity };
 

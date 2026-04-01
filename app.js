@@ -2356,7 +2356,7 @@ const RXN_REF_MAP = {
 let currentUser = null;      // { id, email, name, avatar_url }
 let userProfile = null;      // DB profiles row
 let userPlan = 'free';       // 'free', 'pro', 'enterprise'
-let proMode = true;          // 테스트: 전문가 모드 기본 활성화
+let proMode = false;
 let dailyUsage = { analysis_count: 0, search_count: 0, export_count: 0 };
 let isGuest = false;
 let authSession = null;      // Supabase auth session
@@ -2370,6 +2370,11 @@ const PLAN_LIMITS = {
 
 function getPlanLimit(type) {
   return PLAN_LIMITS[userPlan]?.[type] ?? PLAN_LIMITS.free[type];
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ── Safe localStorage helpers ──
@@ -2717,6 +2722,18 @@ document.addEventListener('DOMContentLoaded', () => {
   initAuth();
 });
 
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (document.getElementById('ytModal')?.style.display !== 'none' && document.getElementById('ytModal')?.style.display) { document.getElementById('ytModal').style.display = 'none'; return; }
+    if (document.getElementById('feedbackModal')?.style.display !== 'none' && document.getElementById('feedbackModal')?.style.display) { document.getElementById('feedbackModal').style.display = 'none'; return; }
+    var methodOverlay = document.getElementById('methodModalOverlay');
+    if (methodOverlay?.classList.contains('open')) { methodOverlay.classList.remove('open'); return; }
+    var healthOverlay = document.getElementById('healthModalOverlay');
+    if (healthOverlay?.classList.contains('open')) { healthOverlay.classList.remove('open'); return; }
+    if (document.getElementById('pricingModal')?.style.display !== 'none' && document.getElementById('pricingModal')?.style.display) { closePricingModal(); return; }
+  }
+});
+
 // Re-render dynamic content when language changes
 document.addEventListener('i18n:applied', () => {
   if (typeof renderCategoryTabs === 'function') renderCategoryTabs();
@@ -2800,8 +2817,7 @@ function contactSales() { window.open('mailto:contact@mealcule.com?subject=엔�
 
 // ── Professional Mode ──
 function toggleProMode() {
-  // 테스트: 플랜 제한 비활성화
-  // if (!currentUser || userPlan === 'free') { openPricingModal(); return; }
+  if (!currentUser || userPlan === 'free') { openPricingModal(); return; }
   proMode = !proMode;
   updateModeUI();
 }
@@ -2827,8 +2843,7 @@ function toggleRef(id) {
 
 // ── Export Report ──
 async function exportReport() {
-  // 테스트: 플랜 제한 비활성화
-  // if (userPlan === 'free') { openPricingModal(); return; }
+  if (userPlan === 'free') { openPricingModal(); return; }
   const exportAllowed = await checkDailyLimit('export');
   if (!exportAllowed) { alert('오늘의 보고서 다운로드 횟수를 초과했습니다.'); return; }
   if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
@@ -5271,14 +5286,18 @@ async function addIngredientWithAI(name) {
   }
 }
 
-function showToast(msg) {
+function showToast(msg, type) {
+  type = type || 'info';
+  var bgColors = { success: 'rgba(16,185,129,0.9)', error: 'rgba(239,68,68,0.9)', warning: 'rgba(245,158,11,0.9)', info: 'rgba(255,255,255,0.15)' };
+  var bg = bgColors[type] || bgColors.info;
   let toast = document.getElementById('globalToast');
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'globalToast';
-    toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;max-width:90vw;text-align:center;pointer-events:none';
+    toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;max-width:90vw;text-align:center;pointer-events:none';
     document.body.appendChild(toast);
   }
+  toast.style.background = bg;
   toast.textContent = msg;
   toast.style.opacity = '1';
   clearTimeout(toast._timer);
@@ -5923,6 +5942,9 @@ let currentTab = "reactions";
 let lastAnalysisResult = null; // 마지막 분석 결과 저장 (보고서용)
 
 async function runAnalysis() {
+  if (window._analysisRunning) return;
+  window._analysisRunning = true;
+  try {
   if (!selCount()) return;
   // Daily limit check (DB 또는 localStorage 기반)
   const allowed = await checkDailyLimit('analysis');
@@ -6271,6 +6293,9 @@ async function runAnalysis() {
       });
     }
   }, 50);
+  } finally {
+    setTimeout(function() { window._analysisRunning = false; }, 1000);
+  }
 }
 
 function switchTab(tab) {
