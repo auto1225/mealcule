@@ -153,12 +153,84 @@ function openCommunityFeed() {
   _cfFeedCache = [];
   _cfSearchQuery = '';
 
-  // Inline rendering for Recipes > Community sub-tab
+  // Inline rendering for Community tab (primary view)
   var inlineTarget = document.getElementById('recipesCommunityContent');
   if (inlineTarget) {
     _cfOpen = true;
     _injectCommunityFeedStyles();
-    inlineTarget.innerHTML = '<div class="cf-feed-list" id="cf-feed-list"></div><div class="cf-load-more" id="cf-load-more" style="display:none;"><div class="cf-spinner"></div></div>';
+
+    var _tt = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+    var cuisines = ['Korean','Japanese','Italian','Chinese','Mexican','Indian','French','Fusion','Molecular'];
+
+    inlineTarget.innerHTML = `
+      <div class="cf-inline-wrap">
+        <div class="cf-hero-banner">
+          <div class="cf-hero-text">
+            <h2>${_tt('요리를 공유하고 영감을 받으세요', 'Share Recipes, Get Inspired')}</h2>
+            <p>${_tt('전 세계 사용자들의 분자 요리 레시피를 탐색하세요', 'Explore molecular cooking recipes from users worldwide')}</p>
+          </div>
+          <button class="cf-share-recipe-btn" onclick="if(typeof shareMyRecipe==='function'){switchRecipeSub('mine');setTimeout(function(){var cards=document.querySelectorAll('.rb-card');if(cards.length)cards[0].click()},500)}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            ${_tt('레시피 공유', 'Share Recipe')}
+          </button>
+        </div>
+        <div class="cf-search-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-tertiary)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="cf-search-input" id="cf-inline-search" placeholder="${_tt('레시피 검색...', 'Search recipes...')}" style="padding-left:38px" />
+        </div>
+        <div class="cf-tabs" id="cf-inline-tabs">
+          <button class="cf-tab active" data-tab="latest">${_tt('최신', 'Latest')}</button>
+          <button class="cf-tab" data-tab="featured">${_tt('추천', 'Featured')}</button>
+          <button class="cf-tab" data-tab="following">${_tt('팔로잉', 'Following')}</button>
+        </div>
+        <div class="cf-cuisine-chips" id="cf-cuisine-chips">
+          <button class="cf-chip active" data-cuisine="">${_tt('전체', 'All')}</button>
+          ${cuisines.map(c => '<button class="cf-chip" data-cuisine="' + c + '">' + c + '</button>').join('')}
+        </div>
+        <div class="cf-feed-list" id="cf-feed-list"></div>
+        <div class="cf-load-more" id="cf-load-more" style="display:none;"><div class="cf-spinner"></div></div>
+      </div>
+    `;
+
+    // Wire up inline tab switching
+    inlineTarget.querySelectorAll('#cf-inline-tabs .cf-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        inlineTarget.querySelectorAll('#cf-inline-tabs .cf-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        _cfTab = tab.dataset.tab;
+        _cfOffset = 0; _cfHasMore = true; _cfFeedCache = [];
+        document.getElementById('cf-feed-list').innerHTML = '';
+        _loadAndRenderFeed();
+      });
+    });
+
+    // Wire up search
+    var inlineSearch = document.getElementById('cf-inline-search');
+    if (inlineSearch) {
+      inlineSearch.addEventListener('input', (e) => {
+        clearTimeout(_cfSearchDebounce);
+        _cfSearchDebounce = setTimeout(() => {
+          _cfSearchQuery = e.target.value.trim();
+          _cfOffset = 0; _cfHasMore = true; _cfFeedCache = [];
+          document.getElementById('cf-feed-list').innerHTML = '';
+          _loadAndRenderFeed();
+        }, 350);
+      });
+    }
+
+    // Wire up cuisine chips
+    inlineTarget.querySelectorAll('#cf-cuisine-chips .cf-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        inlineTarget.querySelectorAll('#cf-cuisine-chips .cf-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        _cfSearchQuery = chip.dataset.cuisine || '';
+        if (inlineSearch) inlineSearch.value = _cfSearchQuery;
+        _cfOffset = 0; _cfHasMore = true; _cfFeedCache = [];
+        document.getElementById('cf-feed-list').innerHTML = '';
+        _loadAndRenderFeed();
+      });
+    });
+
     _loadAndRenderFeed();
     return;
   }
@@ -385,34 +457,48 @@ function renderFeedCard(recipe) {
     ? `<button class="cf-video-btn" onclick="event.stopPropagation();_playRecipeVideo('${recipe.video_id}')" title="${_t('영상 보기', 'Watch Video')}">▶</button>`
     : '';
 
+  const cuisineTag = recipe.cuisine ? `<span class="cf-cuisine-badge">${_escCf(recipe.cuisine)}</span>` : '';
+  const nutr = recipe.nutrition_snapshot || {};
+  const calText = nutr.calories ? `${nutr.calories} kcal` : '';
+
   return `
     <div class="cf-card" data-id="${recipe.id}" onclick="openSharedRecipeDetail('${recipe.id}')">
-      <div class="cf-card-header">
-        <div class="cf-card-author">
-          ${avatarHtml}
-          <span class="cf-author-name">${_escCf(authorName)}</span>
-        </div>
-        <span class="cf-card-time">${_timeAgoCf(recipe.created_at)}</span>
-      </div>
       <div class="cf-card-image">
         ${imageHtml}
         ${videoBtn}
+        ${cuisineTag}
       </div>
       <div class="cf-card-body">
+        <div class="cf-card-header">
+          <div class="cf-card-author">
+            ${avatarHtml}
+            <div class="cf-author-info">
+              <span class="cf-author-name">${_escCf(authorName)}</span>
+              <span class="cf-card-time">${_timeAgoCf(recipe.created_at)}</span>
+            </div>
+          </div>
+        </div>
         <div class="cf-card-title">${_escCf(recipe.title || recipe.name || '')}</div>
         ${desc ? `<div class="cf-card-desc">${_escCf(desc)}</div>` : ''}
-        ${tags ? `<div class="cf-card-tags">${tags}</div>` : ''}
+        <div class="cf-card-meta">
+          ${calText ? `<span class="cf-card-cal">${calText}</span>` : ''}
+          ${tags ? `<div class="cf-card-tags">${tags}</div>` : ''}
+        </div>
       </div>
       <div class="cf-card-actions">
         <button class="cf-like-btn ${liked}" data-id="${recipe.id}" onclick="event.stopPropagation();toggleLike('${recipe.id}',this)">
-          <span class="cf-heart">${liked ? '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">' : '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">'}</span>
+          <svg class="cf-heart-svg" width="18" height="18" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           <span class="cf-like-count">${likeCount}</span>
         </button>
         <button class="cf-comment-btn" onclick="event.stopPropagation();openSharedRecipeDetail('${recipe.id}','comments')">
-          <img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💬'"> <span>${commentCount}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>${commentCount}</span>
         </button>
         <button class="cf-share-btn" onclick="event.stopPropagation();_copyShareLink('${recipe.id}')">
-          <img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔗'"> ${_t('공유', 'Share')}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </button>
+        <button class="cf-save-btn" onclick="event.stopPropagation();">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
         </button>
       </div>
     </div>
@@ -1120,7 +1206,8 @@ function _injectCommunityFeedStyles() {
     .cf-close-btn:hover { background:rgba(255,255,255,0.07); }
 
     /* Search */
-    .cf-search-bar { padding:12px 20px 0; background:#161819; flex-shrink:0; }
+    .cf-search-bar { padding:12px 20px 0; background:#161819; flex-shrink:0; position:relative; }
+    .cf-inline-wrap .cf-search-bar { padding:8px 0 0; background:transparent; }
     .cf-search-input {
       width:100%; padding:9px 14px; border:1px solid rgba(255,255,255,0.08); border-radius:10px;
       font-size:14px; outline:none; background:rgba(255,255,255,0.04); color:#F5F5F5; box-sizing:border-box;
@@ -1140,6 +1227,7 @@ function _injectCommunityFeedStyles() {
     }
     .cf-tab.active { background:#10B981; color:#fff; border-color:#10B981; }
     .cf-tab:hover:not(.active) { background:rgba(16,185,129,0.08); border-color:#10B981; color:#10B981; }
+    .cf-inline-wrap .cf-tabs { padding:10px 0; background:transparent; border-bottom:none; }
 
     /* Feed Container */
     .cf-feed-container { flex:1; overflow-y:auto; padding:16px 20px; }
@@ -1154,7 +1242,7 @@ function _injectCommunityFeedStyles() {
     .cf-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.3); transform:translateY(-1px); }
     .cf-card-header {
       display:flex; justify-content:space-between; align-items:center;
-      padding:12px 16px 0;
+      margin-bottom:8px;
     }
     .cf-card-author { display:flex; align-items:center; gap:8px; }
     .cf-avatar {
@@ -1168,11 +1256,11 @@ function _injectCommunityFeedStyles() {
     .cf-author-name { font-size:13px; font-weight:600; color:#F5F5F5; }
     .cf-card-time { font-size:11px; color:rgba(255,255,255,0.35); }
 
-    /* Card Image */
+    /* Card Image — now first child, full width */
     .cf-card-image {
       position:relative; display:flex; align-items:center; justify-content:center;
-      height:200px; background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.05));
-      margin:12px 16px 0; border-radius:10px; overflow:hidden;
+      height:220px; background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.05));
+      overflow:hidden;
     }
     .cf-card-photo {
       width:100%; height:100%; object-fit:cover;
@@ -1223,6 +1311,75 @@ function _injectCommunityFeedStyles() {
       60% { transform:scale(0.9); }
       100% { transform:scale(1); }
     }
+
+    /* Inline Wrap */
+    .cf-inline-wrap { max-width:640px; margin:0 auto; }
+
+    /* Hero Banner */
+    .cf-hero-banner {
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:24px 20px; margin-bottom:8px;
+      background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04));
+      border-radius:16px; border:1px solid rgba(16,185,129,0.15);
+    }
+    .cf-hero-text h2 { font-size:18px; font-weight:700; color:var(--text-primary,#F5F5F5); margin:0 0 4px; }
+    .cf-hero-text p { font-size:13px; color:var(--text-secondary,rgba(255,255,255,0.5)); margin:0; line-height:1.4; }
+    .cf-share-recipe-btn {
+      display:flex; align-items:center; gap:6px; padding:10px 18px;
+      background:#10B981; color:#fff; border:none; border-radius:12px;
+      font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+      transition:all .2s; flex-shrink:0;
+    }
+    .cf-share-recipe-btn:hover { background:#34D399; transform:translateY(-1px); }
+
+    /* Cuisine Chips */
+    .cf-cuisine-chips {
+      display:flex; gap:6px; padding:8px 0 12px; overflow-x:auto;
+      -ms-overflow-style:none; scrollbar-width:none;
+    }
+    .cf-cuisine-chips::-webkit-scrollbar { display:none; }
+    .cf-chip {
+      padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500;
+      border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04);
+      color:var(--text-secondary,rgba(255,255,255,0.5)); cursor:pointer;
+      white-space:nowrap; transition:all .2s;
+    }
+    .cf-chip.active { background:#10B981; color:#fff; border-color:#10B981; }
+    .cf-chip:hover:not(.active) { border-color:#10B981; color:#10B981; background:rgba(16,185,129,0.08); }
+
+    /* Cuisine Badge on Card Image */
+    .cf-cuisine-badge {
+      position:absolute; top:10px; left:10px;
+      padding:4px 10px; border-radius:8px; font-size:11px; font-weight:600;
+      background:rgba(0,0,0,0.6); color:#fff; backdrop-filter:blur(4px);
+      letter-spacing:0.3px;
+    }
+
+    /* Card Meta (calories + tags row) */
+    .cf-card-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; }
+    .cf-card-cal {
+      font-size:12px; font-weight:600; color:#10B981;
+      background:rgba(16,185,129,0.08); padding:2px 8px; border-radius:6px;
+    }
+
+    /* Author Info Column */
+    .cf-author-info { display:flex; flex-direction:column; gap:1px; }
+
+    /* Save Button */
+    .cf-save-btn {
+      background:none; border:none; cursor:pointer; font-size:13px; color:rgba(255,255,255,0.4);
+      padding:4px 10px; border-radius:8px; display:flex; align-items:center; gap:4px;
+      transition:background .15s; margin-left:auto;
+    }
+    .cf-save-btn:hover { background:rgba(16,185,129,0.08); color:#10B981; }
+    .cf-save-btn.saved { color:#10B981; }
+
+    /* Heart SVG */
+    .cf-heart-svg { transition:transform .2s; }
+    .cf-like-btn.liked .cf-heart-svg { animation:cfHeartPop .4s ease; }
+
+    /* Like Count */
+    .cf-like-count { font-size:13px; }
 
     /* Empty */
     .cf-empty { text-align:center; padding:48px 16px; color:rgba(255,255,255,0.35); font-size:14px; }
@@ -1387,6 +1544,9 @@ function _injectCommunityFeedStyles() {
       .cf-panel { max-width:100vw; }
       .cf-detail-modal { width:96vw; padding:18px; }
       .cf-share-modal { width:96vw; }
+      .cf-hero-banner { flex-direction:column; text-align:center; padding:20px 16px; }
+      .cf-share-recipe-btn { width:100%; justify-content:center; }
+      .cf-card-image { height:180px; }
     }
   `;
   document.head.appendChild(style);

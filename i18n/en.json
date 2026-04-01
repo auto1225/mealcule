@@ -224,6 +224,7 @@
     "analyze": "Analyze",
     "plan": "Plan",
     "recipes": "Recipes",
+    "community": "Community",
     "profile": "Profile",
     "ingredients": "Ingredients",
     "cooking": "Cooking",
@@ -421,6 +422,8 @@
     "anyStyle": "Any style"
   },
   "community": {
+    "feed": "Feed",
+    "myRecipes": "My Recipes",
     "title": "Community Recipes",
     "tabLatest": "Latest",
     "tabFeatured": "Featured",

@@ -2645,12 +2645,12 @@ function _buildFeatureShowcase(_t) {
       ]
     },
     {
-      title: _t('레시피', 'Recipes'),
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="13" y2="11"/></svg>',
+      title: _t('커뮤니티', 'Community'),
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
       color: '#f59e0b',
       items: [
-        { label: _t('레시피 보관함', 'Recipe Box'), desc: _t('분석 결과를 레시피로 저장 · 컬렉션 관리', 'Save analyses as recipes · manage collections'), action: "switchTab('recipes')" },
-        { label: _t('커뮤니티', 'Community'), desc: _t('다른 사용자의 레시피 탐색 · 좋아요 · 댓글', 'Explore others\' recipes · like · comment'), action: "switchTab('recipes');setTimeout(function(){var ct=document.querySelector('.sub-tab[data-subtab=\"community\"]');if(ct)ct.click()},300)" },
+        { label: _t('레시피 피드', 'Recipe Feed'), desc: _t('전 세계 사용자의 분자 요리 탐색 · 좋아요 · 댓글', 'Explore molecular recipes worldwide · like · comment'), action: "switchTab('recipes')" },
+        { label: _t('레시피 보관함', 'My Recipe Box'), desc: _t('분석 결과를 레시피로 저장 · 컬렉션 관리', 'Save analyses as recipes · manage collections'), action: "switchTab('recipes');setTimeout(function(){switchRecipeSub('mine')},200)" },
       ]
     },
     {
@@ -2873,8 +2873,8 @@ function renderPlanTab() {
 }
 
 function renderRecipesTab() {
-  // Render My Recipes sub-tab by default
-  switchRecipeSub('mine');
+  // Default to Community feed (primary content)
+  switchRecipeSub('community');
 }
 
 function switchRecipeSub(sub) {
@@ -7706,9 +7706,9 @@ function openAppMap() {
       { label: _t('일일 영양 요약', 'Daily Nutrition Summary'), action: "switchTab('plan')" },
       { label: _t('AI 식단 생성', 'AI Meal Generation'), action: "switchTab('plan')" },
     ]},
-    { title: _t('레시피', 'Recipes'), icon: '📖', items: [
-      { label: _t('내 레시피', 'My Recipes'), desc: _t('저장된 레시피 · 컬렉션 관리', 'Saved recipes · collection management'), action: "switchTab('recipes')" },
-      { label: _t('커뮤니티', 'Community'), desc: _t('공유 레시피 · 좋아요 · 댓글', 'Shared recipes · likes · comments'), action: "switchTab('recipes');setTimeout(function(){var ct=document.querySelector('.sub-tab[data-subtab=\"community\"]');if(ct)ct.click()},300)" },
+    { title: _t('커뮤니티', 'Community'), icon: '👥', items: [
+      { label: _t('레시피 피드', 'Recipe Feed'), desc: _t('전 세계 레시피 탐색 · 좋아요 · 댓글', 'Explore recipes worldwide · likes · comments'), action: "switchTab('recipes')" },
+      { label: _t('내 레시피', 'My Recipes'), desc: _t('저장된 레시피 · 컬렉션 관리', 'Saved recipes · collection management'), action: "switchTab('recipes');setTimeout(function(){switchRecipeSub('mine')},200)" },
     ]},
     { title: _t('프로필', 'Profile'), icon: '👤', items: [
       { label: _t('건강 프로필', 'Health Profile'), desc: _t('질환 · 알레르기 · 복용약 · 식단', 'Conditions · allergies · medications · diet'), action: "switchTab('profile');setTimeout(function(){showProfileSection('health')},200)" },
