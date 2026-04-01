@@ -3012,7 +3012,10 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Re-render dynamic content when language changes
+let _i18nRendering = false;
 document.addEventListener('i18n:applied', () => {
+  if (_i18nRendering) return;
+  _i18nRendering = true;
   if (typeof renderCategoryTabs === 'function') renderCategoryTabs();
   if (typeof renderIngredients === 'function') renderIngredients(document.getElementById('searchInput')?.value || '');
   if (typeof renderMethods === 'function') renderMethods();
@@ -3022,8 +3025,7 @@ document.addEventListener('i18n:applied', () => {
   if (typeof renderSubstances === 'function') renderSubstances();
   if (typeof updateTime === 'function') updateTime();
   if (typeof updateUserUI === 'function' && typeof currentUser !== 'undefined') updateUserUI();
-  // Re-apply i18n to any new DOM elements created by the re-renders above
-  setTimeout(() => I18n.applyTranslations(), 0);
+  _i18nRendering = false;
 });
 
 // ── Auth Functions (header buttons) ──
@@ -5047,6 +5049,12 @@ function renderIngredientsFromData(items, grid, bypassGrouping = false) {
 
 function renderIngredients(filter = "") {
   const grid = document.getElementById("ingGrid");
+  // Preserve open expand state before clearing
+  const openParents = new Set();
+  grid.querySelectorAll('.ing-expand.open').forEach(el => {
+    const parentName = el.id.replace('ing-expand-', '');
+    if (parentName) openParents.add(parentName);
+  });
   grid.innerHTML = "";
   const lower = (filter || "").toLowerCase();
 
@@ -5067,6 +5075,11 @@ function renderIngredients(filter = "") {
       grid.appendChild(hdr);
       totalCount += renderIngredientsFromData(catItems, grid);
     });
+    // Restore open expand state
+    openParents.forEach(name => {
+      const el = document.getElementById('ing-expand-' + name);
+      if (el) { el.classList.add('open'); const cell = document.querySelector('.ing-cell--parent[data-parent-key="' + name + '"]'); if (cell) cell.classList.add('expanded'); }
+    });
     return;
   }
 
@@ -5080,6 +5093,12 @@ function renderIngredients(filter = "") {
 
   // 검색 시 자식 항목도 직접 표시 (bypassGrouping=true)
   const count = renderIngredientsFromData(localItems, grid, !!lower);
+
+  // Restore open expand state
+  openParents.forEach(name => {
+    const el = document.getElementById('ing-expand-' + name);
+    if (el) { el.classList.add('open'); const cell = document.querySelector('.ing-cell--parent[data-parent-key="' + name + '"]'); if (cell) cell.classList.add('expanded'); }
+  });
 
   if (count === 0 && !!!sbClient) {
     const _nrMsg = (window.I18n && I18n.lang === 'en') ? 'No results found' : '검색 결과 없음';
