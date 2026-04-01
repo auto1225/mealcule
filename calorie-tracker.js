@@ -111,11 +111,15 @@ function _renderCT() {
     else groups.snack.push(m);
   });
 
+  var _ctMealIconBreakfast = '<img src="https://images.pexels.com/photos/103124/pexels-photo-103124.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'🌅\'">';
+  var _ctMealIconLunch = '<img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'☀️\'">';
+  var _ctMealIconDinner = '<img src="https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'🌙\'">';
+  var _ctMealIconSnack = '<img src="https://images.pexels.com/photos/890577/pexels-photo-890577.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'🍪\'">';
   const mealLabels = {
-    breakfast: { icon: '🌅', ko: '아침', en: 'Breakfast' },
-    lunch: { icon: '☀️', ko: '점심', en: 'Lunch' },
-    dinner: { icon: '🌙', ko: '저녁', en: 'Dinner' },
-    snack: { icon: '🍪', ko: '간식', en: 'Snack' },
+    breakfast: { icon: _ctMealIconBreakfast, ko: '아침', en: 'Breakfast' },
+    lunch: { icon: _ctMealIconLunch, ko: '점심', en: 'Lunch' },
+    dinner: { icon: _ctMealIconDinner, ko: '저녁', en: 'Dinner' },
+    snack: { icon: _ctMealIconSnack, ko: '간식', en: 'Snack' },
   };
 
   const dateObj = new Date(_ctDate + 'T00:00:00');
@@ -138,7 +142,7 @@ function _renderCT() {
         </div>
       </div>
 
-      ${isDemo ? `<div class="ct-demo-banner">💡 ${_t('샘플 데이터입니다. 음식을 직접 기록해보세요!', 'Sample data. Start logging your own meals!')}</div>` : ''}
+      ${isDemo ? `<div class="ct-demo-banner"><img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💡'"> ${_t('샘플 데이터입니다. 음식을 직접 기록해보세요!', 'Sample data. Start logging your own meals!')}</div>` : ''}
 
       <!-- Calorie Ring -->
       <div class="ct-ring-section">
@@ -198,14 +202,14 @@ function _renderCT() {
       <!-- Water Tracker -->
       <div class="ct-water">
         <div class="ct-water-header">
-          <span>💧 ${_t('수분 섭취', 'Water Intake')}</span>
+          <span><img src="https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💧'"> ${_t('수분 섭취', 'Water Intake')}</span>
           <span class="ct-water-val">${(_ctWater / 1000).toFixed(1)}L / ${(_ctGoals.water / 1000).toFixed(1)}L</span>
         </div>
         <div class="ct-macro-bar"><div class="ct-macro-fill ct-water-fill" style="width:${waterPct}%"></div></div>
         <div class="ct-water-btns">
           <button class="ct-water-btn" onclick="_ctAddWater(250)">+250ml</button>
           <button class="ct-water-btn" onclick="_ctAddWater(500)">+500ml</button>
-          <button class="ct-water-btn ct-water-custom" onclick="_ctCustomWater()">✏️</button>
+          <button class="ct-water-btn ct-water-custom" onclick="_ctCustomWater()"><img src="https://images.pexels.com/photos/6444/pencil-typography-black-design.jpg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='✏️'"></button>
           ${_ctWater > 0 ? `<button class="ct-water-btn ct-water-undo" onclick="_ctAddWater(-250)">↩</button>` : ''}
         </div>
       </div>
@@ -216,7 +220,7 @@ function _renderCT() {
           + ${_t('음식 기록하기', 'Log Food')}
         </button>
         <button class="ct-photo-btn" onclick="_ctPhotoScan()">
-          📷 ${_t('사진으로 기록', 'Photo Scan')}
+          <img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='📷'"> ${_t('사진으로 기록', 'Photo Scan')}
         </button>
       </div>
 
@@ -231,7 +235,7 @@ function _renderCT() {
             </div>
             ${items.length > 0 ? items.map(item => `
               <div class="ct-meal-item" ${!item.id.startsWith('demo-') ? `onclick="_ctRemoveMeal('${item.id}')"` : ''}>
-                ${item.img ? '<img class="ct-meal-thumb" src="' + item.img + '" alt="" onerror="this.outerHTML=\'<span class=ct-meal-icon>' + (item.icon||'🍽️') + '</span>\'">' : '<span class="ct-meal-icon">' + (item.icon||'🍽️') + '</span>'}
+                ${item.img ? '<img class="ct-meal-thumb" src="' + item.img + '" alt="" onerror="this.outerHTML=\'<span class=ct-meal-icon>' + (item.icon||'') + '</span>\'">' : '<img class="ct-meal-thumb" src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=36&h=36&fit=crop" alt="" onerror="this.outerHTML=\'<span class=ct-meal-icon>🍽️</span>\'">'}
                 <div class="ct-meal-info">
                   <div class="ct-meal-name">${item.name}</div>
                   <div class="ct-meal-meta">${item.time || ''} · P ${item.protein}g · F ${item.fat}g · C ${item.carbs}g</div>
@@ -249,7 +253,7 @@ function _renderCT() {
 
       <!-- Goal Settings -->
       <button class="ct-settings-btn" onclick="_ctOpenGoalSettings()">
-        ⚙️ ${_t('목표 설정', 'Goal Settings')}
+        <img src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⚙️'"> ${_t('목표 설정', 'Goal Settings')}
       </button>
     </div>
   `;
@@ -463,6 +467,7 @@ function _ctQuickAddCal(mealType) {
     protein: 0, fat: 0, carbs: 0,
     time: now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'),
     icon: '🍽️',
+    img: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=36&h=36&fit=crop',
   });
   _saveMeals();
 
@@ -548,6 +553,7 @@ function _ctPhotoScan() {
               carbs: food.carbs || 0,
               time: new Date().toTimeString().slice(0, 5),
               icon: '📷',
+              img: 'https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=36&h=36&fit=crop',
             });
           });
           _saveMeals();
@@ -584,32 +590,32 @@ function _ctOpenGoalSettings() {
   modal.innerHTML = `
     <div class="ct-quickadd-panel" style="max-width:400px">
       <div class="ct-quickadd-header">
-        <h3>⚙️ ${_t('일일 목표 설정', 'Daily Goal Settings')}</h3>
+        <h3><img src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⚙️'"> ${_t('일일 목표 설정', 'Daily Goal Settings')}</h3>
         <button class="ct-close" onclick="this.closest('.ct-quickadd-overlay').remove()">✕</button>
       </div>
       <div class="ct-goal-form">
         <label class="ct-goal-row">
-          <span>🔥 ${_t('칼로리', 'Calories')} (kcal)</span>
+          <span><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🔥'"> ${_t('칼로리', 'Calories')} (kcal)</span>
           <input type="number" id="ctGoalCal" value="${_ctGoals.calories}" min="500" max="10000">
         </label>
         <label class="ct-goal-row">
-          <span>🥩 ${_t('단백질', 'Protein')} (g)</span>
+          <span><img src="https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🥩'"> ${_t('단백질', 'Protein')} (g)</span>
           <input type="number" id="ctGoalProt" value="${_ctGoals.protein}" min="10" max="500">
         </label>
         <label class="ct-goal-row">
-          <span>🧈 ${_t('지방', 'Fat')} (g)</span>
+          <span><img src="https://images.pexels.com/photos/1022385/pexels-photo-1022385.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🧈'"> ${_t('지방', 'Fat')} (g)</span>
           <input type="number" id="ctGoalFat" value="${_ctGoals.fat}" min="10" max="500">
         </label>
         <label class="ct-goal-row">
-          <span>🌾 ${_t('탄수화물', 'Carbs')} (g)</span>
+          <span><img src="https://images.pexels.com/photos/326082/pexels-photo-326082.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🌾'"> ${_t('탄수화물', 'Carbs')} (g)</span>
           <input type="number" id="ctGoalCarbs" value="${_ctGoals.carbs}" min="10" max="1000">
         </label>
         <label class="ct-goal-row">
-          <span>💧 ${_t('수분', 'Water')} (ml)</span>
+          <span><img src="https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💧'"> ${_t('수분', 'Water')} (ml)</span>
           <input type="number" id="ctGoalWater" value="${_ctGoals.water}" min="500" max="10000">
         </label>
         <div style="margin-top:12px;padding:12px;background:#f0fdf4;border-radius:10px;font-size:11px;color:#166534">
-          💡 ${_t('일반 성인 권장: 2,000kcal · 단백질 50g · 지방 65g · 탄수화물 300g · 수분 2L', 'Recommended: 2,000kcal · Protein 50g · Fat 65g · Carbs 300g · Water 2L')}
+          <img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💡'"> ${_t('일반 성인 권장: 2,000kcal · 단백질 50g · 지방 65g · 탄수화물 300g · 수분 2L', 'Recommended: 2,000kcal · Protein 50g · Fat 65g · Carbs 300g · Water 2L')}
         </div>
         <button class="ct-add-btn" style="margin-top:16px" onclick="_ctSaveGoals()">
           ${_t('저장', 'Save')}
