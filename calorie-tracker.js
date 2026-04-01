@@ -472,9 +472,18 @@ function _ctQuickAddCal(mealType) {
 }
 
 function _ctRemoveMeal(id) {
-  _ctMeals = _ctMeals.filter(m => m.id !== id);
-  _saveMeals();
-  _renderCT();
+  if (typeof confirmAction === 'function') {
+    confirmAction(_t('이 식사를 삭제하시겠습니까?', 'Delete this meal?'), () => {
+      _ctMeals = _ctMeals.filter(m => m.id !== id);
+      _saveMeals();
+      _renderCT();
+    });
+  } else {
+    if (!confirm(_t('이 식사를 삭제하시겠습니까?', 'Delete this meal?'))) return;
+    _ctMeals = _ctMeals.filter(m => m.id !== id);
+    _saveMeals();
+    _renderCT();
+  }
 }
 
 function _saveMeals() {

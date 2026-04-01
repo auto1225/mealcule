@@ -490,33 +490,37 @@
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
   <button class="mobile-nav-btn active" id="mnav-ingredients" onclick="mobileNavTo('ingredients')" data-i18n-aria="nav.ingredients">
     <span class="mnav-icon">🥬</span>
-    <span class="mnav-label" data-i18n="nav.ingredients">재료</span>
+    <span class="mnav-label" data-i18n="nav.ingredients">Ingredients</span>
   </button>
   <button class="mobile-nav-btn" id="mnav-cooking" onclick="mobileNavTo('cooking')" data-i18n-aria="nav.cooking">
     <span class="mnav-icon">🔥</span>
-    <span class="mnav-label" data-i18n="nav.cooking">조리</span>
-  </button>
-  <button class="mobile-nav-btn" id="mnav-profile" onclick="mobileNavTo('profile')" data-i18n-aria="nav.profile">
-    <span class="mnav-icon">👤</span>
-    <span class="mnav-label" data-i18n="nav.profile">프로필</span>
+    <span class="mnav-label" data-i18n="nav.cooking">Cooking</span>
   </button>
   <button class="mobile-nav-btn" id="mnav-results" onclick="mobileNavTo('results')" data-i18n-aria="nav.results">
     <span class="mnav-icon">🔬</span>
-    <span class="mnav-label" data-i18n="nav.results">결과</span>
+    <span class="mnav-label" data-i18n="nav.results">Results</span>
   </button>
   <button class="mobile-nav-btn" id="mnav-calories" onclick="openCalorieTracker()" data-i18n-aria="nav.calories">
-    <span class="mnav-icon">🔥</span>
+    <span class="mnav-icon">📊</span>
     <span class="mnav-label">Calories</span>
   </button>
-  <button class="mobile-nav-btn" id="mnav-planner" onclick="openMealPlanner()" data-i18n-aria="nav.planner">
-    <span class="mnav-icon">📅</span>
-    <span class="mnav-label" data-i18n="nav.planner">Planner</span>
-  </button>
-  <button class="mobile-nav-btn" id="mnav-recipes" onclick="toggleRecipeBox()" data-i18n-aria="nav.recipeBox">
-    <span class="mnav-icon">📦</span>
-    <span class="mnav-label" data-i18n="nav.recipeBox">Recipes</span>
+  <button class="mobile-nav-btn" id="mnav-more" onclick="toggleMoreMenu()" data-i18n-aria="nav.more">
+    <span class="mnav-icon">⋯</span>
+    <span class="mnav-label">More</span>
   </button>
 </nav>
+
+<!-- ══ MORE MENU OVERLAY ══ -->
+<div class="more-menu-overlay" id="moreMenuOverlay" style="display:none" onclick="if(event.target===this)closeMoreMenu()">
+  <div class="more-menu" id="moreMenu">
+    <button onclick="mobileNavTo('profile');closeMoreMenu()"><span>👤</span> Profile</button>
+    <button onclick="openCalorieTracker();closeMoreMenu()"><span>🔥</span> Calorie Tracker</button>
+    <button onclick="openMealPlanner();closeMoreMenu()"><span>📅</span> Meal Planner</button>
+    <button onclick="toggleRecipeBox();closeMoreMenu()"><span>📦</span> Recipe Box</button>
+    <button onclick="typeof openCommunityFeed==='function'&&openCommunityFeed();closeMoreMenu()"><span>👥</span> Community</button>
+    <button onclick="typeof openHealthDashboard==='function'&&openHealthDashboard();closeMoreMenu()"><span>📊</span> Health Dashboard</button>
+  </div>
+</div>
 
 <!-- ══ DEV NAVIGATION ══ -->
 <div id="devNav">
@@ -585,5 +589,31 @@
   </div>
 </div>
 
+<script>
+/* ── More Menu ── */
+function toggleMoreMenu() {
+  const overlay = document.getElementById('moreMenuOverlay');
+  overlay.style.display = overlay.style.display === 'none' ? 'flex' : 'none';
+}
+function closeMoreMenu() {
+  document.getElementById('moreMenuOverlay').style.display = 'none';
+}
+
+/* ── Confirm Action Utility ── */
+function confirmAction(message, onConfirm) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center';
+  overlay.innerHTML = '<div style="background:#fff;border-radius:16px;padding:24px;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center">' +
+    '<p style="font-size:14px;font-weight:600;color:#111;margin:0 0 16px">' + message + '</p>' +
+    '<div style="display:flex;gap:8px">' +
+    '<button id="_cfmCancel" style="flex:1;padding:10px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>' +
+    '<button id="_cfmOk" style="flex:1;padding:10px;border-radius:10px;border:none;background:#ef4444;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Delete</button>' +
+    '</div></div>';
+  document.body.appendChild(overlay);
+  overlay.querySelector('#_cfmCancel').onclick = () => overlay.remove();
+  overlay.querySelector('#_cfmOk').onclick = () => { overlay.remove(); onConfirm(); };
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+}
+</script>
 </body>
 </html>

@@ -541,16 +541,29 @@ function promptNewCollection() {
 // ── 6. Delete Recipe ────────────────────────────────────────────────────────
 
 async function deleteRecipe(id) {
-  const yes = confirm(_t('이 레시피를 삭제하시겠습니까?', 'Delete this recipe?'));
-  if (!yes) return;
-  const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser.id } });
-  if (result === null) {
-    showToast(_t('삭제에 실패했습니다.', 'Failed to delete.'));
-    return;
+  if (typeof confirmAction === 'function') {
+    confirmAction(_t('이 레시피를 삭제하시겠습니까?', 'Delete this recipe?'), async () => {
+      const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser.id } });
+      if (result === null) {
+        showToast(_t('삭제에 실패했습니다.', 'Failed to delete.'));
+        return;
+      }
+      showToast(_t('레시피가 삭제되었습니다.', 'Recipe deleted.'));
+      _closeDetailModal();
+      await renderRecipeBox();
+    });
+  } else {
+    const yes = confirm(_t('이 레시피를 삭제하시겠습니까?', 'Delete this recipe?'));
+    if (!yes) return;
+    const result = await dbQuery('saved_recipes', 'delete', { eq: { id, user_id: currentUser.id } });
+    if (result === null) {
+      showToast(_t('삭제에 실패했습니다.', 'Failed to delete.'));
+      return;
+    }
+    showToast(_t('레시피가 삭제되었습니다.', 'Recipe deleted.'));
+    _closeDetailModal();
+    await renderRecipeBox();
   }
-  showToast(_t('레시피가 삭제되었습니다.', 'Recipe deleted.'));
-  _closeDetailModal();
-  await renderRecipeBox();
 }
 
 // ── 7. Toggle Favorite ──────────────────────────────────────────────────────
