@@ -5,14 +5,14 @@
 // _t defined in recipe-box.js; fallback if loaded standalone
 if (typeof _t === 'undefined') var _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
 
-const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
-const MEAL_LABELS = {
-  breakfast: { ko: '아침', en: 'Breakfast', emoji: '🌅', img: 'https://images.pexels.com/photos/103124/pexels-photo-103124.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
-  lunch:     { ko: '점심', en: 'Lunch',     emoji: '☀️', img: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
-  dinner:    { ko: '저녁', en: 'Dinner',    emoji: '🌙', img: 'https://images.pexels.com/photos/299348/pexels-photo-299348.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
-  snack:     { ko: '간식', en: 'Snack',     emoji: '🍪', img: 'https://images.pexels.com/photos/1346347/pexels-photo-1346347.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
+var MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
+var MEAL_LABELS = {
+  breakfast: { ko: '아침', en: 'Breakfast', emoji: '\uD83C\uDF05', img: 'https://images.pexels.com/photos/103124/pexels-photo-103124.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
+  lunch:     { ko: '점심', en: 'Lunch',     emoji: '\u2600\uFE0F', img: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
+  dinner:    { ko: '저녁', en: 'Dinner',    emoji: '\uD83C\uDF19', img: 'https://images.pexels.com/photos/299348/pexels-photo-299348.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
+  snack:     { ko: '간식', en: 'Snack',     emoji: '\uD83C\uDF6A', img: 'https://images.pexels.com/photos/1346347/pexels-photo-1346347.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop' },
 };
-const DAY_LABELS = [
+var DAY_LABELS = [
   { ko: '월', en: 'Mon' }, { ko: '화', en: 'Tue' }, { ko: '수', en: 'Wed' },
   { ko: '목', en: 'Thu' }, { ko: '금', en: 'Fri' }, { ko: '토', en: 'Sat' },
   { ko: '일', en: 'Sun' },
@@ -29,45 +29,45 @@ let _mpState = {
 
 // ── Demo Data (shown when DB is empty) ──
 
-const _DEMO_MEALS = [
+var _DEMO_MEALS = [
   // Monday (day 0) — 1850 kcal
-  { id:'demo_0b', day_of_week:0, meal_type:'breakfast', custom_name:'아보카도 토스트', custom_name_en:'Avocado Toast', custom_emoji:'🥑', custom_img:'https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:350, protein:12, fat:18, carbs:36, fiber:7 },
-  { id:'demo_0l', day_of_week:0, meal_type:'lunch', custom_name:'그릴드 치킨 샐러드', custom_name_en:'Grilled Chicken Salad', custom_emoji:'🥗', custom_img:'https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:480, protein:38, fat:22, carbs:28, fiber:5 },
-  { id:'demo_0d', day_of_week:0, meal_type:'dinner', custom_name:'수비드 스테이크', custom_name_en:'Sous Vide Steak', custom_emoji:'🥩', custom_img:'https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:650, protein:52, fat:38, carbs:12, fiber:2 },
-  { id:'demo_0s', day_of_week:0, meal_type:'snack', custom_name:'그릭 요거트 + 베리', custom_name_en:'Greek Yogurt + Berries', custom_emoji:'🫐', custom_img:'https://images.pexels.com/photos/1132558/pexels-photo-1132558.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:180, protein:15, fat:4, carbs:22, fiber:3 },
+  { id:'demo_0b', day_of_week:0, meal_type:'breakfast', custom_name:'아보카도 토스트', custom_name_en:'Avocado Toast', custom_emoji:'\uD83E\uDD51', custom_img:'https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:350, protein:12, fat:18, carbs:36, fiber:7 },
+  { id:'demo_0l', day_of_week:0, meal_type:'lunch', custom_name:'그릴드 치킨 샐러드', custom_name_en:'Grilled Chicken Salad', custom_emoji:'\uD83E\uDD57', custom_img:'https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:480, protein:38, fat:22, carbs:28, fiber:5 },
+  { id:'demo_0d', day_of_week:0, meal_type:'dinner', custom_name:'수비드 스테이크', custom_name_en:'Sous Vide Steak', custom_emoji:'\uD83E\uDD69', custom_img:'https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:650, protein:52, fat:38, carbs:12, fiber:2 },
+  { id:'demo_0s', day_of_week:0, meal_type:'snack', custom_name:'그릭 요거트 + 베리', custom_name_en:'Greek Yogurt + Berries', custom_emoji:'\uD83E\uDED0', custom_img:'https://images.pexels.com/photos/1132558/pexels-photo-1132558.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:180, protein:15, fat:4, carbs:22, fiber:3 },
 
   // Tuesday (day 1) — 1720 kcal
-  { id:'demo_1b', day_of_week:1, meal_type:'breakfast', custom_name:'오버나이트 오츠', custom_name_en:'Overnight Oats', custom_emoji:'🥣', custom_img:'https://images.pexels.com/photos/543730/pexels-photo-543730.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:320, protein:14, fat:10, carbs:44, fiber:6 },
-  { id:'demo_1l', day_of_week:1, meal_type:'lunch', custom_name:'참치 포케 보울', custom_name_en:'Tuna Poke Bowl', custom_emoji:'🍣', custom_img:'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:520, protein:36, fat:18, carbs:52, fiber:4 },
-  { id:'demo_1d', day_of_week:1, meal_type:'dinner', custom_name:'레몬 허브 연어', custom_name_en:'Lemon Herb Salmon', custom_emoji:'🐟', custom_img:'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:580, protein:44, fat:32, carbs:18, fiber:3 },
-  { id:'demo_1s', day_of_week:1, meal_type:'snack', custom_name:'아몬드 한 줌', custom_name_en:'Handful of Almonds', custom_emoji:'🥜', custom_img:'https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:160, protein:6, fat:14, carbs:6, fiber:4 },
+  { id:'demo_1b', day_of_week:1, meal_type:'breakfast', custom_name:'오버나이트 오츠', custom_name_en:'Overnight Oats', custom_emoji:'\uD83E\uDD63', custom_img:'https://images.pexels.com/photos/543730/pexels-photo-543730.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:320, protein:14, fat:10, carbs:44, fiber:6 },
+  { id:'demo_1l', day_of_week:1, meal_type:'lunch', custom_name:'참치 포케 보울', custom_name_en:'Tuna Poke Bowl', custom_emoji:'\uD83C\uDF63', custom_img:'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:520, protein:36, fat:18, carbs:52, fiber:4 },
+  { id:'demo_1d', day_of_week:1, meal_type:'dinner', custom_name:'레몬 허브 연어', custom_name_en:'Lemon Herb Salmon', custom_emoji:'\uD83D\uDC1F', custom_img:'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:580, protein:44, fat:32, carbs:18, fiber:3 },
+  { id:'demo_1s', day_of_week:1, meal_type:'snack', custom_name:'아몬드 한 줌', custom_name_en:'Handful of Almonds', custom_emoji:'\uD83E\uDD5C', custom_img:'https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:160, protein:6, fat:14, carbs:6, fiber:4 },
 
   // Wednesday (day 2) — 1680 kcal (no snack — realistic gap)
-  { id:'demo_2b', day_of_week:2, meal_type:'breakfast', custom_name:'스크램블 에그 + 토스트', custom_name_en:'Scrambled Eggs + Toast', custom_emoji:'🍳', custom_img:'https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:380, protein:22, fat:20, carbs:28, fiber:2 },
-  { id:'demo_2l', day_of_week:2, meal_type:'lunch', custom_name:'터키 랩', custom_name_en:'Turkey Wrap', custom_emoji:'🌯', custom_img:'https://images.pexels.com/photos/1640557/pexels-photo-1640557.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:450, protein:32, fat:16, carbs:42, fiber:4 },
-  { id:'demo_2d', day_of_week:2, meal_type:'dinner', custom_name:'치킨 스터프라이', custom_name_en:'Chicken Stir-Fry', custom_emoji:'🍜', custom_img:'https://images.pexels.com/photos/2664443/pexels-photo-2664443.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:620, protein:40, fat:22, carbs:58, fiber:6 },
+  { id:'demo_2b', day_of_week:2, meal_type:'breakfast', custom_name:'스크램블 에그 + 토스트', custom_name_en:'Scrambled Eggs + Toast', custom_emoji:'\uD83C\uDF73', custom_img:'https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:380, protein:22, fat:20, carbs:28, fiber:2 },
+  { id:'demo_2l', day_of_week:2, meal_type:'lunch', custom_name:'터키 랩', custom_name_en:'Turkey Wrap', custom_emoji:'\uD83C\uDF2F', custom_img:'https://images.pexels.com/photos/1640557/pexels-photo-1640557.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:450, protein:32, fat:16, carbs:42, fiber:4 },
+  { id:'demo_2d', day_of_week:2, meal_type:'dinner', custom_name:'치킨 스터프라이', custom_name_en:'Chicken Stir-Fry', custom_emoji:'\uD83C\uDF5C', custom_img:'https://images.pexels.com/photos/2664443/pexels-photo-2664443.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:620, protein:40, fat:22, carbs:58, fiber:6 },
 
   // Thursday (day 3) — 2050 kcal
-  { id:'demo_3b', day_of_week:3, meal_type:'breakfast', custom_name:'바나나 팬케이크', custom_name_en:'Banana Pancakes', custom_emoji:'🥞', custom_img:'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:420, protein:12, fat:14, carbs:60, fiber:3 },
-  { id:'demo_3l', day_of_week:3, meal_type:'lunch', custom_name:'퀴노아 버거', custom_name_en:'Quinoa Burger', custom_emoji:'🍔', custom_img:'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:550, protein:24, fat:22, carbs:58, fiber:8 },
-  { id:'demo_3d', day_of_week:3, meal_type:'dinner', custom_name:'쉬림프 파스타', custom_name_en:'Shrimp Pasta', custom_emoji:'🍝', custom_img:'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:680, protein:34, fat:24, carbs:72, fiber:4 },
-  { id:'demo_3s', day_of_week:3, meal_type:'snack', custom_name:'프로틴 스무디', custom_name_en:'Protein Smoothie', custom_emoji:'🥤', custom_img:'https://images.pexels.com/photos/3625372/pexels-photo-3625372.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:220, protein:25, fat:5, carbs:22, fiber:2 },
+  { id:'demo_3b', day_of_week:3, meal_type:'breakfast', custom_name:'바나나 팬케이크', custom_name_en:'Banana Pancakes', custom_emoji:'\uD83E\uDD5E', custom_img:'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:420, protein:12, fat:14, carbs:60, fiber:3 },
+  { id:'demo_3l', day_of_week:3, meal_type:'lunch', custom_name:'퀴노아 버거', custom_name_en:'Quinoa Burger', custom_emoji:'\uD83C\uDF54', custom_img:'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:550, protein:24, fat:22, carbs:58, fiber:8 },
+  { id:'demo_3d', day_of_week:3, meal_type:'dinner', custom_name:'쉬림프 파스타', custom_name_en:'Shrimp Pasta', custom_emoji:'\uD83C\uDF5D', custom_img:'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:680, protein:34, fat:24, carbs:72, fiber:4 },
+  { id:'demo_3s', day_of_week:3, meal_type:'snack', custom_name:'프로틴 스무디', custom_name_en:'Protein Smoothie', custom_emoji:'\uD83E\uDD64', custom_img:'https://images.pexels.com/photos/3625372/pexels-photo-3625372.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:220, protein:25, fat:5, carbs:22, fiber:2 },
 
   // Friday (day 4) — 1880 kcal (no breakfast — skipped)
-  { id:'demo_4l', day_of_week:4, meal_type:'lunch', custom_name:'지중해식 보울', custom_name_en:'Mediterranean Bowl', custom_emoji:'🥙', custom_img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:510, protein:28, fat:24, carbs:46, fiber:7 },
-  { id:'demo_4d', day_of_week:4, meal_type:'dinner', custom_name:'비프 타코', custom_name_en:'Beef Tacos', custom_emoji:'🌮', custom_img:'https://images.pexels.com/photos/4958641/pexels-photo-4958641.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:720, protein:42, fat:34, carbs:56, fiber:5 },
-  { id:'demo_4s', day_of_week:4, meal_type:'snack', custom_name:'후무스 + 야채스틱', custom_name_en:'Hummus + Veggie Sticks', custom_emoji:'🥕', custom_img:'https://images.pexels.com/photos/1400999/pexels-photo-1400999.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:190, protein:8, fat:10, carbs:18, fiber:6 },
+  { id:'demo_4l', day_of_week:4, meal_type:'lunch', custom_name:'지중해식 보울', custom_name_en:'Mediterranean Bowl', custom_emoji:'\uD83E\uDD59', custom_img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:510, protein:28, fat:24, carbs:46, fiber:7 },
+  { id:'demo_4d', day_of_week:4, meal_type:'dinner', custom_name:'비프 타코', custom_name_en:'Beef Tacos', custom_emoji:'\uD83C\uDF2E', custom_img:'https://images.pexels.com/photos/4958641/pexels-photo-4958641.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:720, protein:42, fat:34, carbs:56, fiber:5 },
+  { id:'demo_4s', day_of_week:4, meal_type:'snack', custom_name:'후무스 + 야채스틱', custom_name_en:'Hummus + Veggie Sticks', custom_emoji:'\uD83E\uDD55', custom_img:'https://images.pexels.com/photos/1400999/pexels-photo-1400999.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:190, protein:8, fat:10, carbs:18, fiber:6 },
 
   // Saturday (day 5) — 2180 kcal
-  { id:'demo_5b', day_of_week:5, meal_type:'breakfast', custom_name:'풀 잉글리시 브렉퍼스트', custom_name_en:'Full English Breakfast', custom_emoji:'🍳', custom_img:'https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:550, protein:30, fat:34, carbs:32, fiber:4 },
-  { id:'demo_5l', day_of_week:5, meal_type:'lunch', custom_name:'카프레제 파니니', custom_name_en:'Caprese Panini', custom_emoji:'🥪', custom_img:'https://images.pexels.com/photos/1640557/pexels-photo-1640557.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:460, protein:22, fat:20, carbs:44, fiber:3 },
-  { id:'demo_5d', day_of_week:5, meal_type:'dinner', custom_name:'그릴드 램 찹', custom_name_en:'Grilled Lamb Chops', custom_emoji:'🍖', custom_img:'https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:700, protein:50, fat:42, carbs:16, fiber:2 },
-  { id:'demo_5s', day_of_week:5, meal_type:'snack', custom_name:'다크 초콜릿 + 견과류', custom_name_en:'Dark Chocolate + Nuts', custom_emoji:'🍫', custom_img:'https://images.pexels.com/photos/65882/pexels-photo-65882.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:210, protein:5, fat:16, carbs:18, fiber:3 },
+  { id:'demo_5b', day_of_week:5, meal_type:'breakfast', custom_name:'풀 잉글리시 브렉퍼스트', custom_name_en:'Full English Breakfast', custom_emoji:'\uD83C\uDF73', custom_img:'https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:550, protein:30, fat:34, carbs:32, fiber:4 },
+  { id:'demo_5l', day_of_week:5, meal_type:'lunch', custom_name:'카프레제 파니니', custom_name_en:'Caprese Panini', custom_emoji:'\uD83E\uDD6A', custom_img:'https://images.pexels.com/photos/1640557/pexels-photo-1640557.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:460, protein:22, fat:20, carbs:44, fiber:3 },
+  { id:'demo_5d', day_of_week:5, meal_type:'dinner', custom_name:'그릴드 램 찹', custom_name_en:'Grilled Lamb Chops', custom_emoji:'\uD83C\uDF56', custom_img:'https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:700, protein:50, fat:42, carbs:16, fiber:2 },
+  { id:'demo_5s', day_of_week:5, meal_type:'snack', custom_name:'다크 초콜릿 + 견과류', custom_name_en:'Dark Chocolate + Nuts', custom_emoji:'\uD83C\uDF6B', custom_img:'https://images.pexels.com/photos/65882/pexels-photo-65882.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:210, protein:5, fat:16, carbs:18, fiber:3 },
 
   // Sunday (day 6) — 1760 kcal (no snack)
-  { id:'demo_6b', day_of_week:6, meal_type:'breakfast', custom_name:'블루베리 와플', custom_name_en:'Blueberry Waffles', custom_emoji:'🧇', custom_img:'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:400, protein:10, fat:16, carbs:54, fiber:3 },
-  { id:'demo_6l', day_of_week:6, meal_type:'lunch', custom_name:'미소 라멘', custom_name_en:'Miso Ramen', custom_emoji:'🍜', calories:580, protein:28, fat:22, carbs:62, fiber:4 },
-  { id:'demo_6d', day_of_week:6, meal_type:'dinner', custom_name:'로스트 치킨', custom_name_en:'Roast Chicken', custom_emoji:'🍗', custom_img:'https://images.pexels.com/photos/361184/pexels-photo-361184.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:620, protein:48, fat:30, carbs:24, fiber:3 },
+  { id:'demo_6b', day_of_week:6, meal_type:'breakfast', custom_name:'블루베리 와플', custom_name_en:'Blueberry Waffles', custom_emoji:'\uD83E\uDDC7', custom_img:'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:400, protein:10, fat:16, carbs:54, fiber:3 },
+  { id:'demo_6l', day_of_week:6, meal_type:'lunch', custom_name:'미소 라멘', custom_name_en:'Miso Ramen', custom_emoji:'\uD83C\uDF5C', custom_img:'https://images.pexels.com/photos/2664443/pexels-photo-2664443.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:580, protein:28, fat:22, carbs:62, fiber:4 },
+  { id:'demo_6d', day_of_week:6, meal_type:'dinner', custom_name:'로스트 치킨', custom_name_en:'Roast Chicken', custom_emoji:'\uD83C\uDF57', custom_img:'https://images.pexels.com/photos/361184/pexels-photo-361184.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:620, protein:48, fat:30, carbs:24, fiber:3 },
 ];
 
 // ── Helpers ──
@@ -136,7 +136,7 @@ function _renderProGate() {
   overlay.style.display = 'flex';
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:16px;padding:40px;text-align:center;max-width:360px;width:90%">
-      <div style="font-size:48px;margin-bottom:16px">🔒</div>
+      <div style="margin-bottom:16px"><img src="https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='<span style=\'font-size:48px\'>&#x1F512;</span>'"></div>
       <h2 style="margin:0 0 8px">${_t('Pro 필요', 'Pro Required')}</h2>
       <p style="color:#666;margin:0 0 20px;font-size:14px">
         ${_t('주간 식단 플래너는 Pro 플랜에서 사용할 수 있습니다.', 'The Weekly Meal Planner is available on the Pro plan.')}
@@ -156,7 +156,7 @@ function _buildPlannerShell() {
         <span id="mpWeekLabel" style="font-weight:600;font-size:15px"></span>
         <button onclick="navigateWeek(1)" style="background:none;border:none;font-size:18px;cursor:pointer">&rsaquo;</button>
       </div>
-      <button onclick="_openAiMealPlanGenerator()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">✨ ${_t('AI 생성', 'AI Generate')}</button>
+      <button onclick="_openAiMealPlanGenerator()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='<span>&#x2728;</span>'">${_t('AI 생성', 'AI Generate')}</button>
     </div>
     <div id="mpDayTabs" style="display:none;overflow-x:auto;background:#fff;border-bottom:1px solid #e5e7eb;flex-shrink:0"></div>
     <div id="mpCalendar" style="flex:1;overflow-y:auto;padding:8px"></div>
@@ -276,7 +276,7 @@ function _renderSingleDay(dayIndex, activeItems) {
   let html = '';
   if (_mpState.showingDemo) {
     html += `<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:13px;color:#92400e">
-      <span style="font-size:18px">✨</span>
+      <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=22&h=22&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover" onerror="this.outerHTML='<span>&#x2728;</span>'">
       <span>${_t('샘플 식단입니다. 직접 추가해 보세요!', 'Sample meals shown. Add your own!')}</span>
     </div>`;
   }
@@ -302,7 +302,7 @@ function _renderFullGrid(activeItems) {
   let html = '';
   if (_mpState.showingDemo) {
     html += `<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:8px;font-size:13px;color:#92400e">
-      <span style="font-size:18px">✨</span>
+      <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=22&h=22&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover" onerror="this.outerHTML='<span>&#x2728;</span>'">
       <span>${_t('샘플 식단이 표시됩니다. + 버튼으로 직접 식단을 추가해 보세요!', 'Showing sample meals. Tap + to add your own!')}</span>
     </div>`;
   }
@@ -341,9 +341,10 @@ function _renderFullGrid(activeItems) {
 
 function _renderMealItemCard(item, isDemo) {
   const name = _t(item.custom_name || '', item.custom_name_en || item.custom_name || '');
-  const emoji = item.custom_emoji || '🍽️';
-  const imgUrl = item.custom_img;
-  const iconHtml = imgUrl ? `<img src="${imgUrl}" style="width:22px;height:22px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>${emoji}</span>'">` : `<span>${emoji}</span>`;
+  var emoji = item.custom_emoji || '';
+  var imgUrl = item.custom_img || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=22&h=22&fit=crop';
+  var fallbackEmoji = emoji || '&#x1F37D;';
+  var iconHtml = `<img src="${imgUrl}" style="width:22px;height:22px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>${fallbackEmoji}</span>'">`; 
   const cal = item.calories ? `${Math.round(item.calories)} kcal` : '';
   const isMobile = window.innerWidth <= 768;
   const moveAttr = (!isDemo && isMobile) ? `onclick="_startMoveItem('${item.id}')"` : '';
@@ -533,11 +534,12 @@ function _renderPickerList(recipes, dayOfWeek, mealType) {
     const name = _t(r.name || r.title || '', r.name_en || r.title_en || r.name || r.title || '');
     const cal = r.calories || r.total_calories || 0;
     const p = r.protein || 0, f = r.fat || 0, c = r.carbs || 0;
-    const emoji = r.emoji || '🍽️';
+    var recipeImg = r.image_url || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=32&h=32&fit=crop';
+    var recipeEmoji = r.emoji || '&#x1F37D;';
     return `<div onclick="_selectRecipeForPlan('${r.id}',${dayOfWeek},'${mealType}')"
       style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #f3f3f3;cursor:pointer;transition:background 0.15s"
       onmouseenter="this.style.background='#f8f8ff'" onmouseleave="this.style.background=''">
-      <span style="font-size:24px">${emoji}</span>
+      <img src="${recipeImg}" style="width:32px;height:32px;border-radius:6px;object-fit:cover" onerror="this.outerHTML='<span style=\\'font-size:24px\\'>${recipeEmoji}</span>'">
       <div style="flex:1;min-width:0">
         <div style="font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
         <div style="font-size:11px;color:#888">${Math.round(cal)} kcal | P${Math.round(p)}g F${Math.round(f)}g C${Math.round(c)}g</div>
@@ -560,7 +562,8 @@ async function _selectRecipeForPlan(recipeId, dayOfWeek, mealType) {
     recipe_id: recipe.id,
     custom_name: recipe.name || recipe.title || '',
     custom_name_en: recipe.name_en || recipe.title_en || '',
-    custom_emoji: recipe.emoji || '🍽️',
+    custom_emoji: recipe.emoji || '',
+    custom_img: recipe.image_url || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop',
     calories: recipe.calories || recipe.total_calories || 0,
     protein: recipe.protein || 0,
     fat: recipe.fat || 0,
@@ -605,7 +608,8 @@ async function _addManualItem(dayOfWeek, mealType) {
     recipe_id: null,
     custom_name: name,
     custom_name_en: name,
-    custom_emoji: '🍽️',
+    custom_emoji: '',
+    custom_img: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop',
     calories: cal,
     protein: 0,
     fat: 0,
@@ -809,7 +813,7 @@ function _openAiMealPlanGenerator() {
   modal.innerHTML = `
     <div style="background:#fff;border-radius:16px;max-width:420px;width:100%;padding:24px;max-height:85vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="margin:0;font-size:17px">✨ ${_t('AI 식단 자동 생성', 'AI Meal Plan Generator')}</h3>
+        <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:6px" onerror="this.outerHTML='<span>&#x2728;</span>'">${_t('AI 식단 자동 생성', 'AI Meal Plan Generator')}</h3>
         <button onclick="document.getElementById('aiMealPlanModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
       <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('건강 프로필 기반 맞춤형 7일 식단을 자동 생성합니다', 'Generate a personalized 7-day meal plan based on your health profile')}</p>
@@ -875,7 +879,7 @@ async function _runAiMealPlanGeneration() {
         <div style="font-weight:600;font-size:13px;margin-bottom:6px">${day.dayLabel}</div>`;
       (day.meals || []).forEach(meal => {
         html += `<div style="display:flex;gap:6px;align-items:center;font-size:12px;padding:2px 0">
-          <span>${meal.emoji || '🍽️'}</span>
+          <img src="${meal.image_url || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=22&h=22&fit=crop'}" style="width:18px;height:18px;border-radius:3px;object-fit:cover" onerror="this.outerHTML='<span>&#x1F37D;</span>'">
           <span style="flex:1">${meal.name} <span style="color:#888">${Math.round(meal.calories||0)}kcal</span></span>
         </div>`;
       });
@@ -885,7 +889,7 @@ async function _runAiMealPlanGeneration() {
       html += `</div>`;
     });
     if (data.weeklyNotes) {
-      html += `<div style="font-size:12px;color:#555;padding:8px;background:#ecfdf5;border-radius:8px;margin-bottom:10px">💡 ${data.weeklyNotes}</div>`;
+      html += `<div style="font-size:12px;color:#555;padding:8px;background:#ecfdf5;border-radius:8px;margin-bottom:10px;display:flex;align-items:start;gap:6px"><img src="https://images.pexels.com/photos/355988/pexels-photo-355988.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;flex-shrink:0;margin-top:1px" onerror="this.outerHTML='<span>&#x1F4A1;</span>'"><span>${data.weeklyNotes}</span></div>`;
     }
     html += `<button onclick="_applyAiPlanToPlanner()" style="width:100%;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:13px;font-weight:600;cursor:pointer">${_t('플래너에 적용', 'Apply to Planner')}</button>`;
 
@@ -913,7 +917,8 @@ async function _applyAiPlanToPlanner() {
         recipe_id: null,
         custom_name: meal.name,
         custom_name_en: meal.name_en || meal.name,
-        custom_emoji: meal.emoji || '🍽️',
+        custom_emoji: meal.emoji || '',
+        custom_img: meal.image_url || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop',
         custom_ingredients: meal.ingredients ? meal.ingredients.map(i => ({ name: i, grams: 0 })) : null,
         calories: meal.calories || 0,
         protein: meal.protein || 0,
