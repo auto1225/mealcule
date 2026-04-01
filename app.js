@@ -6727,11 +6727,11 @@ function analyze(ingMap, method, temp, time) {
     const k = 1e10 * Math.exp(-100000/(SCI.R*T));
     const halfLife = Math.round(Math.log(2)/k/60 * 10)/10;
     rxns.push({name:"마이야르 반응 (Maillard Reaction)",key:"maillard",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'🔬\'">',intensity:int,
-      desc:`글루탐산 ${totalGluEst.toFixed(2)}g + 탄수화물 ${totalCarbs.toFixed(1)}g이 ${temp}°C에서 반응 → 진행률 ${int}%`,
-      effects:["갈색 색상 발현","고소한 풍미 생성","향기 화합물 다양화"],
-      science:`k(T) = A·exp(-Ea/RT) | Ea=100 kJ/mol, A=10¹⁰ s⁻¹ | k(${temp}°C)=${k.toExponential(2)} s⁻¹`,
+      desc:`재료 속 아미노산과 당분이 ${temp}°C의 높은 온도에서 만나 갈색으로 변하면서 고소하고 풍부한 맛과 향이 만들어집니다. 빵 굽기, 스테이크 구이에서 나는 그 맛있는 향이 바로 이 반응입니다. 현재 반응이 ${int}% 진행되었습니다.`,
+      effects:["먹음직스러운 갈색","고소한 풍미","풍부한 향"],
+      science:`아미노산(단백질 성분)과 당분(탄수화물)이 높은 온도에서 만나면 수백 가지 새로운 향기 물질이 만들어집니다. 온도가 높을수록, 시간이 길수록 반응이 더 진행됩니다. 약 반감기 ${halfLife}분으로 진행 중입니다.`,
       proDetail:`Martins, Jongen & van Boekel (2001) Food Chem 74:403. 2차 반응속도론: d[M]/dt = k[AA][RS]. Ea=100 kJ/mol, A=10¹⁰ s⁻¹. k(${temp}°C)=${k.toExponential(3)} s⁻¹, t½=${halfLife}분. 반응 진행률 ${int}% (Hodge 3단계: 아마도리 전위 → 스트레커 분해 → 중합). 주요 생성물: 피라진류, 퓨란류, 멜라노이딘. AGEs(최종당화산물) 과도생성 임계: 진행률 >70%.`,
-      health:int>70?"과도한 반응(>70%)은 AGEs 생성 → 염증 촉진 가능":"멜라노이딘 생성 → 항산화 효과"});
+      health:int>70?"반응이 70%를 넘으면 몸에 해로운 물질(AGEs)이 생길 수 있어요. 너무 태우지 않도록 주의하세요.":"적당한 마이야르 반응은 항산화 물질을 만들어 건강에 도움이 됩니다."});
   }
 
   // ── Caramelization: Ea=128 kJ/mol (Kroh 1994, Food Chem) ──
@@ -6743,11 +6743,11 @@ function analyze(ingMap, method, temp, time) {
       const T = temp + 273.15;
       const k = 5e11 * Math.exp(-128000/(SCI.R*T));
       rxns.push({name:"캐러멜화 (Caramelization)",key:"caramelization",icon:'<img src="https://images.pexels.com/photos/33260/honey-sweet-syrup-organic.jpg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'🍯\'">',intensity:int,
-        desc:`당류가 ${temp}°C에서 열분해 → 반응 진행률 ${int}% (개시온도: 수크로스 160°C, 포도당 150°C, 과당 110°C)`,
-        effects:["호박색 발현","캐러멜 향 생성","복합 풍미"],
-        science:`k(T) = A·exp(-Ea/RT) | Ea=128 kJ/mol, A=5×10¹¹ s⁻¹ | k(${temp}°C)=${k.toExponential(2)} s⁻¹`,
+        desc:`설탕이나 당분이 ${temp}°C의 높은 온도에서 녹아 분해되면서 호박색으로 변하고 달콤하면서 깊은 캐러멜 향이 만들어집니다. 크렘브륄레, 토스트의 달콤한 향이 이 반응에서 나옵니다. 현재 ${int}% 진행되었습니다.`,
+        effects:["호박색 색상","달콤한 캐러멜 향","깊은 풍미"],
+        science:`당(설탕, 포도당, 과당)이 높은 열을 받으면 분자가 분해되면서 수백 가지 향기 물질과 갈색 색소가 만들어집니다. 과당은 110°C, 포도당은 150°C, 설탕은 160°C부터 시작됩니다.`,
         proDetail:`Kroh (1994) Food Chem 51:373. Ea=128 kJ/mol. k(${temp}°C)=${k.toExponential(3)} s⁻¹. 수크로스 분해 경로: 수크로스→글루코스+프럭토스→enolization→탈수→HMF(5-hydroxymethylfurfural). HMF 생성량 ∝ 반응진행률²·[당류]. 카라멜 색소 분류: E150a-d.`,
-        health:"고농도 HMF(>1000mg/kg)는 EFSA 잠재독성 주의"});
+        health:"적당한 캐러멜화는 풍미를 좋게 하지만, 너무 태우면 쓴맛이 나고 유해 물질이 생길 수 있으니 색이 진해지면 불을 줄이세요."});
     }
   }
 
@@ -6758,11 +6758,11 @@ function analyze(ingMap, method, temp, time) {
     if (int > 5) {
       const shrink = Math.min(35, Math.round(frac * 35));
       rxns.push({name:"단백질 변성 (Protein Denaturation)",key:"protein_denaturation",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🧬</span>\'">',intensity:int,
-        desc:`단백질 ${totalProtein.toFixed(1)}g의 ${int}% 변성 완료 (미오신 40% + 콜라겐 30% + 액틴 30% 가중합산)`,
-        effects:["조직 수축·응고","소화율 향상","수분 방출"],
-        science:`다성분 시그모이드: f(T)=1/[1+exp(-ΔH/R·(1-Tm/T))] | 수축률≈${shrink}%`,
+        desc:`단백질 ${totalProtein.toFixed(1)}g이 열에 의해 구조가 바뀌면서 식감이 변하고 소화가 잘 되는 형태로 변합니다. 달걀이 익으면 투명한 흰자가 하얗게 굳는 것이 바로 이 현상입니다. 현재 ${int}% 진행되어 약 ${shrink}% 정도 크기가 줄어들었습니다.`,
+        effects:["고기/달걀이 익어서 단단해짐","소화가 더 잘 됨","수분이 빠져나옴"],
+        science:`단백질은 접혀있는 실타래 같은 구조인데, 열을 가하면 이 구조가 풀리면서 서로 엉겨 붙습니다. 55°C부터 시작되어 77°C 이상이면 대부분 변성됩니다. 이것이 고기가 익으면 단단해지고 줄어드는 이유입니다.`,
         proDetail:`Tornberg (2005) Meat Sci 70:493. 미오신: Tm=55°C, ΔH=220kJ/mol(40%). 콜라겐: Tm=65°C, ΔH=180kJ/mol(30%). 액틴: Tm=77°C, ΔH=600kJ/mol(30%). DSC열량계 데이터 기반. 시간보정: 1-exp(-t/τ), τ=20분. 현재 변성도=${int}%, 수축률≈${shrink}%.`,
-        health:"적절한 변성은 단백질 소화율↑, 과변성(>90%)은 탄력·보습 손실"});
+        health:int>90?"너무 오래 익히면 고기가 질겨지고 수분이 많이 빠져 퍽퍽해질 수 있어요. 적당한 시간에 불을 꺼주세요.":"적당히 익히면 단백질이 소화하기 좋은 형태로 바뀌어 영양 흡수가 더 잘 됩니다."});
     }
   }
 
@@ -6773,11 +6773,11 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(frac * 100));
     if (int > 1) {
       rxns.push({name:"전분 호화 (Starch Gelatinization)",key:"starch_gelatinization",icon:'<img src="https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>💧</span>\'">',intensity:int,
-        desc:`전분 과립 ${int}% 호화 완료 (Avrami 핵생성-성장 모델, n=3)`,
-        effects:["점성 증가","투명도 변화","소화율 대폭 향상"],
-        science:`Avrami: α=1-exp(-k·tⁿ) | n=3, Ea=260 kJ/mol | 호화율=${int}%`,
+        desc:`쌀, 감자 등에 들어있는 전분이 물과 열을 만나면 부풀어 오르면서 끈적끈적하게 변합니다. 밥이 지어지거나, 소스가 걸쭉해지는 것이 바로 이 현상입니다. 현재 ${int}% 진행되었습니다.`,
+        effects:["걸쭉하고 부드러운 식감","소화가 훨씬 잘 됨","반투명하게 변함"],
+        science:`전분 알갱이는 물과 함께 60°C 이상으로 가열하면 물을 흡수해 크게 부풀어 오릅니다. 이 과정에서 딱딱한 전분이 부드럽고 소화하기 쉬운 형태로 바뀝니다. 쌀은 61~78°C, 감자는 59~68°C에서 시작됩니다.`,
         proDetail:`Donovan (1979) Biopolymers 18:263. Avrami 핵생성-성장 모델: α=1-exp(-k·t³), k=A·exp(-Ea/RT), Ea=260 kJ/mol, A=2×10²⁰. 호화 온도: 옥수수 62-72°C, 쌀 61-78°C, 감자 59-68°C (Ratnayake & Jackson 2006). 엔탈피 ΔH=10-18 J/g. 현재 호화율=${int}%.`,
-        health:"호화전분은 비호화 대비 소화속도 2-3배↑ → GI 상승"});
+        health:"익힌 전분은 날것보다 소화가 2~3배 빨라져요. 다만 당뇨가 있으신 분은 혈당이 빠르게 오를 수 있으니 채소와 함께 드시면 좋습니다."});
     }
   }
 
@@ -6794,11 +6794,11 @@ function analyze(ingMap, method, temp, time) {
     const k = 3e6 * Math.exp(-75000/(SCI.R*T));
     const t_half = Math.round(Math.log(2)/k/60 * 10)/10;
     rxns.push({name:"비타민 C 열분해",key:"vitamin_c_loss",icon:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'💊\'">',intensity:loss,
-      desc:`아스코르브산 1차 반응 분해 → ${loss}% 손실 | 잔존율 ${Math.round(ret*100)}%`,
-      effects:[`비타민 C ${loss}% 손실`,"항산화 능력 감소"],
-      science:`k(T)=A·exp(-Ea/RT) | Ea=75kJ/mol, A=3×10⁶ s⁻¹ | t½=${t_half}분`,
+      desc:`비타민 C는 열에 매우 약한 영양소입니다. 현재 조리 조건에서 ${loss}%가 파괴되어 ${Math.round(ret*100)}%만 남게 됩니다. 비타민 C를 더 보존하려면 조리 시간을 줄이거나 뚜껑을 덮고 조리하세요.`,
+      effects:[`비타민 C ${loss}% 손실`,"면역력 관련 영양소 감소"],
+      science:`비타민 C는 열을 받으면 시간이 지날수록 분해됩니다. ${temp}°C에서 약 ${t_half}분마다 절반이 파괴됩니다. 뚜껑을 덮으면 산소 접촉이 줄어 손실을 줄일 수 있고, 레몬즙 같은 산성 재료를 넣으면 안정성이 높아집니다.`,
       proDetail:`Santos & Silva (2008) J Food Eng 86:178. 1차 반응: C(t)=C₀·exp(-kt). Ea=75kJ/mol, A=3×10⁶ s⁻¹. k(${temp}°C)=${k.toExponential(3)} s⁻¹, t½=${t_half}분. 잔존율=${Math.round(ret*100)}%. pH의존성: pH<4에서 안정성↑ (산성환경). 산소농도 의존적 → 밀폐조리시 손실 감소.`,
-      health:`${Math.round(ret*100)}% 잔존 — 짧은 조리·밀폐환경·산성화(레몬즙)로 손실 최소화 권장`});
+      health:`비타민 C가 ${Math.round(ret*100)}% 남아있습니다. 더 보존하려면 ① 조리 시간을 짧게 ② 뚜껑을 덮고 ③ 레몬즙을 약간 넣어보세요.`});
   }
 
   // ── Lipid Oxidation: induction period model (Frankel 1980, Prog Lipid Res) ──
@@ -6808,11 +6808,11 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(ox * 100));
     if (int > 5) {
       rxns.push({name:"지질 산화 (Lipid Oxidation)",key:"lipid_oxidation",icon:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚠️</span>\'">',intensity:int,
-        desc:`불포화지방산이 산소(노출도 ${Math.round((md.o2_level||0.7)*100)}%)와 반응 → 과산화지질 생성 위험도 ${int}%`,
-        effects:["산패취 발생","과산화지질 생성","필수지방산 손실"],
-        science:`유도기간 모델: Ea_개시=150kJ/mol, Ea_전파=60kJ/mol (Frankel 1980)`,
+        desc:`기름이 높은 온도와 공기(산소)를 만나면 산화되어 맛이 변하고 건강에 해로운 물질이 만들어질 수 있습니다. 기름에서 불쾌한 냄새가 나기 시작하면 산화가 진행된 것입니다. 현재 산화 위험도 ${int}%입니다.`,
+        effects:["기름 냄새/맛 변질","해로운 산화물 생성","좋은 지방산 손실"],
+        science:`기름 속 불포화지방산이 공기 중 산소와 반응하면 점점 나빠집니다. 온도가 높을수록, 공기에 노출될수록 빨리 산화됩니다. 올리브오일, 비타민 E 같은 항산화 성분이 있으면 산화를 늦출 수 있습니다.`,
         proDetail:`Frankel (1980) Prog Lipid Res 19:1. 자동산화 3단계: 개시(Ea=150kJ/mol)→전파(Ea=60kJ/mol)→종결. ROOH 누적량 ∝ exp(-Ea_init/RT)·t. 항산화제(토코페롤) 존재시 유도기간 2-5배 연장. 현재 산화위험도=${int}%.`,
-        health:"과산화지질은 세포막 손상, 심혈관 위험↑ — 항산화제 첨가 또는 온도 저하 권장"});
+        health:"산화된 기름은 세포를 손상시키고 심혈관 건강에 해롭습니다. 기름을 재사용하지 말고, 발연점이 높은 기름을 사용하세요."});
     }
   }
 
@@ -6822,7 +6822,7 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(Math.min(1, rawAcr*1e5) * 100));
     if (int > 3) {
       const asnInfo = totalAsparagine > 0.05 ? ` (아스파라긴 ${(totalAsparagine*1000).toFixed(0)}mg)` : '';
-      warns.push({type:"주의",msg:`${temp}°C 고온+환원당+아스파라긴${asnInfo} → 아크릴아마이드 생성 (Mottram 2002, Ea=87kJ/mol) — 진행률 ${int}%`});
+      warns.push({type:"주의",msg:`${temp}°C 고온에서 탄수화물과 아미노산이 반응하여 아크릴아마이드(유해물질)가 생성될 수 있습니다. 감자튀김, 토스트 등에서 주로 발생하며, 너무 갈색으로 태우지 않는 것이 중요합니다. (위험도 ${int}%)`});
     }
   }
 
@@ -6833,11 +6833,11 @@ function analyze(ingMap, method, temp, time) {
     const initMg = totalAllicin > 0.05 ? totalAllicin.toFixed(2) : '추정치';
     const retMg  = totalAllicin > 0.05 ? (totalAllicin * ret).toFixed(3) : '—';
     rxns.push({name:"알리신 열변환",key:"allicin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Garlic','🧄','rxn-icon-img',20):'🧄'),intensity:100-p,
-      desc:`초기 알리신 ${initMg}mg → ${retMg}mg 잔존 (${p}% 보존, ${100-p}% 분해·변환)`,
-      effects:["매운향 감소","단맛 증가","항산화 화합물 변환"],
-      science:`1차 반응: Ea=92kJ/mol (Lawson & Wang 2001) | 잔존율=${p}%`,
+      desc:`마늘의 매운 맛과 향을 내는 알리신이 열에 의해 변합니다. 원래의 알리신 중 ${p}%가 남아있고, ${100-p}%는 다른 물질로 바뀌었습니다. 오래 가열할수록 마늘의 매운향은 줄고 달콤하고 부드러운 맛으로 변합니다.`,
+      effects:["마늘의 매운향 감소","달콤하고 부드러운 맛으로 변화","항산화 성분 일부 변환"],
+      science:`마늘을 자르면 생기는 알리신은 열에 약합니다. 가열하면 알리신이 분해되면서 향이 부드러워지고, 일부는 다른 건강에 좋은 물질(항산화 성분)로 변환됩니다. 마늘의 건강 효과를 최대한 살리려면 조리 막바지에 넣으세요.`,
       proDetail:`Lawson & Wang (2001) J Agric Food Chem 49:2911. 알리신 분해: 1차 반응 k=A·exp(-Ea/RT), Ea=92kJ/mol. 초기 투입량=${initMg}mg, 잔존=${retMg}mg(${p}%). 생성물: 아조엔(항혈전, 항암), 다이알릴디설파이드(항균). 알리신 잔존→항균 활성. 낮은 온도(<60°C) 단시간 조리 또는 조리 직전 첨가 권장.`,
-      health:`항균·항산화 활성 약 ${p}% 잔존 — 생마늘 또는 조리 직전 첨가로 보존`});
+      health:`마늘의 항균·항산화 효과를 살리려면 조리 막바지에 넣거나, 생마늘을 활용하세요. 현재 약 ${p}%의 건강 효과가 남아있습니다.`});
   }
 
   // ── Capsaicin Partitioning: LogP=3.04 (Appendino 2008) ──
@@ -6846,43 +6846,43 @@ function analyze(ingMap, method, temp, time) {
     const partCoeff = Math.pow(10, logP);
     const capMg = totalCapsaicin > 0.001 ? totalCapsaicin.toFixed(3) : '미량';
     rxns.push({name:"캡사이신 지용성 추출",key:"capsaicin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Chili Pepper','🌶️','rxn-icon-img',20):'🌶️'),intensity:72,
-      desc:`캡사이신 ${capMg}mg, LogP=${logP} → 지방상 농축도 ${partCoeff.toExponential(1)}× 증가`,
-      effects:["매운맛 강화","기름에 색소 추출","풍미 분산"],
-      science:`Nernst 분배법칙: LogP=3.04, Kow≈${partCoeff.toExponential(1)} | 지방상 농축`,
+      desc:`고추의 매운 성분인 캡사이신이 기름에 잘 녹아 전체 음식으로 퍼집니다. 물보다 기름에 약 1,000배 더 잘 녹기 때문에, 기름과 함께 조리하면 매운맛이 음식 전체에 균일하게 퍼지고, 고추기름 특유의 빨간 색도 추출됩니다.`,
+      effects:["매운맛이 음식 전체로 퍼짐","고추기름 색상 추출","풍미가 골고루 분포"],
+      science:`캡사이신은 물보다 기름에 훨씬 잘 녹는 성질이 있습니다. 그래서 매운 음식을 먹고 물을 마시면 효과가 없고, 우유(지방)를 마시면 매운맛이 줄어드는 것입니다. 기름에 고추를 볶으면 매운맛과 색이 기름으로 옮겨갑니다.`,
       proDetail:`Appendino et al. (2008) Angew Chem. Nernst 분배법칙: [cap]_지방/[cap]_물 = Kow = 10^LogP = ${partCoeff.toFixed(0)}. 지방 존재시 수상 대비 ${partCoeff.toFixed(0)}배 농축. TRPV1 수용체 결합 활성화 임계농도: ~1μM. 오일에 용해된 캡사이신은 구강 내 분포 균일화 → 지속적 매운맛.`,
-      health:"대사↑(TRPV1 활성), 항염(SP 고갈) ↔ 고용량 위점막 자극"});
+      health:"적당량의 캡사이신은 신진대사를 촉진하고 염증을 줄여줍니다. 다만 너무 많이 먹으면 위장이 자극받을 수 있으니 적당량을 유지하세요."});
   }
 
   // ── Lecithin Emulsification (hydrophilic-lipophilic balance) ──
   if (hasFat && (totalLecithin > 100 || has(d => d.compounds.some(c => c.includes("레시틴"))))) {
     const lecMg = totalLecithin > 0 ? totalLecithin.toFixed(0) : '추정';
     rxns.push({name:"유화 (Emulsification)",key:"emulsification",icon:'<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🔄</span>\'">',intensity:60,
-      desc:`레시틴 ${lecMg}mg (포스파티딜콜린 HLB≈8) → O/W 에멀전 안정화`,
-      effects:["크리미한 질감","소스 안정화","풍미 균일 분배"],
-      science:"HLB=8 (Griffin 1954) → O/W 에멀전 | 임계미셀농도(CMC) 의존",
+      desc:`달걀 등에 들어있는 레시틴 성분이 기름과 물을 섞이게 해줍니다. 마요네즈가 기름과 식초로 만들어지는데도 분리되지 않는 것이 바로 이 유화 작용 덕분입니다. 소스가 크리미하고 부드러운 식감이 됩니다.`,
+      effects:["크리미한 부드러운 식감","소스가 분리되지 않음","맛이 골고루 퍼짐"],
+      science:`기름과 물은 원래 섞이지 않지만, 달걀 노른자의 레시틴이 양쪽을 연결하는 다리 역할을 합니다. 이 덕분에 기름이 아주 작은 방울로 물속에 고르게 퍼져 크리미한 질감이 만들어집니다. 마요네즈, 홀란데이즈 소스가 대표적인 예입니다.`,
       proDetail:`Griffin (1954) J Soc Cosmet Chem. 레시틴(포스파티딜콜린) HLB≈8, O/W 에멀전 형성. CMC≈0.2mg/mL. 에멀전 안정성: ζ-전위 |>30mV| 조건. 온도↑ → HLB 감소 → 에멀전 불안정화 경향. 계란 레시틴 2-3% wt 기준 안정적 에멀전.`,
-      health:"지용성 비타민 흡수율↑, 담즙산 절약 효과"});
+      health:"유화가 잘 되면 지용성 비타민(A, D, E, K)의 흡수가 좋아져 영양 섭취에 도움이 됩니다."});
   }
 
   // ── Acid-Protein Coagulation (isoelectric point) ──
   if (hasAcid && hasProt) {
     rxns.push({name:"산-단백질 응고",key:"acid_coagulation",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚗️</span>\'">',intensity:55,
-      desc:"시트르산이 pH↓ → 단백질 등전점(pI≈4.5-5.5) 도달 → 응집·응고",
-      effects:["단백질 응고","pH 저하","살균 효과"],
-      science:"pI에서 순전하=0 → 분자간 인력>척력 → 응집 (Tanford 1961)",
+      desc:`레몬즙이나 식초 같은 산성 재료가 단백질을 굳게 만듭니다. 우유에 레몬즙을 넣으면 덩어리지는 것(치즈 만들기의 원리), 또는 세비체에서 생선이 산에 의해 '익는' 것이 이 반응입니다.`,
+      effects:["단백질이 뭉쳐서 굳어짐","산으로 인한 살균 효과","식감 변화"],
+      science:`산성 재료(레몬, 식초)를 넣으면 단백질 분자들이 서로 당기는 힘이 강해져서 뭉치게 됩니다. 치즈, 두부, 요구르트 만들기가 모두 이 원리를 이용합니다. 열을 가하지 않아도 단백질의 구조가 바뀌어 '익은' 것처럼 됩니다.`,
       proDetail:`Tanford (1961) Physical Chemistry of Macromolecules. pI 도달시 정전기 반발 소멸 → van der Waals + 소수성 상호작용 우세 → 응집. 카제인 pI≈4.6, 알부민 pI≈4.7. 시트르산 pKa: 3.13, 4.76, 6.40 → pH 조절 완충능↑.`,
-      health:"등전점 응고 단백질은 위산(pH1.5-3.5)에서 소화율 개선 가능"});
+      health:"산에 의해 굳어진 단백질은 소화가 잘 되며, 산의 살균 효과로 식품 안전성도 높아집니다."});
   }
 
   // ── Lycopene Bioavailability Enhancement ──
   if (ings.includes("토마토") && (hasFat || temp >= 80)) {
     const bio = hasFat && temp>=80 ? 85 : hasFat ? 60 : 45;
-    rxns.push({name:"리코펜 생체이용률↑",key:"lycopene",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Tomato','🍅','rxn-icon-img',20):'🍅'),intensity:bio,
-      desc:`열+지방 → trans-리코펜→cis변환 및 세포벽 파괴 → 생체이용률 최대 4.3배↑`,
-      effects:["리코펜 추출↑","항산화 극대화","색상 강화"],
-      science:"가열→세포벽 파괴→trans-to-cis 이성화 | Stahl & Sies (1992)",
+    rxns.push({name:"리코펜 흡수율 증가",key:"lycopene",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Tomato','🍅','rxn-icon-img',20):'🍅'),intensity:bio,
+      desc:`토마토의 빨간 색소인 리코펜은 생으로 먹으면 흡수가 잘 안 되지만, 기름과 함께 가열하면 세포벽이 부서지고 기름에 녹아 흡수율이 최대 4.3배까지 높아집니다. 토마토 소스, 볶음 요리에서 리코펜을 가장 잘 흡수할 수 있습니다.`,
+      effects:["리코펜 흡수 대폭 증가","강력한 항산화 효과","토마토 색상 더 진해짐"],
+      science:`토마토를 가열하면 세포벽이 부서져 리코펜이 밖으로 나오고, 기름이 있으면 리코펜이 기름에 녹아 우리 몸이 더 잘 흡수할 수 있게 됩니다. 생토마토보다 토마토 소스(올리브오일+가열)에서 리코펜을 4배 이상 더 많이 흡수할 수 있습니다.`,
       proDetail:`Stahl & Sies (1992) J Nutr 122:2161. cis-이성체 생체이용률은 trans 대비 2.5-4.3배↑(Clinton 1998). 최적조건: 80-100°C·15-20분+지방(오일)→세포벽 파괴+미셀 형성. 리코펜 함량: 생토마토 2.6mg/100g vs 토마토페이스트 29.3mg/100g. 현재 생체이용률 지수: ${bio}%.`,
-      health:"리코펜: 전립선암 위험↓(RR 0.79, Giovannucci 1995), LDL 산화↓"});
+      health:"리코펜은 강력한 항산화 물질로 심혈관 건강과 암 예방에 도움이 됩니다. 토마토를 올리브오일과 함께 조리하면 최고의 건강 효과를 얻을 수 있어요."});
   }
 
   // ── PAH Formation: Ea=120 kJ/mol (Phillips 1999, EFSA 2008) ──
@@ -6890,12 +6890,12 @@ function analyze(ingMap, method, temp, time) {
     const pah = SCI.pahFormation(temp, time) * Math.max(0.3, md.o2_level || 0.7);
     const int = Math.min(100, Math.round(pah * 100));
     if (int > 2) {
-      rxns.push({name:"PAH 생성 (다환방향족탄화수소)",key:"pah",icon:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚠️</span>\'">',intensity:int,
-        desc:`지방 열분해 → 벤조[a]피렌 등 PAH 생성 위험도 ${int}% (IARC Group 1 발암물질)`,
-        effects:["벤조[a]피렌 생성","표면 탄화 침착","발암물질 축적"],
-        science:`k(T)=A·exp(-Ea/RT) | Ea=120kJ/mol, A=2×10⁹ | Phillips (1999) Mutation Res 443:139`,
+      rxns.push({name:"유해물질 생성 (PAH)",key:"pah",icon:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚠️</span>\'">',intensity:int,
+        desc:`고온에서 기름이 타면서 발암 물질(PAH)이 만들어질 수 있습니다. 특히 직접 불꽃 위에서 고기를 구울 때 기름이 불에 떨어져 연기가 나면 위험합니다. 현재 위험도는 ${int}%입니다.`,
+        effects:["발암 물질 생성 가능","음식 표면에 탄화물 부착","연기에 유해 물질 포함"],
+        science:`기름이 불꽃에 떨어져 타면 발암 물질이 연기와 함께 음식 표면에 달라붙습니다. 직접 불을 피하고, 기름 받침대를 사용하면 90% 이상 줄일 수 있습니다. 레몬즙이나 식초로 재운 고기(마리네이드)는 최대 70%까지 줄여줍니다.`,
         proDetail:`EFSA (2008) J EFSA 724. 벤조[a]피렌(BaP): 지방 열분해→라디칼 고리화→다환 방향족 축합. EU 규제 한도: 훈제식품 BaP<2μg/kg (Reg. 835/2011). 직접 화염 접촉시 BaP 최대 130μg/kg. 간접 열원·물받이 사용으로 90% 이상 감소. 마리네이드(산성)로 최대 70% 억제.`,
-        health:"IARC Group 1 발암물질 — 직접 불꽃 피하고, 탄화부위 제거, 알루미늄 포일 활용 권장"});
+        health:"⚠️ 세계보건기구(WHO)가 지정한 발암 물질입니다. 탄 부분은 반드시 제거하고, 직접 불보다는 간접 열(오븐, 후라이팬)을 사용하세요."});
     }
   }
 
@@ -6904,12 +6904,12 @@ function analyze(ingMap, method, temp, time) {
     const hca = SCI.hcaFormation(temp, time);
     const int = Math.min(100, Math.round(hca * 100));
     if (int > 3) {
-      rxns.push({name:"HCA 생성 (이환방향족아민)",key:"hca",icon:'<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🔴</span>\'">',intensity:int,
-        desc:`크레아틴+아미노산+당류 → PhIP 등 HCA 생성 위험도 ${int}% (IARC Group 2A)`,
-        effects:["PhIP·MeIQx 생성","고온·장시간 조리시 급증","표면 부착"],
-        science:`k(T)=A·exp(-Ea/RT) | Ea=80kJ/mol | Skog et al. (1998) Food Chem Toxicol 36:879`,
+      rxns.push({name:"유해물질 생성 (HCA)",key:"hca",icon:'<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🔴</span>\'">',intensity:int,
+        desc:`고기를 너무 높은 온도에서 오래 구우면 고기의 성분들이 반응하여 유해 물질(HCA)이 만들어질 수 있습니다. 특히 고기 표면이 까맣게 탈 때 많이 생깁니다. 현재 위험도는 ${int}%입니다.`,
+        effects:["고온 장시간 조리 시 유해물질 생성","고기 표면에 집중","온도가 높을수록 급증"],
+        science:`고기의 아미노산, 당분, 크레아틴이 높은 온도에서 반응하여 유해 물질을 만듭니다. 이를 줄이는 가장 좋은 방법은 ① 미리 양념(마리네이드)하기 — 최대 90% 감소 ② 자주 뒤집어 표면 온도 낮추기 ③ 너무 오래 굽지 않기입니다.`,
         proDetail:`Sugimura (2000) Mutation Res 447:17. PhIP(2-amino-1-methyl-6-phenylimidazo[4,5-b]pyridine): 가장 흔한 HCA. 크레아틴(근육)+유리아미노산+포도당 → Strecker 분해 → 고리화. 조리 전 마리네이드(로즈마리, 올리브오일)로 최대 90% 감소 (Smith 2008). 뒤집기 빈도↑로 표면온도↓→HCA↓.`,
-        health:"IARC Group 2A 발암물질 — 마리네이드, 저온조리, 자주 뒤집기로 최소화"});
+        health:"⚠️ 발암 가능 물질입니다. 고기를 구울 때 로즈마리·올리브오일로 미리 양념하면 최대 90%까지 줄일 수 있어요. 자주 뒤집어 주세요."});
     }
   }
 
@@ -6920,11 +6920,11 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(nit * 100));
     if (int > 1) {
       rxns.push({name:"니트로사민 생성",key:"nitrosamine",icon:'<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>☢️</span>\'">',intensity:int,
-        desc:`아질산염+2차 아민 → NDMA 등 니트로사민 생성 위험도 ${int}% (IARC Group 1)`,
-        effects:["N-니트로소디메틸아민(NDMA) 생성","고온 가공육에서 급증"],
-        science:`Ea=95kJ/mol | Honikel (2008) Meat Sci 78:68 | IARC Monograph 114`,
+        desc:`베이컨, 소시지 같은 가공육에 들어있는 보존제(아질산염)가 높은 온도에서 발암 물질(니트로사민)로 변할 수 있습니다. 현재 위험도는 ${int}%입니다. 가공육을 직접 불에 구우면 위험이 더 커집니다.`,
+        effects:["발암 물질 생성 가능","가공육을 높은 온도로 구울 때 급증"],
+        science:`가공육에 첨가된 보존제가 높은 온도에서 고기의 다른 성분과 반응하여 니트로사민을 만듭니다. 비타민 C가 풍부한 채소(피망, 브로콜리 등)와 함께 먹으면 니트로사민 생성을 최대 90%까지 줄일 수 있습니다.`,
         proDetail:`IARC (2018) Monograph 114. 가공육은 IARC Group 1 발암물질(대장암). 아질산나트륨(E250) → NO + 2차아민 → 니트로사민. 비타민 C(아스코르브산) 첨가로 니트로사민 생성 최대 90% 억제 (Mirvish 1994 Cancer Lett). 직접 화염 조리 시 니트로사민 3-4배 증가.`,
-        health:"IARC Group 1 — 가공육 고온 조리 최소화, 비타민C 풍부 채소와 함께 섭취"});
+        health:"⚠️ WHO가 지정한 발암 물질입니다. 가공육은 삶거나 쪄서 드시고, 비타민 C가 풍부한 채소와 함께 드세요."});
     }
   }
 
@@ -6934,12 +6934,12 @@ function analyze(ingMap, method, temp, time) {
     const ret = SCI.anthocyaninRetention(temp, time);
     const loss = Math.min(99, Math.round((1-ret)*100));
     if (loss > 5) {
-      rxns.push({name:"안토시아닌 열분해",key:"anthocyanin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Blueberry','🫐','rxn-icon-img',20):'🫐'),intensity:loss,
-        desc:`안토시아닌 ${loss}% 분해 — 항산화 색소 손실 (잔존율 ${100-loss}%)`,
-        effects:["적/보라 색상 퇴색","항산화 능력 감소","갈변화"],
-        science:`1차 반응: Ea=75kJ/mol | Patras et al. (2010) Trends Food Sci Technol 21:3`,
+      rxns.push({name:"안토시아닌 색소 분해",key:"anthocyanin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Blueberry','🫐','rxn-icon-img',20):'🫐'),intensity:loss,
+        desc:`블루베리, 포도 등의 보라/빨간 색소(안토시아닌)가 열에 의해 ${loss}% 파괴되었습니다. 이 색소는 강력한 항산화 물질인데 열에 약합니다. ${100-loss}%가 남아있습니다.`,
+        effects:["보라/빨간 색이 옅어짐","항산화 성분 감소","갈색으로 변할 수 있음"],
+        science:`안토시아닌은 블루베리, 포도, 가지 등에 보라/빨간색을 주는 색소이자 항산화 물질입니다. 열에 약해서 오래 가열하면 색이 빠지고 건강 효과도 줄어듭니다. 레몬즙을 넣으면 산성 환경이 되어 색소가 더 안정적으로 유지됩니다.`,
         proDetail:`Patras (2010). 안토시아닌: pH<3에서 적색(flavylium cation, 안정), pH>7에서 청/녹→무색. 열분해: chalcone 개환 → 무색 화합물. 최적보존: pH<4, 50°C 이하 단시간, 빛 차단, 금속이온(Cu²⁺, Fe³⁺) 회피. 동결-해동도 세포벽 파괴로 방출↑.`,
-        health:`잔존 ${100-loss}% — 짧은 조리, 산성 환경(레몬즙), 저온으로 보존 극대화`});
+        health:`항산화 성분을 최대한 보존하려면 짧은 시간만 조리하고, 레몬즙을 약간 넣어보세요. 현재 ${100-loss}%가 남아있습니다.`});
     }
   }
 
@@ -6949,12 +6949,12 @@ function analyze(ingMap, method, temp, time) {
     const ret = SCI.chlorophyllRetention(temp, time);
     const loss = Math.min(99, Math.round((1-ret)*100));
     if (loss > 5) {
-      rxns.push({name:"클로로필 분해 → 페오피틴",key:"chlorophyll",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Spinach','🥬','rxn-icon-img',20):'<img src="https://images.pexels.com/photos/2325843/pexels-photo-2325843.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🥬</span>\'">'),intensity:loss,
-        desc:`클로로필 ${loss}% 분해 → 페오피틴(올리브색) 전환 (Mg²⁺ 치환)`,
-        effects:["선명 녹색 → 올리브/갈색","Mg²⁺ 이탈","시각 품질 감소"],
-        science:`1차 반응: Ea=68kJ/mol | Schwartz & von Elbe (1983) J Food Sci 48:1303`,
+      rxns.push({name:"녹색 채소 색 변화",key:"chlorophyll",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Spinach','🥬','rxn-icon-img',20):'<img src="https://images.pexels.com/photos/2325843/pexels-photo-2325843.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🥬</span>\'">'),intensity:loss,
+        desc:`시금치, 브로콜리 등 녹색 채소의 선명한 초록색이 열에 의해 ${loss}% 변했습니다. 오래 가열하면 선명한 초록색이 칙칙한 올리브색/갈색으로 바뀝니다. 맛에는 큰 영향이 없지만 보기에 덜 먹음직스러워집니다.`,
+        effects:["선명한 녹색이 칙칙해짐","올리브/갈색으로 변함","영양소는 대부분 유지"],
+        science:`녹색 채소의 색은 엽록소(클로로필)라는 색소 때문입니다. 열을 가하면 이 색소의 구조가 바뀌면서 색이 변합니다. 색을 보존하려면 ① 끓는 물에 30초만 데치고 ② 바로 찬물에 식히거나 ③ 베이킹소다를 아주 소량 넣어보세요.`,
         proDetail:`Schwartz (1983). 클로로필→페오피틴: 산(pH<5) 또는 열에 의해 포르피린 고리 중심 Mg²⁺이 2H⁺로 치환. 클로로필 a(청녹)→페오피틴 a(올리브), 클로로필 b(황녹)→페오피틴 b. 보존법: 약알칼리(베이킹소다 소량), 짧은 블랜칭(30초), 급냉(얼음물).`,
-        health:`녹색 채소는 짧은 고온 조리(블랜칭 30초→급냉) 또는 스팀으로 색·영양 동시 보존`});
+        health:`녹색 채소의 색과 영양을 함께 지키려면 끓는 물에 30초만 데친 후 얼음물에 바로 식히세요. 찜도 좋은 방법입니다.`});
     }
   }
 
@@ -6964,12 +6964,12 @@ function analyze(ingMap, method, temp, time) {
     const isom = SCI.betaCaroteneIsomer(temp, time);
     const int = Math.min(100, Math.round(isom * 100));
     if (int > 5) {
-      rxns.push({name:"베타카로틴 이성화 (생체이용률↑)",key:"beta_carotene",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Carrot','🥕','rxn-icon-img',20):'🥕'),intensity:int,
-        desc:`trans→cis 이성화 ${int}% 진행 + 지방 공존 → 생체이용률 최대 6.5배↑`,
-        effects:["cis-이성체 생성","미셀 가용성 증가","지용성 흡수 극대화"],
-        science:`Ea≈50kJ/mol | Chen & Huang (1998) J Food Sci 63:751`,
+      rxns.push({name:"베타카로틴 흡수율 증가",key:"beta_carotene",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Carrot','🥕','rxn-icon-img',20):'🥕'),intensity:int,
+        desc:`당근, 호박, 고구마의 주황색 색소인 베타카로틴은 기름과 함께 가열하면 흡수율이 최대 6.5배까지 높아집니다. 베타카로틴은 우리 몸에서 비타민 A로 변환되어 눈 건강과 면역력에 중요합니다. 현재 ${int}% 변환이 진행되었습니다.`,
+        effects:["비타민 A 전구체 흡수 대폭 증가","기름에 녹아 흡수 극대화","면역력·시력 유지에 도움"],
+        science:`당근 등의 베타카로틴은 기름에 잘 녹는 성질이 있어서, 생으로 먹으면 흡수가 잘 안 됩니다. 기름에 볶거나 올리브오일을 살짝 뿌려 가열하면 세포벽이 부서지고 기름에 녹아 흡수율이 3.5~6.5배 높아집니다. 80~100°C에서 10~20분 조리가 최적입니다.`,
         proDetail:`Chen & Huang (1998). all-trans-β-carotene → 9-cis, 13-cis, 15-cis 이성체 생성. cis-이성체: 결정성↓, 미셀 가용성↑ → 소장 흡수율 3.5-6.5배 증가 (Deming 2002, Am J Clin Nutr). 최적조건: 80-100°C, 10-20분, 식용유(올리브오일) 5-10mL 동시 조리. 비타민A 전구체로서 면역·시력 유지 필수.`,
-        health:"당근·호박·고구마는 기름과 함께 가열 조리 시 프로비타민A 흡수 극대화"});
+        health:"당근, 호박, 고구마는 꼭 기름과 함께 조리하세요! 올리브오일을 약간 넣고 볶으면 비타민 A 흡수가 크게 좋아집니다."});
     }
   }
 
@@ -6980,12 +6980,12 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(hydro * 100));
     // 설포라판 수율: 60-70°C 최적 (마이로시네이즈 활성), >80°C에서 효소 불활성→저수율
     const sulfoYield = temp <= 70 ? Math.round(hydro * 80) : temp <= 100 ? Math.round(hydro * 30) : Math.round(hydro * 10);
-    rxns.push({name:"글루코시놀레이트 가수분해",key:"glucosinolate",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Broccoli','🥦','rxn-icon-img',20):'🥦'),intensity:int,
-      desc:`십자화과 글루코시놀레이트 ${int}% 가수분해 → 설포라판 수율 약 ${sulfoYield}%`,
-      effects:["설포라판(SFN) 생성","이소티오시아네이트 방출","항암 효소 활성화"],
-      science:`마이로시네이즈: 최적 30-40°C | 열분해: Ea=90kJ/mol | Verkerk (2009)`,
+    rxns.push({name:"항암 성분 변화 (브로콜리류)",key:"glucosinolate",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Broccoli','🥦','rxn-icon-img',20):'🥦'),intensity:int,
+      desc:`브로콜리, 양배추 등 십자화과 채소에는 암 예방에 도움이 되는 설포라판이라는 성분이 만들어집니다. 현재 조건에서 약 ${sulfoYield}%의 설포라판이 생성됩니다. ${temp<=70?'현재 온도에서 항암 성분이 잘 만들어지고 있습니다.':'75°C 이상에서는 항암 성분 생성 효소가 파괴되어 효과가 줄어듭니다.'}`,
+      effects:["항암 성분(설포라판) 생성","해독 기능 활성화","면역력 강화"],
+      science:`브로콜리를 자르거나 씹으면 세포 안의 효소가 글루코시놀레이트를 설포라판(항암 물질)으로 바꿉니다. 이 효소는 30~40°C에서 가장 잘 일하고, 75°C 이상이면 파괴됩니다. 브로콜리를 잘게 썰어 5분 놔둔 후 조리하면 이미 설포라판이 만들어져 열에 강해집니다.`,
       proDetail:`Verkerk et al. (2009) Food Chem Toxicol 47:16. 글루코시놀레이트 → (마이로시네이즈) → 이소티오시아네이트(설포라판). 마이로시네이즈 최적: 30-40°C, 60-70°C에서 잔존 활성. >75°C 효소 완전 불활성화 → 열분해 경로(니트릴 생성↑, 설포라판↓). Matusheski (2004): 60°C 10분 처리 시 설포라판 수율 최대. 장내 세균 마이로시네이즈로 부분 보상 가능.`,
-      health:`설포라판: Nrf2 경로 활성화 → 해독효소(GST) 유도, 항암(Zhang 1992 PNAS). ${temp<=70?'현재 온도에서 효소 활성→높은 수율':'고온에서 효소 불활성→잘게 썰어 상온 방치 후 조리 권장'}`});
+      health:`${temp<=70?'지금 온도에서 항암 성분이 잘 만들어지고 있어요!':'💡 팁: 브로콜리를 잘게 썰어 5분간 상온에 둔 후 조리하면 항암 효과를 최대한 살릴 수 있어요.'}`});
   }
 
   // ── Polyphenol Oxidation (Yoruk & Marshall 2003) ──
@@ -6994,32 +6994,32 @@ function analyze(ingMap, method, temp, time) {
     const ox = SCI.polyphenolOxidation(temp, time);
     const int = Math.min(100, Math.round(ox * 100));
     if (int > 5) {
-      rxns.push({name:"폴리페놀 효소적 갈변 (PPO)",key:"polyphenol_oxidation",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Apple','🍎','rxn-icon-img',20):'🍎'),intensity:int,
-        desc:`폴리페놀옥시다아제(PPO) 활성 → 효소적 갈변 ${int}% 진행`,
-        effects:["갈변(melanin 생성)","항산화 능력 감소","풍미 변화"],
-        science:`PPO 최적 40°C, >70°C 불활성 | Yoruk & Marshall (2003)`,
+      rxns.push({name:"과일/채소 갈변 현상",key:"polyphenol_oxidation",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Apple','🍎','rxn-icon-img',20):'🍎'),intensity:int,
+        desc:`사과를 깎아 놓으면 갈색으로 변하는 것처럼, 과일과 채소의 항산화 성분이 공기와 만나면서 갈변이 ${int}% 진행되었습니다. 맛에는 크게 영향이 없지만 보기에 덜 좋아지고 항산화 성분이 줄어듭니다.`,
+        effects:["표면이 갈색으로 변함","항산화 성분 감소","외관 품질 저하"],
+        science:`과일이나 채소를 자르면 세포 안의 효소가 항산화 성분(폴리페놀)을 산화시켜 갈색으로 만듭니다. 갈변을 막으려면 ① 레몬즙을 뿌리기 ② 물에 담가 공기 차단 ③ 70°C 이상으로 데치기(효소 파괴) 중 하나를 해보세요.`,
         proDetail:`Yoruk & Marshall (2003) J Food Biochem 27:361. 기질: catechol, chlorogenic acid → PPO → o-quinone → melanin 중합. 억제방법: (1) 산처리(pH<3 → 레몬즙/구연산), (2) 70°C 이상 가열(블랜칭), (3) 비타민C(환원제), (4) NaCl 침지. 최적 pH 5-7, 최적 온도 35-45°C.`,
-        health:"레몬즙(산성화), 블랜칭(효소 불활성), 물 침지(산소 차단)로 갈변 억제"});
+        health:"갈변을 막고 싶다면 레몬즙을 뿌리세요! 비타민 C가 산화를 막아주고, 산성 환경이 효소를 억제합니다."});
     }
   }
 
   // ── Method-specific warnings (METHODS 데이터 기반) ────────────────────────
-  if (temp>=250) warns.push({type:"경고",msg:"250°C 이상: PAH(다환방향족탄화수소) 및 HCA(이환아민) 생성 → IARC Group 2A 발암물질 위험"});
-  if (md.pah_risk) warns.push({type:"주의",msg:`${md.label} — 연소·훈연 PAH(벤조피렌 등) 표면 침착 위험 (o2 노출도 ${Math.round((md.o2_level||0)*100)}%) — 탄화 부위 제거 권장`});
-  if (md.medium==='oil' && time>15) warns.push({type:"주의",msg:`장시간 유침 조리(${time}분): 과산화지질(LOOH) 누적, 발연점 초과 여부 확인 권장`});
-  if ((md.pressure_atm||1)>1.1) warns.push({type:"정보",msg:`압력 조리(${md.pressure_atm}atm) → 비등점 약 ${Math.round(100 + (md.pressure_atm-1)*27)}°C, 단백질 변성·전분 호화 촉진 — 영양소 보존률은 저온 장시간 조리보다 우수`});
-  if (md.medium==='mw' && md.uniformity==='low') warns.push({type:"주의",msg:"마이크로파 유전 가열: 국소 핫스팟 발생 → 온도 불균일(±20°C), 중간에 저어주기 권장"});
-  if ((md.leach_factor||0)>=0.8 && time>30) warns.push({type:"정보",msg:`장시간 수침 조리(${time}분): 수용성 영양소(B군, C, 칼륨) 조리수로 용출 최대 ${Math.round((md.leach_factor||0)*90)}% — 국물도 함께 섭취 권장`});
+  if (temp>=250) warns.push({type:"경고",msg:"250°C 이상의 매우 높은 온도입니다. 음식이 탈 수 있고, 탄 부분에는 건강에 해로운 물질이 생길 수 있어요. 온도를 낮추거나 조리 시간을 줄여보세요."});
+  if (md.pah_risk) warns.push({type:"주의",msg:`이 조리 방법은 연기나 직접 불꽃에 의해 음식 표면에 유해 물질이 붙을 수 있어요. 탄 부분은 제거하고 드세요.`});
+  if (md.medium==='oil' && time>15) warns.push({type:"주의",msg:`기름에 ${time}분 이상 오래 조리하면 기름이 산화되어 맛이 변하고 건강에 해로울 수 있어요. 기름의 발연점(연기가 나는 온도)을 확인하세요.`});
+  if ((md.pressure_atm||1)>1.1) warns.push({type:"정보",msg:`압력솥 조리는 높은 압력으로 물의 끓는점이 약 ${Math.round(100 + (md.pressure_atm-1)*27)}°C까지 올라가 더 빨리 익습니다. 영양소 보존이 일반 끓이기보다 우수합니다.`});
+  if (md.medium==='mw' && md.uniformity==='low') warns.push({type:"주의",msg:"전자레인지는 음식이 고르게 익지 않을 수 있어요. 중간에 한 번 저어주거나 돌려주면 더 균일하게 익습니다."});
+  if ((md.leach_factor||0)>=0.8 && time>30) warns.push({type:"정보",msg:`물에 ${time}분 이상 오래 삶으면 비타민 B, C와 칼륨 등이 물에 녹아 나갑니다. 국물도 함께 드시면 영양소를 놓치지 않을 수 있어요.`});
   if (md.medium==='none' && method==='ferment') {
     rxns.push({name:"발효 (Fermentation)",key:"fermentation",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🧫</span>\'">',intensity:70,
-      desc:"미생물 대사로 유기산·알코올·항균 펩타이드 생성 → 풍미·저장성·프로바이오틱스↑",
-      effects:["젖산·초산 생성(pH↓)","단백질 가수분해","프로바이오틱스 증식","비타민 B군 증가"],
-      science:"젖산균 Lactobacillus: 포도당→젖산 (Embden-Meyerhof 경로, ΔG=-196kJ/mol)",
+      desc:"유익한 미생물(유산균 등)이 재료를 분해하면서 독특한 맛과 향을 만들고, 장 건강에 좋은 프로바이오틱스가 생깁니다. 김치, 요구르트, 된장이 모두 이 발효 과정으로 만들어집니다. 보존 기간도 길어집니다.",
+      effects:["새콤한 맛과 감칠맛 증가","장에 좋은 유익균 생성","보존 기간 연장","비타민 B군 증가"],
+      science:"유산균이 당분을 먹고 젖산을 만들어 환경을 산성으로 바꿉니다. 이 산성 환경이 나쁜 세균의 증식을 막고, 동시에 단백질이 분해되면서 감칠맛이 나는 아미노산이 생깁니다. 비타민 B군도 새로 만들어집니다.",
       proDetail:"젖산 발효: 포도당 → 2 젖산 (ΔG°=-196kJ/mol). pH 3.5-4.5 도달 시 유해균 억제. 프로테아제 활성화 → 펩타이드·아미노산 증가 → 감칠맛↑. 비타민 B12·K2·엽산 신생합성 가능. ACE억제 펩타이드(혈압↓), GABA(신경안정) 생성.",
-      health:"프로바이오틱스, 단쇄지방산(SCFA) 생산 → 장내 미생물 다양성↑, 면역 조절"});
+      health:"발효 식품은 장 건강을 개선하고 면역력을 높여줍니다. 김치, 요구르트, 된장 같은 발효 식품을 매일 적당량 섭취하면 좋습니다."});
   }
   if (md.medium==='water' && md.pressure_atm===1.0 && method==='sous_vide') {
-    warns.push({type:"정보",msg:`수비드 저온 장시간(${temp}°C/${time}분): 정밀 온도 제어로 단백질 변성도 최적화 가능 — 단, 63°C 미만에서 가금류 사용 시 살모넬라 살균 시간 확인 필요`});
+    warns.push({type:"정보",msg:`수비드(진공 저온 조리) ${temp}°C에서 ${time}분 조리 중입니다. 정밀한 온도 조절로 최적의 식감을 얻을 수 있어요. 단, 닭고기는 63°C 이상에서 충분히 익혀야 안전합니다.`});
   }
   return {rxns, warns};
 }
@@ -7396,11 +7396,11 @@ async function runAnalysis() {
     const highRxns = rxns.filter(r => r.intensity > 60);
     const midRxns = rxns.filter(r => r.intensity > 30 && r.intensity <= 60);
     const methodName = METHODS[method] ? tl(METHODS[method]) : method;
-    let s = `<strong>화학 반응 요약:</strong> ${methodName} ${temp}°C, ${time}분 조건에서 총 <strong>${rxns.length}개</strong>의 화학 반응이 예측됩니다. `;
-    if (highRxns.length > 0) s += `강한 반응: ${highRxns.map(r => r.name + '(' + r.intensity + '%)').join(', ')}. `;
-    if (midRxns.length > 0) s += `중간 반응: ${midRxns.map(r => r.name).join(', ')}. `;
+    let s = `<strong>🔬 조리 중 일어나는 변화:</strong> ${methodName}(${temp}°C, ${time}분) 조건에서 총 <strong>${rxns.length}가지</strong> 변화가 예측됩니다. `;
+    if (highRxns.length > 0) s += `눈에 띄는 변화: ${highRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '') + '(' + r.intensity + '%)').join(', ')}. `;
+    if (midRxns.length > 0) s += `보통 수준: ${midRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '')).join(', ')}. `;
     const effects = [...new Set(rxns.flatMap(r => r.effects))].slice(0, 5);
-    if (effects.length > 0) s += `주요 효과: ${effects.join(', ')}.`;
+    if (effects.length > 0) s += `음식에 미치는 영향: ${effects.join(', ')}.`;
     return s;
   })();
 
@@ -7410,11 +7410,11 @@ async function runAnalysis() {
     if (entries.length === 0) return '';
     const lost = entries.filter(([,v]) => v.ret < 70).sort((a,b) => a[1].ret - b[1].ret);
     const kept = entries.filter(([,v]) => v.ret >= 80);
-    let s = `<strong>영양소 변화 요약:</strong> 총 <strong>${entries.length}개</strong> 영양소 분석 완료. `;
-    if (kept.length > 0) s += `잘 보존되는 영양소(80%↑): ${kept.slice(0,4).map(([k,v]) => k + ' ' + v.ret + '%').join(', ')}. `;
-    if (lost.length > 0) s += `손실 주의 영양소(70%↓): ${lost.slice(0,4).map(([k,v]) => k + ' ' + v.ret + '%').join(', ')}. `;
+    let s = `<strong>🥗 영양소 변화:</strong> 총 <strong>${entries.length}가지</strong> 영양소를 분석했습니다. `;
+    if (kept.length > 0) s += `잘 보존되는 영양소: ${kept.slice(0,4).map(([k,v]) => k + ' ' + v.ret + '%').join(', ')}. `;
+    if (lost.length > 0) s += `주의가 필요한 영양소(손실 큼): ${lost.slice(0,4).map(([k,v]) => k + ' ' + v.ret + '%').join(', ')}. `;
     const avgRet = Math.round(entries.reduce((a,[,v]) => a + v.ret, 0) / entries.length);
-    s += `평균 잔존율: <strong>${avgRet}%</strong>.`;
+    s += `전체적으로 영양소의 약 <strong>${avgRet}%</strong>가 보존됩니다.`;
     return s;
   })();
 
@@ -7424,13 +7424,13 @@ async function runAnalysis() {
     const flvNames = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
     const top = sorted[0];
     const second = sorted[1];
-    let s = `<strong>맛 프로파일 요약:</strong> 이 조합의 지배적인 맛은 <strong>${flvNames[top[0]]}(${top[1]})</strong>이며, `;
-    s += `그 다음으로 ${flvNames[second[0]]}(${second[1]})이 두드러집니다. `;
+    let s = `<strong>👅 맛 분석:</strong> 이 조합에서 가장 강한 맛은 <strong>${flvNames[top[0]]}(${top[1]}점)</strong>이고, `;
+    s += `다음으로 ${flvNames[second[0]]}(${second[1]}점)이 느껴집니다. `;
     const balance = Math.max(...sorted.map(x=>x[1])) - Math.min(...sorted.map(x=>x[1]));
-    if (balance < 20) s += '전체적으로 균형 잡힌 맛 프로파일입니다. ';
-    else if (balance > 50) s += '특정 맛이 강하게 지배적인 프로파일입니다. ';
+    if (balance < 20) s += '5가지 맛이 고르게 분포된 균형 잡힌 조합입니다. ';
+    else if (balance > 50) s += '특정 맛이 확실히 강한 개성 있는 조합입니다. ';
     const compounds = selNames().flatMap(n => DB[n]?.compounds || []).slice(0, 5);
-    if (compounds.length > 0) s += `핵심 풍미 화합물: ${compounds.join(', ')}.`;
+    if (compounds.length > 0) s += `주요 맛 성분: ${compounds.join(', ')}.`;
     return s;
   })();
 
@@ -7441,14 +7441,14 @@ async function runAnalysis() {
     const dangers = allFindings.filter(f => f.severity === 'danger');
     const cautions = allFindings.filter(f => f.severity === 'caution');
     const goods = allFindings.filter(f => f.severity === 'good');
-    let s = `<strong>건강 분석 요약:</strong> 총 <strong>${allFindings.length}개</strong> 항목 분석. `;
-    if (dangers.length > 0) s += `<span style="color:#ef4444">위험 ${dangers.length}건</span>(${dangers.slice(0,2).map(f => f.title).join(', ')}). `;
-    if (cautions.length > 0) s += `<span style="color:#eab308">주의 ${cautions.length}건</span>. `;
-    if (goods.length > 0) s += `<span style="color:#22c55e">긍정 ${goods.length}건</span>. `;
+    let s = `<strong>❤️ 건강 영향 분석:</strong> 총 <strong>${allFindings.length}가지</strong> 건강 관련 항목을 확인했습니다. `;
+    if (dangers.length > 0) s += `<span style="color:#ef4444">⚠️ 주의 필요 ${dangers.length}건</span>(${dangers.slice(0,2).map(f => f.title).join(', ')}). `;
+    if (cautions.length > 0) s += `<span style="color:#eab308">참고 사항 ${cautions.length}건</span>. `;
+    if (goods.length > 0) s += `<span style="color:#22c55e">✅ 건강에 좋은 점 ${goods.length}건</span>. `;
     const scores = Object.values(allMembersHealth).flatMap(m => m.results.map(r => r.score));
     if (scores.length > 0) {
       const avg = Math.round(scores.reduce((a,b) => a+b, 0) / scores.length);
-      s += `평균 적합도: <strong>${avg}점</strong>.`;
+      s += `나에게 맞는 정도: <strong>${avg}점</strong>/100점.`;
     }
     return s;
   })();
@@ -7495,9 +7495,9 @@ async function runAnalysis() {
         </div>
         <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:12px">${r.desc}</p>
         <div style="margin-bottom:12px">${r.effects.map(e => `<span class="effect-tag">${e}</span>`).join("")}</div>
-        <div class="science-box"><h4>과학적 메커니즘</h4><p>${r.science}</p></div>
+        <div class="science-box"><h4>💡 왜 이런 변화가 일어나나요?</h4><p>${r.science}</p></div>
         ${proMode ? `<div class="science-box" style="border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.1)"><h4 style="color:#a78bfa">전문가 상세</h4><p>${r.proDetail || '상세 동역학 데이터는 해당 반응의 원문 논문을 참조하세요.'}</p></div>` : ''}
-        <div class="health-box"><h4>건강 영향</h4><p>${r.health}</p></div>
+        <div class="health-box"><h4>❤️ 건강 팁</h4><p>${r.health}</p></div>
         ${ref ? `<div class="ref-detail" id="ref-rxn${idx}">
           <strong>📖 참고 문헌</strong><br>
           ${ref.papers.map(p => `${p.authors} (${p.year}). "${p.title}". <em>${p.journal}</em>${p.vol ? ', '+p.vol : ''}${p.pages ? ', pp.'+p.pages : ''}${p.doi ? '. DOI: '+p.doi : ''}`).join('<br><br>')}
