@@ -2471,7 +2471,7 @@ function switchAnalyzeStep(step) {
 function renderHomeDashboard() {
   var container = document.getElementById('homeContent');
   if (!container) return;
-  if (_tabRendered.home) return; // render once
+  // Home은 매번 다시 렌더링 (오늘의 칼로리, 스트릭 등 동적 데이터)
 
   var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
 
@@ -2507,53 +2507,97 @@ function renderHomeDashboard() {
   var catCount = typeof CATEGORIES !== 'undefined' ? Object.keys(CATEGORIES).length - 1 : 15;
   var methodCount = typeof METHODS !== 'undefined' ? Object.keys(METHODS).length : 30;
 
+  // ── Daily calorie summary data ──
+  var todayStr = new Date().toISOString().slice(0, 10);
+  var todayMeals = [];
+  try { todayMeals = JSON.parse(localStorage.getItem('mealcule_ct_meals_' + todayStr) || '[]'); } catch(e) {}
+  if (todayMeals.length === 0 && typeof _CT_DEMO_MEALS !== 'undefined') todayMeals = _CT_DEMO_MEALS;
+  var todayTotals = todayMeals.reduce(function(t, m) {
+    return { cal: t.cal + (m.cal || 0), protein: t.protein + (m.protein || 0), fat: t.fat + (m.fat || 0), carbs: t.carbs + (m.carbs || 0) };
+  }, { cal: 0, protein: 0, fat: 0, carbs: 0 });
+  var dailyGoals = { calories: 2000, protein: 50, fat: 65, carbs: 300 };
+  try { var sg = JSON.parse(localStorage.getItem('mealcule_ct_goals') || '{}'); if (sg.calories) dailyGoals = sg; } catch(e) {}
+  var calPct = Math.min(100, Math.round((todayTotals.cal / dailyGoals.calories) * 100));
+  var calRemain = dailyGoals.calories - todayTotals.cal;
+  var ringColor = calRemain >= 0 ? '#10b981' : '#ef4444';
+  var circumference = 2 * Math.PI * 34;
+
+  // ── Engagement widgets ──
+  var streakHtml = typeof renderStreakWidget === 'function' ? renderStreakWidget() : '';
+  var tipHtml = typeof renderDailyTipWidget === 'function' ? renderDailyTipWidget() : '';
+  var goalSuggestHtml = typeof renderGoalSuggestions === 'function' ? renderGoalSuggestions() : '';
+
   container.innerHTML =
-    '<div class="home-hero">' +
-      '<h2>' + _t('Mealcule에 오신 것을 환영합니다', 'Welcome to Mealcule') + '</h2>' +
-      '<p>' + _t('분자 요리 과학으로 음식의 화학 반응, 영양소 변화, 건강 영향을 실시간 분석합니다', 'Analyze chemical reactions, nutrient changes, and health impacts of your cooking in real-time') + '</p>' +
+    // Compact hero
+    '<div class="home-hero" style="padding:20px 0 8px">' +
+      '<h2 style="font-size:22px">' + _t('안녕하세요!', 'Hello!') + '</h2>' +
+      '<p style="font-size:13px">' + _t('오늘의 영양 상태와 분석 결과를 확인하세요', 'Check your daily nutrition and analysis results') + '</p>' +
     '</div>' +
 
-    '<div class="home-actions">' +
-      '<div class="home-action-card" onclick="switchTab(\'analyze\')">' +
-        '<span class="action-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🧪\'"></span>' +
-        '<div class="action-text"><div class="action-title">' + _t('분석 시작', 'Start Analysis') + '</div>' +
-        '<div class="action-desc">' + _t('재료와 조리법을 선택하고 과학적 분석을 받으세요', 'Select ingredients & cooking method for scientific analysis') + '</div></div>' +
+    // ── Daily Calorie Summary (Foodvisor-style circular display) ──
+    '<div class="daily-summary-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)" style="cursor:pointer">' +
+      '<div class="daily-summary-header">' +
+        '<span style="font-size:14px;font-weight:600">' + _t('오늘의 영양', "Today's Nutrition") + '</span>' +
+        '<span style="font-size:11px;color:var(--text-secondary)">' + _t('상세 보기 ›', 'Details ›') + '</span>' +
       '</div>' +
-      '<div class="home-action-card" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)">' +
-        '<span class="action-icon"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📷\'"></span>' +
-        '<div class="action-text"><div class="action-title">' + _t('사진 스캔', 'Photo Scan') + '</div>' +
-        '<div class="action-desc">' + _t('음식 사진으로 재료를 자동 인식합니다', 'AI recognizes ingredients from your food photo') + '</div></div>' +
+      '<div style="display:flex;align-items:center;gap:20px">' +
+        '<div class="daily-summary-ring">' +
+          '<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>' +
+          '<circle cx="40" cy="40" r="34" fill="none" stroke="' + ringColor + '" stroke-width="7" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + (circumference * (1 - calPct / 100)) + '" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .6s"/></svg>' +
+          '<div class="daily-summary-center"><div style="font-size:18px;font-weight:800;color:' + ringColor + '">' + (calRemain >= 0 ? calRemain : '+' + Math.abs(calRemain)) + '</div>' +
+          '<div style="font-size:9px;color:var(--text-secondary)">' + (calRemain >= 0 ? _t('남은 kcal', 'left') : _t('초과', 'over')) + '</div></div>' +
+        '</div>' +
+        '<div class="daily-summary-macros" style="flex:1">' +
+          '<div><div class="dsm-val">' + todayTotals.protein + 'g</div><div class="dsm-label">' + _t('단백질', 'Protein') + '</div><div class="dsm-bar"><div class="dsm-fill" style="width:' + Math.min(100, Math.round(todayTotals.protein / dailyGoals.protein * 100)) + '%;background:#3b82f6"></div></div></div>' +
+          '<div><div class="dsm-val">' + todayTotals.fat + 'g</div><div class="dsm-label">' + _t('지방', 'Fat') + '</div><div class="dsm-bar"><div class="dsm-fill" style="width:' + Math.min(100, Math.round(todayTotals.fat / dailyGoals.fat * 100)) + '%;background:#f59e0b"></div></div></div>' +
+          '<div><div class="dsm-val">' + todayTotals.carbs + 'g</div><div class="dsm-label">' + _t('탄수화물', 'Carbs') + '</div><div class="dsm-bar"><div class="dsm-fill" style="width:' + Math.min(100, Math.round(todayTotals.carbs / dailyGoals.carbs * 100)) + '%;background:#10b981"></div></div></div>' +
+        '</div>' +
       '</div>' +
-      '<div class="home-action-card" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openUrlImport===\'function\')openUrlImport()},300)">' +
-        '<span class="action-icon"><img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🔗\'"></span>' +
-        '<div class="action-text"><div class="action-title">' + _t('레시피 가져오기', 'Import Recipe') + '</div>' +
-        '<div class="action-desc">' + _t('URL을 붙여넣어 레시피를 분석하세요', 'Paste a recipe URL to analyze it') + '</div></div>' +
-      '</div>' +
+      '<div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text-tertiary)">' + todayTotals.cal + ' / ' + dailyGoals.calories + ' kcal (' + calPct + '%)</div>' +
     '</div>' +
 
+    // ── Goal Suggestions ──
+    goalSuggestHtml +
+
+    // ── Quick Actions (Foodvisor-beating multi-modal) ──
+    '<div class="home-quick-log">' +
+      '<button class="home-quick-btn" onclick="if(typeof openQuickTextLog===\'function\')openQuickTextLog()"><span class="qb-icon">✏️</span>' + _t('빠른 기록', 'Quick Log') + '</button>' +
+      '<button class="home-quick-btn" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)"><span class="qb-icon">📷</span>' + _t('사진 스캔', 'Photo Scan') + '</button>' +
+      '<button class="home-quick-btn" onclick="switchTab(\'analyze\')"><span class="qb-icon">🧪</span>' + _t('분석 시작', 'Analyze') + '</button>' +
+      '<button class="home-quick-btn" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openUrlImport===\'function\')openUrlImport()},300)"><span class="qb-icon">🔗</span>' + _t('URL 가져오기', 'Import URL') + '</button>' +
+    '</div>' +
+
+    // ── Streak Widget ──
+    streakHtml +
+
+    // ── Daily Coaching Tip ──
+    tipHtml +
+
+    // ── Recent Analyses ──
     recentHtml +
 
+    // ── Feature Discovery (compact) ──
     '<div class="home-discover"><div class="home-section-title">' + _t('기능 둘러보기', 'Explore Features') + '</div>' +
       '<div class="home-discover-grid">' +
         '<div class="home-discover-card" onclick="switchTab(\'plan\')">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📅\'"></div>' +
+          '<div class="discover-icon">📅</div>' +
           '<div class="discover-text"><div class="discover-title">' + _t('식단 플래너', 'Meal Planner') + '</div>' +
-          '<div class="discover-desc">' + _t('주간 식단을 계획하고 영양을 관리하세요', 'Plan weekly meals and manage nutrition') + '</div></div>' +
+          '<div class="discover-desc">' + _t('주간 식단 계획', 'Weekly meal planning') + '</div></div>' +
         '</div>' +
         '<div class="home-discover-card" onclick="switchTab(\'recipes\')">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📖\'"></div>' +
+          '<div class="discover-icon">📖</div>' +
           '<div class="discover-text"><div class="discover-title">' + _t('레시피', 'Recipes') + '</div>' +
-          '<div class="discover-desc">' + _t('레시피를 저장하고 커뮤니티와 공유하세요', 'Save recipes and share with the community') + '</div></div>' +
+          '<div class="discover-desc">' + _t('저장 & 커뮤니티', 'Save & Community') + '</div></div>' +
         '</div>' +
         '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></div>' +
+          '<div class="discover-icon">🔥</div>' +
           '<div class="discover-text"><div class="discover-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
-          '<div class="discover-desc">' + _t('일일 영양 섭취를 기록하고 추적하세요', 'Log and track daily nutrition intake') + '</div></div>' +
+          '<div class="discover-desc">' + _t('일일 영양 추적', 'Daily nutrition') + '</div></div>' +
         '</div>' +
         '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'dashboard\')},200)">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></div>' +
+          '<div class="discover-icon">📊</div>' +
           '<div class="discover-text"><div class="discover-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
-          '<div class="discover-desc">' + _t('영양 트렌드와 건강 점수를 확인하세요', 'View nutrition trends and health score') + '</div></div>' +
+          '<div class="discover-desc">' + _t('영양 트렌드', 'Nutrition trends') + '</div></div>' +
         '</div>' +
       '</div>' +
     '</div>' +

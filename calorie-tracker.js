@@ -240,6 +240,7 @@ function _renderCT() {
                   <div class="ct-meal-name">${item.name}</div>
                   <div class="ct-meal-meta">${item.time || ''} · P ${item.protein}g · F ${item.fat}g · C ${item.carbs}g</div>
                 </div>
+                ${typeof renderQualityBadge === 'function' ? renderQualityBadge(item) : ''}
                 <span class="ct-meal-cal">${item.cal}</span>
               </div>
             `).join('') : `
@@ -505,6 +506,10 @@ function _ctRemoveMeal(id) {
 function _saveMeals() {
   try {
     localStorage.setItem('mealcule_ct_meals_' + _ctDate, JSON.stringify(_ctMeals));
+    // 스트릭 업데이트
+    if (typeof updateStreak === 'function') updateStreak();
+    // Home 탭 리렌더링 플래그
+    if (typeof _tabRendered !== 'undefined') _tabRendered.home = false;
   } catch(e) {}
 }
 
