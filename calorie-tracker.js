@@ -914,6 +914,51 @@ function _injectCTStyles() {
     .ct-ring-stats { flex-direction:row; gap:24px; }
     .ct-add-section { flex-direction:column; }
   }
+
+  /* ═══ LIGHT MODE ═══ */
+  [data-theme="light"] .ct-panel { background:#ffffff; }
+  [data-theme="light"] .ct-header { border-bottom-color:rgba(0,0,0,0.08); }
+  [data-theme="light"] .ct-close { color:rgba(0,0,0,0.4); }
+  [data-theme="light"] .ct-close:hover { color:#1A1A1A; }
+  [data-theme="light"] .ct-title { color:#1A1A1A; }
+  [data-theme="light"] .ct-date-btn { border-color:rgba(0,0,0,0.1); color:rgba(0,0,0,0.4); }
+  [data-theme="light"] .ct-date-btn:hover { background:rgba(0,0,0,0.05); color:#1A1A1A; }
+  [data-theme="light"] .ct-date-label { color:#1A1A1A; }
+  [data-theme="light"] .ct-ring-label { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-stat-val { color:#1A1A1A; }
+  [data-theme="light"] .ct-stat-lbl { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-macro-name { color:#1A1A1A; }
+  [data-theme="light"] .ct-macro-val { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-macro-bar { background:rgba(0,0,0,0.08); }
+  [data-theme="light"] .ct-water-header { color:#1A1A1A; }
+  [data-theme="light"] .ct-water-val { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-water-btn { background:rgba(0,0,0,0.04); color:#1A1A1A; }
+  [data-theme="light"] .ct-photo-btn { background:rgba(0,0,0,0.04); color:#1A1A1A; }
+  [data-theme="light"] .ct-meal-group-header { color:#1A1A1A; }
+  [data-theme="light"] .ct-meal-group-cal { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-meal-add-small { border-color:rgba(0,0,0,0.15); color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-meal-add-small:hover { background:rgba(0,0,0,0.05); color:#1A1A1A; }
+  [data-theme="light"] .ct-meal-item { background:rgba(0,0,0,0.03); }
+  [data-theme="light"] .ct-meal-thumb { background:rgba(0,0,0,0.04); }
+  [data-theme="light"] .ct-meal-name { color:#1A1A1A; }
+  [data-theme="light"] .ct-meal-meta { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-meal-cal { color:#1A1A1A; }
+  [data-theme="light"] .ct-meal-empty { border-color:rgba(0,0,0,0.1); color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-meal-empty:hover { background:rgba(0,0,0,0.03); border-color:rgba(0,0,0,0.15); }
+  [data-theme="light"] .ct-settings-btn { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:rgba(0,0,0,0.4); }
+  [data-theme="light"] .ct-quickadd-panel { background:#ffffff; }
+  [data-theme="light"] .ct-quickadd-header { border-bottom-color:rgba(0,0,0,0.08); }
+  [data-theme="light"] .ct-meal-tab { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:rgba(0,0,0,0.4); }
+  [data-theme="light"] .ct-search-input { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
+  [data-theme="light"] .ct-quick-label { color:rgba(0,0,0,0.4); }
+  [data-theme="light"] .ct-quick-cal, [data-theme="light"] .ct-quick-name { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
+  [data-theme="light"] .ct-food-name { color:#1A1A1A; }
+  [data-theme="light"] .ct-food-macros { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-food-cal small { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-food-empty { color:rgba(0,0,0,0.35); }
+  [data-theme="light"] .ct-goal-row { border-bottom-color:rgba(0,0,0,0.08); }
+  [data-theme="light"] .ct-goal-row span { color:#1A1A1A; }
+  [data-theme="light"] .ct-goal-row input { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
   `;
   document.head.appendChild(css);
 }

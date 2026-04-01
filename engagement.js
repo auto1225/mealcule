@@ -629,6 +629,9 @@ function _injectEngagementStyles() {
     .dsm-label{font-size:10px;color:var(--text-secondary)}
     .dsm-bar{height:3px;border-radius:2px;background:rgba(255,255,255,0.08);margin-top:4px;overflow:hidden}
     .dsm-fill{height:100%;border-radius:2px;transition:width .3s ease}
+
+    /* ═══ LIGHT MODE ═══ */
+    [data-theme="light"] .dsm-bar{background:rgba(0,0,0,0.08)}
   `;
   document.head.appendChild(style);
 }

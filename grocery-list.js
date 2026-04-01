@@ -438,6 +438,14 @@ function initGroceryList() {
       .grocery-manual-input input[type="text"]{flex:2}
       .grocery-manual-input input[type="number"]{flex:1;width:60px}
       .grocery-manual-input button{background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:16px;color:#F5F5F5}
+
+      /* ═══ LIGHT MODE ═══ */
+      [data-theme="light"] .grocery-panel{background:#ffffff;box-shadow:0 8px 32px rgba(0,0,0,0.12)}
+      [data-theme="light"] .grocery-summary strong{color:#1A1A1A}
+      [data-theme="light"] .grocery-category-header{color:#1A1A1A;border-bottom-color:rgba(0,0,0,0.08)}
+      [data-theme="light"] .grocery-item-name{color:#1A1A1A}
+      [data-theme="light"] .grocery-manual-input input{border-color:rgba(0,0,0,0.1);background:rgba(0,0,0,0.03);color:#1A1A1A}
+      [data-theme="light"] .grocery-manual-input button{border-color:rgba(0,0,0,0.1);color:#1A1A1A}
     `;
     document.head.appendChild(style);
   }

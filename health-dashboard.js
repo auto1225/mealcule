@@ -202,6 +202,28 @@ function _injectHDStyles() {
     @keyframes hd-ring-anim {
       from { stroke-dasharray: 0 999; }
     }
+
+    /* ═══ LIGHT MODE ═══ */
+    [data-theme="light"] .hd-overlay { background:#F5F5F5; }
+    [data-theme="light"] .hd-header { background:#ffffff; border-bottom-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .hd-header h1 { color:#1A1A1A; }
+    [data-theme="light"] .hd-close-btn { background:rgba(0,0,0,0.04); color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .hd-close-btn:hover { background:rgba(0,0,0,0.07); }
+    [data-theme="light"] .hd-period-tabs { background:#ffffff; border-bottom-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .hd-period-tab { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .hd-card { background:rgba(0,0,0,0.02); border-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .hd-card h2 { color:#1A1A1A; }
+    [data-theme="light"] .hd-ring-label { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .hd-ring-value { color:#1A1A1A; }
+    [data-theme="light"] .hd-upgrade-prompt h2 { color:#1A1A1A; }
+    [data-theme="light"] .hd-upgrade-prompt p { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .hd-bar-label { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .hd-macro-legend-item { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .hd-factor-row { border-bottom-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .hd-modal { background:#ffffff; }
+    [data-theme="light"] .hd-modal h2 { color:#1A1A1A; }
+    [data-theme="light"] .hd-form-group label { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .hd-form-group input, [data-theme="light"] .hd-form-group select { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
   `;
   document.head.appendChild(style);
 }

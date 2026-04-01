@@ -117,7 +117,7 @@ function openMealPlanner() {
   if (!overlay) {
     overlay = document.createElement('div');
     overlay.id = 'mealPlannerOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:8000;background:#0F1113;overflow-y:auto;display:none;flex-direction:column';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:8000;background:var(--bg);overflow-y:auto;display:none;flex-direction:column';
     document.body.appendChild(overlay);
   }
   overlay.style.display = 'flex';
@@ -142,10 +142,10 @@ function _renderProGate() {
   }
   overlay.style.display = 'flex';
   overlay.innerHTML = `
-    <div style="background:#161819;border-radius:16px;padding:40px;text-align:center;max-width:360px;width:90%">
+    <div style="background:var(--bg-secondary);border-radius:16px;padding:40px;text-align:center;max-width:360px;width:90%">
       <div style="margin-bottom:16px"><img src="https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='<span style=\'font-size:48px\'>&#x1F512;</span>'"></div>
-      <h2 style="margin:0 0 8px;color:#F5F5F5">${_t('Pro 필요', 'Pro Required')}</h2>
-      <p style="color:rgba(255,255,255,0.6);margin:0 0 20px;font-size:14px">
+      <h2 style="margin:0 0 8px;color:var(--text)">${_t('Pro 필요', 'Pro Required')}</h2>
+      <p style="color:var(--text-secondary);margin:0 0 20px;font-size:14px">
         ${_t('주간 식단 플래너는 Pro 플랜에서 사용할 수 있습니다.', 'The Weekly Meal Planner is available on the Pro plan.')}
       </p>
       <button onclick="closeMealPlanner()" style="padding:10px 28px;border:none;border-radius:8px;background:#10B981;color:#fff;font-size:14px;cursor:pointer">
@@ -156,7 +156,7 @@ function _renderProGate() {
 
 function _buildPlannerShell() {
   return `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#161819;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border);flex-shrink:0">
       <button onclick="closeMealPlanner()" style="background:none;border:none;font-size:22px;cursor:pointer">&larr;</button>
       <div style="display:flex;align-items:center;gap:8px">
         <button onclick="navigateWeek(-1)" style="background:none;border:none;font-size:18px;cursor:pointer">&lsaquo;</button>
@@ -165,9 +165,9 @@ function _buildPlannerShell() {
       </div>
       <button onclick="_openAiMealPlanGenerator()" style="background:linear-gradient(135deg,#10B981,#059669);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='<span>&#x2728;</span>'">${_t('AI 생성', 'AI Generate')}</button>
     </div>
-    <div id="mpDayTabs" style="display:none;overflow-x:auto;background:#161819;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0"></div>
+    <div id="mpDayTabs" style="display:none;overflow-x:auto;background:var(--bg-secondary);border-bottom:1px solid var(--border);flex-shrink:0"></div>
     <div id="mpCalendar" style="flex:1;overflow-y:auto;padding:8px"></div>
-    <div id="mpWeeklySummary" style="flex-shrink:0;background:#161819;border-top:1px solid rgba(255,255,255,0.08);padding:10px 16px"></div>`;
+    <div id="mpWeeklySummary" style="flex-shrink:0;background:var(--bg-secondary);border-top:1px solid var(--border);padding:10px 16px"></div>`;
 }
 
 // ── Load / Create Plan ──
@@ -265,7 +265,7 @@ function _renderDayTabs() {
     const dateStr = _formatDate(_dayDate(_mpState.weekStart, i));
     return `<button onclick="_selectDay(${i})" style="flex:1;padding:8px 4px;border:none;border-bottom:2px solid ${active ? '#10B981' : 'transparent'};background:${active ? 'rgba(16,185,129,0.08)' : 'transparent'};cursor:pointer;font-size:13px;text-align:center">
       <div style="font-weight:${active ? '700' : '400'}">${_t(d.ko, d.en)}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4)">${dateStr}</div>
+      <div style="font-size:11px;color:var(--text-muted)">${dateStr}</div>
     </button>`;
   }).join('');
 }
@@ -291,9 +291,9 @@ function _renderSingleDay(dayIndex, activeItems) {
     const typeItems = dayItems.filter(it => it.meal_type === type);
     html += `<div style="margin-bottom:12px">
       <div style="font-weight:600;font-size:14px;margin-bottom:6px;padding:4px 0">${_mealLabel(type)}</div>
-      <div class="mp-drop-zone" data-day="${dayIndex}" data-meal="${type}" style="min-height:48px;background:rgba(255,255,255,0.04);border-radius:10px;padding:8px;border:1px dashed rgba(255,255,255,0.08)">
+      <div class="mp-drop-zone" data-day="${dayIndex}" data-meal="${type}" style="min-height:48px;background:var(--card);border-radius:10px;padding:8px;border:1px dashed var(--border)">
         ${typeItems.map(it => _renderMealItemCard(it, _mpState.showingDemo)).join('')}
-        <button onclick="addMealItem(${dayIndex},'${type}')" style="width:100%;padding:8px;border:1px dashed rgba(255,255,255,0.15);border-radius:8px;background:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:13px;margin-top:4px">+ ${_t('추가', 'Add')}</button>
+        <button onclick="addMealItem(${dayIndex},'${type}')" style="width:100%;padding:8px;border:1px dashed rgba(255,255,255,0.15);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;font-size:13px;margin-top:4px">+ ${_t('추가', 'Add')}</button>
       </div>
     </div>`;
   });
@@ -315,22 +315,22 @@ function _renderFullGrid(activeItems) {
   }
   html += '<div style="display:grid;grid-template-columns:80px repeat(7,1fr);gap:1px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden">';
   // Header row
-  html += '<div style="background:rgba(255,255,255,0.04);padding:8px;font-size:12px;color:rgba(255,255,255,0.4)"></div>';
+  html += '<div style="background:var(--card);padding:8px;font-size:12px;color:var(--text-muted)"></div>';
   for (let d = 0; d < 7; d++) {
     const dateStr = _formatDate(_dayDate(_mpState.weekStart, d));
-    html += `<div style="background:rgba(255,255,255,0.04);padding:8px;text-align:center;font-size:13px;font-weight:600;color:#F5F5F5">
-      ${_t(DAY_LABELS[d].ko, DAY_LABELS[d].en)}<br><span style="font-weight:400;font-size:11px;color:rgba(255,255,255,0.4)">${dateStr}</span>
+    html += `<div style="background:var(--card);padding:8px;text-align:center;font-size:13px;font-weight:600;color:var(--text)">
+      ${_t(DAY_LABELS[d].ko, DAY_LABELS[d].en)}<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">${dateStr}</span>
     </div>`;
   }
   // Meal rows
   MEAL_TYPES.forEach(type => {
-    html += `<div style="background:rgba(255,255,255,0.04);padding:8px;font-size:12px;display:flex;align-items:center;justify-content:center;color:#F5F5F5;writing-mode:vertical-lr;text-orientation:mixed">${_mealLabel(type)}</div>`;
+    html += `<div style="background:var(--card);padding:8px;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--text);writing-mode:vertical-lr;text-orientation:mixed">${_mealLabel(type)}</div>`;
     for (let d = 0; d < 7; d++) {
       const cellItems = items.filter(it => it.day_of_week === d && it.meal_type === type);
       const dimStyle = _mpState.showingDemo ? 'opacity:0.7;' : '';
-      html += `<div class="mp-drop-zone" data-day="${d}" data-meal="${type}" style="background:rgba(255,255,255,0.02);padding:6px;min-height:80px;position:relative;${dimStyle}">
+      html += `<div class="mp-drop-zone" data-day="${d}" data-meal="${type}" style="background:var(--card);padding:6px;min-height:80px;position:relative;${dimStyle}">
         ${cellItems.map(it => _renderMealItemCard(it, _mpState.showingDemo)).join('')}
-        <button onclick="addMealItem(${d},'${type}')" style="width:100%;padding:4px;border:1px dashed rgba(255,255,255,0.1);border-radius:6px;background:none;color:rgba(255,255,255,0.35);cursor:pointer;font-size:16px;margin-top:2px">+</button>
+        <button onclick="addMealItem(${d},'${type}')" style="width:100%;padding:4px;border:1px dashed var(--border);border-radius:6px;background:none;color:var(--text-tertiary);cursor:pointer;font-size:16px;margin-top:2px">+</button>
       </div>`;
     }
   });
@@ -338,7 +338,7 @@ function _renderFullGrid(activeItems) {
   html += '<div style="background:#f9fafb;padding:6px;font-size:11px;text-align:center;color:#888">${_t("합계","Total")}</div>';
   for (let d = 0; d < 7; d++) {
     const dayItems = items.filter(it => it.day_of_week === d);
-    html += `<div style="background:rgba(255,255,255,0.02);padding:6px">${renderDayNutrition(d, dayItems)}</div>`;
+    html += `<div style="background:var(--card);padding:6px">${renderDayNutrition(d, dayItems)}</div>`;
   }
   html += '</div>';
   cal.innerHTML = html;
@@ -356,14 +356,14 @@ function _renderMealItemCard(item, isDemo) {
   const isMobile = window.innerWidth <= 768;
   const moveAttr = (!isDemo && isMobile) ? `onclick="_startMoveItem('${item.id}')"` : '';
   const draggable = isDemo ? 'false' : 'true';
-  const deleteBtn = isDemo ? '' : `<button onclick="event.stopPropagation();removeMealItem('${item.id}')" style="background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;font-size:14px;padding:2px">&times;</button>`;
+  const deleteBtn = isDemo ? '' : `<button onclick="event.stopPropagation();removeMealItem('${item.id}')" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:14px;padding:2px">&times;</button>`;
   return `<div class="mp-item" draggable="${draggable}" data-item-id="${item.id}"
-    style="display:flex;align-items:center;gap:6px;padding:6px 8px;margin-bottom:4px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:13px;color:#F5F5F5;cursor:${isDemo ? 'default' : 'grab'};position:relative"
+    style="display:flex;align-items:center;gap:6px;padding:6px 8px;margin-bottom:4px;background:var(--card);border-radius:8px;font-size:13px;color:var(--text);cursor:${isDemo ? 'default' : 'grab'};position:relative"
     ${moveAttr}>
     ${iconHtml}
     <div style="flex:1;min-width:0">
       <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4)">${cal}</div>
+      <div style="font-size:11px;color:var(--text-muted)">${cal}</div>
     </div>
     ${deleteBtn}
   </div>`;
@@ -383,7 +383,7 @@ function renderDayNutrition(dayOfWeek, items) {
   const maxCal = 2500;
   const pct = Math.min(100, Math.round((totals.calories / maxCal) * 100));
   return `
-    <div style="font-size:11px;color:rgba(255,255,255,0.6)">
+    <div style="font-size:11px;color:var(--text-secondary)">
       <div style="background:rgba(255,255,255,0.08);border-radius:4px;height:6px;margin-bottom:4px;overflow:hidden">
         <div style="height:100%;width:${pct}%;background:${pct > 100 ? '#ef4444' : '#4f46e5'};border-radius:4px;transition:width 0.3s"></div>
       </div>
@@ -477,22 +477,22 @@ function renderRecipePicker(dayOfWeek, mealType) {
   }
   modal.style.display = 'flex';
   modal.innerHTML = `
-    <div style="background:#161819;border-radius:16px;max-width:480px;width:92%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">
-      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--bg-secondary);border-radius:16px;max-width:480px;width:92%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
         <span style="font-weight:600;font-size:15px">${_mealLabel(mealType)} — ${_t(DAY_LABELS[dayOfWeek].ko, DAY_LABELS[dayOfWeek].en)}</span>
         <button onclick="_closeRecipePicker()" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
       <div style="padding:8px 16px">
         <input id="mpPickerSearch" type="text" placeholder="${_t('레시피 검색...', 'Search recipes...')}"
-          style="width:100%;padding:8px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;font-size:14px;box-sizing:border-box;background:rgba(255,255,255,0.04);color:#F5F5F5"
+          style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;box-sizing:border-box;background:var(--card);color:var(--text)"
           oninput="_filterPickerRecipes(${dayOfWeek},'${mealType}')">
       </div>
       <div id="mpPickerList" style="flex:1;overflow-y:auto;padding:0 16px 8px"></div>
-      <div style="border-top:1px solid rgba(255,255,255,0.08);padding:12px 16px">
+      <div style="border-top:1px solid var(--border);padding:12px 16px">
         <div style="font-size:13px;font-weight:600;margin-bottom:8px">${_t('직접 입력', 'Manual Entry')}</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <input id="mpManualName" placeholder="${_t('음식 이름', 'Food name')}" style="flex:2;padding:7px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:6px;font-size:13px;min-width:100px;background:rgba(255,255,255,0.04);color:#F5F5F5">
-          <input id="mpManualCal" type="number" placeholder="kcal" style="flex:1;padding:7px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:6px;font-size:13px;min-width:60px;background:rgba(255,255,255,0.04);color:#F5F5F5">
+          <input id="mpManualName" placeholder="${_t('음식 이름', 'Food name')}" style="flex:2;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-width:100px;background:var(--card);color:var(--text)">
+          <input id="mpManualCal" type="number" placeholder="kcal" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-width:60px;background:var(--card);color:var(--text)">
           <button onclick="_addManualItem(${dayOfWeek},'${mealType}')" style="padding:7px 14px;border:none;border-radius:6px;background:#10B981;color:#fff;font-size:13px;cursor:pointer;white-space:nowrap">${_t('추가', 'Add')}</button>
         </div>
       </div>
@@ -503,7 +503,7 @@ function renderRecipePicker(dayOfWeek, mealType) {
 async function _loadPickerRecipes(dayOfWeek, mealType) {
   const list = document.getElementById('mpPickerList');
   if (!list) return;
-  list.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.4)">${_t('로딩 중...', 'Loading...')}</div>`;
+  list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted)">${_t('로딩 중...', 'Loading...')}</div>`;
 
   let recipes = [];
   if (typeof loadSavedRecipes === 'function') {
@@ -534,7 +534,7 @@ function _renderPickerList(recipes, dayOfWeek, mealType) {
   const list = document.getElementById('mpPickerList');
   if (!list) return;
   if (!recipes.length) {
-    list.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.35);font-size:13px">${_t('저장된 레시피가 없습니다', 'No saved recipes')}</div>`;
+    list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-tertiary);font-size:13px">${_t('저장된 레시피가 없습니다', 'No saved recipes')}</div>`;
     return;
   }
   list.innerHTML = recipes.map(r => {
@@ -544,12 +544,12 @@ function _renderPickerList(recipes, dayOfWeek, mealType) {
     var recipeImg = r.image_url || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=32&h=32&fit=crop';
     var recipeEmoji = r.emoji || '&#x1F37D;';
     return `<div onclick="_selectRecipeForPlan('${r.id}',${dayOfWeek},'${mealType}')"
-      style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.15s"
+      style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s"
       onmouseenter="this.style.background='rgba(255,255,255,0.07)'" onmouseleave="this.style.background=''">
       <img src="${recipeImg}" style="width:32px;height:32px;border-radius:6px;object-fit:cover" onerror="this.outerHTML='<span style=\\'font-size:24px\\'>${recipeEmoji}</span>'">
       <div style="flex:1;min-width:0">
         <div style="font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.4)">${Math.round(cal)} kcal | P${Math.round(p)}g F${Math.round(f)}g C${Math.round(c)}g</div>
+        <div style="font-size:11px;color:var(--text-muted)">${Math.round(cal)} kcal | P${Math.round(p)}g F${Math.round(f)}g C${Math.round(c)}g</div>
       </div>
     </div>`;
   }).join('');
@@ -818,20 +818,20 @@ function _openAiMealPlanGenerator() {
   const optionsHtml = CUISINE_OPTIONS.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
 
   modal.innerHTML = `
-    <div style="background:#161819;border-radius:16px;max-width:420px;width:100%;padding:24px;max-height:85vh;overflow-y:auto">
+    <div style="background:var(--bg-secondary);border-radius:16px;max-width:420px;width:100%;padding:24px;max-height:85vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:6px" onerror="this.outerHTML='<span>&#x2728;</span>'">${_t('AI 식단 자동 생성', 'AI Meal Plan Generator')}</h3>
         <button onclick="document.getElementById('aiMealPlanModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
-      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:16px">${_t('건강 프로필 기반 맞춤형 7일 식단을 자동 생성합니다', 'Generate a personalized 7-day meal plan based on your health profile')}</p>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">${_t('건강 프로필 기반 맞춤형 7일 식단을 자동 생성합니다', 'Generate a personalized 7-day meal plan based on your health profile')}</p>
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
         <div>
-          <label style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.6)">${_t('일일 칼로리 목표', 'Daily calorie target')}</label>
-          <input id="aiPlanCalories" type="number" value="2000" min="1200" max="4000" step="100" style="width:100%;padding:8px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;font-size:14px;margin-top:4px;background:rgba(255,255,255,0.04);color:#F5F5F5">
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary)">${_t('일일 칼로리 목표', 'Daily calorie target')}</label>
+          <input id="aiPlanCalories" type="number" value="2000" min="1200" max="4000" step="100" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;margin-top:4px;background:var(--card);color:var(--text)">
         </div>
         <div>
-          <label style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.6)">${_t('요리 스타일', 'Cuisine preference')}</label>
-          <select id="aiPlanCuisine" style="width:100%;padding:8px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;font-size:14px;margin-top:4px;background:rgba(255,255,255,0.04);color:#F5F5F5">${optionsHtml}</select>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary)">${_t('요리 스타일', 'Cuisine preference')}</label>
+          <select id="aiPlanCuisine" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;margin-top:4px;background:var(--card);color:var(--text)">${optionsHtml}</select>
         </div>
       </div>
       <button id="aiPlanGenBtn" onclick="_runAiMealPlanGeneration()" style="width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#10B981,#059669);color:#fff;font-size:14px;font-weight:700;cursor:pointer">
@@ -848,7 +848,7 @@ async function _runAiMealPlanGeneration() {
   const cuisine = document.getElementById('aiPlanCuisine')?.value || '';
 
   if (btn) { btn.disabled = true; btn.textContent = _t('생성 중...', 'Generating...'); }
-  results.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.4)"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('AI가 식단을 생성하고 있습니다...', 'AI is generating your meal plan...')}</div>`;
+  results.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted)"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('AI가 식단을 생성하고 있습니다...', 'AI is generating your meal plan...')}</div>`;
 
   // Collect health profile from app.js globals
   const profile = window._healthProfile || {};
@@ -882,7 +882,7 @@ async function _runAiMealPlanGeneration() {
     // Render preview
     let html = `<div style="font-size:14px;font-weight:700;margin-bottom:10px">${_t('생성된 식단', 'Generated Plan')}</div>`;
     data.plan.forEach(day => {
-      html += `<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.04);border-radius:8px">
+      html += `<div style="margin-bottom:10px;padding:10px;background:var(--card);border-radius:8px">
         <div style="font-weight:600;font-size:13px;margin-bottom:6px">${day.dayLabel}</div>`;
       (day.meals || []).forEach(meal => {
         html += `<div style="display:flex;gap:6px;align-items:center;font-size:12px;padding:2px 0">
@@ -891,7 +891,7 @@ async function _runAiMealPlanGeneration() {
         </div>`;
       });
       if (day.dailyTotal) {
-        html += `<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;border-top:1px solid rgba(255,255,255,0.08);padding-top:4px">${_t('합계', 'Total')}: ${Math.round(day.dailyTotal.calories||0)}kcal · P${Math.round(day.dailyTotal.protein||0)}g · F${Math.round(day.dailyTotal.fat||0)}g · C${Math.round(day.dailyTotal.carbs||0)}g</div>`;
+        html += `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;border-top:1px solid var(--border);padding-top:4px">${_t('합계', 'Total')}: ${Math.round(day.dailyTotal.calories||0)}kcal · P${Math.round(day.dailyTotal.protein||0)}g · F${Math.round(day.dailyTotal.fat||0)}g · C${Math.round(day.dailyTotal.carbs||0)}g</div>`;
       }
       html += `</div>`;
     });

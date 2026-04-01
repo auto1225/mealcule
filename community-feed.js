@@ -1548,6 +1548,57 @@ function _injectCommunityFeedStyles() {
       .cf-share-recipe-btn { width:100%; justify-content:center; }
       .cf-card-image { height:180px; }
     }
+
+    /* ═══ LIGHT MODE ═══ */
+    [data-theme="light"] .cf-card { background:rgba(0,0,0,0.02); border-color:rgba(0,0,0,0.1); }
+    [data-theme="light"] .cf-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    [data-theme="light"] .cf-author-name { color:#1A1A1A; }
+    [data-theme="light"] .cf-card-time { color:rgba(0,0,0,0.35); }
+    [data-theme="light"] .cf-card-title { color:#1A1A1A; }
+    [data-theme="light"] .cf-card-desc { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .cf-card-actions { border-top-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .cf-like-btn,
+    [data-theme="light"] .cf-comment-btn,
+    [data-theme="light"] .cf-share-btn { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-save-btn { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-empty { color:rgba(0,0,0,0.35); }
+    [data-theme="light"] .cf-like-count { color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .cf-tabs { background:transparent; border-bottom-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .cf-tab { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .cf-chip { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .cf-hero-text h2 { color:#1A1A1A; }
+    [data-theme="light"] .cf-hero-text p { color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .cf-detail-modal { background:#ffffff; box-shadow:0 12px 40px rgba(0,0,0,.15); }
+    [data-theme="light"] .cf-modal-close { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-modal-close:hover { color:#1A1A1A; }
+    [data-theme="light"] .cf-det-title { color:#1A1A1A; }
+    [data-theme="light"] .cf-det-title-en { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-det-author-row { border-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .cf-det-desc { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .cf-det-section strong { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .cf-det-ing { background:rgba(0,0,0,0.04); }
+    [data-theme="light"] .cf-det-nutr { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .cf-det-actions-row { border-top-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .cf-like-btn-lg { border-color:rgba(0,0,0,0.1); color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .cf-comment { border-bottom-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .cf-comment-author { color:#1A1A1A; }
+    [data-theme="light"] .cf-comment-time { color:rgba(0,0,0,0.35); }
+    [data-theme="light"] .cf-comment-body { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .cf-reply-input,
+    [data-theme="light"] .cf-comment-input { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
+    [data-theme="light"] .cf-add-comment { border-top-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .cf-share-modal { background:#ffffff; box-shadow:0 12px 40px rgba(0,0,0,.15); }
+    [data-theme="light"] .cf-share-preview { background:rgba(0,0,0,0.03); }
+    [data-theme="light"] .cf-share-label { color:rgba(0,0,0,0.6); }
+    [data-theme="light"] .cf-share-textarea,
+    [data-theme="light"] .cf-share-input { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
+    [data-theme="light"] .cf-profile-card { background:#ffffff; box-shadow:0 12px 40px rgba(0,0,0,.15); }
+    [data-theme="light"] .cf-profile-name { color:#1A1A1A; }
+    [data-theme="light"] .cf-profile-bio { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-stat-num { color:#1A1A1A; }
+    [data-theme="light"] .cf-stat-label { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-author-bio { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .cf-spinner { border-color:rgba(0,0,0,0.08); border-top-color:#10B981; }
   `;
   document.head.appendChild(style);
 }

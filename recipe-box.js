@@ -948,6 +948,19 @@ function _injectRecipeBoxStyles() {
       .rb-grid { grid-template-columns:1fr; }
       .rb-detail-modal { width:95vw; padding:18px; }
     }
+
+    /* ═══ LIGHT MODE ═══ */
+    [data-theme="light"] .rb-panel { background:#ffffff; }
+    [data-theme="light"] .rb-panel-header { border-bottom-color:rgba(0,0,0,0.08); }
+    [data-theme="light"] .rb-panel-close { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .rb-panel-close:hover { background:rgba(0,0,0,0.05); }
+    [data-theme="light"] .rb-count { color:rgba(0,0,0,0.4); }
+    [data-theme="light"] .rb-new-col-btn { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:rgba(0,0,0,0.5); }
+    [data-theme="light"] .rb-detail-modal { background:#ffffff; }
+    [data-theme="light"] .rb-det-name { color:#1A1A1A; }
+    [data-theme="light"] .rb-notes-input { background:rgba(0,0,0,0.03); color:#1A1A1A; }
+    [data-theme="light"] .rb-action-btn { border-color:rgba(0,0,0,0.1); background:rgba(0,0,0,0.03); color:#1A1A1A; }
+    [data-theme="light"] .rb-det-footer { color:rgba(0,0,0,0.35); }
   `;
   document.head.appendChild(style);
 }

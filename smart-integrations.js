@@ -74,7 +74,7 @@ function _renderAppliancePanel() {
   if (!overlay) return;
 
   let html = `
-    <div style="background:#161819;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
+    <div style="background:var(--bg-secondary);border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;vertical-align:middle;border-radius:3px;object-fit:cover;margin-right:4px"> ${_t('스마트 가전 연동', 'Smart Appliances')}</h3>
         <button onclick="closeAppliancePanel()" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
@@ -83,7 +83,7 @@ function _renderAppliancePanel() {
   // Connected appliances
   if (_connectedAppliances.length > 0) {
     html += `<div style="margin-bottom:16px">
-      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#F5F5F5">${_t('연결된 기기', 'Connected Devices')}</div>`;
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text)">${_t('연결된 기기', 'Connected Devices')}</div>`;
     _connectedAppliances.forEach(a => {
       const info = SMART_APPLIANCES.find(sa => sa.id === a.id) || a;
       const iconHtml = info.img
@@ -96,15 +96,15 @@ function _renderAppliancePanel() {
           <div style="font-weight:600;font-size:13px">${info.name}</div>
           <div style="font-size:11px;color:#10B981">● ${_t('연결됨', 'Connected')}</div>
         </div>
-        <button onclick="_disconnectAppliance('${a.id}')" style="background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:rgba(255,255,255,0.4)">${_t('해제', 'Disconnect')}</button>
+        <button onclick="_disconnectAppliance('${a.id}')" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--text-muted)">${_t('해제', 'Disconnect')}</button>
       </div>`;
     });
     html += `</div>`;
   }
 
   // Available appliances
-  html += `<div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#F5F5F5">${_t('연결 가능한 기기', 'Available Devices')}</div>
-    <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px">${_t(
+  html += `<div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text)">${_t('연결 가능한 기기', 'Available Devices')}</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">${_t(
       '스마트 가전을 연결하면 레시피의 온도/시간을 기기에 직접 전송할 수 있습니다.',
       'Connect smart appliances to send recipe temperature and timer settings directly to your device.'
     )}</p>`;
@@ -121,13 +121,13 @@ function _renderAppliancePanel() {
 
   Object.entries(brands).forEach(([brand, appliances]) => {
     html += `<div style="margin-bottom:12px">
-      <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-bottom:6px">${brand}</div>`;
+      <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">${brand}</div>`;
     appliances.forEach(a => {
       const aIconHtml = a.img
         ? `<img src="${a.img}" alt="${a.name}" style="width:24px;height:24px;border-radius:5px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display=''">`
           + `<span style="font-size:20px;display:none">${a.icon}</span>`
         : `<span style="font-size:20px">${a.icon}</span>`;
-      html += `<div style="display:flex;align-items:center;gap:10px;padding:8px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;margin-bottom:4px">
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--border);border-radius:8px;margin-bottom:4px">
         ${aIconHtml}
         <div style="flex:1;font-size:13px">${a.name}</div>
         <button onclick="_connectAppliance('${a.id}')" style="padding:5px 12px;border:none;border-radius:6px;background:#10B981;color:#fff;font-size:12px;cursor:pointer;font-weight:600">${_t('연결', 'Connect')}</button>
@@ -137,7 +137,7 @@ function _renderAppliancePanel() {
   });
 
   html += `
-      <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.4)">
+      <div style="margin-top:16px;padding:12px;background:var(--card);border-radius:10px;font-size:12px;color:var(--text-muted)">
         <img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" alt="" style="width:14px;height:14px;vertical-align:middle;border-radius:2px;object-fit:cover;margin-right:3px"> ${_t(
           '실제 가전 연동은 각 제조사의 API 키 설정이 필요합니다. 현재는 시뮬레이션 모드입니다.',
           'Actual appliance connection requires manufacturer API keys. Currently in simulation mode.'
@@ -233,14 +233,14 @@ function openGroceryDelivery(groceryItems) {
   const others = DELIVERY_SERVICES.filter(s => !s.region.includes(region));
 
   let html = `
-    <div style="background:#161819;border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
+    <div style="background:var(--bg-secondary);border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/264507/pexels-photo-264507.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;vertical-align:middle;border-radius:3px;object-fit:cover;margin-right:4px"> ${_t('온라인 장보기', 'Order Groceries Online')}</h3>
         <button onclick="document.getElementById('deliveryOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>`;
 
   if (items.length > 0) {
-    html += `<div style="font-size:13px;margin-bottom:12px;color:rgba(255,255,255,0.6)">
+    html += `<div style="font-size:13px;margin-bottom:12px;color:var(--text-secondary)">
       ${_t(`${items.length}개 항목을 배달 서비스에서 주문합니다`, `Order ${items.length} items from a delivery service`)}
     </div>`;
   }
@@ -251,14 +251,14 @@ function openGroceryDelivery(groceryItems) {
     return name;
   }).join(' ');
 
-  html += `<div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#F5F5F5">${_t('추천 서비스', 'Recommended')}</div>`;
+  html += `<div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text)">${_t('추천 서비스', 'Recommended')}</div>`;
   available.forEach(s => {
     const isPreferred = _preferredDelivery === s.id;
     html += _renderDeliveryCard(s, searchTerms, isPreferred);
   });
 
   if (others.length > 0) {
-    html += `<div style="font-size:13px;font-weight:600;margin:12px 0 8px;color:rgba(255,255,255,0.4)">${_t('기타 서비스', 'Other Services')}</div>`;
+    html += `<div style="font-size:13px;font-weight:600;margin:12px 0 8px;color:var(--text-muted)">${_t('기타 서비스', 'Other Services')}</div>`;
     others.slice(0, 4).forEach(s => {
       html += _renderDeliveryCard(s, searchTerms, false);
     });
@@ -282,7 +282,7 @@ function _renderDeliveryCard(service, searchTerms, isPreferred) {
       ${isPreferred ? `<div style="font-size:10px;color:#10B981">★ ${_t('기본 서비스', 'Preferred')}</div>` : ''}
     </div>
     <div style="display:flex;gap:4px">
-      <button onclick="_setPreferredDelivery('${service.id}')" style="background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:4px 8px;font-size:10px;cursor:pointer;color:rgba(255,255,255,0.4)" title="${_t('기본 설정', 'Set preferred')}">★</button>
+      <button onclick="_setPreferredDelivery('${service.id}')" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:10px;cursor:pointer;color:var(--text-muted)" title="${_t('기본 설정', 'Set preferred')}">★</button>
       <a href="${fullUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="padding:5px 14px;border:none;border-radius:6px;background:#10B981;color:#fff;font-size:12px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block">${_t('주문', 'Order')}</a>
     </div>
   </div>`;
