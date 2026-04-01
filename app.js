@@ -2409,6 +2409,255 @@ async function checkDailyLimit(type = 'analysis') {
   return true;
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  TAB NAVIGATION SYSTEM
+// ═══════════════════════════════════════════════════════════════════
+var _currentTab = 'home';
+var _currentStep = 1;
+var _tabRendered = {};
+
+function switchTab(tabName) {
+  _currentTab = tabName;
+  document.querySelectorAll('.tab-section').forEach(function(s) { s.classList.remove('active'); });
+  var target = document.getElementById('tab-' + tabName);
+  if (target) target.classList.add('active');
+  // Update nav active states
+  document.querySelectorAll('.mobile-nav-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tabName);
+  });
+  document.querySelectorAll('.header-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.tab === tabName);
+  });
+  // Lazy render tab content
+  if (tabName === 'home') renderHomeDashboard();
+  if (tabName === 'plan') renderPlanTab();
+  if (tabName === 'recipes') renderRecipesTab();
+  if (tabName === 'profile') renderProfileTab();
+  window.scrollTo(0, 0);
+}
+
+function switchAnalyzeStep(step) {
+  _currentStep = step;
+  document.querySelectorAll('.wizard-panel').forEach(function(p) { p.classList.remove('active'); });
+  var panel = document.getElementById('analyze-step-' + step);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('.wizard-step').forEach(function(s) {
+    var n = parseInt(s.dataset.step);
+    s.classList.toggle('active', n === step);
+    s.classList.toggle('completed', n < step);
+  });
+  // Update wizard nav button states
+  var analyzeBtn = document.querySelector('.wizard-analyze-btn');
+  if (analyzeBtn && step === 3) {
+    analyzeBtn.disabled = !selCount || selCount() === 0;
+  }
+  if (step !== 4) window.scrollTo(0, 0);
+}
+
+function renderHomeDashboard() {
+  var container = document.getElementById('homeContent');
+  if (!container) return;
+  if (_tabRendered.home) return; // render once
+
+  var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+
+  // Get recent analyses from localStorage
+  var recentHtml = '';
+  try {
+    var history = JSON.parse(localStorage.getItem('mc_history') || '[]');
+    var recent = history.slice(0, 3);
+    if (recent.length > 0) {
+      recentHtml = '<div class="home-recent"><div class="home-section-title">' + _t('최근 분석', 'Recent Analyses') + '</div><div class="home-recent-list">';
+      recent.forEach(function(item) {
+        var ingredients = item.ingredients || item.name || _t('분석 결과', 'Analysis');
+        var date = item.date ? new Date(item.date).toLocaleDateString() : '';
+        recentHtml += '<div class="home-recent-item" onclick="switchTab(\'analyze\')">' +
+          '<span class="recent-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🧪\'"></span>' +
+          '<div class="recent-info"><div class="recent-name">' + escapeHtml(ingredients) + '</div>' +
+          '<div class="recent-meta">' + date + '</div></div></div>';
+      });
+      recentHtml += '</div></div>';
+    }
+  } catch(e) {}
+
+  // Count ingredients
+  var ingCount = typeof DB !== 'undefined' ? Object.keys(DB).length : 939;
+  var catCount = typeof CATEGORIES !== 'undefined' ? Object.keys(CATEGORIES).length - 1 : 15;
+  var methodCount = typeof METHODS !== 'undefined' ? Object.keys(METHODS).length : 30;
+
+  container.innerHTML =
+    '<div class="home-hero">' +
+      '<h2>' + _t('Mealcule에 오신 것을 환영합니다', 'Welcome to Mealcule') + '</h2>' +
+      '<p>' + _t('분자 요리 과학으로 음식의 화학 반응, 영양소 변화, 건강 영향을 실시간 분석합니다', 'Analyze chemical reactions, nutrient changes, and health impacts of your cooking in real-time') + '</p>' +
+    '</div>' +
+
+    '<div class="home-actions">' +
+      '<div class="home-action-card" onclick="switchTab(\'analyze\')">' +
+        '<span class="action-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🧪\'"></span>' +
+        '<div class="action-title">' + _t('분석 시작', 'Start Analysis') + '</div>' +
+        '<div class="action-desc">' + _t('재료와 조리법을 선택하고 과학적 분석을 받으세요', 'Select ingredients & cooking method for scientific analysis') + '</div>' +
+      '</div>' +
+      '<div class="home-action-card" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)">' +
+        '<span class="action-icon"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📷\'"></span>' +
+        '<div class="action-title">' + _t('사진 스캔', 'Photo Scan') + '</div>' +
+        '<div class="action-desc">' + _t('음식 사진으로 재료를 자동 인식합니다', 'AI recognizes ingredients from your food photo') + '</div>' +
+      '</div>' +
+      '<div class="home-action-card" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openUrlImport===\'function\')openUrlImport()},300)">' +
+        '<span class="action-icon"><img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🔗\'"></span>' +
+        '<div class="action-title">' + _t('레시피 가져오기', 'Import Recipe') + '</div>' +
+        '<div class="action-desc">' + _t('URL을 붙여넣어 레시피를 분석하세요', 'Paste a recipe URL to analyze it') + '</div>' +
+      '</div>' +
+    '</div>' +
+
+    recentHtml +
+
+    '<div class="home-discover"><div class="home-section-title">' + _t('기능 둘러보기', 'Explore Features') + '</div>' +
+      '<div class="home-discover-grid">' +
+        '<div class="home-discover-card" onclick="switchTab(\'plan\')">' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📅\'"></div>' +
+          '<div class="discover-title">' + _t('식단 플래너', 'Meal Planner') + '</div>' +
+          '<div class="discover-desc">' + _t('주간 식단을 계획하고 영양을 관리하세요', 'Plan weekly meals and manage nutrition') + '</div>' +
+        '</div>' +
+        '<div class="home-discover-card" onclick="switchTab(\'recipes\')">' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📖\'"></div>' +
+          '<div class="discover-title">' + _t('레시피', 'Recipes') + '</div>' +
+          '<div class="discover-desc">' + _t('레시피를 저장하고 커뮤니티와 공유하세요', 'Save recipes and share with the community') + '</div>' +
+        '</div>' +
+        '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)">' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></div>' +
+          '<div class="discover-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
+          '<div class="discover-desc">' + _t('일일 영양 섭취를 기록하고 추적하세요', 'Log and track daily nutrition intake') + '</div>' +
+        '</div>' +
+        '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'dashboard\')},200)">' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></div>' +
+          '<div class="discover-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
+          '<div class="discover-desc">' + _t('영양 트렌드와 건강 점수를 확인하세요', 'View nutrition trends and health score') + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="home-stats">' +
+      '<span class="home-stat"><strong>' + ingCount + '+</strong> ' + _t('식재료', 'ingredients') + '</span>' +
+      '<span class="home-stat"><strong>' + catCount + '</strong> ' + _t('카테고리', 'categories') + '</span>' +
+      '<span class="home-stat"><strong>' + methodCount + '+</strong> ' + _t('조리법', 'cooking methods') + '</span>' +
+    '</div>';
+
+  _tabRendered.home = true;
+}
+
+function renderPlanTab() {
+  var content = document.getElementById('planContent');
+  if (!content) return;
+  if (typeof openMealPlanner === 'function') {
+    openMealPlanner();
+  }
+}
+
+function renderRecipesTab() {
+  // Render My Recipes sub-tab by default
+  switchRecipeSub('mine');
+}
+
+function switchRecipeSub(sub) {
+  document.querySelectorAll('.sub-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.sub === sub);
+  });
+  var mineEl = document.getElementById('recipesMyContent');
+  var commEl = document.getElementById('recipesCommunityContent');
+  if (mineEl) mineEl.style.display = sub === 'mine' ? 'block' : 'none';
+  if (commEl) commEl.style.display = sub === 'community' ? 'block' : 'none';
+
+  if (sub === 'mine' && typeof toggleRecipeBox === 'function') {
+    var target = document.getElementById('recipesMyContent');
+    if (target && !target.innerHTML.trim()) toggleRecipeBox();
+  }
+  if (sub === 'community' && typeof openCommunityFeed === 'function') {
+    var target = document.getElementById('recipesCommunityContent');
+    if (target && !target.innerHTML.trim()) openCommunityFeed();
+  }
+}
+
+function renderProfileTab() {
+  var container = document.getElementById('profileHubContent');
+  if (!container || container.innerHTML.trim()) return;
+
+  var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+
+  container.innerHTML =
+    '<div class="profile-hub-header">' +
+      '<h2>' + _t('내 프로필', 'My Profile') + '</h2>' +
+      '<p>' + _t('건강 정보와 영양 관리를 한 곳에서', 'Health info and nutrition management in one place') + '</p>' +
+    '</div>' +
+    '<div class="profile-hub-grid">' +
+      '<div class="profile-hub-card" onclick="showProfileSection(\'health\')">' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🏥\'"></span>' +
+        '<div class="hub-title">' + _t('건강 프로필', 'Health Profile') + '</div>' +
+        '<div class="hub-desc">' + _t('체질, 질환, 알레르기 등 건강 정보 관리', 'Manage health conditions, allergies, and traits') + '</div>' +
+      '</div>' +
+      '<div class="profile-hub-card" onclick="showProfileSection(\'calories\')">' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></span>' +
+        '<div class="hub-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
+        '<div class="hub-desc">' + _t('일일 영양 섭취 기록 및 목표 관리', 'Track daily nutrition and manage goals') + '</div>' +
+      '</div>' +
+      '<div class="profile-hub-card" onclick="showProfileSection(\'dashboard\')">' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></span>' +
+        '<div class="hub-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
+        '<div class="hub-desc">' + _t('주간/월간 영양 트렌드 분석', 'Weekly/monthly nutrition trend analysis') + '</div>' +
+      '</div>' +
+      '<div class="profile-hub-card" onclick="showProfileSection(\'settings\')">' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'⚙️\'"></span>' +
+        '<div class="hub-title">' + _t('설정', 'Settings') + '</div>' +
+        '<div class="hub-desc">' + _t('언어, 모드, 계정 관리', 'Language, mode, and account settings') + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="profileSectionContent"></div>';
+}
+
+function showProfileSection(section) {
+  var container = document.getElementById('profileSectionContent');
+  if (!container) return;
+
+  // Highlight active hub card
+  document.querySelectorAll('.profile-hub-card').forEach(function(c, i) {
+    var sections = ['health', 'calories', 'dashboard', 'settings'];
+    c.classList.toggle('hub-active', sections[i] === section);
+  });
+
+  if (section === 'health') {
+    // Show the health profile form (move from analyze step 3 or render inline)
+    var profilePanel = document.getElementById('profilePanel');
+    if (profilePanel) {
+      container.innerHTML = '';
+      container.appendChild(profilePanel.cloneNode(true));
+      container.querySelector('#profilePanel').style.display = 'block';
+    }
+  } else if (section === 'calories') {
+    if (typeof openCalorieTracker === 'function') openCalorieTracker();
+  } else if (section === 'dashboard') {
+    if (typeof openHealthDashboard === 'function') openHealthDashboard();
+  } else if (section === 'settings') {
+    var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+    container.innerHTML =
+      '<div class="card" style="margin-top:16px">' +
+        '<div class="section-title">' + _t('설정', 'Settings') + '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
+            '<span style="font-size:13px;color:var(--text)">' + _t('언어', 'Language') + '</span>' +
+            '<button onclick="if(window.I18n)I18n.toggle()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px">' + (window.I18n && I18n.lang === 'en' ? '한국어로 전환' : 'Switch to English') + '</button>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
+            '<span style="font-size:13px;color:var(--text)">' + _t('분석 모드', 'Analysis Mode') + '</span>' +
+            '<button onclick="toggleProMode()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px">' + (typeof proMode !== 'undefined' && proMode ? 'Expert → Standard' : 'Standard → Expert') + '</button>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
+            '<span style="font-size:13px;color:var(--text)">' + _t('요금제', 'Plan') + '</span>' +
+            '<button onclick="openPricingModal()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-family:inherit;font-size:12px">' + (typeof userPlan !== 'undefined' ? userPlan.toUpperCase() : 'FREE') + ' — ' + _t('변경', 'Change') + '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+}
+
 // ══════════════════════════════════════════════════
 // LOGIN PAGE LOGIC (Supabase Auth 연동)
 // ══════════════════════════════════════════════════
@@ -2420,6 +2669,7 @@ function showLoginPage() {
 
 function hideLoginPage() {
   document.getElementById('loginPage').classList.add('hidden');
+  switchTab('home');
 }
 
 function showLoginError(msg) {
@@ -3387,44 +3637,10 @@ function switchProfileStep(step) {
 
 // ── Mobile Bottom Navigation ──────────────────────────────────────────────
 function mobileNavTo(section) {
-  // Update active state
-  document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.id === 'mnav-' + section);
-  });
-
-  const container = document.querySelector('.container');
-  if (!container) return;
-
-  // Scroll to the relevant section
-  const scrollMap = {
-    ingredients: '.grid2',
-    cooking: '.grid2',
-    profile: '.card[style*="margin-bottom:16px"]',
-    results: '#results',
-    history: '#historyPanel',
-  };
-
-  if (section === 'history') {
-    toggleHistory();
-  } else if (section === 'profile') {
-    const card = document.querySelector('#profileToggle')?.closest('.card');
-    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (!profileOpen) toggleProfile();
-  } else if (section === 'results') {
-    const results = document.getElementById('results');
-    if (results && results.style.display !== 'none') {
-      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      const emptyState = document.getElementById('emptyState');
-      if (emptyState) emptyState.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  } else if (section === 'ingredients') {
-    const grid = document.querySelector('.grid2');
-    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } else if (section === 'cooking') {
-    const cookingCard = document.querySelectorAll('.grid2 .card')[1];
-    if (cookingCard) cookingCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  var map = {ingredients:'analyze', cooking:'analyze', results:'analyze', profile:'profile', history:'analyze'};
+  switchTab(map[section] || section);
+  if (section === 'cooking') switchAnalyzeStep(2);
+  if (section === 'results') switchAnalyzeStep(4);
 }
 
 function _makeHealthRow(key, icon, label, desc, isActive, isCustom, extraClass, onToggle) {
@@ -5994,11 +6210,11 @@ async function runAnalysis() {
   // Tabs + Export
   html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
     <div class="tabs" style="flex:1;margin-bottom:0">
-      <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchTab('reactions')"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> 화학 반응</button>
-      <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchTab('nutrition')"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📊'"> 영양소 변화</button>
-      <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchTab('flavor')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽️'"> 맛 프로파일</button>
-      ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchTab('health')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> 건강 분석</button>` : ''}
-      <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchTab('recipes')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍴'"> 레시피 추천</button>
+      <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchResultTab('reactions')"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> 화학 반응</button>
+      <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchResultTab('nutrition')"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📊'"> 영양소 변화</button>
+      <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchResultTab('flavor')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽️'"> 맛 프로파일</button>
+      ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchResultTab('health')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> 건강 분석</button>` : ''}
+      <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchResultTab('recipes')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍴'"> 레시피 추천</button>
     </div>
     <button class="export-btn" onclick="exportReport()" title="${userPlan==='free'?'프로 플랜 필요':'보고서 다운로드'}"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📥'"> 보고서${userPlan==='free'?' <span class="pro-badge">PRO</span>':''}</button>
   </div>`;
@@ -6296,9 +6512,10 @@ async function runAnalysis() {
   } finally {
     setTimeout(function() { window._analysisRunning = false; }, 1000);
   }
+  switchAnalyzeStep(4);
 }
 
-function switchTab(tab) {
+function switchResultTab(tab) {
   currentTab = tab;
   ["reactions","nutrition","flavor","health","recipes"].forEach(t => {
     const el = document.getElementById("tab-" + t);
@@ -6723,12 +6940,12 @@ async function devGoHistory() {
 function devTab(tab) {
   const res = document.getElementById('results');
   if (!res || !res.innerHTML.trim() || res.style.display === 'none') {
-    devRunSample().then(() => setTimeout(() => { switchTab(tab); res.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200));
+    devRunSample().then(() => setTimeout(() => { switchResultTab(tab); res.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200));
   } else {
     devGoMain();
     res.style.display = 'block';
     document.getElementById('emptyState').style.display = 'none';
-    switchTab(tab);
+    switchResultTab(tab);
     setTimeout(() => res.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
   }
 }
