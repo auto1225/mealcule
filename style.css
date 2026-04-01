@@ -520,20 +520,28 @@ td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text)}
 @media(max-width:768px){
   .mobile-nav{
     display:flex;position:fixed;bottom:0;left:0;right:0;z-index:9000;
-    background:rgba(22,24,25,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom);
-    box-shadow:0 -4px 20px rgba(0,0,0,0.3)
+    background:rgba(18,20,21,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-top:1px solid rgba(255,255,255,0.06);padding:4px 0 env(safe-area-inset-bottom);
+    box-shadow:0 -2px 24px rgba(0,0,0,0.4)
   }
   .mobile-nav-btn{
     flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:3px;padding:6px 4px;border:none;background:transparent;cursor:pointer;
-    min-height:52px;color:var(--text-tertiary);transition:color .15s;font-family:inherit
+    gap:4px;padding:8px 4px 6px;border:none;background:transparent;cursor:pointer;
+    min-height:56px;color:rgba(255,255,255,0.35);transition:all .2s ease;font-family:inherit;
+    position:relative
   }
   .mobile-nav-btn.active{color:var(--accent)}
-  .mobile-nav-btn .mnav-icon{font-size:20px;line-height:1}
-  .mobile-nav-btn .mnav-label{font-size:10px;font-weight:500;line-height:1}
+  .mobile-nav-btn::before{
+    content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:0;height:2px;background:var(--accent);border-radius:0 0 2px 2px;transition:width .25s ease
+  }
+  .mobile-nav-btn.active::before{width:32px}
+  .mobile-nav-btn .mnav-svg{width:22px;height:22px;transition:transform .2s ease}
+  .mobile-nav-btn.active .mnav-svg{transform:scale(1.08)}
+  .mobile-nav-btn .mnav-label{font-size:11px;font-weight:600;line-height:1;letter-spacing:0.01em}
+  .mobile-nav-btn.active .mnav-label{font-weight:700}
   /* Push container content above the nav */
-  body{padding-bottom:calc(60px + env(safe-area-inset-bottom))}
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   #devNav{display:none}
 }
 
@@ -543,9 +551,9 @@ td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text)}
 
 /* ── Meal Planner Responsive ─────────────────────────────────────────────── */
 @media(max-width:768px){
-  .mobile-nav-btn .mnav-icon{font-size:18px}
-  .mobile-nav-btn .mnav-label{font-size:9px}
-  .mobile-nav-btn{gap:2px;padding:5px 2px}
+  .mobile-nav-btn .mnav-svg{width:20px;height:20px}
+  .mobile-nav-btn .mnav-label{font-size:10px}
+  .mobile-nav-btn{gap:3px;padding:6px 2px 5px}
 }
 
 /* ── Photo Scan Button (in search bar) ──────────────────────────────────── */
