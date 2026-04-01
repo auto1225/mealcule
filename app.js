@@ -1,21 +1,21 @@
 // ── 카테고리 정의 ──
 const CATEGORIES = {
-  all:{label:"전체",label_en:"All",emoji:"📋",img:"https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  meat:{label:"육류",label_en:"Meat",emoji:"🥩",img:"https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  seafood:{label:"해산물",label_en:"Seafood",emoji:"🐟",img:"https://images.pexels.com/photos/3296279/pexels-photo-3296279.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  veg:{label:"채소",label_en:"Vegetables",emoji:"🥬",img:"https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  fruit:{label:"과일",label_en:"Fruit",emoji:"🍎",img:"https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  grain:{label:"곡물·면",label_en:"Grains",emoji:"🌾",img:"https://images.pexels.com/photos/326082/pexels-photo-326082.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  dairy:{label:"유제품",label_en:"Dairy",emoji:"🧀",img:"https://images.pexels.com/photos/773253/pexels-photo-773253.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  egg:{label:"달걀",label_en:"Eggs",emoji:"🥚",img:"https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  nut:{label:"견과·씨앗",label_en:"Nuts & Seeds",emoji:"🥜",img:"https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  mushroom:{label:"버섯",label_en:"Mushroom",emoji:"🍄",img:"https://images.pexels.com/photos/1643403/pexels-photo-1643403.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  legume:{label:"콩류",label_en:"Legumes",emoji:"🫘",img:"https://images.pexels.com/photos/6316673/pexels-photo-6316673.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  herb:{label:"허브·향신료",label_en:"Herbs & Spices",emoji:"🌿",img:"https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  sauce:{label:"조미료·소스",label_en:"Sauces",emoji:"🫗",img:"https://images.pexels.com/photos/5908226/pexels-photo-5908226.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  oil:{label:"기름",label_en:"Oil",emoji:"🫒",img:"https://images.pexels.com/photos/1022385/pexels-photo-1022385.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  beverage:{label:"음료",label_en:"Beverages",emoji:"☕",img:"https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
-  processed:{label:"가공식품",label_en:"Processed",emoji:"🥫",img:"https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  all:{label:"전체",label_en:"All",emoji:"📋",img:"https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  meat:{label:"육류",label_en:"Meat",emoji:"🥩",img:"https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  seafood:{label:"해산물",label_en:"Seafood",emoji:"🐟",img:"https://images.pexels.com/photos/3296279/pexels-photo-3296279.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  veg:{label:"채소",label_en:"Vegetables",emoji:"🥬",img:"https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  fruit:{label:"과일",label_en:"Fruit",emoji:"🍎",img:"https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  grain:{label:"곡물·면",label_en:"Grains",emoji:"🌾",img:"https://images.pexels.com/photos/326082/pexels-photo-326082.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  dairy:{label:"유제품",label_en:"Dairy",emoji:"🧀",img:"https://images.pexels.com/photos/773253/pexels-photo-773253.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  egg:{label:"달걀",label_en:"Eggs",emoji:"🥚",img:"https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  nut:{label:"견과·씨앗",label_en:"Nuts & Seeds",emoji:"🥜",img:"https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  mushroom:{label:"버섯",label_en:"Mushroom",emoji:"🍄",img:"https://images.pexels.com/photos/1643403/pexels-photo-1643403.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  legume:{label:"콩류",label_en:"Legumes",emoji:"🫘",img:"https://images.pexels.com/photos/6316673/pexels-photo-6316673.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  herb:{label:"허브·향신료",label_en:"Herbs & Spices",emoji:"🌿",img:"https://images.pexels.com/photos/1391503/pexels-photo-1391503.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  sauce:{label:"조미료·소스",label_en:"Sauces",emoji:"🫗",img:"https://images.pexels.com/photos/5908226/pexels-photo-5908226.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  oil:{label:"기름",label_en:"Oil",emoji:"🫒",img:"https://images.pexels.com/photos/1022385/pexels-photo-1022385.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  beverage:{label:"음료",label_en:"Beverages",emoji:"☕",img:"https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
+  processed:{label:"가공식품",label_en:"Processed",emoji:"🥫",img:"https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop"},
 };
 
 // ── 식재료 DB (350+ 재료, 15개 카테고리) ──
@@ -2447,7 +2447,7 @@ function switchAnalyzeStep(step) {
     s.classList.toggle('completed', n < step);
   });
   // Update wizard nav button states
-  var analyzeBtn = document.querySelector('.wizard-analyze-btn');
+  var analyzeBtn = document.getElementById('analyzeBtn');
   if (analyzeBtn && step === 3) {
     analyzeBtn.disabled = !selCount || selCount() === 0;
   }
@@ -2605,7 +2605,7 @@ function renderProfileTab() {
         '<div class="hub-desc">' + _t('주간/월간 영양 트렌드 분석', 'Weekly/monthly nutrition trend analysis') + '</div>' +
       '</div>' +
       '<div class="profile-hub-card" onclick="showProfileSection(\'settings\')">' +
-        '<span class="hub-icon"><img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'⚙️\'"></span>' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'⚙️\'"></span>' +
         '<div class="hub-title">' + _t('설정', 'Settings') + '</div>' +
         '<div class="hub-desc">' + _t('언어, 모드, 계정 관리', 'Language, mode, and account settings') + '</div>' +
       '</div>' +
@@ -3489,7 +3489,7 @@ function renderConditions() {
   const _en = window.I18n && I18n.lang === 'en';
   tabBar.innerHTML = `
     <button class="cond-tab me${isMe?' active':''}" onclick="switchCondTab('me')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> ${_en ? 'My Conditions' : '본인 질환'}</button>
-    <button class="cond-tab fam${!isMe?' active':''}" onclick="switchCondTab('fam')"><img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👨‍👩‍👧‍👦'"> ${_en ? 'Family History' : '직계 가족 병력'}</button>`;
+    <button class="cond-tab fam${!isMe?' active':''}" onclick="switchCondTab('fam')"><img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👨‍👩‍👧‍👦'"> ${_en ? 'Family History' : '직계 가족 병력'}</button>`;
   container.appendChild(tabBar);
 
   // 현재 탭 기준 배열
@@ -3841,8 +3841,8 @@ function renderSubstances() {
   const allSubstances = {...SUBSTANCES, ...customSubstances};
   const _en = window.I18n && I18n.lang === 'en';
   const catLabels = _en
-    ? {alcohol:'<img src="https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍷\'"> Alcohol', smoking:'🚬 Smoking', medication:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Medication', supplement:'<img src="https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🌿\'"> Supplements', lifestyle:'<img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏃\'"> Lifestyle'}
-    : {alcohol:'<img src="https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍷\'"> 음주', smoking:'🚬 흡연', medication:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물', supplement:'<img src="https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🌿\'"> 영양제', lifestyle:'<img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏃\'"> 생활습관'};
+    ? {alcohol:'<img src="https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍷\'"> Alcohol', smoking:'🚬 Smoking', medication:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Medication', supplement:'<img src="https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🌿\'"> Supplements', lifestyle:'<img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏃\'"> Lifestyle'}
+    : {alcohol:'<img src="https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍷\'"> 음주', smoking:'🚬 흡연', medication:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물', supplement:'<img src="https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🌿\'"> 영양제', lifestyle:'<img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏃\'"> 생활습관'};
   const catOrder = ['alcohol','smoking','medication','supplement','lifestyle'];
   const wrap = document.createElement("div");
   wrap.className = "ing-table";
@@ -5083,14 +5083,14 @@ function renderCategoryTabs() {
   const allBtn = document.createElement("button");
   allBtn.className = "cat-tab" + (activeCategory === "all" ? " active" : "");
   const allCat = cats.all || CATEGORIES.all;
-  allBtn.innerHTML = `<span>${allCat.img ? '<img src="' + allCat.img + '" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'📋\'">' : '<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>📋</span>\'">'}</span><span>${window.tl ? tl(allCat) : '전체'}</span>`;
+  allBtn.innerHTML = `<span>${allCat.img ? '<img src="' + allCat.img + '" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'📋\'">' : '<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>📋</span>\'">'}</span><span>${window.tl ? tl(allCat) : '전체'}</span>`;
   allBtn.onclick = () => { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
   container.appendChild(allBtn);
   Object.entries(cats).forEach(([key, c]) => {
     if (key === 'all') return;
     const btn = document.createElement("button");
     btn.className = "cat-tab" + (activeCategory === key ? " active" : "");
-    btn.innerHTML = `<span>${c.img ? '<img src="' + c.img + '" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'' + c.emoji + '\'">' : c.emoji}</span><span>${tl(c)}</span>`;
+    btn.innerHTML = `<span>${c.img ? '<img src="' + c.img + '" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'' + c.emoji + '\'">' : c.emoji}</span><span>${tl(c)}</span>`;
     btn.onclick = () => { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
     container.appendChild(btn);
   });
@@ -5156,8 +5156,8 @@ let _healthModalPendingItem = null;
 
 const HEALTH_MODAL_CONFIG = {
   trait:     {title:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🧬\'"> 체질/식이 특이사항 추가', title_en:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🧬\'"> Add Constitution / Dietary Trait', placeholder:'예: 옥수수 알레르기, 저인산식, 프럭토스 불내증...', placeholder_en:'e.g., Corn allergy, Low phosphorus diet, Fructose intolerance...'},
-  family:    {title:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> 가족 병력 추가', title_en:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> Add Family History', placeholder:'예: 췌장암, 파킨슨병, 다발성경화증...', placeholder_en:'e.g., Pancreatic cancer, Parkinson\'s, Multiple sclerosis...'},
-  substance: {title:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물·영양제·생활습관 추가', title_en:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Add Medication / Supplement / Lifestyle', placeholder:'예: 클로피도그렐, NAC, 간헐적 단식...', placeholder_en:'e.g., Clopidogrel, NAC, Intermittent fasting...'},
+  family:    {title:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> 가족 병력 추가', title_en:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> Add Family History', placeholder:'예: 췌장암, 파킨슨병, 다발성경화증...', placeholder_en:'e.g., Pancreatic cancer, Parkinson\'s, Multiple sclerosis...'},
+  substance: {title:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물·영양제·생활습관 추가', title_en:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Add Medication / Supplement / Lifestyle', placeholder:'예: 클로피도그렐, NAC, 간헐적 단식...', placeholder_en:'e.g., Clopidogrel, NAC, Intermittent fasting...'},
   condition: {title:'<img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏥\'"> 질환/건강 상태 추가', title_en:'<img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏥\'"> Add Condition / Health Status', placeholder:'예: 크론병, 셀리악병, 루푸스, 갑상선 기능항진증...', placeholder_en:'e.g., Crohn\'s, Celiac, Lupus, Hyperthyroidism...'},
 };
 
