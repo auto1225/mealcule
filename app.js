@@ -5094,6 +5094,9 @@ function renderCategoryTabs() {
     btn.onclick = () => { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
     container.appendChild(btn);
   });
+  // Auto-scroll active tab into view
+  var activeTab = container.querySelector('.cat-tab.active');
+  if (activeTab) activeTab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 }
 
 // ── 커뮤니티 조리 방법 Supabase 로드 ────────────────────────────────────────
