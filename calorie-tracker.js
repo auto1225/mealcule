@@ -16,46 +16,46 @@ let _ctStyleInjected = false;
 // ── Quick Food Database (common foods for instant search) ──
 const _CT_QUICK_FOODS = [
   // Korean foods
-  { name_ko: '흰쌀밥 1공기', name_en: 'White Rice (1 bowl)', cal: 310, protein: 6, fat: 1, carbs: 68, icon: '🍚' },
-  { name_ko: '김치찌개 1인분', name_en: 'Kimchi Stew (1 serving)', cal: 200, protein: 12, fat: 8, carbs: 18, icon: '🍲' },
-  { name_ko: '된장찌개 1인분', name_en: 'Doenjang Stew (1 serving)', cal: 150, protein: 10, fat: 5, carbs: 15, icon: '🥘' },
-  { name_ko: '불고기 1인분', name_en: 'Bulgogi (1 serving)', cal: 320, protein: 28, fat: 15, carbs: 18, icon: '🥩' },
-  { name_ko: '비빔밥', name_en: 'Bibimbap', cal: 550, protein: 22, fat: 12, carbs: 85, icon: '🍛' },
-  { name_ko: '삼겹살 1인분', name_en: 'Pork Belly (1 serving)', cal: 450, protein: 18, fat: 38, carbs: 2, icon: '🥓' },
-  { name_ko: '떡볶이 1인분', name_en: 'Tteokbokki (1 serving)', cal: 380, protein: 8, fat: 6, carbs: 72, icon: '🌶️' },
-  { name_ko: '김밥 1줄', name_en: 'Gimbap (1 roll)', cal: 420, protein: 12, fat: 10, carbs: 72, icon: '🍙' },
-  { name_ko: '라면 1봉지', name_en: 'Instant Ramen (1 pack)', cal: 500, protein: 10, fat: 16, carbs: 78, icon: '🍜' },
-  { name_ko: '삼계탕', name_en: 'Samgyetang', cal: 480, protein: 35, fat: 18, carbs: 38, icon: '🐔' },
+  { name_ko: '흰쌀밥 1공기', name_en: 'White Rice (1 bowl)', cal: 310, protein: 6, fat: 1, carbs: 68, icon: '🍚', img: 'https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '김치찌개 1인분', name_en: 'Kimchi Stew (1 serving)', cal: 200, protein: 12, fat: 8, carbs: 18, icon: '🍲', img: 'https://images.pexels.com/photos/13774731/pexels-photo-13774731.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '된장찌개 1인분', name_en: 'Doenjang Stew (1 serving)', cal: 150, protein: 10, fat: 5, carbs: 15, icon: '🥘', img: 'https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '불고기 1인분', name_en: 'Bulgogi (1 serving)', cal: 320, protein: 28, fat: 15, carbs: 18, icon: '🥩', img: 'https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '비빔밥', name_en: 'Bibimbap', cal: 550, protein: 22, fat: 12, carbs: 85, icon: '🍛', img: 'https://images.pexels.com/photos/5409015/pexels-photo-5409015.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '삼겹살 1인분', name_en: 'Pork Belly (1 serving)', cal: 450, protein: 18, fat: 38, carbs: 2, icon: '🥓', img: 'https://images.pexels.com/photos/8753665/pexels-photo-8753665.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '떡볶이 1인분', name_en: 'Tteokbokki (1 serving)', cal: 380, protein: 8, fat: 6, carbs: 72, icon: '🌶️', img: 'https://images.pexels.com/photos/8471732/pexels-photo-8471732.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '김밥 1줄', name_en: 'Gimbap (1 roll)', cal: 420, protein: 12, fat: 10, carbs: 72, icon: '🍙', img: 'https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '라면 1봉지', name_en: 'Instant Ramen (1 pack)', cal: 500, protein: 10, fat: 16, carbs: 78, icon: '🍜', img: 'https://images.pexels.com/photos/12984979/pexels-photo-12984979.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '삼계탕', name_en: 'Samgyetang', cal: 480, protein: 35, fat: 18, carbs: 38, icon: '🐔', img: 'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
   // International foods
-  { name_ko: '시저 샐러드', name_en: 'Caesar Salad', cal: 350, protein: 15, fat: 22, carbs: 20, icon: '🥗' },
-  { name_ko: '치킨 브레스트 구이', name_en: 'Grilled Chicken Breast', cal: 280, protein: 42, fat: 8, carbs: 0, icon: '🍗' },
-  { name_ko: '연어 스테이크', name_en: 'Salmon Steak', cal: 360, protein: 34, fat: 22, carbs: 0, icon: '🐟' },
-  { name_ko: '아보카도 토스트', name_en: 'Avocado Toast', cal: 350, protein: 8, fat: 18, carbs: 38, icon: '🥑' },
-  { name_ko: '그릭 요거트', name_en: 'Greek Yogurt', cal: 130, protein: 15, fat: 4, carbs: 8, icon: '🥛' },
-  { name_ko: '바나나 1개', name_en: 'Banana', cal: 105, protein: 1, fat: 0, carbs: 27, icon: '🍌' },
-  { name_ko: '사과 1개', name_en: 'Apple', cal: 95, protein: 0, fat: 0, carbs: 25, icon: '🍎' },
-  { name_ko: '계란 2개', name_en: '2 Eggs', cal: 156, protein: 12, fat: 10, carbs: 1, icon: '🥚' },
-  { name_ko: '오트밀 1그릇', name_en: 'Oatmeal (1 bowl)', cal: 300, protein: 10, fat: 6, carbs: 54, icon: '🥣' },
-  { name_ko: '파스타 1인분', name_en: 'Pasta (1 serving)', cal: 550, protein: 18, fat: 12, carbs: 88, icon: '🍝' },
-  { name_ko: '스테이크 200g', name_en: 'Steak 200g', cal: 500, protein: 44, fat: 34, carbs: 0, icon: '🥩' },
-  { name_ko: '피자 2조각', name_en: 'Pizza (2 slices)', cal: 540, protein: 22, fat: 24, carbs: 56, icon: '🍕' },
-  { name_ko: '햄버거', name_en: 'Hamburger', cal: 580, protein: 28, fat: 30, carbs: 42, icon: '🍔' },
-  { name_ko: '프로틴 쉐이크', name_en: 'Protein Shake', cal: 200, protein: 30, fat: 3, carbs: 12, icon: '🥤' },
-  { name_ko: '아메리카노', name_en: 'Americano', cal: 5, protein: 0, fat: 0, carbs: 1, icon: '☕' },
-  { name_ko: '카페라떼', name_en: 'Cafe Latte', cal: 190, protein: 8, fat: 8, carbs: 18, icon: '☕' },
+  { name_ko: '시저 샐러드', name_en: 'Caesar Salad', cal: 350, protein: 15, fat: 22, carbs: 20, icon: '🥗', img: 'https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '치킨 브레스트 구이', name_en: 'Grilled Chicken Breast', cal: 280, protein: 42, fat: 8, carbs: 0, icon: '🍗', img: 'https://images.pexels.com/photos/361184/pexels-photo-361184.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '연어 스테이크', name_en: 'Salmon Steak', cal: 360, protein: 34, fat: 22, carbs: 0, icon: '🐟', img: 'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '아보카도 토스트', name_en: 'Avocado Toast', cal: 350, protein: 8, fat: 18, carbs: 38, icon: '🥑', img: 'https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '그릭 요거트', name_en: 'Greek Yogurt', cal: 130, protein: 15, fat: 4, carbs: 8, icon: '🥛', img: 'https://images.pexels.com/photos/1132558/pexels-photo-1132558.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '바나나 1개', name_en: 'Banana', cal: 105, protein: 1, fat: 0, carbs: 27, icon: '🍌', img: 'https://images.pexels.com/photos/1093038/pexels-photo-1093038.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '사과 1개', name_en: 'Apple', cal: 95, protein: 0, fat: 0, carbs: 25, icon: '🍎', img: 'https://images.pexels.com/photos/206959/pexels-photo-206959.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '계란 2개', name_en: '2 Eggs', cal: 156, protein: 12, fat: 10, carbs: 1, icon: '🥚', img: 'https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '오트밀 1그릇', name_en: 'Oatmeal (1 bowl)', cal: 300, protein: 10, fat: 6, carbs: 54, icon: '🥣', img: 'https://images.pexels.com/photos/543730/pexels-photo-543730.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '파스타 1인분', name_en: 'Pasta (1 serving)', cal: 550, protein: 18, fat: 12, carbs: 88, icon: '🍝', img: 'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '스테이크 200g', name_en: 'Steak 200g', cal: 500, protein: 44, fat: 34, carbs: 0, icon: '🥩', img: 'https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '피자 2조각', name_en: 'Pizza (2 slices)', cal: 540, protein: 22, fat: 24, carbs: 56, icon: '🍕', img: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '햄버거', name_en: 'Hamburger', cal: 580, protein: 28, fat: 30, carbs: 42, icon: '🍔', img: 'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '프로틴 쉐이크', name_en: 'Protein Shake', cal: 200, protein: 30, fat: 3, carbs: 12, icon: '🥤', img: 'https://images.pexels.com/photos/3625372/pexels-photo-3625372.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '아메리카노', name_en: 'Americano', cal: 5, protein: 0, fat: 0, carbs: 1, icon: '☕', img: 'https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '카페라떼', name_en: 'Cafe Latte', cal: 190, protein: 8, fat: 8, carbs: 18, icon: '☕', img: 'https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
   // Snacks
-  { name_ko: '견과류 한줌', name_en: 'Handful of Nuts', cal: 170, protein: 5, fat: 14, carbs: 8, icon: '🥜' },
-  { name_ko: '초콜릿 바', name_en: 'Chocolate Bar', cal: 250, protein: 3, fat: 14, carbs: 30, icon: '🍫' },
-  { name_ko: '고구마 1개', name_en: 'Sweet Potato', cal: 180, protein: 2, fat: 0, carbs: 42, icon: '🍠' },
-  { name_ko: '두부 반모', name_en: 'Tofu (half block)', cal: 120, protein: 14, fat: 6, carbs: 3, icon: '🧈' },
+  { name_ko: '견과류 한줌', name_en: 'Handful of Nuts', cal: 170, protein: 5, fat: 14, carbs: 8, icon: '🥜', img: 'https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '초콜릿 바', name_en: 'Chocolate Bar', cal: 250, protein: 3, fat: 14, carbs: 30, icon: '🍫', img: 'https://images.pexels.com/photos/65882/pexels-photo-65882.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '고구마 1개', name_en: 'Sweet Potato', cal: 180, protein: 2, fat: 0, carbs: 42, icon: '🍠', img: 'https://images.pexels.com/photos/5765658/pexels-photo-5765658.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { name_ko: '두부 반모', name_en: 'Tofu (half block)', cal: 120, protein: 14, fat: 6, carbs: 3, icon: '🧈', img: 'https://images.pexels.com/photos/4518843/pexels-photo-4518843.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
 ];
 
 // ── Demo Logged Meals for today ──
 const _CT_DEMO_MEALS = [
-  { id: 'demo-1', meal_type: 'breakfast', name: _t('그릭 요거트 & 그래놀라', 'Greek Yogurt & Granola'), cal: 320, protein: 18, fat: 10, carbs: 42, time: '08:15', icon: '🥣' },
-  { id: 'demo-2', meal_type: 'breakfast', name: _t('아메리카노', 'Americano'), cal: 5, protein: 0, fat: 0, carbs: 1, time: '08:20', icon: '☕' },
-  { id: 'demo-3', meal_type: 'lunch', name: _t('비빔밥', 'Bibimbap'), cal: 550, protein: 22, fat: 12, carbs: 85, time: '12:30', icon: '🍛' },
-  { id: 'demo-4', meal_type: 'snack', name: _t('바나나 1개', 'Banana'), cal: 105, protein: 1, fat: 0, carbs: 27, time: '15:00', icon: '🍌' },
+  { id: 'demo-1', meal_type: 'breakfast', name: _t('그릭 요거트 & 그래놀라', 'Greek Yogurt & Granola'), cal: 320, protein: 18, fat: 10, carbs: 42, time: '08:15', icon: '🥣', img: 'https://images.pexels.com/photos/1132558/pexels-photo-1132558.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { id: 'demo-2', meal_type: 'breakfast', name: _t('아메리카노', 'Americano'), cal: 5, protein: 0, fat: 0, carbs: 1, time: '08:20', icon: '☕', img: 'https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { id: 'demo-3', meal_type: 'lunch', name: _t('비빔밥', 'Bibimbap'), cal: 550, protein: 22, fat: 12, carbs: 85, time: '12:30', icon: '🍛', img: 'https://images.pexels.com/photos/5409015/pexels-photo-5409015.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
+  { id: 'demo-4', meal_type: 'snack', name: _t('바나나 1개', 'Banana'), cal: 105, protein: 1, fat: 0, carbs: 27, time: '15:00', icon: '🍌', img: 'https://images.pexels.com/photos/1093038/pexels-photo-1093038.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop' },
 ];
 
 // ═══════════════════════════════════════
@@ -231,7 +231,7 @@ function _renderCT() {
             </div>
             ${items.length > 0 ? items.map(item => `
               <div class="ct-meal-item" ${!item.id.startsWith('demo-') ? `onclick="_ctRemoveMeal('${item.id}')"` : ''}>
-                <span class="ct-meal-icon">${item.icon || '🍽️'}</span>
+                ${item.img ? '<img class="ct-meal-thumb" src="' + item.img + '" alt="" onerror="this.outerHTML=\'<span class=ct-meal-icon>' + (item.icon||'🍽️') + '</span>\'">' : '<span class="ct-meal-icon">' + (item.icon||'🍽️') + '</span>'}
                 <div class="ct-meal-info">
                   <div class="ct-meal-name">${item.name}</div>
                   <div class="ct-meal-meta">${item.time || ''} · P ${item.protein}g · F ${item.fat}g · C ${item.carbs}g</div>
@@ -368,7 +368,7 @@ function _ctSwitchMealTab(btn, type) {
 function _renderFoodList(foods, mealType) {
   return foods.map((f, i) => `
     <div class="ct-food-item" onclick="_ctAddFood(${i}, '${mealType}')">
-      <span class="ct-food-icon">${f.icon}</span>
+      ${f.img ? '<img class="ct-food-thumb" src="' + f.img + '" alt="" onerror="this.outerHTML=\'<span class=ct-food-icon>' + f.icon + '</span>\'">' : '<span class="ct-food-icon">' + f.icon + '</span>'}
       <div class="ct-food-info">
         <div class="ct-food-name">${_t(f.name_ko, f.name_en)}</div>
         <div class="ct-food-macros">P ${f.protein}g · F ${f.fat}g · C ${f.carbs}g</div>
@@ -416,6 +416,7 @@ function _ctAddFood(index, mealType) {
     carbs: food.carbs,
     time: now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'),
     icon: food.icon,
+    img: food.img || '',
   };
 
   // If currently showing demo, replace with real data
@@ -769,6 +770,13 @@ function _injectCTStyles() {
   }
   .ct-meal-item:hover { background:#fee2e2; }
   .ct-meal-icon { font-size:20px; }
+  .ct-meal-thumb, .ct-food-thumb {
+    width:36px; height:36px; border-radius:10px; object-fit:cover;
+    background:#f3f4f6; flex-shrink:0;
+  }
+  .ct-food-thumb {
+    width:40px; height:40px;
+  }
   .ct-meal-info { flex:1; min-width:0; }
   .ct-meal-name { font-size:13px; font-weight:600; color:#111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .ct-meal-meta { font-size:10px; color:#9ca3af; margin-top:1px; }
