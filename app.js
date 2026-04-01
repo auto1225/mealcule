@@ -1,21 +1,21 @@
 // ── 카테고리 정의 ──
 const CATEGORIES = {
   all:{label:"전체",label_en:"All",emoji:"📋"},
-  meat:{label:"육류",label_en:"Meat",emoji:"🥩"},
-  seafood:{label:"해산물",label_en:"Seafood",emoji:"🐟"},
-  veg:{label:"채소",label_en:"Vegetables",emoji:"🥬"},
-  fruit:{label:"과일",label_en:"Fruit",emoji:"🍎"},
-  grain:{label:"곡물·면",label_en:"Grains",emoji:"🌾"},
-  dairy:{label:"유제품",label_en:"Dairy",emoji:"🧀"},
-  egg:{label:"달걀",label_en:"Eggs",emoji:"🥚"},
-  nut:{label:"견과·씨앗",label_en:"Nuts & Seeds",emoji:"🥜"},
-  mushroom:{label:"버섯",label_en:"Mushroom",emoji:"🍄"},
-  legume:{label:"콩류",label_en:"Legumes",emoji:"🫘"},
-  herb:{label:"허브·향신료",label_en:"Herbs & Spices",emoji:"🌿"},
-  sauce:{label:"조미료·소스",label_en:"Sauces",emoji:"🫗"},
-  oil:{label:"기름",label_en:"Oil",emoji:"🫒"},
-  beverage:{label:"음료",label_en:"Beverages",emoji:"☕"},
-  processed:{label:"가공식품",label_en:"Processed",emoji:"🥫"},
+  meat:{label:"육류",label_en:"Meat",emoji:"🥩",img:"https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  seafood:{label:"해산물",label_en:"Seafood",emoji:"🐟",img:"https://images.pexels.com/photos/3296279/pexels-photo-3296279.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  veg:{label:"채소",label_en:"Vegetables",emoji:"🥬",img:"https://images.pexels.com/photos/1400999/pexels-photo-1400999.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  fruit:{label:"과일",label_en:"Fruit",emoji:"🍎",img:"https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  grain:{label:"곡물·면",label_en:"Grains",emoji:"🌾",img:"https://images.pexels.com/photos/326082/pexels-photo-326082.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  dairy:{label:"유제품",label_en:"Dairy",emoji:"🧀",img:"https://images.pexels.com/photos/773253/pexels-photo-773253.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  egg:{label:"달걀",label_en:"Eggs",emoji:"🥚",img:"https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  nut:{label:"견과·씨앗",label_en:"Nuts & Seeds",emoji:"🥜",img:"https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  mushroom:{label:"버섯",label_en:"Mushroom",emoji:"🍄",img:"https://images.pexels.com/photos/36438/pexels-photo-36438.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  legume:{label:"콩류",label_en:"Legumes",emoji:"🫘",img:"https://images.pexels.com/photos/1537169/pexels-photo-1537169.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  herb:{label:"허브·향신료",label_en:"Herbs & Spices",emoji:"🌿",img:"https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  sauce:{label:"조미료·소스",label_en:"Sauces",emoji:"🫗",img:"https://images.pexels.com/photos/5908226/pexels-photo-5908226.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  oil:{label:"기름",label_en:"Oil",emoji:"🫒",img:"https://images.pexels.com/photos/1022385/pexels-photo-1022385.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  beverage:{label:"음료",label_en:"Beverages",emoji:"☕",img:"https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
+  processed:{label:"가공식품",label_en:"Processed",emoji:"🥫",img:"https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
 };
 
 // ── 식재료 DB (350+ 재료, 15개 카테고리) ──
@@ -1245,27 +1245,27 @@ const CHILD_SET = new Set(Object.values(PARENT_GROUPS).flat());
 // ─────────────────────────────────────────────────────────────────────────────
 //                         medium    p_atm  o2   leach  fat    brown  h2o    pah    unif
 const METHODS = {
-  pan_fry:  {label:"팬 프라이",  label_en:"Pan Fry",      emoji:"🍳",range:[150,220], medium:'dry',    pressure_atm:1.0, o2_level:0.7, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
-  boil:     {label:"끓이기",    label_en:"Boil",          emoji:"🍲",range:[95,100],  medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.9, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  steam:    {label:"찜",       label_en:"Steam",          emoji:"♨️",range:[95,100],  medium:'steam',  pressure_atm:1.0, o2_level:0.2, leach_factor:0.2, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  grill:    {label:"그릴",     label_en:"Grill",          emoji:"🔥",range:[200,300],  medium:'dry',    pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
-  oven:     {label:"오븐",     label_en:"Oven",           emoji:"🫕",range:[150,250],  medium:'dry',    pressure_atm:1.0, o2_level:0.8, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
-  deep_fry: {label:"튀김",     label_en:"Deep Fry",       emoji:"🍤",range:[160,190],  medium:'oil',    pressure_atm:1.0, o2_level:0.4, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'high'  },
-  stir_fry: {label:"볶음",     label_en:"Stir Fry",       emoji:"🥘",range:[180,250],  medium:'dry',    pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
-  air_fry:  {label:"에어프라이어",label_en:"Air Fryer",    emoji:"🌀",range:[160,210], medium:'dry',   pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
-  microwave:{label:"전자레인지",label_en:"Microwave",      emoji:"📡",range:[60,100],   medium:'mw',     pressure_atm:1.0, o2_level:0.5, leach_factor:0.3, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'low'   },
-  pressure: {label:"압력솥",   label_en:"Pressure Cook",  emoji:"🫙",range:[110,130],  medium:'water',  pressure_atm:1.3, o2_level:0.0, leach_factor:0.7, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  slow_cook:{label:"슬로우쿠킹",label_en:"Slow Cook",     emoji:"⏲️",range:[70,95],   medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.8, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  sous_vide:{label:"수비드",   label_en:"Sous Vide",      emoji:"🎯",range:[50,90],    medium:'water',  pressure_atm:1.0, o2_level:0.0, leach_factor:0.1, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  smoke:    {label:"훈제",     label_en:"Smoke",          emoji:"🪵",range:[90,135],   medium:'smoke',  pressure_atm:1.0, o2_level:0.6, leach_factor:0.0, fat_contact:false, browning:false, starch_h2o:false, pah_risk:true,  uniformity:'low'   },
-  charcoal: {label:"숯불구이", label_en:"Charcoal Grill", emoji:"🔥",range:[300,500],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
-  wok:      {label:"웍 볶음",  label_en:"Wok",            emoji:"🥢",range:[200,300],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'low'   },
-  blanch:   {label:"데치기",   label_en:"Blanch",         emoji:"💧",range:[90,100],   medium:'water',  pressure_atm:1.0, o2_level:0.2, leach_factor:0.6, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  braise:   {label:"브레이징", label_en:"Braise",         emoji:"🍖",range:[80,100],   medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.6, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  poach:    {label:"포칭",     label_en:"Poach",          emoji:"🫗",range:[70,85],    medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.5, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
-  tandoor:  {label:"탄두르",   label_en:"Tandoor",        emoji:"🏺",range:[250,480],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
-  ferment:  {label:"발효",     label_en:"Ferment",        emoji:"🧫",range:[4,40],     medium:'none',   pressure_atm:1.0, o2_level:0.3, leach_factor:0.1, fat_contact:false, browning:false, starch_h2o:false, pah_risk:false, uniformity:'medium'},
-  raw:      {label:"생식",     label_en:"Raw",            emoji:"🥗",range:[0,25],     medium:'none',   pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:false, starch_h2o:false, pah_risk:false, uniformity:'high'  },
+  pan_fry:  {label:"팬 프라이",  label_en:"Pan Fry",      emoji:"🍳",img:"https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[150,220], medium:'dry',    pressure_atm:1.0, o2_level:0.7, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  boil:     {label:"끓이기",    label_en:"Boil",          emoji:"🍲",img:"https://images.pexels.com/photos/6287525/pexels-photo-6287525.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[95,100],  medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.9, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  steam:    {label:"찜",       label_en:"Steam",          emoji:"♨️",img:"https://images.pexels.com/photos/6941010/pexels-photo-6941010.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[95,100],  medium:'steam',  pressure_atm:1.0, o2_level:0.2, leach_factor:0.2, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  grill:    {label:"그릴",     label_en:"Grill",          emoji:"🔥",img:"https://images.pexels.com/photos/1309060/pexels-photo-1309060.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[200,300],  medium:'dry',    pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  oven:     {label:"오븐",     label_en:"Oven",           emoji:"🫕",img:"https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[150,250],  medium:'dry',    pressure_atm:1.0, o2_level:0.8, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  deep_fry: {label:"튀김",     label_en:"Deep Fry",       emoji:"🍤",img:"https://images.pexels.com/photos/1893556/pexels-photo-1893556.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[160,190],  medium:'oil',    pressure_atm:1.0, o2_level:0.4, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'high'  },
+  stir_fry: {label:"볶음",     label_en:"Stir Fry",       emoji:"🥘",img:"https://images.pexels.com/photos/2664443/pexels-photo-2664443.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[180,250],  medium:'dry',    pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  air_fry:  {label:"에어프라이어",label_en:"Air Fryer",    emoji:"🌀",img:"https://images.pexels.com/photos/6896394/pexels-photo-6896394.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[160,210], medium:'dry',   pressure_atm:1.0, o2_level:0.9, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  microwave:{label:"전자레인지",label_en:"Microwave",      emoji:"📡",img:"https://images.pexels.com/photos/211761/pexels-photo-211761.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[60,100],   medium:'mw',     pressure_atm:1.0, o2_level:0.5, leach_factor:0.3, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'low'   },
+  pressure: {label:"압력솥",   label_en:"Pressure Cook",  emoji:"🫙",img:"https://images.pexels.com/photos/2544829/pexels-photo-2544829.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[110,130],  medium:'water',  pressure_atm:1.3, o2_level:0.0, leach_factor:0.7, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  slow_cook:{label:"슬로우쿠킹",label_en:"Slow Cook",     emoji:"⏲️",img:"https://images.pexels.com/photos/2544829/pexels-photo-2544829.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[70,95],   medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.8, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  sous_vide:{label:"수비드",   label_en:"Sous Vide",      emoji:"🎯",img:"https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[50,90],    medium:'water',  pressure_atm:1.0, o2_level:0.0, leach_factor:0.1, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  smoke:    {label:"훈제",     label_en:"Smoke",          emoji:"🪵",img:"https://images.pexels.com/photos/1482803/pexels-photo-1482803.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[90,135],   medium:'smoke',  pressure_atm:1.0, o2_level:0.6, leach_factor:0.0, fat_contact:false, browning:false, starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  charcoal: {label:"숯불구이", label_en:"Charcoal Grill", emoji:"🔥",img:"https://images.pexels.com/photos/1105325/pexels-photo-1105325.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[300,500],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  wok:      {label:"웍 볶음",  label_en:"Wok",            emoji:"🥢",img:"https://images.pexels.com/photos/2664443/pexels-photo-2664443.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[200,300],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:true,  browning:true,  starch_h2o:false, pah_risk:false, uniformity:'low'   },
+  blanch:   {label:"데치기",   label_en:"Blanch",         emoji:"💧",img:"https://images.pexels.com/photos/6287525/pexels-photo-6287525.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[90,100],   medium:'water',  pressure_atm:1.0, o2_level:0.2, leach_factor:0.6, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  braise:   {label:"브레이징", label_en:"Braise",         emoji:"🍖",img:"https://images.pexels.com/photos/2641886/pexels-photo-2641886.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[80,100],   medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.6, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  poach:    {label:"포칭",     label_en:"Poach",          emoji:"🫗",img:"https://images.pexels.com/photos/3535383/pexels-photo-3535383.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[70,85],    medium:'water',  pressure_atm:1.0, o2_level:0.1, leach_factor:0.5, fat_contact:false, browning:false, starch_h2o:true,  pah_risk:false, uniformity:'high'  },
+  tandoor:  {label:"탄두르",   label_en:"Tandoor",        emoji:"🏺",img:"https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[250,480],  medium:'dry',    pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:true,  starch_h2o:false, pah_risk:true,  uniformity:'low'   },
+  ferment:  {label:"발효",     label_en:"Ferment",        emoji:"🧫",img:"https://images.pexels.com/photos/1132558/pexels-photo-1132558.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[4,40],     medium:'none',   pressure_atm:1.0, o2_level:0.3, leach_factor:0.1, fat_contact:false, browning:false, starch_h2o:false, pah_risk:false, uniformity:'medium'},
+  raw:      {label:"생식",     label_en:"Raw",            emoji:"🥗",img:"https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop",range:[0,25],     medium:'none',   pressure_atm:1.0, o2_level:1.0, leach_factor:0.0, fat_contact:false, browning:false, starch_h2o:false, pah_risk:false, uniformity:'high'  },
 };
 
 // ── 질환별 식이 규칙 DB ──
@@ -4847,14 +4847,15 @@ function renderCategoryTabs() {
   const cats = dbCategories || CATEGORIES;
   const allBtn = document.createElement("button");
   allBtn.className = "cat-tab" + (activeCategory === "all" ? " active" : "");
-  allBtn.innerHTML = `<span>🍽️</span><span>${window.tl ? tl(cats.all || CATEGORIES.all) : '전체'}</span>`;
+  const allCat = cats.all || CATEGORIES.all;
+  allBtn.innerHTML = `<span>${allCat.img ? '<img src="' + allCat.img + '" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'📋\'">' : '📋'}</span><span>${window.tl ? tl(allCat) : '전체'}</span>`;
   allBtn.onclick = () => { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
   container.appendChild(allBtn);
   Object.entries(cats).forEach(([key, c]) => {
     if (key === 'all') return;
     const btn = document.createElement("button");
     btn.className = "cat-tab" + (activeCategory === key ? " active" : "");
-    btn.innerHTML = `<span>${c.emoji}</span><span>${tl(c)}</span>`;
+    btn.innerHTML = `<span>${c.img ? '<img src="' + c.img + '" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'' + c.emoji + '\'">' : c.emoji}</span><span>${tl(c)}</span>`;
     btn.onclick = () => { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
     container.appendChild(btn);
   });
@@ -5114,7 +5115,10 @@ function renderMethods() {
   Object.entries(METHODS).forEach(([key, m]) => {
     const btn = document.createElement("button");
     btn.className = "method-btn" + (method === key ? " active" : "");
-    btn.innerHTML = `<div class="emoji">${m.emoji}</div><div>${tl(m)}</div>`;
+    const iconHtml = m.img
+      ? `<img src="${m.img}" class="method-img" alt="${tl(m)}" onerror="this.outerHTML='<span class=\\'emoji\\'>${m.emoji}</span>'">`
+      : `<span class="emoji">${m.emoji}</span>`;
+    btn.innerHTML = `<div class="method-icon">${iconHtml}</div><div>${tl(m)}</div>`;
     btn.onclick = () => {
       method = key;
       document.getElementById("tempSlider").value = Math.round((m.range[0] + m.range[1]) / 2);
@@ -6569,11 +6573,16 @@ async function renderHistory() {
     const date = new Date(h.created_at).toLocaleString('ko-KR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
     const ings = Object.keys(h.ingredients || {}).slice(0, 3).join(', ');
     const more = Object.keys(h.ingredients || {}).length > 3 ? ` 외 ${Object.keys(h.ingredients).length - 3}개` : '';
-    const methodEmoji = Object.fromEntries(Object.entries(METHODS).map(([k,v])=>[k,v.emoji]))[h.method] || '🍳';
+    const methodData = METHODS[h.method];
+    const methodEmoji = methodData?.emoji || '🍳';
+    const methodImg = methodData?.img;
+    const methodIcon = methodImg
+      ? `<img src="${methodImg}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='${methodEmoji} '">`
+      : (methodEmoji + ' ');
     return `<div class="history-item" style="padding:12px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .2s" onclick="replayAnalysis('${h.id}')" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
-          <div style="font-size:14px;font-weight:500">${methodEmoji} ${ings}${more}</div>
+          <div style="font-size:14px;font-weight:500">${methodIcon}${ings}${more}</div>
           <div style="font-size:12px;color:#737373;margin-top:2px">${h.temperature}°C · ${h.duration}분 · ${date}</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
