@@ -56,7 +56,7 @@ var _DEMO_MEALS = [
   // Friday (day 4) — 1880 kcal (no breakfast — skipped)
   { id:'demo_4l', day_of_week:4, meal_type:'lunch', custom_name:'지중해식 보울', custom_name_en:'Mediterranean Bowl', custom_emoji:'\uD83E\uDD59', custom_img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:510, protein:28, fat:24, carbs:46, fiber:7 },
   { id:'demo_4d', day_of_week:4, meal_type:'dinner', custom_name:'비프 타코', custom_name_en:'Beef Tacos', custom_emoji:'\uD83C\uDF2E', custom_img:'https://images.pexels.com/photos/4958641/pexels-photo-4958641.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:720, protein:42, fat:34, carbs:56, fiber:5 },
-  { id:'demo_4s', day_of_week:4, meal_type:'snack', custom_name:'후무스 + 야채스틱', custom_name_en:'Hummus + Veggie Sticks', custom_emoji:'\uD83E\uDD55', custom_img:'https://images.pexels.com/photos/1400999/pexels-photo-1400999.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:190, protein:8, fat:10, carbs:18, fiber:6 },
+  { id:'demo_4s', day_of_week:4, meal_type:'snack', custom_name:'후무스 + 야채스틱', custom_name_en:'Hummus + Veggie Sticks', custom_emoji:'\uD83E\uDD55', custom_img:'https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:190, protein:8, fat:10, carbs:18, fiber:6 },
 
   // Saturday (day 5) — 2180 kcal
   { id:'demo_5b', day_of_week:5, meal_type:'breakfast', custom_name:'풀 잉글리시 브렉퍼스트', custom_name_en:'Full English Breakfast', custom_emoji:'\uD83C\uDF73', custom_img:'https://images.pexels.com/photos/824635/pexels-photo-824635.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop', calories:550, protein:30, fat:34, carbs:32, fiber:4 },

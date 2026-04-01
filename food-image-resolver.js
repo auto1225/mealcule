@@ -8,7 +8,7 @@ var FoodImageResolver = (function() {
   'use strict';
 
   var CACHE_KEY = '_foodImgCache';
-  var CACHE_VERSION = 1;
+  var CACHE_VERSION = 2;
   var API_BASE = window.location.hostname === 'localhost' ? '' : '';
   var _cache = null;
   var _pendingRequests = {};
@@ -20,20 +20,20 @@ var FoodImageResolver = (function() {
     // ── Meat ──
     'beef':_px(65175),'pork':_px(618773),'chicken breast':_px(5769377),'chicken leg':_px(616354),
     'lamb':_px(3535383),'duck':_px(2338407),'bacon':_px(1927377),'sausage':_px(8360243),
-    'ham':_px(6607314),'chicken':_px(616354),'organ meat':_px(7495481),'processed meat':_px(8360243),
+    'ham':_px(6607314),'chicken':_px(616354),'organ meat':_px(6607314),'processed meat':_px(8360243),
     'goose':_px(1694003),'quail':_px(1694003),'pheasant':_px(1694003),'turkey':_px(5765068),
     'veal':_px(618775),'goat':_px(618773),'rabbit':_px(618775),'venison':_px(618775),
     'horse meat':_px(618773),'ostrich':_px(65175),'bison':_px(65175),'wild boar':_px(65175),
     'alligator':_px(65175),'beef sirloin':_px(5045090),'beef tenderloin':_px(5045090),
-    'ribeye':_px(5045090),'striploin':_px(5045090),'beef short ribs':_px(7495481),
-    'brisket':_px(7495481),'beef round':_px(5045090),'flat iron steak':_px(5045090),
+    'ribeye':_px(5045090),'striploin':_px(5045090),'beef short ribs':_px(6607314),
+    'brisket':_px(6607314),'beef round':_px(5045090),'flat iron steak':_px(5045090),
     'pork belly':_px(618773),'pork shoulder':_px(618773),'pork loin':_px(618773),
     'pork ribs':_px(618773),'ground pork':_px(618773),'chicken thigh':_px(616354),
     'chicken wing':_px(60616),'whole chicken':_px(616354),'ground chicken':_px(616354),
     'lamb chop':_px(3535383),'lamb shank':_px(3535383),'ground lamb':_px(3535383),
     'duck breast':_px(2338407),'duck leg':_px(2338407),
     // ── Seafood ──
-    'salmon':_px(1409050),'tuna':_px(3296279),'shrimp':_px(37346),'mackerel':_px(3296279),
+    'salmon':_px(1409050),'tuna':_px(3296279),'shrimp':_px(2871757),'mackerel':_px(3296279),
     'squid':_px(3296279),'clam':_px(2871757),'crab':_px(2871757),'octopus':_px(2871757),
     'pacific saury':_px(3296279),'cod':_px(3296279),'halibut':_px(3296279),
     'anchovy':_px(3296279),'abalone':_px(2871757),'scallop':_px(2871757),
@@ -44,7 +44,7 @@ var FoodImageResolver = (function() {
     'herring':_px(3296279),'swordfish':_px(3296279),'tilapia':_px(3296279),
     // ── Vegetables ──
     'onion':_px(144206),'garlic':_px(1392585),'potato':_px(4110476),'tomato':_px(3938343),
-    'chili pepper':_px(9185580),'broccoli':_px(47347),'carrot':_px(143133),
+    'chili pepper':_px(9185580),'broccoli':_px(7330428),'carrot':_px(143133),
     'spinach':_px(2325843),'napa cabbage':_px(2518893),'bell pepper':_px(594137),
     'cabbage':_px(2518893),'cucumber':_px(3568039),'squash':_px(1300972),
     'eggplant':_px(321551),'celery':_px(143133),'asparagus':_px(539431),
@@ -88,16 +88,16 @@ var FoodImageResolver = (function() {
     'pecan':_px(1295572),'hazelnut':_px(1295572),'chia seed':_px(1295572),
     'flax seed':_px(1295572),'hemp seed':_px(1295572),'pumpkin seed':_px(1295572),
     // ── Mushroom ──
-    'shiitake':_px(36438),'button mushroom':_px(36438),'enoki':_px(36438),
-    'king oyster mushroom':_px(36438),'wood ear':_px(36438),'oyster mushroom':_px(36438),
-    'portobello':_px(36438),'truffle':_px(36438),'chanterelle':_px(36438),
-    'maitake':_px(36438),'morel':_px(36438),'lion\'s mane':_px(36438),
+    'shiitake':_px(1643403),'button mushroom':_px(1643403),'enoki':_px(1643403),
+    'king oyster mushroom':_px(1643403),'wood ear':_px(1643403),'oyster mushroom':_px(1643403),
+    'portobello':_px(1643403),'truffle':_px(1643403),'chanterelle':_px(1643403),
+    'maitake':_px(1643403),'morel':_px(1643403),'lion\'s mane':_px(1643403),
     // ── Legumes ──
-    'black bean':_px(1537169),'lentil':_px(1537169),'chickpea':_px(1537169),
-    'red bean':_px(1537169),'white kidney bean':_px(1537169),'pinto bean':_px(1537169),
-    'green lentil':_px(1537169),'red lentil':_px(1537169),'mung bean':_px(1537169),
-    'lima bean':_px(1537169),'tempeh':_px(1537169),'tofu':_px(1537169),
-    'green peas':_px(1537169),'edamame':_px(1537169),'soybean':_px(1537169),
+    'black bean':_px(6316673),'lentil':_px(6316673),'chickpea':_px(6316673),
+    'red bean':_px(6316673),'white kidney bean':_px(6316673),'pinto bean':_px(6316673),
+    'green lentil':_px(6316673),'red lentil':_px(6316673),'mung bean':_px(6316673),
+    'lima bean':_px(6316673),'tempeh':_px(6316673),'tofu':_px(6316673),
+    'green peas':_px(6316673),'edamame':_px(6316673),'soybean':_px(6316673),
     // ── Herbs & Spices ──
     'basil':_px(1340116),'rosemary':_px(1340116),'thyme':_px(1340116),
     'mint':_px(1340116),'cilantro':_px(1340116),'parsley':_px(1340116),
@@ -124,7 +124,7 @@ var FoodImageResolver = (function() {
     'matcha':_px(312418),'kombucha':_px(312418),'soy milk':_px(248412),
     'almond milk':_px(248412),'oat milk':_px(248412),'orange juice':_px(207085),
     // ── Processed ──
-    'tofu':_px(1537169),'natto':_px(1537169),'miso':_px(5908226),
+    'tofu':_px(6316673),'natto':_px(6316673),'miso':_px(5908226),
     'kimchi':_px(2518893),'sauerkraut':_px(2518893),'pickle':_px(3568039),
   };
   var _queue = [];
@@ -133,9 +133,9 @@ var FoodImageResolver = (function() {
 
   // ── 카테고리별 fallback 이미지 (SEED에 없는 항목용) ────────────────────────
   var CAT_FALLBACK = {
-    meat:_px(65175), seafood:_px(3296279), veg:_px(1400999), fruit:_px(1132047),
+    meat:_px(65175), seafood:_px(3296279), veg:_px(2255935), fruit:_px(1132047),
     grain:_px(326082), dairy:_px(773253), egg:_px(824635), nut:_px(1295572),
-    mushroom:_px(36438), legume:_px(1537169), herb:_px(1340116), sauce:_px(5908226),
+    mushroom:_px(1643403), legume:_px(6316673), herb:_px(1340116), sauce:_px(5908226),
     oil:_px(1022385), beverage:_px(312418), processed:_px(1583884)
   };
 
