@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#059669">
+<meta name="theme-color" content="#0F1113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Mealcule — 분자 요리 과학 플랫폼</title>
 <meta name="description" content="Mealcule - 논문 기반 분자 요리 과학 플랫폼. 음식의 화학 반응, 영양소 변화, 건강 영향을 실시간 분석합니다.">
@@ -13,6 +13,9 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<!-- Accent Stripe -->
+<div class="accent-stripe"></div>
 
 <!-- ═══════════════════════════════════════ -->
 <!-- LOGIN PAGE                              -->
@@ -61,7 +64,7 @@
   </div>
 
   <!-- Right: Login Form -->
-  <div class="login-right">
+  <div class="login-right login-card">
     <div class="login-form-header">
       <h2 id="loginFormTitle" data-i18n="login.title">로그인</h2>
       <p id="loginFormDesc" data-i18n="login.subtitle">Mealcule 계정으로 시작하세요</p>
@@ -120,7 +123,7 @@
 <!-- Header -->
 <header class="header">
   <div style="display:flex;align-items:center;gap:14px">
-    <div class="logo" style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px)">
+    <div class="logo" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px)">
       <svg viewBox="0 0 38 38" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
         <line x1="19" y1="8" x2="12" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/>
         <line x1="19" y1="8" x2="26" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -161,15 +164,15 @@
 <!-- Auth Modal (replaced by login page) -->
 
 <!-- Pricing Modal -->
-<div class="modal-overlay" id="pricingModal">
+<div class="modal-overlay glass-overlay" id="pricingModal">
   <div class="modal-box" style="max-width:720px">
     <button class="modal-close" onclick="closePricingModal()">&times;</button>
     <h2 class="modal-title" style="text-align:center" data-i18n="pricing.title">요금제 선택</h2>
-    <p style="text-align:center;color:#737373;font-size:13px;margin-bottom:24px" data-i18n="pricing.subtitle">과학적 음식 분석의 새로운 기준</p>
+    <p style="text-align:center;color:var(--text-muted, #737373);font-size:13px;margin-bottom:24px" data-i18n="pricing.subtitle">과학적 음식 분석의 새로운 기준</p>
     <div class="pricing-grid">
       <div class="price-card">
         <div class="price-name" data-i18n="pricing.freeName">Free</div>
-        <p style="font-size:12px;color:#737373" data-i18n="pricing.freeDesc">Get started</p>
+        <p style="font-size:12px;color:var(--text-muted, #737373)" data-i18n="pricing.freeDesc">Get started</p>
         <div class="price-amount" data-i18n="pricing.freePrice">$0<span>/mo</span></div>
         <div class="price-features" data-i18n-html="pricing.freeFeatures">
           ✓ 5 analyses per day<br>
@@ -183,7 +186,7 @@
       </div>
       <div class="price-card popular">
         <div class="price-name" data-i18n="pricing.proName">Pro</div>
-        <p style="font-size:12px;color:#737373" data-i18n="pricing.proDesc">Professional analysis</p>
+        <p style="font-size:12px;color:var(--text-muted, #737373)" data-i18n="pricing.proDesc">Professional analysis</p>
         <div class="price-amount" data-i18n="pricing.proPrice">$7.99<span>/mo</span></div>
         <div class="price-features" data-i18n-html="pricing.proFeatures">
           ✓ Unlimited analyses<br>
@@ -197,7 +200,7 @@
       </div>
       <div class="price-card">
         <div class="price-name" data-i18n="pricing.entName">Enterprise</div>
-        <p style="font-size:12px;color:#737373" data-i18n="pricing.entDesc">For teams & research</p>
+        <p style="font-size:12px;color:var(--text-muted, #737373)" data-i18n="pricing.entDesc">For teams & research</p>
         <div class="price-amount" data-i18n="pricing.entPrice">$39.99<span>/mo</span></div>
         <div class="price-features" data-i18n-html="pricing.entFeatures">
           ✓ Everything in Pro<br>
@@ -214,12 +217,19 @@
 </div>
 
 <div class="container">
+  <!-- Loading Skeleton -->
+  <div id="appSkeleton" class="skeleton-container" style="display:none">
+    <div class="skeleton" style="height:40px;width:60%;margin-bottom:16px"></div>
+    <div class="skeleton" style="height:200px;margin-bottom:16px"></div>
+    <div class="skeleton" style="height:300px"></div>
+  </div>
+
   <!-- Methodology Banner -->
   <div class="methodology-banner" onclick="toggleMethodology()">
     <span style="font-size:20px"><img src="https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🔬</span>'"></span>
     <div>
       <strong data-i18n="methodology.bannerTitle">Research-based scientific analysis</strong> — <span data-i18n="methodology.bannerSub">USDA, WHO/FDA, peer-reviewed data</span>
-      <span style="margin-left:6px;color:#059669" data-i18n="methodology.bannerLink">Learn more ▸</span>
+      <span style="margin-left:6px;color:var(--accent, #059669)" data-i18n="methodology.bannerLink">Learn more ▸</span>
     </div>
   </div>
   <div class="methodology-content" id="methodologyContent">
@@ -239,10 +249,10 @@
   <div class="grid2">
     <!-- Ingredients -->
     <div class="card">
-      <div class="section-title"><img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=24&h=24&fit=crop" style="width:24px;height:24px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🥬</span>'"> <span data-i18n="ingredients.sectionTitle">재료 선택</span> <span id="dbStatus" style="font-size:11px;font-weight:400;color:#737373;margin-left:auto"></span></div>
+      <div class="section-title"><img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=24&h=24&fit=crop" style="width:24px;height:24px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🥬</span>'"> <span data-i18n="ingredients.sectionTitle">재료 선택</span> <span id="dbStatus" style="font-size:11px;font-weight:400;color:var(--text-muted, #737373);margin-left:auto"></span></div>
       <div class="search-wrap">
         <span class="search-icon"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"></span>
-        <input type="text" id="searchInput" data-i18n-placeholder="ingredients.searchPlaceholder" placeholder="재료 이름으로 검색..." oninput="onSearchInput()">
+        <input type="text" id="searchInput" data-i18n-placeholder="ingredients.searchPlaceholder" placeholder="재료 이름으로 검색..." oninput="onSearchInput()" autocomplete="off">
         <button class="photo-scan-btn" onclick="openPhotoScanner()" title="Scan ingredients from photo" data-i18n-title="ai.photoBtn"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📷'"></button>
       </div>
       <div class="cat-scroll-wrap">
@@ -263,7 +273,7 @@
     <!-- Cooking Conditions -->
     <div class="card">
       <div class="section-title"><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"> <span data-i18n="cooking.sectionTitle">조리 조건</span></div>
-      <p style="font-size:12px;color:#737373;margin-bottom:8px" data-i18n="cooking.methodLabel">조리 방법</p>
+      <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px" data-i18n="cooking.methodLabel">조리 방법</p>
       <div class="method-grid" id="methodGrid"></div>
 
       <div class="slider-row">
@@ -280,7 +290,7 @@
 
       <div class="slider-row">
         <label><img src="https://images.pexels.com/photos/2784135/pexels-photo-2784135.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>⏱️</span>'"> <span data-i18n="cooking.timeLabel">조리 시간</span></label>
-        <span id="timeVal" style="font-size:16px;font-weight:700;color:#171717">15분</span>
+        <span id="timeVal" style="font-size:16px;font-weight:700">15분</span>
       </div>
       <input type="range" id="timeSlider" min="1" max="120" value="15" oninput="updateTime()">
       <div class="range-labels">
@@ -325,7 +335,7 @@
 
       <!-- Step 1: 기본 정보 -->
       <div id="profileStep-basic" class="profile-step-panel">
-        <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="profile.basicInfo">기본 정보</span></p>
+        <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="profile.basicInfo">기본 정보</span></p>
         <div class="profile-grid">
           <div class="profile-field"><label data-i18n="profile.nameLabel">이름</label><input type="text" id="pName" value="" data-i18n-placeholder="profile.namePlaceholder" placeholder="이름" onchange="updateProfile()"></div>
           <div class="profile-field"><label data-i18n="profile.ageLabel">나이</label><input type="number" id="pAge" min="1" max="120" value="" data-i18n-placeholder="profile.agePlaceholder" placeholder="만 나이" onchange="updateProfile()"></div>
@@ -350,14 +360,14 @@
       <div id="profileStep-health" class="profile-step-panel" style="display:none">
         <!-- 체질/특이사항 -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:12px">
-          <p style="font-size:12px;color:#737373;margin:0"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧬'"> <span data-i18n="profile.traitsTitle">체질 및 식이 특이사항</span></p>
+          <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧬'"> <span data-i18n="profile.traitsTitle">체질 및 식이 특이사항</span></p>
           <button class="add-health-btn" onclick="openAddHealthModal('trait')" data-i18n="profile.traitsAddBtn">+ 직접 추가</button>
         </div>
         <div class="family-grid" id="traitGrid"></div>
 
         <!-- 질환 + 가족력 통합 탭 -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
-          <p style="font-size:12px;color:#737373;margin:0"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> <span data-i18n="profile.conditionsTitle">질환 · 가족력</span></p>
+          <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> <span data-i18n="profile.conditionsTitle">질환 · 가족력</span></p>
           <button class="add-health-btn" onclick="openAddHealthModal(_condTab==='me'?'condition':'family')" data-i18n="profile.conditionsAddBtn">+ 직접 추가</button>
         </div>
         <div class="condition-grid" id="condGrid"></div>
@@ -371,7 +381,7 @@
       <!-- Step 3: 상세 설정 -->
       <div id="profileStep-advanced" class="profile-step-panel" style="display:none">
         <!-- 인종/국적 -->
-        <p style="font-size:12px;color:#737373;margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🌍'"> 인종 · 국적</p>
+        <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🌍'"> 인종 · 국적</p>
         <div class="profile-grid">
           <div class="profile-field"><label data-i18n="profile.ethnicityLabel">인종/민족</label><select id="pEthnicity" onchange="updateProfile()">
             <option value="" data-i18n="profile.selectDefault">선택</option>
@@ -397,10 +407,10 @@
 
         <!-- 약물/생활습관 -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:16px">
-          <p style="font-size:12px;color:#737373;margin:0"><img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💊</span>'"> <span data-i18n="profile.substancesTitle">약물 · 영양제 · 생활습관</span></p>
+          <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💊</span>'"> <span data-i18n="profile.substancesTitle">약물 · 영양제 · 생활습관</span></p>
           <button class="add-health-btn" onclick="openAddHealthModal('substance')" data-i18n="profile.substancesAddBtn">+ 직접 추가</button>
         </div>
-        <p style="font-size:11px;color:#737373;margin-bottom:8px" data-i18n="profile.substancesDesc">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
+        <p style="font-size:11px;color:var(--text-muted, #737373);margin-bottom:8px" data-i18n="profile.substancesDesc">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
         <div class="family-grid" id="substanceGrid"></div>
 
         <div style="display:flex;justify-content:flex-start;margin-top:12px">
@@ -408,7 +418,7 @@
         </div>
       </div>
     </div>
-    <p id="condNote" style="font-size:11px;color:#737373;margin-top:8px;display:none" data-i18n="profile.condNote"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
+    <p id="condNote" style="font-size:11px;color:var(--text-muted, #737373);margin-top:8px;display:none" data-i18n="profile.condNote"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
   </div>
 
   <!-- ── Analyze Button (below all inputs) ── -->
@@ -416,7 +426,7 @@
     <button class="analyze-btn analyze-btn--main" id="analyzeBtn" disabled onclick="runAnalysis()" style="flex:1">
       <img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> <span data-i18n="cooking.analyzeBtn">Analyze Chemical Reactions →</span>
     </button>
-    <button class="analyze-btn" onclick="typeof sendToAppliance==='function'&&sendToAppliance(document.getElementById('tempSlider')?.value,document.getElementById('timeSlider')?.value,method)" style="padding:12px 16px;border-radius:12px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;font-size:16px" title="Send to smart appliance" data-i18n-title="smartIntegrations.sendToDevice"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏠'"></button>
+    <button class="analyze-btn" onclick="typeof sendToAppliance==='function'&&sendToAppliance(document.getElementById('tempSlider')?.value,document.getElementById('timeSlider')?.value,method)" style="padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);cursor:pointer;font-size:16px" title="Send to smart appliance" data-i18n-title="smartIntegrations.sendToDevice"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏠'"></button>
   </div>
 
   <!-- Results -->
@@ -425,34 +435,34 @@
   <!-- Empty State -->
   <div id="emptyState" class="empty-state">
     <div class="big-icon"><img src="https://images.pexels.com/photos/887827/pexels-photo-887827.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop" style="width:64px;height:64px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>👨‍🍳</span>'"></div>
-    <h3 style="color:#737373;font-weight:500;font-size:18px;margin-bottom:8px" data-i18n="emptyState.title">재료를 선택하고 조리 조건을 설정해보세요</h3>
-    <p style="color:#737373;font-size:14px" data-i18n="emptyState.desc">화학 반응 · 영양소 변화 · 맛 프로파일을 과학적으로 분석합니다</p>
+    <h3 style="color:var(--text-muted, #737373);font-weight:500;font-size:18px;margin-bottom:8px" data-i18n="emptyState.title">재료를 선택하고 조리 조건을 설정해보세요</h3>
+    <p style="color:var(--text-muted, #737373);font-size:14px" data-i18n="emptyState.desc">화학 반응 · 영양소 변화 · 맛 프로파일을 과학적으로 분석합니다</p>
   </div>
 
   <!-- Analysis History Panel -->
   <div id="historyPanel" style="display:none">
     <div class="card" style="margin-top:16px">
-      <div class="section-title"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="history.sectionTitle">분석 기록</span> <span id="historyCount" style="font-size:12px;color:#737373;font-weight:400"></span></div>
+      <div class="section-title"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="history.sectionTitle">분석 기록</span> <span id="historyCount" style="font-size:12px;color:var(--text-muted, #737373);font-weight:400"></span></div>
       <div id="historyList" style="max-height:400px;overflow-y:auto"></div>
-      <div id="historyEmpty" style="text-align:center;padding:24px;color:#737373;font-size:13px;display:none" data-i18n="history.empty">
+      <div id="historyEmpty" style="text-align:center;padding:24px;color:var(--text-muted, #737373);font-size:13px;display:none" data-i18n="history.empty">
         분석 기록이 없습니다. 분석을 실행하면 자동으로 저장됩니다.
       </div>
     </div>
   </div>
 
   <!-- Feedback Modal -->
-  <div id="feedbackModal" class="modal" style="display:none">
-    <div class="modal-content" style="max-width:400px;padding:24px;border-radius:16px;background:#fff">
+  <div id="feedbackModal" class="modal glass-overlay" style="display:none">
+    <div class="modal-content" style="max-width:400px;padding:24px;border-radius:16px">
       <h3 style="margin-bottom:12px;font-size:17px" data-i18n="feedback.title"><img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💬</span>'"> Send Feedback</h3>
-      <select id="feedbackType" style="width:100%;padding:10px;border:1px solid #e5e5e5;border-radius:8px;margin-bottom:10px;font-size:14px">
+      <select id="feedbackType" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;margin-bottom:10px;font-size:14px;background:transparent;color:inherit">
         <option value="general" data-i18n="feedback.general">General feedback</option>
         <option value="bug" data-i18n="feedback.bug">Bug report</option>
         <option value="feature" data-i18n="feedback.feature">Feature request</option>
         <option value="data_correction" data-i18n="feedback.dataFix">Data correction</option>
       </select>
-      <textarea id="feedbackMsg" data-i18n-placeholder="feedback.placeholder" placeholder="Share your feedback..." style="width:100%;height:120px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;resize:vertical;font-size:14px;font-family:inherit"></textarea>
+      <textarea id="feedbackMsg" data-i18n-placeholder="feedback.placeholder" placeholder="Share your feedback..." style="width:100%;height:120px;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;resize:vertical;font-size:14px;font-family:inherit;background:transparent;color:inherit"></textarea>
       <div style="display:flex;gap:8px;margin-top:12px">
-        <button onclick="closeFeedbackModal()" style="flex:1;padding:10px;border:1px solid #e5e5e5;border-radius:8px;background:#fff;cursor:pointer;font-size:14px" data-i18n="modal.cancel">Cancel</button>
+        <button onclick="closeFeedbackModal()" style="flex:1;padding:10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;background:rgba(255,255,255,0.05);cursor:pointer;font-size:14px;color:inherit" data-i18n="modal.cancel">Cancel</button>
         <button onclick="submitFeedback()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;cursor:pointer;font-size:14px;font-weight:600" data-i18n="feedback.send">Send</button>
       </div>
     </div>
@@ -484,7 +494,7 @@
   <a href="mailto:contact@mealcule.com" data-i18n="app.contact">Contact</a> ·
   <a href="#" data-i18n="app.terms">Terms of Service</a> ·
   <a href="#" data-i18n="app.privacy">Privacy Policy</a><br>
-  <span style="color:#a3a3a3" data-i18n="app.copyright">&copy; 2026 Mealcule. All rights reserved.</span>
+  <span style="color:var(--text-muted, #a3a3a3)" data-i18n="app.copyright">&copy; 2026 Mealcule. All rights reserved.</span>
 </footer>
 
 <!-- ══ MOBILE BOTTOM NAV ══ -->
@@ -512,7 +522,7 @@
 </nav>
 
 <!-- ══ MORE MENU OVERLAY ══ -->
-<div class="more-menu-overlay" id="moreMenuOverlay" style="display:none" onclick="if(event.target===this)closeMoreMenu()">
+<div class="more-menu-overlay glass-overlay" id="moreMenuOverlay" style="display:none" onclick="if(event.target===this)closeMoreMenu()">
   <div class="more-menu" id="moreMenu">
     <button onclick="mobileNavTo('profile');closeMoreMenu()"><span><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"></span> Profile</button>
     <button onclick="openCalorieTracker();closeMoreMenu()"><span><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"></span> Calorie Tracker</button>
@@ -544,11 +554,11 @@
 
 
 <!-- 조리 방법 추가 모달 -->
-<div class="method-modal-overlay" id="methodModalOverlay" onclick="if(event.target===this)closeMethodModal()">
+<div class="method-modal-overlay glass-overlay" id="methodModalOverlay" onclick="if(event.target===this)closeMethodModal()">
   <div class="method-modal">
     <h3 data-i18n="methodModal.title"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍳'"> Add Cooking Method</h3>
     <p data-i18n="methodModal.desc">Enter any cooking method from around the world.<br>AI will analyze its physicochemical factors and share with all users.</p>
-    <input type="text" id="methodModalInput" data-i18n-placeholder="methodModal.placeholder" placeholder="e.g. Infrared grill, Robata, Plancha..." maxlength="80"
+    <input type="text" id="methodModalInput" data-i18n-placeholder="methodModal.placeholder" placeholder="e.g. Infrared grill, Robata, Plancha..." maxlength="80" autocomplete="off"
       onkeydown="if(event.key==='Enter')confirmAddMethod()">
     <div id="methodModalStatus"></div>
     <div class="method-modal-actions">
@@ -559,7 +569,7 @@
 </div>
 
 <!-- YouTube In-App Player Modal -->
-<div class="yt-modal-overlay" id="ytModal" onclick="if(event.target===this)closeYtModal()">
+<div class="yt-modal-overlay glass-overlay" id="ytModal" onclick="if(event.target===this)closeYtModal()">
   <div class="yt-modal">
     <div class="yt-modal-top">
       <div class="yt-modal-title" id="ytModalTitle"></div>
@@ -571,11 +581,11 @@
 </div>
 
 <!-- 건강 항목 추가 모달 -->
-<div class="health-modal-overlay" id="healthModalOverlay" onclick="if(event.target===this)closeAddHealthModal()">
+<div class="health-modal-overlay glass-overlay" id="healthModalOverlay" onclick="if(event.target===this)closeAddHealthModal()">
   <div class="health-modal">
     <h3 id="healthModalTitle" data-i18n="healthModal.title"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🔬</span>'"> Add Health Item</h3>
     <p class="health-modal-sub" id="healthModalSub" data-i18n="healthModal.desc">AI will analyze medically and nutritionally, then add to your health profile</p>
-    <input type="text" id="healthModalInput" data-i18n-placeholder="healthModal.placeholder" placeholder="e.g. Crohn's disease, Lipitor, Vitamin K allergy..." maxlength="60"
+    <input type="text" id="healthModalInput" data-i18n-placeholder="healthModal.placeholder" placeholder="e.g. Crohn's disease, Lipitor, Vitamin K allergy..." maxlength="60" autocomplete="off"
       onkeydown="if(event.key==='Enter')analyzeHealthItem()">
     <div class="health-modal-status" id="healthModalStatus"></div>
     <div class="health-modal-result" id="healthModalResult">
@@ -603,11 +613,11 @@ function closeMoreMenu() {
 /* ── Confirm Action Utility ── */
 function confirmAction(message, onConfirm) {
   const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center';
-  overlay.innerHTML = '<div style="background:#fff;border-radius:16px;padding:24px;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center">' +
-    '<p style="font-size:14px;font-weight:600;color:#111;margin:0 0 16px">' + message + '</p>' +
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.innerHTML = '<div style="background:rgba(30,32,36,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center">' +
+    '<p style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.9);margin:0 0 16px">' + message + '</p>' +
     '<div style="display:flex;gap:8px">' +
-    '<button id="_cfmCancel" style="flex:1;padding:10px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>' +
+    '<button id="_cfmCancel" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);font-size:13px;font-weight:600;cursor:pointer">Cancel</button>' +
     '<button id="_cfmOk" style="flex:1;padding:10px;border-radius:10px;border:none;background:#ef4444;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Delete</button>' +
     '</div></div>';
   document.body.appendChild(overlay);
