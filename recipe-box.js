@@ -333,13 +333,24 @@ async function saveRecipe(recipeIndex) {
     updated_at: now,
   };
 
+  let saved;
   const result = await dbQuery('saved_recipes', 'insert', { data: row });
-  if (!result) {
-    showToast(_t('레시피 저장에 실패했습니다.', 'Failed to save recipe.'));
-    return null;
+  if (result) {
+    saved = Array.isArray(result) ? result[0] : result;
+  } else {
+    // Fallback: save to localStorage when DB is unavailable
+    row.id = 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    try {
+      const existing = JSON.parse(localStorage.getItem('mc_saved_recipes') || '[]');
+      existing.unshift(row);
+      localStorage.setItem('mc_saved_recipes', JSON.stringify(existing));
+      saved = row;
+    } catch (e) {
+      showToast(_t('레시피 저장에 실패했습니다.', 'Failed to save recipe.'));
+      return null;
+    }
   }
 
-  const saved = Array.isArray(result) ? result[0] : result;
   showToast(_t(`"${r.name}" 레시피가 저장되었습니다!`, `"${r.name_en || r.name}" saved to Recipe Box!`));
   document.dispatchEvent(new CustomEvent('recipe:saved', { detail: saved }));
   return saved;

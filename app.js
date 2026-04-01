@@ -3790,7 +3790,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    if (document.getElementById('ytModal')?.style.display !== 'none' && document.getElementById('ytModal')?.style.display) { document.getElementById('ytModal').style.display = 'none'; return; }
+    if (document.getElementById('ytModal')?.classList.contains('show')) { closeYtModal(); return; }
     if (document.getElementById('feedbackModal')?.style.display !== 'none' && document.getElementById('feedbackModal')?.style.display) { document.getElementById('feedbackModal').style.display = 'none'; return; }
     var methodOverlay = document.getElementById('methodModalOverlay');
     if (methodOverlay?.classList.contains('open')) { methodOverlay.classList.remove('open'); return; }
@@ -8365,7 +8365,7 @@ async function runAnalysis() {
       <button class="cuisine-chip" data-country="id" onclick="selectCuisine(this,'id')">🇮🇩 인도네시아</button>
       <button class="cuisine-chip" data-country="pe" onclick="selectCuisine(this,'pe')">🇵🇪 페루</button>
     </div>
-    <div id="recipeList"><div class="yt-loading"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍳'"> AI가 레시피를 추천하는 중...</div></div>
+    <div id="recipeList"><div class="yt-loading"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍳'"> ${_t('AI가 레시피를 추천하는 중...','AI is recommending recipes...')}</div></div>
   </div>`;
 
   html += "</div>";
@@ -8506,7 +8506,8 @@ function selectCuisine(btn, country) {
   if (prev !== country) {
     _cachedRecipes = null;
     _ytCache = {};
-    document.getElementById('recipeList').innerHTML = '<div class="yt-loading"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍳\'"> AI가 레시피를 추천하는 중...</div>';
+    const _en = window.I18n && I18n.lang === 'en';
+    document.getElementById('recipeList').innerHTML = '<div class="yt-loading"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍳\'"> ' + (_en ? 'AI is recommending recipes...' : 'AI가 레시피를 추천하는 중...') + '</div>';
     loadRecipes(country);
   }
 }
@@ -8559,14 +8560,14 @@ async function loadRecipes(country) {
 function renderRecipeList(recipes) {
   const el = document.getElementById('recipeList');
   if (!el) return;
+  const _en = window.I18n && I18n.lang === 'en';
   if (!recipes || recipes.length === 0) {
-    el.innerHTML = '<div class="yt-loading">추천 레시피가 없습니다.</div>';
+    el.innerHTML = '<div class="yt-loading">' + (_en ? 'No recommended recipes.' : '추천 레시피가 없습니다.') + '</div>';
     return;
   }
   // Recipe summary
   const cuisines = [...new Set(recipes.map(r => r.cuisine).filter(Boolean))];
   const difficulties = recipes.map(r => r.difficulty).filter(Boolean);
-  const _en = window.I18n && I18n.lang === 'en';
   let recipeSummary = `<div style="margin-bottom:16px;padding:14px 16px;border-radius:12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);font-size:13px;line-height:1.7;color:var(--text)">`;
   recipeSummary += `<strong>${_en ? 'Recipe Summary' : '레시피 추천 요약'}:</strong> `;
   recipeSummary += `${_en ? `${recipes.length} recipes recommended` : `총 <strong>${recipes.length}개</strong> 레시피 추천`}. `;
@@ -8639,7 +8640,8 @@ async function loadYt(idx, query, order, btn) {
 
   if (_ytCache[cacheKey]) { renderYtVideos(videosEl, _ytCache[cacheKey]); return; }
 
-  videosEl.innerHTML = '<div class="yt-loading"><img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🎬\'"> YouTube에서 영상을 검색하는 중...</div>';
+  const _en = window.I18n && I18n.lang === 'en';
+  videosEl.innerHTML = '<div class="yt-loading"><img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🎬\'"> ' + (_en ? 'Searching YouTube videos...' : 'YouTube에서 영상을 검색하는 중...') + '</div>';
 
   // Country lang params
   const activeCountry = document.querySelector('.cuisine-chip.active')?.dataset?.country || '';
@@ -8653,13 +8655,14 @@ async function loadYt(idx, query, order, btn) {
     _ytCache[cacheKey] = data.videos;
     renderYtVideos(videosEl, data.videos);
   } catch (e) {
-    videosEl.innerHTML = `<div class="yt-error">YouTube 검색 실패: ${e.message}</div>`;
+    videosEl.innerHTML = `<div class="yt-error">${_en ? 'YouTube search failed' : 'YouTube 검색 실패'}: ${e.message}</div>`;
   }
 }
 
 function renderYtVideos(container, videos) {
+  const _en = window.I18n && I18n.lang === 'en';
   if (!videos || videos.length === 0) {
-    container.innerHTML = '<div class="yt-loading">검색 결과가 없습니다.</div>';
+    container.innerHTML = '<div class="yt-loading">' + (_en ? 'No results found.' : '검색 결과가 없습니다.') + '</div>';
     return;
   }
   const playLg = `<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>`;
@@ -8715,27 +8718,49 @@ function getUserLang() {
 
 function openYtVideo(videoId, title) {
   const lang = getUserLang();
+  const _en = window.I18n && I18n.lang === 'en';
   const modal = document.getElementById('ytModal');
   if (!modal) return;
   document.getElementById('ytModalTitle').textContent = title;
-  document.getElementById('ytIframeWrap').innerHTML =
-    `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=1&hl=${lang}&cc_lang_pref=${lang}&rel=0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen></iframe>`;
+  // Set YouTube link for "Open on YouTube" button
+  const ytLink = document.getElementById('ytModalYtLink');
+  if (ytLink) ytLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+  // Show modal FIRST, then insert iframe after animation so video renders properly
+  const wrap = document.getElementById('ytIframeWrap');
+  wrap.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:13px">' + (_en ? 'Loading video...' : '영상 로딩 중...') + '</div>';
   modal.classList.add('show');
   document.body.style.overflow = 'hidden';
+  // Insert iframe after modal transition completes (350ms) so it has real dimensions
+  setTimeout(() => {
+    wrap.innerHTML =
+      `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=1&hl=${lang}&cc_lang_pref=${lang}&rel=0&playsinline=1&modestbranding=1&enablejsapi=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+        allowfullscreen playsinline
+        style="width:100%;height:100%;border:none;display:block;pointer-events:auto;position:relative;z-index:1"></iframe>`;
+  }, 380);
 }
 
 function closeYtModal() {
   const modal = document.getElementById('ytModal');
   if (!modal) return;
+  // Stop video immediately by clearing iframe src
+  const wrap = document.getElementById('ytIframeWrap');
+  const iframe = wrap?.querySelector('iframe');
+  if (iframe) iframe.src = '';
   modal.classList.remove('show');
   document.body.style.overflow = '';
-  setTimeout(() => { const w = document.getElementById('ytIframeWrap'); if (w) w.innerHTML = ''; }, 340);
+  setTimeout(() => { if (wrap) wrap.innerHTML = ''; }, 340);
 }
 
 function fmtNum(n) {
   if (!n) return '0';
+  const _en = window.I18n && I18n.lang === 'en';
+  if (_en) {
+    if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+    if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+    return String(n);
+  }
   if (n >= 1e8) return (n/1e8).toFixed(1) + '억';
   if (n >= 1e4) return (n/1e4).toFixed(1) + '만';
   if (n >= 1000) return (n/1000).toFixed(1) + 'K';
@@ -8744,9 +8769,17 @@ function fmtNum(n) {
 
 function fmtDate(iso) {
   if (!iso) return '';
+  const _en = window.I18n && I18n.lang === 'en';
   const d = new Date(iso);
   const diff = Date.now() - d;
   const days = Math.floor(diff / 86400000);
+  if (_en) {
+    if (days < 1)   return 'Today';
+    if (days < 7)   return `${days}d ago`;
+    if (days < 30)  return `${Math.floor(days/7)}w ago`;
+    if (days < 365) return `${Math.floor(days/30)}mo ago`;
+    return `${Math.floor(days/365)}y ago`;
+  }
   if (days < 1)   return '오늘';
   if (days < 7)   return `${days}일 전`;
   if (days < 30)  return `${Math.floor(days/7)}주 전`;
