@@ -2627,11 +2627,31 @@ function _buildFeatureShowcase(_t) {
       icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l3 7-6 11-6-11 3-7z"/></svg>',
       color: '#10b981',
       items: [
-        { label: _t('재료 선택 분석', 'Ingredient Analysis'), desc: _t('939+ 식재료 데이터베이스', '939+ ingredient database'), action: "switchTab('analyze')" },
-        { label: _t('사진 스캔', 'Photo Scan'), desc: _t('AI가 음식 사진에서 재료 인식', 'AI identifies ingredients from food photos'), action: "switchTab('analyze');setTimeout(function(){if(typeof openPhotoScanner==='function')openPhotoScanner()},300)" },
-        { label: _t('레시피 URL 가져오기', 'Import Recipe URL'), desc: _t('웹 레시피 자동 분석', 'Auto-analyze web recipes'), action: "switchTab('analyze');setTimeout(function(){if(typeof openUrlImport==='function')openUrlImport()},300)" },
-        { label: _t('화학 반응 분석', 'Chemical Reactions'), desc: _t('마이야르, 캐러멜화, 단백질 변성 등', 'Maillard, caramelization, denaturation...'), action: "switchTab('analyze')" },
-        { label: _t('건강 영향 분석', 'Health Impact'), desc: _t('질환별 맞춤 분석 · 약물-음식 상호작용', 'Condition-specific · drug-food interactions'), action: "switchTab('analyze')" },
+        { label: _t('재료 선택 분석', 'Ingredient Analysis'), desc: _t('939+ 식재료 데이터베이스', '939+ ingredient database'),
+          detail: _t(
+            '939개 이상의 식재료 데이터베이스에서 재료를 선택하면, 각 재료의 영양 성분, 화학적 특성, 다른 재료와의 상호작용을 과학적으로 분석합니다. 15개 카테고리(채소, 육류, 해산물, 유제품 등)에서 검색하거나 직접 입력할 수 있습니다.',
+            'Select from 939+ ingredients database to get scientific analysis of nutritional profiles, chemical properties, and interactions between ingredients. Browse 15 categories (vegetables, meat, seafood, dairy, etc.) or search directly.'
+          ), action: "switchTab('analyze')" },
+        { label: _t('사진 스캔', 'Photo Scan'), desc: _t('AI가 음식 사진에서 재료 인식', 'AI identifies ingredients from food photos'),
+          detail: _t(
+            '음식 사진을 촬영하거나 갤러리에서 선택하면, AI가 이미지에서 재료를 자동 인식합니다. 인식된 재료는 바로 분석 화면에 추가되어 영양 · 화학 분석을 시작할 수 있습니다. 여러 재료가 포함된 복잡한 요리도 인식 가능합니다.',
+            'Take a photo or pick from gallery — AI automatically identifies ingredients in the image. Recognized ingredients are added directly to the analysis screen for immediate nutritional and chemical analysis. Works with complex dishes containing multiple ingredients.'
+          ), action: "switchTab('analyze');setTimeout(function(){if(typeof openPhotoScanner==='function')openPhotoScanner()},300)" },
+        { label: _t('레시피 URL 가져오기', 'Import Recipe URL'), desc: _t('웹 레시피 자동 분석', 'Auto-analyze web recipes'),
+          detail: _t(
+            '온라인 레시피 URL을 붙여넣으면 재료와 조리법을 자동으로 추출하고 분석합니다. 만개의 레시피, Allrecipes, 쿠팡이츠 등 주요 레시피 사이트를 지원하며, 추출된 재료를 바로 분석하거나 레시피 보관함에 저장할 수 있습니다.',
+            'Paste any online recipe URL to auto-extract ingredients and cooking methods for analysis. Supports major recipe sites like Allrecipes, Food Network, and more. Extracted ingredients can be analyzed immediately or saved to your Recipe Box.'
+          ), action: "switchTab('analyze');setTimeout(function(){if(typeof openUrlImport==='function')openUrlImport()},300)" },
+        { label: _t('화학 반응 분석', 'Chemical Reactions'), desc: _t('마이야르, 캐러멜화, 단백질 변성 등', 'Maillard, caramelization, denaturation...'),
+          detail: _t(
+            '선택한 재료와 조리 조건에서 발생하는 화학 반응을 분석합니다. 마이야르 반응(갈변), 캐러멜화, 단백질 변성, 전분 겔화, 유화, 발효 등 30가지 이상의 반응을 온도 · 시간 · pH 조건별로 시뮬레이션합니다. 각 반응이 풍미, 질감, 영양에 미치는 영향을 시각적으로 보여줍니다.',
+            'Analyze chemical reactions occurring between your selected ingredients and cooking conditions. Simulate 30+ reactions including Maillard browning, caramelization, protein denaturation, starch gelatinization, emulsification, and fermentation by temperature, time, and pH. Visualize how each reaction affects flavor, texture, and nutrition.'
+          ), action: "switchTab('analyze')" },
+        { label: _t('건강 영향 분석', 'Health Impact'), desc: _t('질환별 맞춤 분석 · 약물-음식 상호작용', 'Condition-specific · drug-food interactions'),
+          detail: _t(
+            '건강 프로필(질환, 알레르기, 복용 중인 약물)을 설정하면, 분석 결과에 개인 맞춤 건강 영향을 포함합니다. 약물-음식 상호작용(예: 와파린-비타민K), 질환별 주의 재료(예: 당뇨-고GI 식품), 알레르기 경고를 자동으로 표시합니다.',
+            'Set up your health profile (conditions, allergies, medications) to get personalized health impact in every analysis. Automatically flags drug-food interactions (e.g., warfarin-vitamin K), condition-specific warnings (e.g., diabetes-high GI foods), and allergy alerts.'
+          ), action: "switchTab('analyze')" },
       ]
     },
     {
@@ -2639,9 +2659,21 @@ function _buildFeatureShowcase(_t) {
       icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1"/><circle cx="12" cy="15" r="1"/><circle cx="16" cy="15" r="1"/></svg>',
       color: '#8b5cf6',
       items: [
-        { label: _t('주간 식단 계획', 'Weekly Meal Plan'), desc: _t('7일 × 4끼 드래그&드롭 캘린더', '7 days × 4 meals drag & drop calendar'), action: "switchTab('plan')" },
-        { label: _t('일일 영양 요약', 'Daily Nutrition Summary'), desc: _t('날짜별 칼로리 · 매크로 합산', 'Per-day calorie & macro totals'), action: "switchTab('plan')" },
-        { label: _t('AI 식단 생성', 'AI Meal Generation'), desc: _t('목표에 맞는 식단 자동 생성', 'Auto-generate meals for your goals'), action: "switchTab('plan')" },
+        { label: _t('주간 식단 계획', 'Weekly Meal Plan'), desc: _t('7일 × 4끼 드래그&드롭 캘린더', '7 days × 4 meals drag & drop calendar'),
+          detail: _t(
+            '7일 × 4끼(아침, 점심, 저녁, 간식) 캘린더에 식단을 계획하세요. 레시피를 드래그&드롭으로 배치하고, 각 날짜의 총 칼로리와 매크로 영양소를 자동 계산합니다. 주간 장보기 목록도 자동 생성됩니다.',
+            'Plan meals on a 7-day × 4-meal (breakfast, lunch, dinner, snack) calendar. Drag & drop recipes to slots, auto-calculate daily calorie and macro totals. Weekly grocery list is generated automatically.'
+          ), action: "switchTab('plan')" },
+        { label: _t('일일 영양 요약', 'Daily Nutrition Summary'), desc: _t('날짜별 칼로리 · 매크로 합산', 'Per-day calorie & macro totals'),
+          detail: _t(
+            '플래너에 배치한 식단의 날짜별 영양 요약을 확인하세요. 칼로리, 단백질, 탄수화물, 지방의 일일 합산과 목표 대비 달성률을 시각적으로 보여줍니다. 영양 불균형이 있으면 자동으로 알려줍니다.',
+            'View per-day nutritional summaries for your planned meals. See daily totals for calories, protein, carbs, and fat with visual progress toward your goals. Automatically alerts you to nutritional imbalances.'
+          ), action: "switchTab('plan')" },
+        { label: _t('AI 식단 생성', 'AI Meal Generation'), desc: _t('목표에 맞는 식단 자동 생성', 'Auto-generate meals for your goals'),
+          detail: _t(
+            '칼로리 목표, 선호 요리 스타일, 건강 프로필을 기반으로 AI가 일주일 식단을 자동 생성합니다. 알레르기와 식이 제한을 고려하며, 생성된 식단은 자유롭게 수정할 수 있습니다.',
+            'AI generates a full weekly meal plan based on your calorie goals, preferred cuisine style, and health profile. Respects allergies and dietary restrictions. Generated plans are fully editable.'
+          ), action: "switchTab('plan')" },
       ]
     },
     {
@@ -2649,8 +2681,16 @@ function _buildFeatureShowcase(_t) {
       icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
       color: '#f59e0b',
       items: [
-        { label: _t('레시피 피드', 'Recipe Feed'), desc: _t('전 세계 사용자의 분자 요리 탐색 · 좋아요 · 댓글', 'Explore molecular recipes worldwide · like · comment'), action: "switchTab('recipes')" },
-        { label: _t('레시피 보관함', 'My Recipe Box'), desc: _t('분석 결과를 레시피로 저장 · 컬렉션 관리', 'Save analyses as recipes · manage collections'), action: "switchTab('recipes');setTimeout(function(){switchRecipeSub('mine')},200)" },
+        { label: _t('레시피 피드', 'Recipe Feed'), desc: _t('전 세계 사용자의 분자 요리 탐색 · 좋아요 · 댓글', 'Explore molecular recipes worldwide · like · comment'),
+          detail: _t(
+            '전 세계 Mealcule 사용자들이 공유한 분자 요리 레시피를 탐색하세요. 요리 종류별 필터링, 좋아요, 댓글, 레시피 저장이 가능합니다. 인기 레시피, 최신 레시피, 팔로잉 피드를 탭으로 전환할 수 있으며, 직접 레시피를 공유하여 커뮤니티에 참여하세요.',
+            'Explore molecular cooking recipes shared by Mealcule users worldwide. Filter by cuisine type, like, comment, and save recipes. Switch between Popular, Latest, and Following feeds. Share your own recipes to participate in the community.'
+          ), action: "switchTab('recipes')" },
+        { label: _t('레시피 보관함', 'My Recipe Box'), desc: _t('분석 결과를 레시피로 저장 · 컬렉션 관리', 'Save analyses as recipes · manage collections'),
+          detail: _t(
+            '분석한 재료 조합을 레시피로 저장하고 컬렉션별로 관리하세요. 커뮤니티에서 발견한 레시피도 보관할 수 있습니다. 각 레시피에는 재료, 영양 정보, 조리법, 화학 분석 결과가 모두 포함됩니다.',
+            'Save your analyzed ingredient combinations as recipes and organize them into collections. Bookmark community recipes too. Each recipe includes ingredients, nutritional info, cooking method, and chemical analysis results.'
+          ), action: "switchTab('recipes');setTimeout(function(){switchRecipeSub('mine')},200)" },
       ]
     },
     {
@@ -2658,18 +2698,38 @@ function _buildFeatureShowcase(_t) {
       icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>',
       color: '#ef4444',
       items: [
-        { label: _t('칼로리 트래커', 'Calorie Tracker'), desc: _t('일일 칼로리 · 매크로 · 수분 섭취 추적', 'Daily calories · macros · water intake tracking'), action: "switchTab('profile');setTimeout(function(){showProfileSection('calories')},200)" },
-        { label: _t('건강 대시보드', 'Health Dashboard'), desc: _t('주간/월간 영양 트렌드 · 건강 점수', 'Weekly/monthly nutrition trends · health score'), action: "switchTab('profile');setTimeout(function(){showProfileSection('dashboard')},200)" },
-        { label: _t('건강 프로필', 'Health Profile'), desc: _t('질환 · 알레르기 · 복용약 · 식단 설정', 'Conditions · allergies · medications · diet'), action: "switchTab('profile');setTimeout(function(){showProfileSection('health')},200)" },
-        { label: _t('빠른 식사 기록', 'Quick Food Log'), desc: _t('텍스트로 간편하게 식사 기록', 'Log meals quickly with text input'), action: "if(typeof openQuickTextLog==='function')openQuickTextLog()" },
+        { label: _t('칼로리 트래커', 'Calorie Tracker'), desc: _t('일일 칼로리 · 매크로 · 수분 섭취 추적', 'Daily calories · macros · water intake tracking'),
+          detail: _t(
+            '일일 칼로리, 탄수화물, 단백질, 지방 섭취량을 기록하고 추적합니다. 수분 섭취량도 관리할 수 있으며, 목표 대비 달성률을 시각적 차트로 확인하세요. 식사를 추가하면 자동으로 칼로리와 매크로가 계산됩니다.',
+            'Track daily calories, carbs, protein, and fat intake. Manage water consumption too. Visualize progress toward goals with charts. Adding meals automatically calculates calories and macros.'
+          ), action: "switchTab('profile');setTimeout(function(){showProfileSection('calories')},200)" },
+        { label: _t('건강 대시보드', 'Health Dashboard'), desc: _t('주간/월간 영양 트렌드 · 건강 점수', 'Weekly/monthly nutrition trends · health score'),
+          detail: _t(
+            '주간/월간 영양 섭취 트렌드를 차트로 확인하고, 종합 건강 점수를 받으세요. 칼로리 추이, 영양소 균형, 목표 달성률을 한눈에 파악할 수 있습니다. 개선이 필요한 영역에 대한 맞춤 권장 사항도 제공합니다.',
+            'View weekly and monthly nutrition trends with charts and receive an overall health score. Track calorie trends, nutrient balance, and goal achievement at a glance. Get personalized recommendations for areas needing improvement.'
+          ), action: "switchTab('profile');setTimeout(function(){showProfileSection('dashboard')},200)" },
+        { label: _t('건강 프로필', 'Health Profile'), desc: _t('질환 · 알레르기 · 복용약 · 식단 설정', 'Conditions · allergies · medications · diet'),
+          detail: _t(
+            '기저 질환(당뇨, 고혈압, 신장질환 등), 식품 알레르기, 복용 중인 약물, 식이 제한(채식, 글루텐프리 등)을 설정하세요. 이 정보는 모든 분석에 반영되어 개인 맞춤 건강 경고와 추천을 제공합니다.',
+            'Set up your conditions (diabetes, hypertension, kidney disease, etc.), food allergies, current medications, and dietary restrictions (vegetarian, gluten-free, etc.). This profile is applied to every analysis for personalized health warnings and recommendations.'
+          ), action: "switchTab('profile');setTimeout(function(){showProfileSection('health')},200)" },
+        { label: _t('빠른 식사 기록', 'Quick Food Log'), desc: _t('텍스트로 간편하게 식사 기록', 'Log meals quickly with text input'),
+          detail: _t(
+            '"김치찌개 1그릇, 밥 1공기" 같이 텍스트만 입력하면 AI가 자동으로 음식을 인식하고 칼로리를 계산합니다. 퍼지 매칭으로 약간의 오타나 약어도 인식하며, 기록된 식사는 칼로리 트래커에 자동 반영됩니다.',
+            'Just type "kimchi stew 1 bowl, rice 1 serving" — AI auto-recognizes food and calculates calories. Fuzzy matching handles typos and abbreviations. Logged meals are automatically reflected in Calorie Tracker.'
+          ), action: "if(typeof openQuickTextLog==='function')openQuickTextLog()" },
       ]
     }
   ];
 
+  // Store sections globally for popup access
+  window._featureShowcaseData = sections;
+
   var html = '<div class="home-features">' +
     '<div class="home-section-title">' + _t('주요 기능', 'Features') + '</div>';
 
-  sections.forEach(function(sec) {
+  var itemIdx = 0;
+  sections.forEach(function(sec, si) {
     html += '<div class="hf-section">' +
       '<div class="hf-section-header" style="--hf-color:' + sec.color + '">' +
         '<span class="hf-section-icon">' + sec.icon + '</span>' +
@@ -2677,10 +2737,11 @@ function _buildFeatureShowcase(_t) {
         '<span class="hf-section-count">' + sec.items.length + '</span>' +
       '</div>' +
       '<div class="hf-items">';
-    sec.items.forEach(function(item) {
-      html += '<button class="hf-item" onclick="' + item.action.replace(/'/g, "\\'") + '">' +
+    sec.items.forEach(function(item, ii) {
+      html += '<button class="hf-item" onclick="showFeatureDetail(' + si + ',' + ii + ')">' +
         '<div class="hf-item-label">' + item.label + '</div>' +
         '<div class="hf-item-desc">' + item.desc + '</div>' +
+        '<svg class="hf-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' +
       '</button>';
     });
     html += '</div></div>';
@@ -2688,6 +2749,47 @@ function _buildFeatureShowcase(_t) {
 
   html += '</div>';
   return html;
+}
+
+// ── Feature Detail Popup ──
+function showFeatureDetail(sectionIdx, itemIdx) {
+  var sections = window._featureShowcaseData;
+  if (!sections || !sections[sectionIdx] || !sections[sectionIdx].items[itemIdx]) return;
+  var sec = sections[sectionIdx];
+  var item = sec.items[itemIdx];
+  var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+
+  var existing = document.getElementById('featureDetailOverlay');
+  if (existing) existing.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = 'featureDetailOverlay';
+  overlay.className = 'fd-overlay';
+  overlay.innerHTML =
+    '<div class="fd-modal">' +
+      '<button class="fd-close" onclick="document.getElementById(\'featureDetailOverlay\').remove()" aria-label="Close">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>' +
+      '<div class="fd-icon-badge" style="background:' + sec.color + '20;color:' + sec.color + '">' +
+        sec.icon +
+      '</div>' +
+      '<div class="fd-category" style="color:' + sec.color + '">' + sec.title + '</div>' +
+      '<h3 class="fd-title">' + item.label + '</h3>' +
+      '<p class="fd-detail">' + (item.detail || item.desc) + '</p>' +
+      '<div class="fd-actions">' +
+        '<button class="fd-go-btn" style="background:' + sec.color + '" onclick="document.getElementById(\'featureDetailOverlay\').remove();' + item.action.replace(/'/g, "\\'") + '">' +
+          _t('바로 가기', 'Go to Feature') +
+          ' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+  requestAnimationFrame(function() { overlay.classList.add('open'); });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.remove();
+  });
 }
 
 /** 데이터 관리 UI 렌더링 */

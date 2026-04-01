@@ -721,11 +721,31 @@ select option{background:var(--bg-secondary);color:var(--text)}
 .hf-section-title{font-size:14px;font-weight:700;color:var(--text)}
 .hf-section-count{margin-left:auto;font-size:11px;color:var(--text-tertiary);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px}
 .hf-items{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;overflow:hidden}
-.hf-item{display:block;width:100%;text-align:left;padding:12px 14px;border:none;background:var(--card);color:var(--text);cursor:pointer;transition:background .15s;font-family:inherit}
+.hf-item{display:block;width:100%;text-align:left;padding:12px 14px;border:none;background:var(--card);color:var(--text);cursor:pointer;transition:background .15s;font-family:inherit;position:relative}
 .hf-item:hover{background:var(--card-hover)}
-.hf-item-label{font-size:13px;font-weight:600;margin-bottom:2px}
-.hf-item-desc{font-size:11px;color:var(--text-tertiary);line-height:1.4}
+.hf-item-label{font-size:13px;font-weight:600;margin-bottom:2px;padding-right:20px}
+.hf-item-desc{font-size:11px;color:var(--text-tertiary);line-height:1.4;padding-right:20px}
+.hf-item-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);opacity:.4;transition:opacity .15s,transform .15s}
+.hf-item:hover .hf-item-arrow{opacity:.8;transform:translateY(-50%) translateX(2px)}
 @media(min-width:600px){.hf-items{grid-template-columns:1fr 1fr}}
+
+/* ── Feature Detail Popup ── */
+.fd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .25s ease;backdrop-filter:blur(4px)}
+.fd-overlay.open{opacity:1}
+.fd-modal{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:420px;padding:32px 28px 24px;box-shadow:0 16px 48px rgba(0,0,0,.35);animation:fdSlideUp .3s ease}
+@keyframes fdSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fd-close{position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;color:var(--text-tertiary);padding:6px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.fd-close:hover{background:rgba(255,255,255,.08)}
+.fd-icon-badge{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;margin-bottom:12px}
+.fd-icon-badge svg{width:24px;height:24px}
+.fd-category{font-size:12px;font-weight:600;margin-bottom:4px;letter-spacing:.3px;text-transform:uppercase}
+.fd-title{font-size:20px;font-weight:700;color:var(--text);margin:0 0 12px;line-height:1.3}
+.fd-detail{font-size:14px;color:var(--text-secondary);line-height:1.7;margin:0 0 20px}
+.fd-actions{display:flex;gap:10px}
+.fd-go-btn{display:inline-flex;align-items:center;gap:6px;padding:12px 24px;border:none;border-radius:12px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;font-family:inherit}
+.fd-go-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.fd-go-btn svg{transition:transform .2s}
+.fd-go-btn:hover svg{transform:translateX(3px)}
 
 /* ── App Map Overlay ── */
 .appmap-overlay{position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
