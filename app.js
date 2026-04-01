@@ -1,6 +1,6 @@
 // ── 카테고리 정의 ──
 const CATEGORIES = {
-  all:{label:"전체",label_en:"All",emoji:"📋"},
+  all:{label:"전체",label_en:"All",emoji:"📋",img:"https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
   meat:{label:"육류",label_en:"Meat",emoji:"🥩",img:"https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
   seafood:{label:"해산물",label_en:"Seafood",emoji:"🐟",img:"https://images.pexels.com/photos/3296279/pexels-photo-3296279.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
   veg:{label:"채소",label_en:"Vegetables",emoji:"🥬",img:"https://images.pexels.com/photos/1400999/pexels-photo-1400999.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"},
@@ -2110,7 +2110,7 @@ const CONDITIONS = {
 const DISEASE_GROUPS = {
   cancer:   {label:"암 / 종양",     label_en:"Cancer / Tumors",          emoji:"🎗️", keys:['stomach_cancer','liver_cancer','colon_cancer','lung_cancer','breast_cancer','prostate_cancer','pancreatic_cancer','cervical_cancer','ovarian_cancer','thyroid_cancer','leukemia']},
   cardio:   {label:"심혈관",         label_en:"Cardiovascular",          emoji:"❤️",  keys:['hypertension','heart','hyperlipidemia','metabolic_syndrome','stroke']},
-  metabolic:{label:"대사 / 내분비", label_en:"Metabolic / Endocrine",   emoji:"🔬",  keys:['diabetes','obesity','pcos','thyroid_hypo','thyroid_hyper','gout']},
+  metabolic:{label:"대사 / 내분비", label_en:"Metabolic / Endocrine",   emoji:"🔬", img:"https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=24&h=24&fit=crop", keys:['diabetes','obesity','pcos','thyroid_hypo','thyroid_hyper','gout']},
   digestive:{label:"소화기",         label_en:"Digestive",               emoji:"🫃",  keys:['gerd','gastritis','ibs','crohns','celiac','gallstone','pancreatitis','fatty_liver']},
   renal:    {label:"신장 / 혈액",   label_en:"Renal / Blood",           emoji:"🫘",  keys:['kidney','liver','anemia']},
   musculo:  {label:"근골격 / 면역", label_en:"Musculoskeletal / Immune",emoji:"🦴",  keys:['osteoporosis','arthritis','sarcopenia','autoimmune','lupus','allergy_disease','asthma']},
@@ -3224,7 +3224,7 @@ function renderConditions() {
   const _en = window.I18n && I18n.lang === 'en';
   tabBar.innerHTML = `
     <button class="cond-tab me${isMe?' active':''}" onclick="switchCondTab('me')">🏥 ${_en ? 'My Conditions' : '본인 질환'}</button>
-    <button class="cond-tab fam${!isMe?' active':''}" onclick="switchCondTab('fam')">👨‍👩‍👧‍👦 ${_en ? 'Family History' : '직계 가족 병력'}</button>`;
+    <button class="cond-tab fam${!isMe?' active':''}" onclick="switchCondTab('fam')"><img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👨‍👩‍👧‍👦'"> ${_en ? 'Family History' : '직계 가족 병력'}</button>`;
   container.appendChild(tabBar);
 
   // 현재 탭 기준 배열
@@ -3248,7 +3248,7 @@ function renderConditions() {
     hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
     const badge = selCount > 0
       ? `<span class="cg-badge" style="background:${isMe?'#059669':'#3b82f6'}">${selCount}</span>` : '';
-    hdr.innerHTML = `<span class="cg-e">${group.emoji}</span><span>${tl(group)}</span>${badge}<span class="cg-arr">▶</span>`;
+    hdr.innerHTML = `<span class="cg-e">${group.img ? '<img src="'+group.img+'" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\''+group.emoji+'\'">': group.emoji}</span><span>${tl(group)}</span>${badge}<span class="cg-arr">▶</span>`;
     hdr.onclick = () => toggleCondParent(groupKey);
     wrap.appendChild(hdr);
 
@@ -3532,7 +3532,7 @@ function updateProfileSummary() {
   const actLabels = {sedentary:'비활동적',light:'가벼운 활동',moderate:'중간 활동',active:'활발',very_active:'매우 활발'};
   if (member.activity) chips.push(actLabels[member.activity]);
   member.traits.forEach(t => { const d = TRAITS[t]||customTraits[t]; if(d) chips.push(d.emoji+' '+d.label); });
-  member.familyHx.forEach(f => { const d = CONDITIONS[f]||customConditions[f]; if(d) chips.push('👨‍👩‍👧 '+d.label); });
+  member.familyHx.forEach(f => { const d = CONDITIONS[f]||customConditions[f]; if(d) chips.push('<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧\'"> '+d.label); });
   member.conditions.forEach(c => { const d = CONDITIONS[c]||customConditions[c]; if(d) chips.push(d.emoji+' '+d.label); });
   member.substances.forEach(s => { const d = SUBSTANCES[s]||customSubstances[s]; if(d) chips.push(d.emoji+' '+d.label); });
 
@@ -3610,8 +3610,8 @@ function renderSubstances() {
   const allSubstances = {...SUBSTANCES, ...customSubstances};
   const _en = window.I18n && I18n.lang === 'en';
   const catLabels = _en
-    ? {alcohol:'🍷 Alcohol', smoking:'🚬 Smoking', medication:'💊 Medication', supplement:'🌿 Supplements', lifestyle:'🏃 Lifestyle'}
-    : {alcohol:'🍷 음주', smoking:'🚬 흡연', medication:'💊 약물', supplement:'🌿 영양제', lifestyle:'🏃 생활습관'};
+    ? {alcohol:'<img src="https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍷\'"> Alcohol', smoking:'🚬 Smoking', medication:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Medication', supplement:'<img src="https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🌿\'"> Supplements', lifestyle:'<img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏃\'"> Lifestyle'}
+    : {alcohol:'<img src="https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍷\'"> 음주', smoking:'🚬 흡연', medication:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물', supplement:'<img src="https://images.pexels.com/photos/1340116/pexels-photo-1340116.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🌿\'"> 영양제', lifestyle:'<img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏃\'"> 생활습관'};
   const catOrder = ['alcohol','smoking','medication','supplement','lifestyle'];
   const wrap = document.createElement("div");
   wrap.className = "ing-table";
@@ -3738,7 +3738,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     // 가족력 보정 — 통합 DB: familyHx와 conditions가 같은 key 사용
     if (member.familyHx.includes(condKey)) {
       const famLabel = (CONDITIONS[condKey]||customConditions[condKey])?.label || condKey;
-      findings.push({severity:'caution', title:`👨‍👩‍👧 가족력: ${famLabel}`,
+      findings.push({severity:'caution', title:`<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👨‍👩‍👧'"> 가족력: ${famLabel}`,
         detail:`직계 가족에 ${famLabel} 병력이 있어 유전적 소인이 있을 수 있습니다. 같은 식이라도 발병 위험이 일반인 대비 2-3배 높을 수 있습니다.`,
         tip:'정기 검진과 함께 예방적 식이 관리를 더 엄격하게 적용하는 것이 좋습니다.'});
     }
@@ -4925,8 +4925,8 @@ let _healthModalPendingItem = null;
 
 const HEALTH_MODAL_CONFIG = {
   trait:     {title:'🧬 체질/식이 특이사항 추가', title_en:'🧬 Add Constitution / Dietary Trait', placeholder:'예: 옥수수 알레르기, 저인산식, 프럭토스 불내증...', placeholder_en:'e.g., Corn allergy, Low phosphorus diet, Fructose intolerance...'},
-  family:    {title:'👨‍👩‍👧‍👦 가족 병력 추가', title_en:'👨‍👩‍👧‍👦 Add Family History', placeholder:'예: 췌장암, 파킨슨병, 다발성경화증...', placeholder_en:'e.g., Pancreatic cancer, Parkinson\'s, Multiple sclerosis...'},
-  substance: {title:'💊 약물·영양제·생활습관 추가', title_en:'💊 Add Medication / Supplement / Lifestyle', placeholder:'예: 클로피도그렐, NAC, 간헐적 단식...', placeholder_en:'e.g., Clopidogrel, NAC, Intermittent fasting...'},
+  family:    {title:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> 가족 병력 추가', title_en:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> Add Family History', placeholder:'예: 췌장암, 파킨슨병, 다발성경화증...', placeholder_en:'e.g., Pancreatic cancer, Parkinson\'s, Multiple sclerosis...'},
+  substance: {title:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물·영양제·생활습관 추가', title_en:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Add Medication / Supplement / Lifestyle', placeholder:'예: 클로피도그렐, NAC, 간헐적 단식...', placeholder_en:'e.g., Clopidogrel, NAC, Intermittent fasting...'},
   condition: {title:'🏥 질환/건강 상태 추가', title_en:'🏥 Add Condition / Health Status', placeholder:'예: 크론병, 셀리악병, 루푸스, 갑상선 기능항진증...', placeholder_en:'e.g., Crohn\'s, Celiac, Lupus, Hyperthyroidism...'},
 };
 
@@ -5250,7 +5250,7 @@ async function addIngredientWithAI(name) {
     // 로컬 DB에 추가
     DB[ing.name] = {
       cat: ing.cat || 'processed',
-      emoji: ing.emoji || '🍽️',
+      emoji: ing.emoji || '🍴',
       defaultG: ing.default_g || 100,
       comp: { protein: ing.protein||0, fat: ing.fat||0, carbs: ing.carbs||0, water: ing.water||0, fiber: ing.fiber||0 },
       amino: Array.isArray(ing.amino_acids) ? ing.amino_acids : [],
@@ -5515,7 +5515,7 @@ function analyze(ingMap, method, temp, time) {
     const T = temp + 273.15;
     const k = 1e10 * Math.exp(-100000/(SCI.R*T));
     const halfLife = Math.round(Math.log(2)/k/60 * 10)/10;
-    rxns.push({name:"마이야르 반응 (Maillard Reaction)",key:"maillard",icon:"🔬",intensity:int,
+    rxns.push({name:"마이야르 반응 (Maillard Reaction)",key:"maillard",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'🔬\'">',intensity:int,
       desc:`글루탐산 ${totalGluEst.toFixed(2)}g + 탄수화물 ${totalCarbs.toFixed(1)}g이 ${temp}°C에서 반응 → 진행률 ${int}%`,
       effects:["갈색 색상 발현","고소한 풍미 생성","향기 화합물 다양화"],
       science:`k(T) = A·exp(-Ea/RT) | Ea=100 kJ/mol, A=10¹⁰ s⁻¹ | k(${temp}°C)=${k.toExponential(2)} s⁻¹`,
@@ -5531,7 +5531,7 @@ function analyze(ingMap, method, temp, time) {
     if (int > 2) {
       const T = temp + 273.15;
       const k = 5e11 * Math.exp(-128000/(SCI.R*T));
-      rxns.push({name:"캐러멜화 (Caramelization)",key:"caramelization",icon:"🍯",intensity:int,
+      rxns.push({name:"캐러멜화 (Caramelization)",key:"caramelization",icon:'<img src="https://images.pexels.com/photos/33260/honey-sweet-syrup-organic.jpg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'🍯\'">',intensity:int,
         desc:`당류가 ${temp}°C에서 열분해 → 반응 진행률 ${int}% (개시온도: 수크로스 160°C, 포도당 150°C, 과당 110°C)`,
         effects:["호박색 발현","캐러멜 향 생성","복합 풍미"],
         science:`k(T) = A·exp(-Ea/RT) | Ea=128 kJ/mol, A=5×10¹¹ s⁻¹ | k(${temp}°C)=${k.toExponential(2)} s⁻¹`,
@@ -5582,7 +5582,7 @@ function analyze(ingMap, method, temp, time) {
     const T = temp + 273.15;
     const k = 3e6 * Math.exp(-75000/(SCI.R*T));
     const t_half = Math.round(Math.log(2)/k/60 * 10)/10;
-    rxns.push({name:"비타민 C 열분해",key:"vitamin_c_loss",icon:"💊",intensity:loss,
+    rxns.push({name:"비타민 C 열분해",key:"vitamin_c_loss",icon:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'💊\'">',intensity:loss,
       desc:`아스코르브산 1차 반응 분해 → ${loss}% 손실 | 잔존율 ${Math.round(ret*100)}%`,
       effects:[`비타민 C ${loss}% 손실`,"항산화 능력 감소"],
       science:`k(T)=A·exp(-Ea/RT) | Ea=75kJ/mol, A=3×10⁶ s⁻¹ | t½=${t_half}분`,
@@ -5621,7 +5621,7 @@ function analyze(ingMap, method, temp, time) {
     const p = Math.round(ret*100);
     const initMg = totalAllicin > 0.05 ? totalAllicin.toFixed(2) : '추정치';
     const retMg  = totalAllicin > 0.05 ? (totalAllicin * ret).toFixed(3) : '—';
-    rxns.push({name:"알리신 열변환",key:"allicin",icon:"🧄",intensity:100-p,
+    rxns.push({name:"알리신 열변환",key:"allicin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Garlic','🧄','rxn-icon-img',20):'🧄'),intensity:100-p,
       desc:`초기 알리신 ${initMg}mg → ${retMg}mg 잔존 (${p}% 보존, ${100-p}% 분해·변환)`,
       effects:["매운향 감소","단맛 증가","항산화 화합물 변환"],
       science:`1차 반응: Ea=92kJ/mol (Lawson & Wang 2001) | 잔존율=${p}%`,
@@ -5634,7 +5634,7 @@ function analyze(ingMap, method, temp, time) {
     const logP = 3.04;
     const partCoeff = Math.pow(10, logP);
     const capMg = totalCapsaicin > 0.001 ? totalCapsaicin.toFixed(3) : '미량';
-    rxns.push({name:"캡사이신 지용성 추출",key:"capsaicin",icon:"🌶️",intensity:72,
+    rxns.push({name:"캡사이신 지용성 추출",key:"capsaicin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Chili Pepper','🌶️','rxn-icon-img',20):'🌶️'),intensity:72,
       desc:`캡사이신 ${capMg}mg, LogP=${logP} → 지방상 농축도 ${partCoeff.toExponential(1)}× 증가`,
       effects:["매운맛 강화","기름에 색소 추출","풍미 분산"],
       science:`Nernst 분배법칙: LogP=3.04, Kow≈${partCoeff.toExponential(1)} | 지방상 농축`,
@@ -5666,7 +5666,7 @@ function analyze(ingMap, method, temp, time) {
   // ── Lycopene Bioavailability Enhancement ──
   if (ings.includes("토마토") && (hasFat || temp >= 80)) {
     const bio = hasFat && temp>=80 ? 85 : hasFat ? 60 : 45;
-    rxns.push({name:"리코펜 생체이용률↑",key:"lycopene",icon:"🍅",intensity:bio,
+    rxns.push({name:"리코펜 생체이용률↑",key:"lycopene",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Tomato','🍅','rxn-icon-img',20):'🍅'),intensity:bio,
       desc:`열+지방 → trans-리코펜→cis변환 및 세포벽 파괴 → 생체이용률 최대 4.3배↑`,
       effects:["리코펜 추출↑","항산화 극대화","색상 강화"],
       science:"가열→세포벽 파괴→trans-to-cis 이성화 | Stahl & Sies (1992)",
@@ -5723,7 +5723,7 @@ function analyze(ingMap, method, temp, time) {
     const ret = SCI.anthocyaninRetention(temp, time);
     const loss = Math.min(99, Math.round((1-ret)*100));
     if (loss > 5) {
-      rxns.push({name:"안토시아닌 열분해",key:"anthocyanin",icon:"🫐",intensity:loss,
+      rxns.push({name:"안토시아닌 열분해",key:"anthocyanin",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Blueberry','🫐','rxn-icon-img',20):'🫐'),intensity:loss,
         desc:`안토시아닌 ${loss}% 분해 — 항산화 색소 손실 (잔존율 ${100-loss}%)`,
         effects:["적/보라 색상 퇴색","항산화 능력 감소","갈변화"],
         science:`1차 반응: Ea=75kJ/mol | Patras et al. (2010) Trends Food Sci Technol 21:3`,
@@ -5738,7 +5738,7 @@ function analyze(ingMap, method, temp, time) {
     const ret = SCI.chlorophyllRetention(temp, time);
     const loss = Math.min(99, Math.round((1-ret)*100));
     if (loss > 5) {
-      rxns.push({name:"클로로필 분해 → 페오피틴",key:"chlorophyll",icon:"🥬",intensity:loss,
+      rxns.push({name:"클로로필 분해 → 페오피틴",key:"chlorophyll",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Spinach','🥬','rxn-icon-img',20):'🥬'),intensity:loss,
         desc:`클로로필 ${loss}% 분해 → 페오피틴(올리브색) 전환 (Mg²⁺ 치환)`,
         effects:["선명 녹색 → 올리브/갈색","Mg²⁺ 이탈","시각 품질 감소"],
         science:`1차 반응: Ea=68kJ/mol | Schwartz & von Elbe (1983) J Food Sci 48:1303`,
@@ -5753,7 +5753,7 @@ function analyze(ingMap, method, temp, time) {
     const isom = SCI.betaCaroteneIsomer(temp, time);
     const int = Math.min(100, Math.round(isom * 100));
     if (int > 5) {
-      rxns.push({name:"베타카로틴 이성화 (생체이용률↑)",key:"beta_carotene",icon:"🥕",intensity:int,
+      rxns.push({name:"베타카로틴 이성화 (생체이용률↑)",key:"beta_carotene",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Carrot','🥕','rxn-icon-img',20):'🥕'),intensity:int,
         desc:`trans→cis 이성화 ${int}% 진행 + 지방 공존 → 생체이용률 최대 6.5배↑`,
         effects:["cis-이성체 생성","미셀 가용성 증가","지용성 흡수 극대화"],
         science:`Ea≈50kJ/mol | Chen & Huang (1998) J Food Sci 63:751`,
@@ -5769,7 +5769,7 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(hydro * 100));
     // 설포라판 수율: 60-70°C 최적 (마이로시네이즈 활성), >80°C에서 효소 불활성→저수율
     const sulfoYield = temp <= 70 ? Math.round(hydro * 80) : temp <= 100 ? Math.round(hydro * 30) : Math.round(hydro * 10);
-    rxns.push({name:"글루코시놀레이트 가수분해",key:"glucosinolate",icon:"🥦",intensity:int,
+    rxns.push({name:"글루코시놀레이트 가수분해",key:"glucosinolate",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Broccoli','🥦','rxn-icon-img',20):'🥦'),intensity:int,
       desc:`십자화과 글루코시놀레이트 ${int}% 가수분해 → 설포라판 수율 약 ${sulfoYield}%`,
       effects:["설포라판(SFN) 생성","이소티오시아네이트 방출","항암 효소 활성화"],
       science:`마이로시네이즈: 최적 30-40°C | 열분해: Ea=90kJ/mol | Verkerk (2009)`,
@@ -5783,7 +5783,7 @@ function analyze(ingMap, method, temp, time) {
     const ox = SCI.polyphenolOxidation(temp, time);
     const int = Math.min(100, Math.round(ox * 100));
     if (int > 5) {
-      rxns.push({name:"폴리페놀 효소적 갈변 (PPO)",key:"polyphenol_oxidation",icon:"🍎",intensity:int,
+      rxns.push({name:"폴리페놀 효소적 갈변 (PPO)",key:"polyphenol_oxidation",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Apple','🍎','rxn-icon-img',20):'🍎'),intensity:int,
         desc:`폴리페놀옥시다아제(PPO) 활성 → 효소적 갈변 ${int}% 진행`,
         effects:["갈변(melanin 생성)","항산화 능력 감소","풍미 변화"],
         science:`PPO 최적 40°C, >70°C 불활성 | Yoruk & Marshall (2003)`,
@@ -5973,8 +5973,8 @@ async function runAnalysis() {
   html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
     <div class="tabs" style="flex:1;margin-bottom:0">
       <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchTab('reactions')">🧪 화학 반응</button>
-      <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchTab('nutrition')">📊 영양소 변화</button>
-      <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchTab('flavor')">🍽️ 맛 프로파일</button>
+      <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchTab('nutrition')"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📊'"> 영양소 변화</button>
+      <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchTab('flavor')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽️'"> 맛 프로파일</button>
       ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchTab('health')">🏥 건강 분석</button>` : ''}
       <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchTab('recipes')">🍴 레시피 추천</button>
     </div>
@@ -6081,7 +6081,7 @@ async function runAnalysis() {
     const firstResults = Object.values(allMembersHealth)[0];
     const comp = firstResults.results[0].composition;
     html += `<div class="card" style="margin-bottom:16px">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#171717">📋 투입 재료 총 성분 요약</h3>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#171717"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> 투입 재료 총 성분 요약</h3>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px">
         ${[
           {l:'칼로리',v:comp.calories.toFixed(0)+'kcal',c:'#f97316'},
