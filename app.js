@@ -3261,6 +3261,28 @@ document.addEventListener('i18n:applied', () => {
   if (typeof renderSubstances === 'function') renderSubstances();
   if (typeof updateTime === 'function') updateTime();
   if (typeof updateUserUI === 'function' && typeof currentUser !== 'undefined') updateUserUI();
+  // Re-render dynamic tab content on language change
+  if (typeof _tabRendered !== 'undefined') {
+    _tabRendered.home = false;
+    _tabRendered.recipes = false;
+    _tabRendered.profile = false;
+  }
+  // Re-render the currently active tab
+  var _activeTab = document.querySelector('.tab-section.active');
+  if (_activeTab) {
+    var _tabName = _activeTab.id.replace('tab-', '');
+    if (_tabName === 'home' && typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (_tabName === 'recipes' && typeof renderRecipesTab === 'function') renderRecipesTab();
+    if (_tabName === 'profile' && typeof renderProfileTab === 'function') renderProfileTab();
+  }
+  // Re-render mobile nav labels
+  document.querySelectorAll('.mobile-nav-btn').forEach(function(btn) {
+    var tab = btn.dataset.tab;
+    var labels = {home:'홈',analyze:'분석',plan:'식단',recipes:'레시피',profile:'프로필'};
+    var labelsEn = {home:'Home',analyze:'Analyze',plan:'Plan',recipes:'Recipes',profile:'Profile'};
+    var span = btn.querySelector('span');
+    if (span && tab) span.textContent = (window.I18n && I18n.lang === 'en') ? (labelsEn[tab]||tab) : (labels[tab]||tab);
+  });
   _i18nRendering = false;
 });
 
@@ -7656,7 +7678,7 @@ function openPhotoScanner() {
   if (!overlay) {
     overlay = document.createElement('div');
     overlay.id = 'photoScanOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
     overlay.onclick = e => { if (e.target === overlay) overlay.style.display = 'none'; };
     document.body.appendChild(overlay);
   }
@@ -7784,7 +7806,7 @@ function openUrlImport() {
   if (!overlay) {
     overlay = document.createElement('div');
     overlay.id = 'urlImportOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px';
     overlay.onclick = e => { if (e.target === overlay) overlay.style.display = 'none'; };
     document.body.appendChild(overlay);
   }
