@@ -3955,26 +3955,39 @@ function toggleRef(id) {
 // ── Export Report ──
 async function exportReport(format = 'txt') {
   if (userPlan === 'free') { openPricingModal(); return; }
+  const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
   const exportAllowed = await checkDailyLimit('export');
-  if (!exportAllowed) { alert('오늘의 보고서 다운로드 횟수를 초과했습니다.'); return; }
-  if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
+  if (!exportAllowed) { alert(_t('오늘의 보고서 다운로드 횟수를 초과했습니다.','Daily report download limit exceeded.')); return; }
+  if (!lastAnalysisResult) { alert(_t('먼저 분석을 실행해주세요','Please run an analysis first.')); return; }
 
   const { rxns, warns, nutrition, flavor, temp, time, health } = lastAnalysisResult;
-  const now = new Date().toLocaleString('ko-KR');
+  const isEn = window.I18n && I18n.lang === 'en';
+  const now = new Date().toLocaleString(isEn ? 'en-US' : 'ko-KR');
   const methodInfo = METHODS[method] || {};
-  const VNAMES = {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',
-    folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',
-    calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
-  const flavorNames = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
-  const flavorDescs = {umami:'글루탐산, 이노신산에 의한 깊은 맛',sweet:'당류, 마이야르 반응 산물',salty:'나트륨, 미네랄',sour:'유기산(시트르산 등)',bitter:'폴리페놀, 캐러멜화 산물'};
+  const VNAMES = isEn
+    ? {C:'Vitamin C',B1:'Vitamin B1',B2:'Vitamin B2',B6:'Vitamin B6',B12:'Vitamin B12',folate:'Folate',niacin:'Niacin',A:'Vitamin A',D:'Vitamin D',E:'Vitamin E',K:'Vitamin K',calcium:'Calcium',iron:'Iron',zinc:'Zinc',magnesium:'Magnesium',potassium:'Potassium'}
+    : {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
+  const flavorNm = isEn
+    ? {umami:'Umami',sweet:'Sweet',salty:'Salty',sour:'Sour',bitter:'Bitter'}
+    : {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+  const flavorDsc = isEn
+    ? {umami:'Glutamate, inosinic acid',sweet:'Sugars, Maillard products',salty:'Sodium, minerals',sour:'Organic acids (citric acid etc.)',bitter:'Polyphenols, caramelization products'}
+    : {umami:'글루탐산, 이노신산에 의한 깊은 맛',sweet:'당류, 마이야르 반응 산물',salty:'나트륨, 미네랄',sour:'유기산(시트르산 등)',bitter:'폴리페놀, 캐러멜화 산물'};
+  const medLbl = isEn
+    ? {dry:'Dry heat',water:'Water',steam:'Steam',oil:'Oil',mw:'Microwave',smoke:'Smoke',none:'No heat'}
+    : {dry:'건열',water:'수침',steam:'증기',oil:'유지',mw:'마이크로파',smoke:'훈연',none:'가열없음'};
+  const sevLbl = isEn
+    ? {danger:'Danger',caution:'Caution',good:'Good',info:'Info'}
+    : {danger:'위험',caution:'주의',good:'긍정',info:'참고'};
+  const scoreLbl = (s) => isEn ? (s>=70?'Good':s>=40?'Caution':'Risk') : (s>=70?'양호':s>=40?'주의 필요':'위험');
 
   let report = `═══════════════════════════════════════════════════\n`;
-  report += `  MEALCULE 분석 보고서\n`;
-  report += `  생성일: ${now}\n`;
+  report += `  MEALCULE ${_t('분석 보고서','Analysis Report')}\n`;
+  report += `  ${_t('생성일','Date')}: ${now}\n`;
   report += `═══════════════════════════════════════════════════\n\n`;
 
   // ── 1. 재료 ──
-  report += `[재료 목록]\n`;
+  report += `[${_t('재료 목록','Ingredients')}]\n`;
   for (const [name, g] of Object.entries(selected)) {
     const d = DB[name];
     report += `  • ${name} (${d?.emoji||''}) — ${g}g`;
@@ -3983,89 +3996,75 @@ async function exportReport(format = 'txt') {
   }
 
   // ── 2. 조리 조건 ──
-  report += `\n[조리 조건]\n`;
-  report += `  방법: ${methodInfo.label || method} (${method})\n`;
-  report += `  온도: ${temp}°C\n`;
-  report += `  시간: ${time}분\n`;
+  report += `\n[${_t('조리 조건','Cooking Conditions')}]\n`;
+  report += `  ${_t('방법','Method')}: ${methodInfo.label || method} (${method})\n`;
+  report += `  ${_t('온도','Temp')}: ${temp}°C\n`;
+  report += `  ${_t('시간','Time')}: ${time}${_t('분','min')}\n`;
   if (methodInfo.medium) {
-    const medLabel = {dry:'건열',water:'수침',steam:'증기',oil:'유지',mw:'마이크로파',smoke:'훈연',none:'가열없음'};
-    report += `  열전달 매체: ${medLabel[methodInfo.medium] || methodInfo.medium}\n`;
+    report += `  ${_t('열전달 매체','Heat medium')}: ${medLbl[methodInfo.medium] || methodInfo.medium}\n`;
   }
 
-  // ── 3. 경고 & 주의 ──
+  // ── 3. 경고 ──
   if (warns.length > 0) {
-    report += `\n[⚠️ 경고 및 주의사항]\n`;
-    warns.forEach(w => {
-      report += `  [${w.type}] ${w.msg}\n`;
-    });
+    report += `\n[⚠️ ${_t('경고 및 주의사항','Warnings')}]\n`;
+    warns.forEach(w => { report += `  [${w.type}] ${w.msg}\n`; });
   }
 
-  // ── 4. 화학 반응 분석 (전체) ──
+  // ── 4. 화학 반응 ──
   report += `\n${'─'.repeat(50)}\n`;
-  report += `[🧪 화학 반응 분석]\n`;
+  report += `[🧪 ${_t('화학 반응 분석','Chemical Reaction Analysis')}]\n`;
   report += `${'─'.repeat(50)}\n`;
 
-  // Summary
   if (rxns.length > 0) {
     const highRxns = rxns.filter(r => r.intensity > 60);
     const midRxns = rxns.filter(r => r.intensity > 30 && r.intensity <= 60);
     const methodName = methodInfo.label || method;
-    report += `\n  ▶ 요약: ${methodName}(${temp}°C, ${time}분) 조건에서 총 ${rxns.length}가지 변화가 예측됩니다.\n`;
-    if (highRxns.length > 0) report += `    눈에 띄는 변화: ${highRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '') + '(' + r.intensity + '%)').join(', ')}\n`;
-    if (midRxns.length > 0) report += `    보통 수준: ${midRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '')).join(', ')}\n`;
+    report += `\n  ▶ ${_t('요약','Summary')}: ${methodName}(${temp}°C, ${time}${_t('분','min')}) — ${_t('총','total')} ${rxns.length}${_t('가지 변화 예측',' reactions predicted')}\n`;
+    if (highRxns.length > 0) report += `    ${_t('눈에 띄는 변화','Notable')}: ${highRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '') + '(' + r.intensity + '%)').join(', ')}\n`;
+    if (midRxns.length > 0) report += `    ${_t('보통 수준','Moderate')}: ${midRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '')).join(', ')}\n`;
     const effects = [...new Set(rxns.flatMap(r => r.effects))].slice(0, 8);
-    if (effects.length > 0) report += `    음식에 미치는 영향: ${effects.join(', ')}\n`;
+    if (effects.length > 0) report += `    ${_t('음식에 미치는 영향','Effects')}: ${effects.join(', ')}\n`;
   } else {
-    report += `\n  특별한 화학 반응이 예측되지 않습니다.\n`;
+    report += `\n  ${_t('특별한 화학 반응이 예측되지 않습니다.','No significant chemical reactions predicted.')}\n`;
   }
 
-  rxns.forEach((r, idx) => {
+  rxns.forEach((r) => {
     const refKey = RXN_REF_MAP[r.key] || null;
     const ref = refKey ? REFERENCES[refKey] : null;
     const conf = ref ? ref.confidence : null;
-
     report += `\n  ◆ ${r.name}`;
-    if (conf) report += ` (신뢰도 ${conf}%)`;
+    if (conf) report += ` (${_t('신뢰도','confidence')} ${conf}%)`;
     report += `\n`;
-    report += `    반응 강도: ${r.intensity}%\n`;
+    report += `    ${_t('반응 강도','Intensity')}: ${r.intensity}%\n`;
     report += `    ${r.desc}\n`;
-    if (r.effects && r.effects.length > 0) {
-      report += `    효과: ${r.effects.join(' · ')}\n`;
-    }
-    report += `\n    💡 왜 이런 변화가 일어나나요?\n`;
+    if (r.effects && r.effects.length > 0) report += `    ${_t('효과','Effects')}: ${r.effects.join(' · ')}\n`;
+    report += `\n    💡 ${_t('왜 이런 변화가 일어나나요?','Why does this happen?')}\n`;
     report += `    ${r.science}\n`;
-    if (proMode && r.proDetail) {
-      report += `\n    📖 전문가 상세:\n`;
-      report += `    ${r.proDetail}\n`;
-    }
-    report += `\n    ❤️ 건강 팁:\n`;
-    report += `    ${r.health}\n`;
+    if (proMode && r.proDetail) { report += `\n    📖 ${_t('전문가 상세','Expert Detail')}:\n    ${r.proDetail}\n`; }
+    report += `\n    ❤️ ${_t('건강 팁','Health Tip')}:\n    ${r.health}\n`;
     if (ref) {
-      report += `\n    📚 참고 문헌:\n`;
-      ref.papers.forEach(p => {
-        report += `    - ${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.vol ? ', '+p.vol : ''}${p.doi ? '. DOI: '+p.doi : ''}\n`;
-      });
+      report += `\n    📚 ${_t('참고 문헌','References')}:\n`;
+      ref.papers.forEach(p => { report += `    - ${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.vol ? ', '+p.vol : ''}${p.doi ? '. DOI: '+p.doi : ''}\n`; });
     }
   });
 
-  // ── 5. 영양소 변화 (전체) ──
+  // ── 5. 영양소 ──
   report += `\n${'─'.repeat(50)}\n`;
-  report += `[📊 영양소 변화 분석]\n`;
+  report += `[📊 ${_t('영양소 변화 분석','Nutrient Change Analysis')}]\n`;
   report += `${'─'.repeat(50)}\n`;
 
   const nutriEntries = Object.entries(nutrition).filter(([,v]) => v.orig > 0);
   if (nutriEntries.length > 0) {
-    // Summary
     const lost = nutriEntries.filter(([,v]) => v.ret < 70).sort((a,b) => a[1].ret - b[1].ret);
     const kept = nutriEntries.filter(([,v]) => v.ret >= 80);
     const avgRet = Math.round(nutriEntries.reduce((a,[,v]) => a + v.ret, 0) / nutriEntries.length);
-    report += `\n  ▶ 요약: 총 ${nutriEntries.length}가지 영양소 분석, 평균 보존율 ${avgRet}%\n`;
-    if (kept.length > 0) report += `    잘 보존되는 영양소: ${kept.slice(0,5).map(([k,v]) => (VNAMES[k]||k) + ' ' + v.ret + '%').join(', ')}\n`;
-    if (lost.length > 0) report += `    주의 필요 (손실 큼): ${lost.slice(0,5).map(([k,v]) => (VNAMES[k]||k) + ' ' + v.ret + '%').join(', ')}\n`;
+    report += `\n  ▶ ${_t('요약','Summary')}: ${_t('총','total')} ${nutriEntries.length}${_t('가지 영양소, 평균 보존율',' nutrients, avg retention')} ${avgRet}%\n`;
+    if (kept.length > 0) report += `    ${_t('잘 보존','Well preserved')}: ${kept.slice(0,5).map(([k,v]) => (VNAMES[k]||k) + ' ' + v.ret + '%').join(', ')}\n`;
+    if (lost.length > 0) report += `    ${_t('주의 필요 (손실 큼)','Significant loss')}: ${lost.slice(0,5).map(([k,v]) => (VNAMES[k]||k) + ' ' + v.ret + '%').join(', ')}\n`;
 
-    report += `\n  영양소            조리 전    →    조리 후    잔존율\n`;
+    report += `\n  ${_t('영양소','Nutrient').padEnd(14)} ${_t('조리 전','Before').padStart(8)}    →    ${_t('조리 후','After').padStart(8)}    ${_t('잔존율','Retention')}\n`;
     report += `  ${'─'.repeat(46)}\n`;
-    const sorted = [...nutriEntries].sort((a, b) => (a[1].ret || 100) - (b[1].ret || 100));
+    const sorted = [...nutriEntries].sort((a, b) => a[1].ret - b[1].ret);
     sorted.forEach(([k, n]) => {
       const label = (VNAMES[k] || k).padEnd(14);
       const bar = '█'.repeat(Math.round((n.ret || 0) / 10)) + '░'.repeat(10 - Math.round((n.ret || 0) / 10));
@@ -4073,112 +4072,93 @@ async function exportReport(format = 'txt') {
     });
   }
 
-  // ── 6. 맛 프로파일 (전체) ──
+  // ── 6. 맛 프로파일 ──
   report += `\n${'─'.repeat(50)}\n`;
-  report += `[🍽️ 맛 프로파일 분석]\n`;
+  report += `[🍽️ ${_t('맛 프로파일 분석','Flavor Profile Analysis')}]\n`;
   report += `${'─'.repeat(50)}\n`;
 
   if (flavor) {
-    // Summary
     const fSorted = Object.entries(flavor).sort((a,b) => b[1] - a[1]);
-    const topF = fSorted[0];
-    const secF = fSorted[1];
-    report += `\n  ▶ 요약: 가장 강한 맛은 ${flavorNames[topF[0]]}(${topF[1]}점), 다음으로 ${flavorNames[secF[0]]}(${secF[1]}점)\n`;
+    const topF = fSorted[0]; const secF = fSorted[1];
+    report += `\n  ▶ ${_t('요약','Summary')}: ${_t('가장 강한 맛','Strongest')} ${flavorNm[topF[0]]}(${topF[1]}), ${_t('다음','next')} ${flavorNm[secF[0]]}(${secF[1]})\n`;
     const balance = Math.max(...fSorted.map(x=>x[1])) - Math.min(...fSorted.map(x=>x[1]));
-    if (balance < 20) report += `    5가지 맛이 고르게 분포된 균형 잡힌 조합\n`;
-    else if (balance > 50) report += `    특정 맛이 확실히 강한 개성 있는 조합\n`;
-
+    if (balance < 20) report += `    ${_t('5가지 맛이 고르게 분포된 균형 잡힌 조합','Well-balanced combination across all 5 tastes')}\n`;
+    else if (balance > 50) report += `    ${_t('특정 맛이 확실히 강한 개성 있는 조합','Distinctive combination with dominant flavors')}\n`;
     report += `\n`;
     Object.entries(flavor).forEach(([k, v]) => {
       const score = Math.round(v);
       const bar = '█'.repeat(Math.round(score / 10)) + '░'.repeat(10 - Math.round(score / 10));
-      report += `  ${(flavorNames[k] || k).padEnd(6)}: ${String(score).padStart(3)}점 [${bar}]  — ${flavorDescs[k] || ''}\n`;
+      report += `  ${(flavorNm[k] || k).padEnd(8)}: ${String(score).padStart(3)} [${bar}]  — ${flavorDsc[k] || ''}\n`;
     });
-
-    // 재료별 풍미 화합물
-    report += `\n  [재료별 핵심 풍미 화합물]\n`;
+    report += `\n  [${_t('재료별 핵심 풍미 화합물','Key Flavor Compounds by Ingredient')}]\n`;
     selNames().forEach(n => {
       const d = DB[n];
-      if (d && d.compounds && d.compounds.length > 0) {
-        report += `  • ${n} (${d.emoji}): ${d.compounds.join(', ')}\n`;
-      }
+      if (d && d.compounds && d.compounds.length > 0) report += `  • ${n} (${d.emoji}): ${d.compounds.join(', ')}\n`;
     });
   }
 
-  // ── 7. 건강 분석 (전체) ──
+  // ── 7. 건강 분석 ──
   if (health && Object.keys(health).length > 0) {
     report += `\n${'─'.repeat(50)}\n`;
-    report += `[❤️ 건강 영향 분석]\n`;
+    report += `[❤️ ${_t('건강 영향 분석','Health Impact Analysis')}]\n`;
     report += `${'─'.repeat(50)}\n`;
 
-    // Health summary
     const allFindings = Object.values(health).flatMap(m => m.results.flatMap(r => r.findings));
     const dangers = allFindings.filter(f => f.severity === 'danger');
     const cautions = allFindings.filter(f => f.severity === 'caution');
     const goods = allFindings.filter(f => f.severity === 'good');
     const scores = Object.values(health).flatMap(m => m.results.map(r => r.score));
     const avgScore = scores.length > 0 ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
-    report += `\n  ▶ 요약: 총 ${allFindings.length}가지 건강 항목 분석\n`;
-    if (dangers.length > 0) report += `    ⚠️ 주의 필요: ${dangers.length}건\n`;
-    if (cautions.length > 0) report += `    참고 사항: ${cautions.length}건\n`;
-    if (goods.length > 0) report += `    ✅ 건강에 좋은 점: ${goods.length}건\n`;
-    report += `    종합 점수: ${avgScore}점/100점\n`;
+    report += `\n  ▶ ${_t('요약','Summary')}: ${_t('총','total')} ${allFindings.length}${_t('가지 건강 항목',' health items')}\n`;
+    if (dangers.length > 0) report += `    ⚠️ ${_t('주의 필요','Warnings')}: ${dangers.length}\n`;
+    if (cautions.length > 0) report += `    ${_t('참고 사항','Cautions')}: ${cautions.length}\n`;
+    if (goods.length > 0) report += `    ✅ ${_t('건강에 좋은 점','Benefits')}: ${goods.length}\n`;
+    report += `    ${_t('종합 점수','Overall score')}: ${avgScore}/100\n`;
 
-    // 총 성분 요약
     const firstResults = Object.values(health)[0];
     const comp = firstResults.results[0].composition;
     if (comp) {
-      report += `\n  [투입 재료 총 성분]\n`;
-      report += `  칼로리: ${comp.calories.toFixed(0)}kcal | 단백질: ${comp.protein.toFixed(1)}g | 지방: ${comp.fat.toFixed(1)}g | 탄수화물: ${comp.carbs.toFixed(1)}g\n`;
-      report += `  식이섬유: ${comp.fiber.toFixed(1)}g | 나트륨: ${comp.sodium.toFixed(0)}mg | 칼륨: ${comp.potassium.toFixed(0)}mg | 포화지방: ${comp.saturatedFat.toFixed(1)}g\n`;
+      report += `\n  [${_t('투입 재료 총 성분','Total Nutritional Composition')}]\n`;
+      report += `  ${_t('칼로리','Calories')}: ${comp.calories.toFixed(0)}kcal | ${_t('단백질','Protein')}: ${comp.protein.toFixed(1)}g | ${_t('지방','Fat')}: ${comp.fat.toFixed(1)}g | ${_t('탄수화물','Carbs')}: ${comp.carbs.toFixed(1)}g\n`;
+      report += `  ${_t('식이섬유','Fiber')}: ${comp.fiber.toFixed(1)}g | ${_t('나트륨','Sodium')}: ${comp.sodium.toFixed(0)}mg | ${_t('칼륨','Potassium')}: ${comp.potassium.toFixed(0)}mg | ${_t('포화지방','Sat. Fat')}: ${comp.saturatedFat.toFixed(1)}g\n`;
     }
 
-    // 각 멤버별 결과
-    Object.entries(health).forEach(([memberId, memberData]) => {
+    Object.entries(health).forEach(([, memberData]) => {
       const member = memberData.member;
-      const healthResults = memberData.results;
       report += `\n  ──────────────────────────────────\n`;
-      report += `  👤 ${member.name}${member.age ? ' (' + member.age + '세)' : ''}\n`;
+      report += `  👤 ${member.name}${member.age ? ' (' + member.age + (isEn ? ' yrs' : '세') + ')' : ''}\n`;
       report += `  ──────────────────────────────────\n`;
-
-      healthResults.forEach(hr => {
-        const scoreLabel = hr.score >= 70 ? '양호' : hr.score >= 40 ? '주의 필요' : '위험';
-        report += `\n  ${hr.emoji} ${hr.label} 적합도: ${scoreLabel} (${hr.score}점/100)\n`;
-        report += `    ${hr.desc} · ${hr.findings.length}개 항목 분석\n`;
-
+      memberData.results.forEach(hr => {
+        report += `\n  ${hr.emoji} ${hr.label} ${_t('적합도','Suitability')}: ${scoreLbl(hr.score)} (${hr.score}/100)\n`;
+        report += `    ${hr.desc} · ${hr.findings.length}${_t('개 항목 분석',' items analyzed')}\n`;
         if (hr.findings.length === 0) {
-          report += `    → 현재 재료 조합에서 ${hr.label} 관련 특이사항 없음\n`;
+          report += `    → ${_t('특이사항 없음','No issues found')}\n`;
         } else {
-          const sevKo = {danger:'위험',caution:'주의',good:'긍정',info:'참고'};
           hr.findings.forEach(f => {
-            report += `\n    [${sevKo[f.severity] || f.severity}] ${f.title}\n`;
+            report += `\n    [${sevLbl[f.severity] || f.severity}] ${f.title}\n`;
             report += `      ${f.detail}\n`;
-            if (f.tip) {
-              report += `      💡 개선 팁: ${f.tip}\n`;
-            }
+            if (f.tip) report += `      💡 ${_t('개선 팁','Tip')}: ${f.tip}\n`;
           });
         }
       });
     });
 
-    report += `\n  ⚕️ 이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며,\n`;
-    report += `  개인의 건강 상태에 따라 다를 수 있습니다.\n`;
-    report += `  구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.\n`;
+    report += `\n  ⚕️ ${_t('이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며,','This analysis is general nutritional reference information.')}\n`;
+    report += `  ${_t('개인의 건강 상태에 따라 다를 수 있습니다.','Results may vary based on individual health conditions.')}\n`;
+    report += `  ${_t('구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.','Consult your healthcare provider for specific dietary advice.')}\n`;
   }
 
-  // ── 8. 과학적 출처 ──
+  // ── 8. 출처 ──
   report += `\n${'─'.repeat(50)}\n`;
-  report += `[📚 과학적 출처]\n`;
+  report += `[📚 ${_t('과학적 출처','Scientific References')}]\n`;
   report += `${'─'.repeat(50)}\n`;
-  for (const [key, ref] of Object.entries(REFERENCES)) {
-    ref.papers.forEach(p => {
-      report += `  - ${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.vol ? ', '+p.vol : ''}${p.doi ? '. DOI: '+p.doi : ''}\n`;
-    });
+  for (const [, ref] of Object.entries(REFERENCES)) {
+    ref.papers.forEach(p => { report += `  - ${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.vol ? ', '+p.vol : ''}${p.doi ? '. DOI: '+p.doi : ''}\n`; });
   }
 
   report += `\n═══════════════════════════════════════════════════\n`;
   report += `  Mealcule v2.0 · mealcule.com\n`;
-  report += `  이 보고서는 이론적 모델에 기반하며\n  의학적 조언을 대체하지 않습니다.\n`;
+  report += `  ${_t('이 보고서는 이론적 모델에 기반하며\n  의학적 조언을 대체하지 않습니다.','This report is based on theoretical models\n  and does not replace medical advice.')}\n`;
   report += `═══════════════════════════════════════════════════\n`;
 
   if (format === 'pdf') {
@@ -4214,12 +4194,14 @@ async function exportReportPDF() {
     alert('PDF 라이브러리를 로딩 중입니다. 잠시 후 다시 시도해주세요.');
     return;
   }
-  if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
+  const _t = (ko, en) => (window.I18n && I18n.lang === 'en') ? en : ko;
+  const isEn = window.I18n && I18n.lang === 'en';
+  if (!lastAnalysisResult) { alert(_t('먼저 분석을 실행해주세요','Please run an analysis first.')); return; }
 
   // 로딩 표시
   const loadingEl = document.createElement('div');
   loadingEl.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:99999;color:white;font-size:18px;font-weight:600';
-  loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:12px;font-size:32px">📄</div>PDF 생성 중...<br><span style="font-size:13px;opacity:0.7">한국어 폰트 로딩 포함</span></div>';
+  loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:12px;font-size:32px">📄</div>' + _t('PDF 생성 중...','Generating PDF...') + '<br><span style="font-size:13px;opacity:0.7">' + _t('폰트 로딩 포함','Including font loading') + '</span></div>';
   document.body.appendChild(loadingEl);
 
   try {
@@ -4227,23 +4209,24 @@ async function exportReportPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    // 한국어 폰트 등록
     doc.addFileToVFS('NanumGothic.ttf', fontB64);
     doc.addFont('NanumGothic.ttf', 'NanumGothic', 'normal');
     doc.setFont('NanumGothic');
 
-    const W = doc.internal.pageSize.getWidth();   // 210
-    const H = doc.internal.pageSize.getHeight();   // 297
-    const M = 15; // margin
-    const UW = W - M * 2; // usable width
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    const M = 15;
+    const UW = W - M * 2;
     let y = 0;
     let pageNum = 1;
 
     const { rxns, warns, nutrition, flavor, temp, time, health } = lastAnalysisResult;
     const methodInfo = METHODS[method] || {};
-    const VNAMES = {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
-    const flavorNm = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
-    const flavorDsc = {umami:'글루탐산, 이노신산',sweet:'당류, 마이야르 반응 산물',salty:'나트륨, 미네랄',sour:'유기산(시트르산 등)',bitter:'폴리페놀, 캐러멜화 산물'};
+    const VNAMES = isEn
+      ? {C:'Vitamin C',B1:'Vitamin B1',B2:'Vitamin B2',B6:'Vitamin B6',B12:'Vitamin B12',folate:'Folate',niacin:'Niacin',A:'Vitamin A',D:'Vitamin D',E:'Vitamin E',K:'Vitamin K',calcium:'Calcium',iron:'Iron',zinc:'Zinc',magnesium:'Magnesium',potassium:'Potassium'}
+      : {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
+    const flavorNm = isEn ? {umami:'Umami',sweet:'Sweet',salty:'Salty',sour:'Sour',bitter:'Bitter'} : {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+    const flavorDsc = isEn ? {umami:'Glutamate, inosinic acid',sweet:'Sugars, Maillard products',salty:'Sodium, minerals',sour:'Organic acids',bitter:'Polyphenols, caramelization'} : {umami:'글루탐산, 이노신산',sweet:'당류, 마이야르 반응 산물',salty:'나트륨, 미네랄',sour:'유기산(시트르산 등)',bitter:'폴리페놀, 캐러멜화 산물'};
 
     // ── 헬퍼 함수 ──
     function checkPage(need) {
@@ -4329,7 +4312,7 @@ async function exportReportPDF() {
 
     doc.setFontSize(9);
     doc.setTextColor(180, 180, 180);
-    doc.text(new Date().toLocaleString('ko-KR'), M, 34);
+    doc.text(new Date().toLocaleString(isEn ? 'en-US' : 'ko-KR'), M, 34);
     const ingNames = Object.keys(selected).join(', ');
     const ingLine = doc.splitTextToSize(ingNames, UW);
     doc.text(ingLine[0] + (ingLine.length > 1 ? ' ...' : ''), M, 42);
@@ -4339,12 +4322,11 @@ async function exportReportPDF() {
     // ═══════════════════════════════════════════════════
     // 1. 재료 & 조리 조건
     // ═══════════════════════════════════════════════════
-    drawSectionHeader('1. 재료 및 조리 조건');
+    drawSectionHeader(_t('1. 재료 및 조리 조건','1. Ingredients & Cooking'));
 
-    // 재료 테이블
     doc.setFontSize(9);
     doc.setTextColor(100, 100, 100);
-    doc.text('재료', M + 2, y); doc.text('용량', M + 80, y); doc.text('분류', M + 105, y);
+    doc.text(_t('재료','Ingredient'), M + 2, y); doc.text(_t('용량','Amount'), M + 80, y); doc.text(_t('분류','Category'), M + 105, y);
     y += 1;
     drawDivider();
 
@@ -4362,10 +4344,10 @@ async function exportReportPDF() {
     }
 
     y += 3;
-    drawSubHeader('조리 조건');
+    drawSubHeader(_t('조리 조건','Cooking Conditions'));
     doc.setFontSize(9);
     doc.setTextColor(60, 60, 60);
-    doc.text(`방법: ${methodInfo.label || method}    온도: ${temp}\u00B0C    시간: ${time}분`, M + 3, y);
+    doc.text(`${_t('방법','Method')}: ${methodInfo.label || method}    ${_t('온도','Temp')}: ${temp}\u00B0C    ${_t('시간','Time')}: ${time}${_t('분','min')}`, M + 3, y);
     y += 6;
 
     // 경고
@@ -4393,10 +4375,10 @@ async function exportReportPDF() {
     // ═══════════════════════════════════════════════════
     // 2. 화학 반응 분석
     // ═══════════════════════════════════════════════════
-    drawSectionHeader('2. 화학 반응 분석 (' + rxns.length + '건)');
+    drawSectionHeader(_t('2. 화학 반응 분석','2. Chemical Reactions') + ' (' + rxns.length + ')');
 
     if (rxns.length === 0) {
-      drawText('특별한 화학 반응이 예측되지 않습니다.', M + 3, 9, [120,120,120], UW - 6, 5);
+      drawText(_t('특별한 화학 반응이 예측되지 않습니다.','No significant chemical reactions predicted.'), M + 3, 9, [120,120,120], UW - 6, 5);
     }
 
     rxns.forEach((r, idx) => {
@@ -4414,13 +4396,13 @@ async function exportReportPDF() {
       if (conf) {
         doc.setFontSize(7);
         doc.setTextColor(16, 185, 129);
-        doc.text('신뢰도 ' + conf + '%', M + 3 + doc.getTextWidth(r.name) + 4, y);
+        doc.text(_t('신뢰도 ','Conf. ') + conf + '%', M + 3 + doc.getTextWidth(r.name) + 4, y);
       }
       // 강도 바 (우측)
       const barX = W - M - 50;
       doc.setFontSize(7);
       doc.setTextColor(120, 120, 120);
-      doc.text('강도 ' + r.intensity + '%', barX, y - 1);
+      doc.text(_t('강도 ','Int. ') + r.intensity + '%', barX, y - 1);
       const barColor = r.intensity > 70 ? [239,68,68] : r.intensity > 40 ? [234,179,8] : [34,197,94];
       drawBar(barX, y + 1, 45, r.intensity, barColor);
       y += 9;
@@ -4446,7 +4428,7 @@ async function exportReportPDF() {
       doc.roundedRect(M + 2, y - 2, UW - 4, sciH, 1.5, 1.5, 'F');
       doc.setFontSize(8);
       doc.setTextColor(30, 100, 180);
-      doc.text('왜 이런 변화가 일어나나요?', M + 5, y + 2);
+      doc.text(_t('왜 이런 변화가 일어나나요?','Why does this happen?'), M + 5, y + 2);
       y += 6;
       doc.setFontSize(8);
       doc.setTextColor(60, 80, 120);
@@ -4466,7 +4448,7 @@ async function exportReportPDF() {
         doc.roundedRect(M + 2, y - 2, UW - 4, proH, 1.5, 1.5, 'F');
         doc.setFontSize(8);
         doc.setTextColor(139, 92, 246);
-        doc.text('전문가 상세', M + 5, y + 2);
+        doc.text(_t('전문가 상세','Expert Detail'), M + 5, y + 2);
         y += 6;
         doc.setFontSize(7.5);
         doc.setTextColor(80, 60, 140);
@@ -4486,7 +4468,7 @@ async function exportReportPDF() {
       doc.roundedRect(M + 2, y - 2, UW - 4, hH, 1.5, 1.5, 'F');
       doc.setFontSize(8);
       doc.setTextColor(220, 38, 38);
-      doc.text('건강 팁', M + 5, y + 2);
+      doc.text(_t('건강 팁','Health Tip'), M + 5, y + 2);
       y += 6;
       doc.setFontSize(8);
       doc.setTextColor(140, 40, 40);
@@ -4520,12 +4502,12 @@ async function exportReportPDF() {
     // ═══════════════════════════════════════════════════
     // 3. 영양소 변화
     // ═══════════════════════════════════════════════════
-    drawSectionHeader('3. 영양소 변화 분석');
+    drawSectionHeader(_t('3. 영양소 변화 분석','3. Nutrient Changes'));
 
     const nutriEntries = Object.entries(nutrition).filter(([,v]) => v.orig > 0);
     if (nutriEntries.length > 0) {
       const avgRet = Math.round(nutriEntries.reduce((a,[,v]) => a + v.ret, 0) / nutriEntries.length);
-      drawText('총 ' + nutriEntries.length + '가지 영양소 분석 | 평균 보존율 ' + avgRet + '%', M + 3, 9, [60,60,60], UW, 5);
+      drawText(_t('총 ','Total ') + nutriEntries.length + _t('가지 영양소 | 평균 보존율 ',' nutrients | Avg retention ') + avgRet + '%', M + 3, 9, [60,60,60], UW, 5);
       y += 2;
 
       // 테이블 헤더
@@ -4533,11 +4515,11 @@ async function exportReportPDF() {
       doc.rect(M, y - 4, UW, 7, 'F');
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
-      doc.text('영양소', M + 3, y);
-      doc.text('조리 전', M + 60, y);
-      doc.text('조리 후', M + 85, y);
-      doc.text('보존율', M + 110, y);
-      doc.text('시각화', M + 135, y);
+      doc.text(_t('영양소','Nutrient'), M + 3, y);
+      doc.text(_t('조리 전','Before'), M + 60, y);
+      doc.text(_t('조리 후','After'), M + 85, y);
+      doc.text(_t('보존율','Retention'), M + 110, y);
+      doc.text(_t('시각화','Chart'), M + 135, y);
       y += 5;
 
       const sorted = [...nutriEntries].sort((a, b) => a[1].ret - b[1].ret);
@@ -4561,11 +4543,11 @@ async function exportReportPDF() {
     // ═══════════════════════════════════════════════════
     // 4. 맛 프로파일
     // ═══════════════════════════════════════════════════
-    drawSectionHeader('4. 맛 프로파일 분석');
+    drawSectionHeader(_t('4. 맛 프로파일 분석','4. Flavor Profile'));
 
     if (flavor) {
       const fSorted = Object.entries(flavor).sort((a,b) => b[1] - a[1]);
-      drawText('가장 강한 맛: ' + flavorNm[fSorted[0][0]] + ' (' + fSorted[0][1] + '점)', M + 3, 9, [60,60,60], UW, 5);
+      drawText(_t('가장 강한 맛: ','Strongest: ') + flavorNm[fSorted[0][0]] + ' (' + fSorted[0][1] + ')', M + 3, 9, [60,60,60], UW, 5);
       y += 2;
 
       const flavorColors = {umami:[99,102,241],sweet:[249,115,22],salty:[59,130,246],sour:[234,179,8],bitter:[139,92,246]};
@@ -4585,7 +4567,7 @@ async function exportReportPDF() {
 
       // 재료별 풍미 화합물
       y += 2;
-      drawSubHeader('재료별 핵심 풍미 화합물');
+      drawSubHeader(_t('재료별 핵심 풍미 화합물','Key Flavor Compounds'));
       selNames().forEach(n => {
         const d = DB[n];
         if (d && d.compounds && d.compounds.length > 0) {
@@ -4604,22 +4586,22 @@ async function exportReportPDF() {
     // 5. 건강 분석
     // ═══════════════════════════════════════════════════
     if (health && Object.keys(health).length > 0) {
-      drawSectionHeader('5. 건강 영향 분석');
+      drawSectionHeader(_t('5. 건강 영향 분석','5. Health Impact'));
 
       // 총 성분 요약
       const firstResults = Object.values(health)[0];
       const comp = firstResults.results[0]?.composition;
       if (comp) {
-        drawSubHeader('투입 재료 총 성분');
+        drawSubHeader(_t('투입 재료 총 성분','Nutritional Composition'));
         const nutrients = [
-          ['칼로리', comp.calories.toFixed(0) + 'kcal', [249,115,22]],
-          ['단백질', comp.protein.toFixed(1) + 'g', [239,68,68]],
-          ['지방', comp.fat.toFixed(1) + 'g', [234,179,8]],
-          ['탄수화물', comp.carbs.toFixed(1) + 'g', [59,130,246]],
-          ['식이섬유', comp.fiber.toFixed(1) + 'g', [34,197,94]],
-          ['나트륨', comp.sodium.toFixed(0) + 'mg', [168,85,247]],
-          ['칼륨', comp.potassium.toFixed(0) + 'mg', [6,182,212]],
-          ['포화지방', comp.saturatedFat.toFixed(1) + 'g', [244,63,94]],
+          [_t('칼로리','Calories'), comp.calories.toFixed(0) + 'kcal', [249,115,22]],
+          [_t('단백질','Protein'), comp.protein.toFixed(1) + 'g', [239,68,68]],
+          [_t('지방','Fat'), comp.fat.toFixed(1) + 'g', [234,179,8]],
+          [_t('탄수화물','Carbs'), comp.carbs.toFixed(1) + 'g', [59,130,246]],
+          [_t('식이섬유','Fiber'), comp.fiber.toFixed(1) + 'g', [34,197,94]],
+          [_t('나트륨','Sodium'), comp.sodium.toFixed(0) + 'mg', [168,85,247]],
+          [_t('칼륨','Potassium'), comp.potassium.toFixed(0) + 'mg', [6,182,212]],
+          [_t('포화지방','Sat. Fat'), comp.saturatedFat.toFixed(1) + 'g', [244,63,94]],
         ];
         checkPage(12);
         let nx = M + 3;
@@ -4646,15 +4628,14 @@ async function exportReportPDF() {
         doc.roundedRect(M, y - 3, UW, 8, 1.5, 1.5, 'F');
         doc.setFontSize(10);
         doc.setTextColor(16, 185, 129);
-        doc.text(member.name + (member.age ? ' (' + member.age + '세)' : ''), M + 4, y + 1);
+        doc.text(member.name + (member.age ? ' (' + member.age + (isEn ? ' yrs' : '세') + ')' : ''), M + 4, y + 1);
         y += 9;
 
         healthResults.forEach(hr => {
           checkPage(16);
           const scoreColor = hr.score >= 70 ? [34,197,94] : hr.score >= 40 ? [234,179,8] : [239,68,68];
-          const scoreLabel = hr.score >= 70 ? '양호' : hr.score >= 40 ? '주의 필요' : '위험';
+          const scoreLabel = hr.score >= 70 ? _t('양호','Good') : hr.score >= 40 ? _t('주의 필요','Caution') : _t('위험','Risk');
 
-          // 점수 원형 표시
           doc.setDrawColor(...scoreColor);
           doc.setLineWidth(1.2);
           doc.circle(M + 12, y + 4, 8);
@@ -4662,16 +4643,15 @@ async function exportReportPDF() {
           doc.setTextColor(...scoreColor);
           doc.text(hr.score + '', M + 12, y + 6, { align: 'center' });
 
-          // 라벨
           doc.setFontSize(10);
-          doc.text(hr.label + ' 적합도: ' + scoreLabel, M + 24, y + 2);
+          doc.text(hr.label + ' ' + _t('적합도: ','Suitability: ') + scoreLabel, M + 24, y + 2);
           doc.setFontSize(8);
           doc.setTextColor(120, 120, 120);
-          doc.text(hr.desc + ' | ' + hr.findings.length + '개 항목', M + 24, y + 7);
+          doc.text(hr.desc + ' | ' + hr.findings.length + _t('개 항목',' items'), M + 24, y + 7);
           y += 14;
 
           // Findings
-          const sevKo = {danger:'위험',caution:'주의',good:'긍정',info:'참고'};
+          const sevKo = isEn ? {danger:'Danger',caution:'Caution',good:'Good',info:'Info'} : {danger:'위험',caution:'주의',good:'긍정',info:'참고'};
           const sevColors = {danger:[239,68,68],caution:[234,179,8],good:[34,197,94],info:[59,130,246]};
 
           hr.findings.forEach(f => {
@@ -4709,7 +4689,7 @@ async function exportReportPDF() {
             if (f.tip) {
               checkPage(8);
               doc.setFillColor(255, 251, 235);
-              const tipLines = doc.splitTextToSize('개선 팁: ' + f.tip, UW - 18);
+              const tipLines = doc.splitTextToSize(_t('개선 팁: ','Tip: ') + f.tip, UW - 18);
               doc.roundedRect(M + 6, y - 1, UW - 10, tipLines.length * 3.5 + 4, 1, 1, 'F');
               doc.setFontSize(7.5);
               doc.setTextColor(140, 100, 20);
@@ -4731,15 +4711,15 @@ async function exportReportPDF() {
       doc.roundedRect(M, y, UW, 10, 1.5, 1.5, 'F');
       doc.setFontSize(7);
       doc.setTextColor(16, 150, 100);
-      doc.text('이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며, 개인의 건강 상태에 따라 다를 수 있습니다.', M + 3, y + 4);
-      doc.text('구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.', M + 3, y + 8);
+      doc.text(_t('이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며, 개인의 건강 상태에 따라 다를 수 있습니다.','This analysis is general nutritional reference. Results may vary by individual health conditions.'), M + 3, y + 4);
+      doc.text(_t('구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.','Consult your healthcare provider for specific dietary advice.'), M + 3, y + 8);
       y += 14;
     }
 
     // ═══════════════════════════════════════════════════
     // 6. 과학적 출처
     // ═══════════════════════════════════════════════════
-    drawSectionHeader('참고 문헌');
+    drawSectionHeader(_t('참고 문헌','References'));
     doc.setFontSize(7);
     doc.setTextColor(100, 100, 100);
     for (const [, ref] of Object.entries(REFERENCES)) {
