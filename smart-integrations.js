@@ -62,7 +62,7 @@ function closeAppliancePanel() {
 
 function _loadConnectedAppliances() {
   const stored = localStorage.getItem('mealcule_appliances');
-  _connectedAppliances = stored ? JSON.parse(stored) : [];
+  try { _connectedAppliances = stored ? JSON.parse(stored) : []; } catch(e) { _connectedAppliances = []; }
 }
 
 function _saveConnectedAppliances() {

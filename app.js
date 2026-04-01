@@ -2065,7 +2065,7 @@ const CONDITIONS = {
       detail:()=>`EGCG는 난소암 세포의 VEGF(혈관 신생인자)를 억제하고 세포 자멸을 유도합니다.`, tip:"하루 3-4잔 80°C 녹차를 섭취하세요."},
   ]},
   thyroid_cancer: {label:"갑상선암", label_en:"Thyroid Cancer", emoji:"🦋", desc:"갑상선 악성종양 — 방사선·요오드 불균형 연관", desc_en:"Thyroid malignancy — radiation/iodine imbalance related", rules:[
-    {check:(im)=>Object.keys(im).some(n=>['미역','다시마'].includes(n))&&Object.values({}).length>0, severity:"info", title:"요오드 식품 — 갑상선 기능 영향 주의",
+    {check:(im)=>Object.keys(im).some(n=>['미역','다시마'].includes(n)), severity:"info", title:"요오드 식품 — 갑상선 기능 영향 주의",
       detail:()=>`갑상선암 치료 후 방사성 요오드 치료 전 저요오드 식사가 필요한 경우가 있습니다. 담당 의사와 상담 후 결정하세요.`, tip:"치료 상태에 따라 요오드 섭취를 조절하세요."},
     {check:(im)=>Object.keys(im).some(n=>['브로콜리','양배추','케일'].includes(n)), severity:"info", title:"십자화과 채소 — 갑상선 기능 영향 가능",
       detail:()=>`십자화과 채소의 고이트로겐은 갑상선 요오드 흡수를 억제할 수 있으나, 가열 조리 시 대부분 불활성화됩니다.`, tip:"충분히 가열 조리하면 안전하게 섭취할 수 있습니다."},
@@ -3568,8 +3568,9 @@ function deleteMember(memberId) {
   if (members.length <= 1) return;
   members = members.filter(m => m.id !== memberId);
   if (activeMemberId === memberId) {
-    activeMemberId = members[0].id;
+    activeMemberId = members.length > 0 ? members[0].id : null;
   }
+  if (!activeMemberId) return;
   switchMember(activeMemberId);
 }
 

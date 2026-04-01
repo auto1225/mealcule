@@ -442,7 +442,7 @@ function _ctQuickAddCal(mealType) {
   if (!calInput) return;
 
   const cal = parseInt(calInput.value);
-  if (!cal || cal <= 0) return;
+  if (!cal || isNaN(cal) || cal <= 0) return;
 
   const name = (nameInput && nameInput.value.trim()) || _t('빠른 기록', 'Quick Entry');
   const now = new Date();

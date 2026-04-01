@@ -691,7 +691,8 @@ function editNutritionGoals() {
   document.getElementById('hdGoalSave').addEventListener('click', async () => {
     const newGoals = {};
     fields.forEach(f => {
-      newGoals[f.key] = parseInt(document.getElementById(`hdGoal_${f.key}`).value) || 0;
+      const el = document.getElementById(`hdGoal_${f.key}`);
+      newGoals[f.key] = el ? (parseInt(el.value) || 0) : 0;
     });
 
     try {

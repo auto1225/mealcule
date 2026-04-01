@@ -249,7 +249,8 @@ function _groceryCancelAdd() {
 
 async function _groceryConfirmAdd() {
   const name = (document.getElementById('groceryNewName')?.value || '').trim();
-  const qty = parseFloat(document.getElementById('groceryNewQty')?.value) || null;
+  const rawQty = parseFloat(document.getElementById('groceryNewQty')?.value);
+  const qty = !isNaN(rawQty) ? rawQty : null;
   const unit = (document.getElementById('groceryNewUnit')?.value || '').trim() || null;
   if (!name) { showToast(_t('재료명을 입력하세요', 'Enter ingredient name')); return; }
   if (!_activeListId) return;
