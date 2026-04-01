@@ -3959,22 +3959,27 @@ async function exportReport(format = 'txt') {
   if (!exportAllowed) { alert('오늘의 보고서 다운로드 횟수를 초과했습니다.'); return; }
   if (!lastAnalysisResult) { alert('먼저 분석을 실행해주세요'); return; }
 
-  const { rxns, warns, nutrition, flavor, temp, time } = lastAnalysisResult;
+  const { rxns, warns, nutrition, flavor, temp, time, health } = lastAnalysisResult;
   const now = new Date().toLocaleString('ko-KR');
   const methodInfo = METHODS[method] || {};
   const VNAMES = {C:'비타민 C',B1:'비타민 B1',B2:'비타민 B2',B6:'비타민 B6',B12:'비타민 B12',
     folate:'엽산',niacin:'나이아신',A:'비타민 A',D:'비타민 D',E:'비타민 E',K:'비타민 K',
     calcium:'칼슘',iron:'철분',zinc:'아연',magnesium:'마그네슘',potassium:'칼륨'};
+  const flavorNames = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+  const flavorDescs = {umami:'글루탐산, 이노신산에 의한 깊은 맛',sweet:'당류, 마이야르 반응 산물',salty:'나트륨, 미네랄',sour:'유기산(시트르산 등)',bitter:'폴리페놀, 캐러멜화 산물'};
 
-  let report = `═══════════════════════════════════════\n`;
+  let report = `═══════════════════════════════════════════════════\n`;
   report += `  MEALCULE 분석 보고서\n`;
   report += `  생성일: ${now}\n`;
-  report += `═══════════════════════════════════════\n\n`;
+  report += `═══════════════════════════════════════════════════\n\n`;
 
   // ── 1. 재료 ──
-  report += `[재료]\n`;
+  report += `[재료 목록]\n`;
   for (const [name, g] of Object.entries(selected)) {
-    report += `  - ${name}: ${g}g\n`;
+    const d = DB[name];
+    report += `  • ${name} (${d?.emoji||''}) — ${g}g`;
+    if (d?.category) report += ` [${d.category}]`;
+    report += `\n`;
   }
 
   // ── 2. 조리 조건 ──
@@ -3989,69 +3994,192 @@ async function exportReport(format = 'txt') {
 
   // ── 3. 경고 & 주의 ──
   if (warns.length > 0) {
-    report += `\n[경고 및 주의사항]\n`;
+    report += `\n[⚠️ 경고 및 주의사항]\n`;
     warns.forEach(w => {
       report += `  [${w.type}] ${w.msg}\n`;
     });
   }
 
-  // ── 4. 화학 반응 ──
-  report += `\n[화학 반응 분석]\n`;
-  if (rxns.length === 0) {
-    report += `  특별한 화학 반응이 예측되지 않습니다.\n`;
+  // ── 4. 화학 반응 분석 (전체) ──
+  report += `\n${'─'.repeat(50)}\n`;
+  report += `[🧪 화학 반응 분석]\n`;
+  report += `${'─'.repeat(50)}\n`;
+
+  // Summary
+  if (rxns.length > 0) {
+    const highRxns = rxns.filter(r => r.intensity > 60);
+    const midRxns = rxns.filter(r => r.intensity > 30 && r.intensity <= 60);
+    const methodName = methodInfo.label || method;
+    report += `\n  ▶ 요약: ${methodName}(${temp}°C, ${time}분) 조건에서 총 ${rxns.length}가지 변화가 예측됩니다.\n`;
+    if (highRxns.length > 0) report += `    눈에 띄는 변화: ${highRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '') + '(' + r.intensity + '%)').join(', ')}\n`;
+    if (midRxns.length > 0) report += `    보통 수준: ${midRxns.map(r => r.name.replace(/\s*\(.*?\)\s*/g, '')).join(', ')}\n`;
+    const effects = [...new Set(rxns.flatMap(r => r.effects))].slice(0, 8);
+    if (effects.length > 0) report += `    음식에 미치는 영향: ${effects.join(', ')}\n`;
   } else {
-    rxns.forEach(r => {
-      report += `\n  ◆ ${r.name} (반응 강도: ${r.intensity}%)\n`;
-      report += `    ${r.desc}\n`;
-      if (r.effects && r.effects.length > 0) {
-        report += `    효과: ${r.effects.join(' · ')}\n`;
-      }
-      if (r.health) {
-        report += `    건강 영향: ${r.health}\n`;
-      }
-      if (r.science) {
-        report += `    과학 모델: ${r.science}\n`;
-      }
-    });
+    report += `\n  특별한 화학 반응이 예측되지 않습니다.\n`;
   }
 
-  // ── 5. 영양소 보존률 ──
-  const nutriKeys = Object.keys(nutrition);
-  if (nutriKeys.length > 0) {
-    report += `\n[영양소 변화 (조리 후 보존률)]\n`;
-    // 보존률 낮은 순서로 정렬
-    const sorted = nutriKeys.sort((a, b) => (nutrition[a].ret || 100) - (nutrition[b].ret || 100));
-    sorted.forEach(k => {
-      const n = nutrition[k];
-      const label = VNAMES[k] || k;
+  rxns.forEach((r, idx) => {
+    const refKey = RXN_REF_MAP[r.key] || null;
+    const ref = refKey ? REFERENCES[refKey] : null;
+    const conf = ref ? ref.confidence : null;
+
+    report += `\n  ◆ ${r.name}`;
+    if (conf) report += ` (신뢰도 ${conf}%)`;
+    report += `\n`;
+    report += `    반응 강도: ${r.intensity}%\n`;
+    report += `    ${r.desc}\n`;
+    if (r.effects && r.effects.length > 0) {
+      report += `    효과: ${r.effects.join(' · ')}\n`;
+    }
+    report += `\n    💡 왜 이런 변화가 일어나나요?\n`;
+    report += `    ${r.science}\n`;
+    if (proMode && r.proDetail) {
+      report += `\n    📖 전문가 상세:\n`;
+      report += `    ${r.proDetail}\n`;
+    }
+    report += `\n    ❤️ 건강 팁:\n`;
+    report += `    ${r.health}\n`;
+    if (ref) {
+      report += `\n    📚 참고 문헌:\n`;
+      ref.papers.forEach(p => {
+        report += `    - ${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.vol ? ', '+p.vol : ''}${p.doi ? '. DOI: '+p.doi : ''}\n`;
+      });
+    }
+  });
+
+  // ── 5. 영양소 변화 (전체) ──
+  report += `\n${'─'.repeat(50)}\n`;
+  report += `[📊 영양소 변화 분석]\n`;
+  report += `${'─'.repeat(50)}\n`;
+
+  const nutriEntries = Object.entries(nutrition).filter(([,v]) => v.orig > 0);
+  if (nutriEntries.length > 0) {
+    // Summary
+    const lost = nutriEntries.filter(([,v]) => v.ret < 70).sort((a,b) => a[1].ret - b[1].ret);
+    const kept = nutriEntries.filter(([,v]) => v.ret >= 80);
+    const avgRet = Math.round(nutriEntries.reduce((a,[,v]) => a + v.ret, 0) / nutriEntries.length);
+    report += `\n  ▶ 요약: 총 ${nutriEntries.length}가지 영양소 분석, 평균 보존율 ${avgRet}%\n`;
+    if (kept.length > 0) report += `    잘 보존되는 영양소: ${kept.slice(0,5).map(([k,v]) => (VNAMES[k]||k) + ' ' + v.ret + '%').join(', ')}\n`;
+    if (lost.length > 0) report += `    주의 필요 (손실 큼): ${lost.slice(0,5).map(([k,v]) => (VNAMES[k]||k) + ' ' + v.ret + '%').join(', ')}\n`;
+
+    report += `\n  영양소            조리 전    →    조리 후    잔존율\n`;
+    report += `  ${'─'.repeat(46)}\n`;
+    const sorted = [...nutriEntries].sort((a, b) => (a[1].ret || 100) - (b[1].ret || 100));
+    sorted.forEach(([k, n]) => {
+      const label = (VNAMES[k] || k).padEnd(14);
       const bar = '█'.repeat(Math.round((n.ret || 0) / 10)) + '░'.repeat(10 - Math.round((n.ret || 0) / 10));
-      report += `  ${label.padEnd(12)}: ${String(n.ret || 0).padStart(3)}% [${bar}]  ${(n.orig||0).toFixed(2)} → ${(n.cooked||0).toFixed(2)} (단위: mg/μg)\n`;
+      report += `  ${label} ${(n.orig||0).toFixed(2).padStart(8)} → ${(n.cooked||0).toFixed(2).padStart(8)}    ${String(n.ret || 0).padStart(3)}% [${bar}]\n`;
     });
   }
 
-  // ── 6. 맛 프로파일 ──
+  // ── 6. 맛 프로파일 (전체) ──
+  report += `\n${'─'.repeat(50)}\n`;
+  report += `[🍽️ 맛 프로파일 분석]\n`;
+  report += `${'─'.repeat(50)}\n`;
+
   if (flavor) {
-    report += `\n[맛 프로파일 예측]\n`;
-    const flavorNames = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+    // Summary
+    const fSorted = Object.entries(flavor).sort((a,b) => b[1] - a[1]);
+    const topF = fSorted[0];
+    const secF = fSorted[1];
+    report += `\n  ▶ 요약: 가장 강한 맛은 ${flavorNames[topF[0]]}(${topF[1]}점), 다음으로 ${flavorNames[secF[0]]}(${secF[1]}점)\n`;
+    const balance = Math.max(...fSorted.map(x=>x[1])) - Math.min(...fSorted.map(x=>x[1]));
+    if (balance < 20) report += `    5가지 맛이 고르게 분포된 균형 잡힌 조합\n`;
+    else if (balance > 50) report += `    특정 맛이 확실히 강한 개성 있는 조합\n`;
+
+    report += `\n`;
     Object.entries(flavor).forEach(([k, v]) => {
       const score = Math.round(v);
       const bar = '█'.repeat(Math.round(score / 10)) + '░'.repeat(10 - Math.round(score / 10));
-      report += `  ${(flavorNames[k] || k).padEnd(6)}: ${String(score).padStart(3)}% [${bar}]\n`;
+      report += `  ${(flavorNames[k] || k).padEnd(6)}: ${String(score).padStart(3)}점 [${bar}]  — ${flavorDescs[k] || ''}\n`;
+    });
+
+    // 재료별 풍미 화합물
+    report += `\n  [재료별 핵심 풍미 화합물]\n`;
+    selNames().forEach(n => {
+      const d = DB[n];
+      if (d && d.compounds && d.compounds.length > 0) {
+        report += `  • ${n} (${d.emoji}): ${d.compounds.join(', ')}\n`;
+      }
     });
   }
 
-  // ── 7. 과학적 출처 ──
-  report += `\n[과학적 출처]\n`;
+  // ── 7. 건강 분석 (전체) ──
+  if (health && Object.keys(health).length > 0) {
+    report += `\n${'─'.repeat(50)}\n`;
+    report += `[❤️ 건강 영향 분석]\n`;
+    report += `${'─'.repeat(50)}\n`;
+
+    // Health summary
+    const allFindings = Object.values(health).flatMap(m => m.results.flatMap(r => r.findings));
+    const dangers = allFindings.filter(f => f.severity === 'danger');
+    const cautions = allFindings.filter(f => f.severity === 'caution');
+    const goods = allFindings.filter(f => f.severity === 'good');
+    const scores = Object.values(health).flatMap(m => m.results.map(r => r.score));
+    const avgScore = scores.length > 0 ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+    report += `\n  ▶ 요약: 총 ${allFindings.length}가지 건강 항목 분석\n`;
+    if (dangers.length > 0) report += `    ⚠️ 주의 필요: ${dangers.length}건\n`;
+    if (cautions.length > 0) report += `    참고 사항: ${cautions.length}건\n`;
+    if (goods.length > 0) report += `    ✅ 건강에 좋은 점: ${goods.length}건\n`;
+    report += `    종합 점수: ${avgScore}점/100점\n`;
+
+    // 총 성분 요약
+    const firstResults = Object.values(health)[0];
+    const comp = firstResults.results[0].composition;
+    if (comp) {
+      report += `\n  [투입 재료 총 성분]\n`;
+      report += `  칼로리: ${comp.calories.toFixed(0)}kcal | 단백질: ${comp.protein.toFixed(1)}g | 지방: ${comp.fat.toFixed(1)}g | 탄수화물: ${comp.carbs.toFixed(1)}g\n`;
+      report += `  식이섬유: ${comp.fiber.toFixed(1)}g | 나트륨: ${comp.sodium.toFixed(0)}mg | 칼륨: ${comp.potassium.toFixed(0)}mg | 포화지방: ${comp.saturatedFat.toFixed(1)}g\n`;
+    }
+
+    // 각 멤버별 결과
+    Object.entries(health).forEach(([memberId, memberData]) => {
+      const member = memberData.member;
+      const healthResults = memberData.results;
+      report += `\n  ──────────────────────────────────\n`;
+      report += `  👤 ${member.name}${member.age ? ' (' + member.age + '세)' : ''}\n`;
+      report += `  ──────────────────────────────────\n`;
+
+      healthResults.forEach(hr => {
+        const scoreLabel = hr.score >= 70 ? '양호' : hr.score >= 40 ? '주의 필요' : '위험';
+        report += `\n  ${hr.emoji} ${hr.label} 적합도: ${scoreLabel} (${hr.score}점/100)\n`;
+        report += `    ${hr.desc} · ${hr.findings.length}개 항목 분석\n`;
+
+        if (hr.findings.length === 0) {
+          report += `    → 현재 재료 조합에서 ${hr.label} 관련 특이사항 없음\n`;
+        } else {
+          const sevKo = {danger:'위험',caution:'주의',good:'긍정',info:'참고'};
+          hr.findings.forEach(f => {
+            report += `\n    [${sevKo[f.severity] || f.severity}] ${f.title}\n`;
+            report += `      ${f.detail}\n`;
+            if (f.tip) {
+              report += `      💡 개선 팁: ${f.tip}\n`;
+            }
+          });
+        }
+      });
+    });
+
+    report += `\n  ⚕️ 이 분석은 일반적인 영양학 지식에 기반한 참고 정보이며,\n`;
+    report += `  개인의 건강 상태에 따라 다를 수 있습니다.\n`;
+    report += `  구체적인 식이 관리는 반드시 담당 의료진과 상담하세요.\n`;
+  }
+
+  // ── 8. 과학적 출처 ──
+  report += `\n${'─'.repeat(50)}\n`;
+  report += `[📚 과학적 출처]\n`;
+  report += `${'─'.repeat(50)}\n`;
   for (const [key, ref] of Object.entries(REFERENCES)) {
     ref.papers.forEach(p => {
-      report += `  - ${p.authors} (${p.year}) "${p.title}" ${p.journal}\n`;
+      report += `  - ${p.authors} (${p.year}). "${p.title}". ${p.journal}${p.vol ? ', '+p.vol : ''}${p.doi ? '. DOI: '+p.doi : ''}\n`;
     });
   }
 
-  report += `\n═══════════════════════════════════════\n`;
+  report += `\n═══════════════════════════════════════════════════\n`;
   report += `  Mealcule v2.0 · mealcule.com\n`;
   report += `  이 보고서는 이론적 모델에 기반하며\n  의학적 조언을 대체하지 않습니다.\n`;
-  report += `═══════════════════════════════════════\n`;
+  report += `═══════════════════════════════════════════════════\n`;
 
   if (format === 'pdf') {
     exportReportPDF(report);
@@ -4064,105 +4192,118 @@ async function exportReport(format = 'txt') {
   }
 }
 
-// ── PDF Export ──
+// ── PDF Export (html2canvas 기반 — 화면 캡처 방식) ──
 async function exportReportPDF(reportText) {
   if (typeof window.jspdf === 'undefined') {
     alert('PDF 라이브러리를 로딩 중입니다. 잠시 후 다시 시도해주세요.');
     return;
   }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  // Load Noto Sans KR for Korean support
-  const fontUrl = 'https://cdn.jsdelivr.net/gh/nicholasgasior/gfonts@master/dist/NotoSansKR/NotoSansKR-Regular.ttf';
-  let fontLoaded = false;
+  // 방법: 현재 분석 결과 화면을 캡처하여 PDF로 변환
+  const resultsEl = document.getElementById('results');
+  if (!resultsEl || resultsEl.style.display === 'none') {
+    alert('분석 결과가 표시된 상태에서 PDF를 다운로드해주세요.');
+    return;
+  }
+
+  // Show all tabs temporarily for full capture
+  const tabs = ['tab-reactions', 'tab-nutrition', 'tab-flavor', 'tab-health', 'tab-recipes'];
+  const origDisplay = {};
+  tabs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { origDisplay[id] = el.style.display; el.style.display = 'block'; }
+  });
+
+  // 로딩 표시
+  const loadingEl = document.createElement('div');
+  loadingEl.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:99999;color:white;font-size:18px;font-weight:600';
+  loadingEl.textContent = 'PDF 생성 중...';
+  document.body.appendChild(loadingEl);
+
   try {
-    const resp = await fetch(fontUrl);
-    const buf = await resp.arrayBuffer();
-    const bytes = new Uint8Array(buf);
-    let binary = '';
-    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-    const b64 = btoa(binary);
-    doc.addFileToVFS('NotoSansKR.ttf', b64);
-    doc.addFont('NotoSansKR.ttf', 'NotoSansKR', 'normal');
-    doc.setFont('NotoSansKR');
-    fontLoaded = true;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 10;
+    const usableW = pageW - margin * 2;
+
+    // Capture results area
+    const canvas = await html2canvas(resultsEl, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#0F1113',
+      logging: false,
+      windowWidth: 800,
+    });
+
+    // Restore original tab displays
+    tabs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && origDisplay[id] !== undefined) el.style.display = origDisplay[id];
+    });
+
+    // Calculate image dimensions
+    const imgW = usableW;
+    const imgH = (canvas.height * imgW) / canvas.width;
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+    // Split into pages
+    let yOffset = 0;
+    const pageImgH = pageH - margin * 2 - 12; // leave room for header/footer
+
+    // First page header
+    doc.setFillColor(16, 185, 129);
+    doc.rect(0, 0, pageW, 14, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.text('Mealcule Analysis Report', margin, 10);
+    doc.setFontSize(8);
+    doc.text(new Date().toLocaleString(), pageW - margin, 10, { align: 'right' });
+
+    let currentY = 16;
+    const totalPages = Math.ceil(imgH / pageImgH);
+
+    for (let page = 0; page < totalPages; page++) {
+      if (page > 0) {
+        doc.addPage();
+        currentY = margin;
+      }
+
+      // Clip and draw portion of image
+      const srcY = (page * pageImgH / imgH) * canvas.height;
+      const srcH = (pageImgH / imgH) * canvas.height;
+
+      // Create clipped canvas for this page
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = Math.min(srcH, canvas.height - srcY);
+      const ctx = pageCanvas.getContext('2d');
+      ctx.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
+
+      const pageData = pageCanvas.toDataURL('image/jpeg', 0.92);
+      const drawH = (pageCanvas.height * imgW) / canvas.width;
+      doc.addImage(pageData, 'JPEG', margin, currentY, imgW, drawH);
+
+      // Footer
+      doc.setFontSize(7);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Mealcule v2.0 | Page ${page + 1}/${totalPages}`, pageW / 2, pageH - 5, { align: 'center' });
+    }
+
+    doc.save(`mealcule-report-${Date.now()}.pdf`);
   } catch(e) {
-    console.warn('Korean font load failed, using default:', e);
+    console.error('PDF export error:', e);
+    alert('PDF 생성 중 오류가 발생했습니다: ' + e.message);
+    // Restore tabs on error too
+    tabs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && origDisplay[id] !== undefined) el.style.display = origDisplay[id];
+    });
+  } finally {
+    loadingEl.remove();
   }
-
-  const pageW = doc.internal.pageSize.getWidth();
-  const pageH = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  const usableW = pageW - margin * 2;
-  let y = margin;
-
-  // Header bar
-  doc.setFillColor(16, 185, 129);
-  doc.rect(0, 0, pageW, 28, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
-  doc.text('Mealcule Analysis Report', margin, 18);
-  doc.setFontSize(9);
-  doc.text(new Date().toLocaleString(), pageW - margin, 18, { align: 'right' });
-
-  y = 36;
-  doc.setTextColor(40, 40, 40);
-  doc.setFontSize(10);
-
-  // Split report text into lines
-  const lines = reportText.split('\n');
-  for (const line of lines) {
-    if (y > pageH - 20) {
-      doc.addPage();
-      y = margin;
-    }
-    const trimmed = line.trimEnd();
-    // Section headers
-    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-      y += 3;
-      doc.setFillColor(240, 240, 240);
-      doc.rect(margin, y - 4, usableW, 7, 'F');
-      doc.setFontSize(11);
-      doc.setTextColor(16, 185, 129);
-      doc.text(trimmed, margin + 2, y);
-      doc.setFontSize(10);
-      doc.setTextColor(40, 40, 40);
-      y += 8;
-    } else if (trimmed.startsWith('═')) {
-      doc.setDrawColor(16, 185, 129);
-      doc.setLineWidth(0.5);
-      doc.line(margin, y, pageW - margin, y);
-      y += 4;
-    } else if (trimmed.startsWith('◆')) {
-      y += 2;
-      doc.setFontSize(10);
-      doc.setTextColor(60, 60, 60);
-      const wrapped = doc.splitTextToSize(trimmed, usableW - 4);
-      wrapped.forEach(wl => {
-        if (y > pageH - 20) { doc.addPage(); y = margin; }
-        doc.text(wl, margin + 2, y);
-        y += 5;
-      });
-      doc.setTextColor(40, 40, 40);
-    } else if (trimmed) {
-      const wrapped = doc.splitTextToSize(trimmed, usableW - 4);
-      wrapped.forEach(wl => {
-        if (y > pageH - 20) { doc.addPage(); y = margin; }
-        doc.text(wl, margin + 4, y);
-        y += 4.5;
-      });
-    } else {
-      y += 2;
-    }
-  }
-
-  // Footer on last page
-  doc.setFontSize(8);
-  doc.setTextColor(150, 150, 150);
-  doc.text('Generated by Mealcule v2.0 — mealcule.com', pageW / 2, pageH - 8, { align: 'center' });
-
-  doc.save(`mealcule-report-${Date.now()}.pdf`);
 }
 
 // ── Supabase Config ──
