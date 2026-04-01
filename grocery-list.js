@@ -126,8 +126,12 @@ function renderGroceryList(items) {
     if (!group || group.length === 0) return;
     const catInfo = CATEGORIES[cat] || { emoji: '', label: cat, label_en: cat };
     const catName = _t(catInfo.label, catInfo.label_en);
+    const catIconHtml = catInfo.img
+      ? `<img src="${catInfo.img}" alt="${catName}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.style.display='none';this.nextElementSibling.style.display=''">`
+        + `<span style="display:none">${catInfo.emoji}</span>`
+      : `<span>${catInfo.emoji}</span>`;
     html += `<div class="grocery-category">
-      <div class="grocery-category-header">${catInfo.emoji} ${catName}</div>`;
+      <div class="grocery-category-header">${catIconHtml} ${catName}</div>`;
     group.forEach(item => {
       html += _renderItem(item);
     });
@@ -343,7 +347,7 @@ async function copyGroceryAsText(listId) {
     const group = groups[cat];
     if (!group || group.length === 0) return;
     const catInfo = CATEGORIES[cat] || { emoji: '', label_en: cat };
-    text += `${catInfo.emoji} ${catInfo.label_en}\n`;
+    text += `${catInfo.emoji || ''} ${catInfo.label_en}\n`;
     group.forEach(item => {
       const check = item.is_checked ? '\u2611' : '\u2610';
       const name = item.ingredient_name_en || item.ingredient_name;

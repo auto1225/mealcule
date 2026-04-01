@@ -9,25 +9,25 @@ if (typeof _t === 'undefined') var _t = (ko, en) => (window.I18n && I18n.lang ==
 // ══════════════════════════════════════════════════════════════
 
 const SMART_APPLIANCES = [
-  { id: 'samsung_oven', name: 'Samsung Smart Oven', icon: '🔥', brand: 'samsung',
+  { id: 'samsung_oven', name: 'Samsung Smart Oven', icon: '🔥', img: 'https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'samsung',
     capabilities: ['temperature', 'timer', 'preheat', 'mode'] },
-  { id: 'samsung_cooktop', name: 'Samsung Induction Cooktop', icon: '🍳', brand: 'samsung',
+  { id: 'samsung_cooktop', name: 'Samsung Induction Cooktop', icon: '🍳', img: 'https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'samsung',
     capabilities: ['temperature', 'timer', 'power'] },
-  { id: 'samsung_fridge', name: 'Samsung Family Hub', icon: '🧊', brand: 'samsung',
+  { id: 'samsung_fridge', name: 'Samsung Family Hub', icon: '🧊', img: 'https://images.pexels.com/photos/2343467/pexels-photo-2343467.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'samsung',
     capabilities: ['grocery_sync', 'meal_plan_display'] },
-  { id: 'lg_oven', name: 'LG InstaView Oven', icon: '🔥', brand: 'lg',
+  { id: 'lg_oven', name: 'LG InstaView Oven', icon: '🔥', img: 'https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'lg',
     capabilities: ['temperature', 'timer', 'preheat'] },
-  { id: 'lg_cooktop', name: 'LG Induction Range', icon: '🍳', brand: 'lg',
+  { id: 'lg_cooktop', name: 'LG Induction Range', icon: '🍳', img: 'https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'lg',
     capabilities: ['temperature', 'timer'] },
-  { id: 'balmuda_toaster', name: 'BALMUDA The Toaster', icon: '🍞', brand: 'balmuda',
+  { id: 'balmuda_toaster', name: 'BALMUDA The Toaster', icon: '🍞', img: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'balmuda',
     capabilities: ['temperature', 'timer', 'mode'] },
-  { id: 'thermomix', name: 'Thermomix TM6', icon: '🥣', brand: 'vorwerk',
+  { id: 'thermomix', name: 'Thermomix TM6', icon: '🥣', img: 'https://images.pexels.com/photos/2544829/pexels-photo-2544829.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'vorwerk',
     capabilities: ['temperature', 'timer', 'speed', 'mode'] },
-  { id: 'instant_pot', name: 'Instant Pot', icon: '🥘', brand: 'instant',
+  { id: 'instant_pot', name: 'Instant Pot', icon: '🥘', img: 'https://images.pexels.com/photos/2544829/pexels-photo-2544829.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'instant',
     capabilities: ['temperature', 'timer', 'pressure', 'mode'] },
-  { id: 'anova_sous_vide', name: 'Anova Precision Cooker', icon: '♨️', brand: 'anova',
+  { id: 'anova_sous_vide', name: 'Anova Precision Cooker', icon: '♨️', img: 'https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'anova',
     capabilities: ['temperature', 'timer'] },
-  { id: 'june_oven', name: 'June Smart Oven', icon: '🔥', brand: 'june',
+  { id: 'june_oven', name: 'June Smart Oven', icon: '🔥', img: 'https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', brand: 'june',
     capabilities: ['temperature', 'timer', 'mode', 'camera'] },
 ];
 
@@ -86,8 +86,12 @@ function _renderAppliancePanel() {
       <div style="font-size:13px;font-weight:600;margin-bottom:8px">${_t('연결된 기기', 'Connected Devices')}</div>`;
     _connectedAppliances.forEach(a => {
       const info = SMART_APPLIANCES.find(sa => sa.id === a.id) || a;
+      const iconHtml = info.img
+        ? `<img src="${info.img}" alt="${info.name}" style="width:28px;height:28px;border-radius:6px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display=''">`
+          + `<span style="font-size:24px;display:none">${info.icon}</span>`
+        : `<span style="font-size:24px">${info.icon}</span>`;
       html += `<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#ecfdf5;border-radius:10px;margin-bottom:6px">
-        <span style="font-size:24px">${info.icon}</span>
+        ${iconHtml}
         <div style="flex:1">
           <div style="font-weight:600;font-size:13px">${info.name}</div>
           <div style="font-size:11px;color:#059669">● ${_t('연결됨', 'Connected')}</div>
@@ -119,8 +123,12 @@ function _renderAppliancePanel() {
     html += `<div style="margin-bottom:12px">
       <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;margin-bottom:6px">${brand}</div>`;
     appliances.forEach(a => {
+      const aIconHtml = a.img
+        ? `<img src="${a.img}" alt="${a.name}" style="width:24px;height:24px;border-radius:5px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display=''">`
+          + `<span style="font-size:20px;display:none">${a.icon}</span>`
+        : `<span style="font-size:20px">${a.icon}</span>`;
       html += `<div style="display:flex;align-items:center;gap:10px;padding:8px;border:1px solid #eee;border-radius:8px;margin-bottom:4px">
-        <span style="font-size:20px">${a.icon}</span>
+        ${aIconHtml}
         <div style="flex:1;font-size:13px">${a.name}</div>
         <button onclick="_connectAppliance('${a.id}')" style="padding:5px 12px;border:none;border-radius:6px;background:#059669;color:#fff;font-size:12px;cursor:pointer;font-weight:600">${_t('연결', 'Connect')}</button>
       </div>`;
