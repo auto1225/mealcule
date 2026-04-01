@@ -6373,15 +6373,15 @@ async function runAnalysis() {
   const hasHealth = Object.keys(allMembersHealth).length > 0;
 
   // Tabs + Export
-  html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-    <div class="tabs" style="flex:1;margin-bottom:0">
-      <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchResultTab('reactions')"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> 화학 반응</button>
-      <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchResultTab('nutrition')"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📊'"> 영양소 변화</button>
-      <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchResultTab('flavor')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽️'"> 맛 프로파일</button>
-      ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchResultTab('health')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> 건강 분석</button>` : ''}
-      <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchResultTab('recipes')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍴'"> 레시피 추천</button>
+  html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <div class="tabs">
+      <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchResultTab('reactions')"><span class="tab-icon">🧪</span> ${_t('화학 반응','Reactions')}</button>
+      <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchResultTab('nutrition')"><span class="tab-icon">📊</span> ${_t('영양소 변화','Nutrition')}</button>
+      <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchResultTab('flavor')"><span class="tab-icon">🍽️</span> ${_t('맛 프로파일','Flavor')}</button>
+      ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchResultTab('health')"><span class="tab-icon">🏥</span> ${_t('건강 분석','Health')}</button>` : ''}
+      <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchResultTab('recipes')"><span class="tab-icon">🍴</span> ${_t('레시피 추천','Recipes')}</button>
     </div>
-    <button class="export-btn" onclick="exportReport()" title="${userPlan==='free'?'프로 플랜 필요':'보고서 다운로드'}"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📥'"> 보고서${userPlan==='free'?' <span class="pro-badge">PRO</span>':''}</button>
+    <button class="export-btn" onclick="exportReport()" title="${_t('보고서 다운로드','Download Report')}">📥 ${_t('보고서','Report')}</button>
   </div>`;
 
   // ── Summary generation for each tab ──
