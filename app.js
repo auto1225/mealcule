@@ -2471,47 +2471,79 @@ function switchAnalyzeStep(step) {
 function renderHomeDashboard() {
   var container = document.getElementById('homeContent');
   if (!container) return;
-  // Home은 매번 다시 렌더링 (오늘의 칼로리, 스트릭 등 동적 데이터)
 
   var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
 
-  // Get recent analyses from localStorage
-  var recentHtml = '';
-  try {
-    var history = JSON.parse(localStorage.getItem(LOCAL_KEYS.HISTORY) || '[]');
-    var recent = history.slice(0, 5);
-    if (recent.length > 0) {
-      recentHtml = '<div class="home-recent"><div class="home-section-title">' +
-        _t('최근 분석', 'Recent Analyses') +
-        ' <span style="font-size:12px;font-weight:400;color:var(--text-secondary);margin-left:8px">(' + history.length + _t('개 저장됨', ' saved') + ')</span>' +
-        '<button onclick="_openAnalysisHistory()" style="float:right;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:11px">' + _t('전체 보기', 'View All') + '</button>' +
-        '</div><div class="home-recent-list">';
-      recent.forEach(function(item) {
-        var ingredients = item.ingredients || _t('분석 결과', 'Analysis');
-        var date = item.date ? new Date(item.date).toLocaleDateString() : '';
-        var methodTxt = item.method || '';
-        recentHtml += '<div class="home-recent-item" onclick="_openSavedAnalysis(\'' + item.id + '\')">' +
-          '<span class="recent-icon">🧪</span>' +
-          '<div class="recent-info"><div class="recent-name">' + escapeHtml(ingredients) + '</div>' +
-          '<div class="recent-meta">' + escapeHtml(methodTxt) + (methodTxt ? ' · ' : '') + (item.temp || '') + '°C · ' + (item.time || '') + _t('분', 'min') +
-          ' · ' + _t('반응 ', '') + (item.rxnCount || 0) + _t('개', ' reactions') +
-          '</div><div class="recent-date">' + date + '</div></div>' +
-          '<span class="recent-arrow">›</span></div>';
-      });
-      recentHtml += '</div></div>';
-    }
-  } catch(e) {}
-
-  // Count ingredients
-  var ingCount = typeof DB !== 'undefined' ? Object.keys(DB).length : 939;
-  var catCount = typeof CATEGORIES !== 'undefined' ? Object.keys(CATEGORIES).length - 1 : 15;
-  var methodCount = typeof METHODS !== 'undefined' ? Object.keys(METHODS).length : 30;
-
-  // ── Daily calorie summary data ──
+  // ── Detect user state ──
+  var hasHistory = false;
+  var hasMeals = false;
+  var history = [];
+  try { history = JSON.parse(localStorage.getItem(LOCAL_KEYS.HISTORY) || '[]'); hasHistory = history.length > 0; } catch(e) {}
   var todayStr = new Date().toISOString().slice(0, 10);
   var todayMeals = [];
-  try { todayMeals = JSON.parse(localStorage.getItem('mealcule_ct_meals_' + todayStr) || '[]'); } catch(e) {}
-  if (todayMeals.length === 0 && typeof _CT_DEMO_MEALS !== 'undefined') todayMeals = _CT_DEMO_MEALS;
+  try { todayMeals = JSON.parse(localStorage.getItem('mealcule_ct_meals_' + todayStr) || '[]'); hasMeals = todayMeals.length > 0; } catch(e) {}
+
+  var isNewUser = !hasHistory && !hasMeals;
+
+  // ── NEW USER: Clean onboarding ──
+  if (isNewUser) {
+    var ingCount = typeof DB !== 'undefined' ? Object.keys(DB).length : 939;
+    container.innerHTML =
+      '<div class="home-onboard">' +
+        '<div class="home-onboard-hero">' +
+          '<div class="onboard-logo-glow"></div>' +
+          '<h1>' + _t('요리의 과학을 발견하세요', 'Discover the Science of Cooking') + '</h1>' +
+          '<p>' + _t('재료를 선택하면 조리 중 일어나는 화학 반응, 영양 변화, 건강 영향까지 분석해 드립니다.', 'Select ingredients and we\'ll analyze chemical reactions, nutritional changes, and health impacts during cooking.') + '</p>' +
+        '</div>' +
+
+        '<button class="home-start-btn" onclick="switchTab(\'analyze\')">' +
+          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 7h-8l1-7z"/><path d="M6 10l-1 8a2 2 0 002 2h10a2 2 0 002-2l-1-8"/><line x1="12" y1="14" x2="12" y2="18"/></svg>' +
+          _t('첫 분석 시작하기', 'Start Your First Analysis') +
+        '</button>' +
+
+        '<div class="home-alt-actions">' +
+          '<button class="home-alt-btn" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M12 3v2"/></svg>' +
+            '<span>' + _t('음식 사진으로 분석', 'Analyze by Photo') + '</span>' +
+          '</button>' +
+          '<button class="home-alt-btn" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openUrlImport===\'function\')openUrlImport()},300)">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>' +
+            '<span>' + _t('레시피 URL 가져오기', 'Import Recipe URL') + '</span>' +
+          '</button>' +
+        '</div>' +
+
+        '<div class="home-how-it-works">' +
+          '<div class="home-section-title">' + _t('어떻게 작동하나요?', 'How does it work?') + '</div>' +
+          '<div class="how-steps">' +
+            '<div class="how-step">' +
+              '<div class="how-step-num">1</div>' +
+              '<div class="how-step-text"><strong>' + _t('재료 선택', 'Pick Ingredients') + '</strong><br>' + _t(ingCount + '+ 식재료 데이터베이스에서 선택', 'Choose from ' + ingCount + '+ ingredients') + '</div>' +
+            '</div>' +
+            '<div class="how-step">' +
+              '<div class="how-step-num">2</div>' +
+              '<div class="how-step-text"><strong>' + _t('조리 조건 설정', 'Set Cooking Conditions') + '</strong><br>' + _t('온도, 시간, 조리법 선택', 'Temperature, time, method') + '</div>' +
+            '</div>' +
+            '<div class="how-step">' +
+              '<div class="how-step-num">3</div>' +
+              '<div class="how-step-text"><strong>' + _t('과학 분석 결과', 'Get Science Results') + '</strong><br>' + _t('화학 반응, 영양 변화, 건강 영향', 'Reactions, nutrition, health impacts') + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="home-stats">' +
+          '<span class="home-stat"><strong>' + ingCount + '+</strong> ' + _t('식재료', 'ingredients') + '</span>' +
+          '<span class="home-stat"><strong>' + (typeof METHODS !== 'undefined' ? Object.keys(METHODS).length : 30) + '+</strong> ' + _t('조리법', 'methods') + '</span>' +
+          '<span class="home-stat"><strong>USDA</strong> ' + _t('기반', 'based') + '</span>' +
+        '</div>' +
+      '</div>';
+
+    _tabRendered.home = true;
+    return;
+  }
+
+  // ── RETURNING USER: Focused dashboard ──
+  // Calorie data
+  if (!hasMeals && typeof _CT_DEMO_MEALS !== 'undefined') todayMeals = _CT_DEMO_MEALS;
   var todayTotals = todayMeals.reduce(function(t, m) {
     return { cal: t.cal + (m.cal || 0), protein: t.protein + (m.protein || 0), fat: t.fat + (m.fat || 0), carbs: t.carbs + (m.carbs || 0) };
   }, { cal: 0, protein: 0, fat: 0, carbs: 0 });
@@ -2522,20 +2554,53 @@ function renderHomeDashboard() {
   var ringColor = calRemain >= 0 ? '#10b981' : '#ef4444';
   var circumference = 2 * Math.PI * 34;
 
-  // ── Engagement widgets ──
+  // Recent analyses
+  var recentHtml = '';
+  if (hasHistory) {
+    var recent = history.slice(0, 3);
+    recentHtml = '<div class="home-recent"><div class="home-section-title">' +
+      _t('최근 분석', 'Recent Analyses') +
+      '<button onclick="_openAnalysisHistory()" style="margin-left:auto;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:11px">' + _t('전체 보기', 'View All') + '</button>' +
+      '</div><div class="home-recent-list">';
+    recent.forEach(function(item) {
+      var ingredients = item.ingredients || _t('분석 결과', 'Analysis');
+      var date = item.date ? new Date(item.date).toLocaleDateString() : '';
+      recentHtml += '<div class="home-recent-item" onclick="_openSavedAnalysis(\'' + item.id + '\')">' +
+        '<span class="recent-icon">🧪</span>' +
+        '<div class="recent-info"><div class="recent-name">' + escapeHtml(ingredients) + '</div>' +
+        '<div class="recent-date">' + date + '</div></div>' +
+        '<span class="recent-arrow">›</span></div>';
+    });
+    recentHtml += '</div></div>';
+  }
+
+  // Engagement widgets
   var streakHtml = typeof renderStreakWidget === 'function' ? renderStreakWidget() : '';
   var tipHtml = typeof renderDailyTipWidget === 'function' ? renderDailyTipWidget() : '';
-  var goalSuggestHtml = typeof renderGoalSuggestions === 'function' ? renderGoalSuggestions() : '';
 
-  container.innerHTML =
-    // Compact hero
-    '<div class="home-hero" style="padding:20px 0 8px">' +
-      '<h2 style="font-size:22px">' + _t('안녕하세요!', 'Hello!') + '</h2>' +
-      '<p style="font-size:13px">' + _t('오늘의 영양 상태와 분석 결과를 확인하세요', 'Check your daily nutrition and analysis results') + '</p>' +
-    '</div>' +
+  // Build returning user HTML
+  var html = '';
 
-    // ── Daily Calorie Summary (Foodvisor-style circular display) ──
-    '<div class="daily-summary-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)" style="cursor:pointer">' +
+  // Greeting — compact
+  html += '<div class="home-hero" style="padding:16px 0 8px">' +
+    '<h2 style="font-size:20px">' + _t('안녕하세요!', 'Hello!') + '</h2>' +
+  '</div>';
+
+  // Quick actions — 2 primary buttons only
+  html += '<div class="home-quick-duo">' +
+    '<button class="home-primary-btn" onclick="switchTab(\'analyze\')">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 7h-8l1-7z"/><path d="M6 10l-1 8a2 2 0 002 2h10a2 2 0 002-2l-1-8"/><line x1="12" y1="14" x2="12" y2="18"/></svg>' +
+      _t('분석 시작', 'Analyze') +
+    '</button>' +
+    '<button class="home-primary-btn home-primary-btn--secondary" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M12 3v2"/></svg>' +
+      _t('사진 스캔', 'Photo Scan') +
+    '</button>' +
+  '</div>';
+
+  // Daily nutrition — only if user has actual meal data
+  if (hasMeals) {
+    html += '<div class="daily-summary-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)" style="cursor:pointer">' +
       '<div class="daily-summary-header">' +
         '<span style="font-size:14px;font-weight:600">' + _t('오늘의 영양', "Today's Nutrition") + '</span>' +
         '<span style="font-size:11px;color:var(--text-secondary)">' + _t('상세 보기 ›', 'Details ›') + '</span>' +
@@ -2554,60 +2619,16 @@ function renderHomeDashboard() {
         '</div>' +
       '</div>' +
       '<div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text-tertiary)">' + todayTotals.cal + ' / ' + dailyGoals.calories + ' kcal (' + calPct + '%)</div>' +
-    '</div>' +
-
-    // ── Goal Suggestions ──
-    goalSuggestHtml +
-
-    // ── Quick Actions (Foodvisor-beating multi-modal) ──
-    '<div class="home-quick-log">' +
-      '<button class="home-quick-btn" onclick="if(typeof openQuickTextLog===\'function\')openQuickTextLog()"><span class="qb-icon">✏️</span>' + _t('빠른 기록', 'Quick Log') + '</button>' +
-      '<button class="home-quick-btn" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)"><span class="qb-icon">📷</span>' + _t('사진 스캔', 'Photo Scan') + '</button>' +
-      '<button class="home-quick-btn" onclick="switchTab(\'analyze\')"><span class="qb-icon">🧪</span>' + _t('분석 시작', 'Analyze') + '</button>' +
-      '<button class="home-quick-btn" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openUrlImport===\'function\')openUrlImport()},300)"><span class="qb-icon">🔗</span>' + _t('URL 가져오기', 'Import URL') + '</button>' +
-    '</div>' +
-
-    // ── Streak Widget ──
-    streakHtml +
-
-    // ── Daily Coaching Tip ──
-    tipHtml +
-
-    // ── Recent Analyses ──
-    recentHtml +
-
-    // ── Feature Discovery (compact) ──
-    '<div class="home-discover"><div class="home-section-title">' + _t('기능 둘러보기', 'Explore Features') + '</div>' +
-      '<div class="home-discover-grid">' +
-        '<div class="home-discover-card" onclick="switchTab(\'plan\')">' +
-          '<div class="discover-icon">📅</div>' +
-          '<div class="discover-text"><div class="discover-title">' + _t('식단 플래너', 'Meal Planner') + '</div>' +
-          '<div class="discover-desc">' + _t('주간 식단 계획', 'Weekly meal planning') + '</div></div>' +
-        '</div>' +
-        '<div class="home-discover-card" onclick="switchTab(\'recipes\')">' +
-          '<div class="discover-icon">📖</div>' +
-          '<div class="discover-text"><div class="discover-title">' + _t('레시피', 'Recipes') + '</div>' +
-          '<div class="discover-desc">' + _t('저장 & 커뮤니티', 'Save & Community') + '</div></div>' +
-        '</div>' +
-        '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)">' +
-          '<div class="discover-icon">🔥</div>' +
-          '<div class="discover-text"><div class="discover-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
-          '<div class="discover-desc">' + _t('일일 영양 추적', 'Daily nutrition') + '</div></div>' +
-        '</div>' +
-        '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'dashboard\')},200)">' +
-          '<div class="discover-icon">📊</div>' +
-          '<div class="discover-text"><div class="discover-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
-          '<div class="discover-desc">' + _t('영양 트렌드', 'Nutrition trends') + '</div></div>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-
-    '<div class="home-stats">' +
-      '<span class="home-stat"><strong>' + ingCount + '+</strong> ' + _t('식재료', 'ingredients') + '</span>' +
-      '<span class="home-stat"><strong>' + catCount + '</strong> ' + _t('카테고리', 'categories') + '</span>' +
-      '<span class="home-stat"><strong>' + methodCount + '+</strong> ' + _t('조리법', 'cooking methods') + '</span>' +
     '</div>';
+  }
 
+  // Streak + tip
+  html += streakHtml + tipHtml;
+
+  // Recent analyses
+  html += recentHtml;
+
+  container.innerHTML = html;
   _tabRendered.home = true;
 }
 
