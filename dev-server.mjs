@@ -1,5 +1,5 @@
 // 로컬 개발 서버: 정적 파일 + /api/* 라우트 처리
-// 실행: ANTHROPIC_API_KEY=sk-... node dev-server.mjs
+// 실행: node dev-server.mjs  (.env 자동 로딩)
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -7,6 +7,26 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = 4000;
+
+// ── .env 자동 로딩 ──────────────────────────────────────────────────────────
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  for (const line of envContent.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx < 1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    let val = trimmed.slice(eqIdx + 1).trim();
+    // Remove surrounding quotes
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    if (!process.env[key]) process.env[key] = val;
+  }
+  console.log('✅ .env loaded');
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
