@@ -2494,18 +2494,18 @@ function renderHomeDashboard() {
     '<div class="home-actions">' +
       '<div class="home-action-card" onclick="switchTab(\'analyze\')">' +
         '<span class="action-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🧪\'"></span>' +
-        '<div class="action-title">' + _t('분석 시작', 'Start Analysis') + '</div>' +
-        '<div class="action-desc">' + _t('재료와 조리법을 선택하고 과학적 분석을 받으세요', 'Select ingredients & cooking method for scientific analysis') + '</div>' +
+        '<div class="action-text"><div class="action-title">' + _t('분석 시작', 'Start Analysis') + '</div>' +
+        '<div class="action-desc">' + _t('재료와 조리법을 선택하고 과학적 분석을 받으세요', 'Select ingredients & cooking method for scientific analysis') + '</div></div>' +
       '</div>' +
       '<div class="home-action-card" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openPhotoScanner===\'function\')openPhotoScanner()},300)">' +
         '<span class="action-icon"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📷\'"></span>' +
-        '<div class="action-title">' + _t('사진 스캔', 'Photo Scan') + '</div>' +
-        '<div class="action-desc">' + _t('음식 사진으로 재료를 자동 인식합니다', 'AI recognizes ingredients from your food photo') + '</div>' +
+        '<div class="action-text"><div class="action-title">' + _t('사진 스캔', 'Photo Scan') + '</div>' +
+        '<div class="action-desc">' + _t('음식 사진으로 재료를 자동 인식합니다', 'AI recognizes ingredients from your food photo') + '</div></div>' +
       '</div>' +
       '<div class="home-action-card" onclick="switchTab(\'analyze\');setTimeout(function(){if(typeof openUrlImport===\'function\')openUrlImport()},300)">' +
         '<span class="action-icon"><img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🔗\'"></span>' +
-        '<div class="action-title">' + _t('레시피 가져오기', 'Import Recipe') + '</div>' +
-        '<div class="action-desc">' + _t('URL을 붙여넣어 레시피를 분석하세요', 'Paste a recipe URL to analyze it') + '</div>' +
+        '<div class="action-text"><div class="action-title">' + _t('레시피 가져오기', 'Import Recipe') + '</div>' +
+        '<div class="action-desc">' + _t('URL을 붙여넣어 레시피를 분석하세요', 'Paste a recipe URL to analyze it') + '</div></div>' +
       '</div>' +
     '</div>' +
 
@@ -2514,24 +2514,24 @@ function renderHomeDashboard() {
     '<div class="home-discover"><div class="home-section-title">' + _t('기능 둘러보기', 'Explore Features') + '</div>' +
       '<div class="home-discover-grid">' +
         '<div class="home-discover-card" onclick="switchTab(\'plan\')">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📅\'"></div>' +
-          '<div class="discover-title">' + _t('식단 플래너', 'Meal Planner') + '</div>' +
-          '<div class="discover-desc">' + _t('주간 식단을 계획하고 영양을 관리하세요', 'Plan weekly meals and manage nutrition') + '</div>' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📅\'"></div>' +
+          '<div class="discover-text"><div class="discover-title">' + _t('식단 플래너', 'Meal Planner') + '</div>' +
+          '<div class="discover-desc">' + _t('주간 식단을 계획하고 영양을 관리하세요', 'Plan weekly meals and manage nutrition') + '</div></div>' +
         '</div>' +
         '<div class="home-discover-card" onclick="switchTab(\'recipes\')">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📖\'"></div>' +
-          '<div class="discover-title">' + _t('레시피', 'Recipes') + '</div>' +
-          '<div class="discover-desc">' + _t('레시피를 저장하고 커뮤니티와 공유하세요', 'Save recipes and share with the community') + '</div>' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📖\'"></div>' +
+          '<div class="discover-text"><div class="discover-title">' + _t('레시피', 'Recipes') + '</div>' +
+          '<div class="discover-desc">' + _t('레시피를 저장하고 커뮤니티와 공유하세요', 'Save recipes and share with the community') + '</div></div>' +
         '</div>' +
         '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'calories\')},200)">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></div>' +
-          '<div class="discover-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
-          '<div class="discover-desc">' + _t('일일 영양 섭취를 기록하고 추적하세요', 'Log and track daily nutrition intake') + '</div>' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></div>' +
+          '<div class="discover-text"><div class="discover-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
+          '<div class="discover-desc">' + _t('일일 영양 섭취를 기록하고 추적하세요', 'Log and track daily nutrition intake') + '</div></div>' +
         '</div>' +
         '<div class="home-discover-card" onclick="switchTab(\'profile\');setTimeout(function(){showProfileSection(\'dashboard\')},200)">' +
-          '<div class="discover-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:32px;height:32px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></div>' +
-          '<div class="discover-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
-          '<div class="discover-desc">' + _t('영양 트렌드와 건강 점수를 확인하세요', 'View nutrition trends and health score') + '</div>' +
+          '<div class="discover-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></div>' +
+          '<div class="discover-text"><div class="discover-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
+          '<div class="discover-desc">' + _t('영양 트렌드와 건강 점수를 확인하세요', 'View nutrition trends and health score') + '</div></div>' +
         '</div>' +
       '</div>' +
     '</div>' +
@@ -2590,24 +2590,24 @@ function renderProfileTab() {
     '</div>' +
     '<div class="profile-hub-grid">' +
       '<div class="profile-hub-card" onclick="showProfileSection(\'health\')">' +
-        '<span class="hub-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🏥\'"></span>' +
-        '<div class="hub-title">' + _t('건강 프로필', 'Health Profile') + '</div>' +
-        '<div class="hub-desc">' + _t('체질, 질환, 알레르기 등 건강 정보 관리', 'Manage health conditions, allergies, and traits') + '</div>' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🏥\'"></span>' +
+        '<div class="hub-text"><div class="hub-title">' + _t('건강 프로필', 'Health Profile') + '</div>' +
+        '<div class="hub-desc">' + _t('체질, 질환, 알레르기 등 건강 정보 관리', 'Manage health conditions, allergies, and traits') + '</div></div>' +
       '</div>' +
       '<div class="profile-hub-card" onclick="showProfileSection(\'calories\')">' +
-        '<span class="hub-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></span>' +
-        '<div class="hub-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
-        '<div class="hub-desc">' + _t('일일 영양 섭취 기록 및 목표 관리', 'Track daily nutrition and manage goals') + '</div>' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'🔥\'"></span>' +
+        '<div class="hub-text"><div class="hub-title">' + _t('칼로리 트래커', 'Calorie Tracker') + '</div>' +
+        '<div class="hub-desc">' + _t('일일 영양 섭취 기록 및 목표 관리', 'Track daily nutrition and manage goals') + '</div></div>' +
       '</div>' +
       '<div class="profile-hub-card" onclick="showProfileSection(\'dashboard\')">' +
-        '<span class="hub-icon"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></span>' +
-        '<div class="hub-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
-        '<div class="hub-desc">' + _t('주간/월간 영양 트렌드 분석', 'Weekly/monthly nutrition trend analysis') + '</div>' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'📊\'"></span>' +
+        '<div class="hub-text"><div class="hub-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
+        '<div class="hub-desc">' + _t('주간/월간 영양 트렌드 분석', 'Weekly/monthly nutrition trend analysis') + '</div></div>' +
       '</div>' +
       '<div class="profile-hub-card" onclick="showProfileSection(\'settings\')">' +
-        '<span class="hub-icon"><img src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'⚙️\'"></span>' +
-        '<div class="hub-title">' + _t('설정', 'Settings') + '</div>' +
-        '<div class="hub-desc">' + _t('언어, 모드, 계정 관리', 'Language, mode, and account settings') + '</div>' +
+        '<span class="hub-icon"><img src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'⚙️\'"></span>' +
+        '<div class="hub-text"><div class="hub-title">' + _t('설정', 'Settings') + '</div>' +
+        '<div class="hub-desc">' + _t('언어, 모드, 계정 관리', 'Language, mode, and account settings') + '</div></div>' +
       '</div>' +
     '</div>' +
     '<div id="profileSectionContent"></div>';

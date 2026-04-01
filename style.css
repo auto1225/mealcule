@@ -627,15 +627,16 @@ select option{background:var(--bg-secondary);color:var(--text)}
 .home-hero h2{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .home-hero p{color:var(--text-secondary);font-size:15px;line-height:1.5;max-width:480px;margin:0 auto}
 
-.home-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
-.home-action-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-.home-action-card:hover{background:var(--card-hover);border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
-.home-action-card:active{transform:translateY(0);opacity:0.9}
-.home-action-card .action-icon{font-size:32px;margin-bottom:12px;display:block}
+.home-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:32px}
+.home-action-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;text-align:left}
+.home-action-card:hover{background:var(--card-hover);border-color:var(--border-hover)}
+.home-action-card:active{opacity:0.9}
+.home-action-card .action-icon{font-size:28px;flex-shrink:0}
 .home-action-card .action-icon img{width:40px;height:40px;border-radius:10px;object-fit:cover}
-.home-action-card .action-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap}
+.home-action-card .action-text{flex:1;min-width:0}
+.home-action-card .action-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap}
 .home-action-card .action-desc{font-size:11px;color:var(--text-tertiary);line-height:1.4}
-@media(max-width:480px){.home-actions{grid-template-columns:1fr;gap:8px}.home-action-card{padding:20px 16px;display:flex;align-items:center;gap:16px;text-align:left}.home-action-card .action-icon{margin-bottom:0;font-size:28px}}
+@media(min-width:600px){.home-actions{grid-template-columns:repeat(3,1fr);gap:12px}.home-action-card{flex-direction:column;text-align:center;padding:24px 16px}.home-action-card .action-icon{margin-bottom:8px}}
 
 .home-section-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 
@@ -649,13 +650,14 @@ select option{background:var(--bg-secondary);color:var(--text)}
 .home-recent-item .recent-meta{font-size:11px;color:var(--text-tertiary);margin-top:2px}
 
 .home-discover{margin-bottom:32px}
-.home-discover-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.home-discover-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all 0.2s}
-.home-discover-card:hover{background:var(--card-hover);border-color:var(--border-hover);transform:translateY(-1px)}
-.home-discover-card .discover-icon{font-size:24px;margin-bottom:8px}
-.home-discover-card .discover-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap}
+.home-discover-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.home-discover-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px}
+.home-discover-card:hover{background:var(--card-hover);border-color:var(--border-hover)}
+.home-discover-card .discover-icon{font-size:24px;flex-shrink:0}
+.home-discover-card .discover-text{flex:1;min-width:0}
+.home-discover-card .discover-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap}
 .home-discover-card .discover-desc{font-size:11px;color:var(--text-tertiary);line-height:1.4}
-@media(max-width:480px){.home-discover-grid{grid-template-columns:1fr}}
+@media(min-width:600px){.home-discover-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 
 .home-stats{text-align:center;padding:20px;color:var(--text-tertiary);font-size:12px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .home-stat{display:flex;align-items:center;gap:4px}
@@ -712,15 +714,16 @@ select option{background:var(--bg-secondary);color:var(--text)}
 .profile-hub-header h2{font-size:22px;font-weight:700;margin-bottom:6px}
 .profile-hub-header p{color:var(--text-secondary);font-size:13px}
 
-.profile-hub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
-.profile-hub-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.2s;text-align:center}
-.profile-hub-card:hover{background:var(--card-hover);border-color:var(--border-hover);transform:translateY(-2px)}
-.profile-hub-card:active{transform:translateY(0)}
-.profile-hub-card .hub-icon{font-size:28px;margin-bottom:10px;display:block}
-.profile-hub-card .hub-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap}
+.profile-hub-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:24px}
+.profile-hub-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px;text-align:left}
+.profile-hub-card:hover{background:var(--card-hover);border-color:var(--border-hover)}
+.profile-hub-card:active{opacity:0.9}
+.profile-hub-card .hub-icon{font-size:28px;flex-shrink:0}
+.profile-hub-card .hub-text{flex:1;min-width:0}
+.profile-hub-card .hub-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap}
 .profile-hub-card .hub-desc{font-size:11px;color:var(--text-tertiary);line-height:1.4}
 .profile-hub-card.hub-active{border-color:var(--accent);background:var(--accent-subtle)}
-@media(max-width:480px){.profile-hub-grid{grid-template-columns:1fr}}
+@media(min-width:600px){.profile-hub-grid{grid-template-columns:repeat(2,1fr);gap:12px}}
 
 #profileSectionContent{min-height:200px}
 
