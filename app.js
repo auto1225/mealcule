@@ -2663,6 +2663,10 @@ function showProfileSection(section) {
         '<div class="section-title">' + _t('설정', 'Settings') + '</div>' +
         '<div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
+            '<span style="font-size:13px;color:var(--text)">' + _t('테마', 'Theme') + '</span>' +
+            '<button onclick="toggleTheme();renderProfileTab();showProfileSection(\'settings\')" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px">' + (document.documentElement.getAttribute('data-theme') === 'light' ? _t('다크 모드', 'Dark Mode') : _t('라이트 모드', 'Light Mode')) + '</button>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
             '<span style="font-size:13px;color:var(--text)">' + _t('언어', 'Language') + '</span>' +
             '<button onclick="if(window.I18n){I18n.setLang(I18n.lang===\'en\'?\'ko\':\'en\');renderProfileTab();showProfileSection(\'settings\')}" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px">' + (window.I18n && I18n.lang === 'en' ? '한국어로 전환' : 'Switch to English') + '</button>' +
           '</div>' +
@@ -3042,8 +3046,17 @@ function updateUserUI() {
       badge.textContent = userPlan === 'free' ? '' : userPlan.toUpperCase();
       badge.style.display = userPlan === 'free' ? 'none' : 'inline';
     }
-  } else {
+  } else if (isGuest) {
+    authBtn.textContent = _t('게스트', 'Guest');
     authBtn.style.display = '';
+    authBtn.style.opacity = '0.7';
+    authBtn.style.fontSize = '11px';
+    avatar.style.display = 'none';
+  } else {
+    authBtn.textContent = _t('로그인', 'Log in');
+    authBtn.style.display = '';
+    authBtn.style.opacity = '1';
+    authBtn.style.fontSize = '';
     avatar.style.display = 'none';
   }
 }
@@ -3087,6 +3100,18 @@ async function selectPlan(plan) {
   closePricingModal();
 }
 function contactSales() { window.open('mailto:contact@mealcule.com?subject=엔터프라이즈 플랜 문의'); }
+
+// ── Theme Toggle ──
+function toggleTheme() {
+  var current = document.documentElement.getAttribute('data-theme');
+  var next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('mealcule_theme', next);
+}
+(function() {
+  var saved = localStorage.getItem('mealcule_theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+})();
 
 // ── Professional Mode ──
 function toggleProMode() {
@@ -6611,6 +6636,8 @@ async function loadRecipes(country) {
   const member0 = _pendingRecipeLoad || {};
   const ingredients = Object.entries(selected).map(([name, grams]) => ({ name, grams }));
   try {
+    var _recipeAbort = new AbortController();
+    var _recipeTimeout = setTimeout(function() { _recipeAbort.abort(); }, 10000);
     const r = await fetch(`${API_BASE}/api/recommend-recipes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -6625,14 +6652,19 @@ async function loadRecipes(country) {
         country: country || null,
         userLang: getUserLang(),
       }),
+      signal: _recipeAbort.signal,
     });
+    clearTimeout(_recipeTimeout);
     const data = await r.json();
     if (!r.ok || data.error) throw new Error(data.error || '알 수 없는 오류');
     _cachedRecipes = { country, recipes: data.recipes };
     renderRecipeList(data.recipes);
   } catch (e) {
     const el = document.getElementById('recipeList');
-    if (el) el.innerHTML = `<div class="yt-error">레시피 추천 실패: ${e.message}</div>`;
+    var _msg = e.name === 'AbortError'
+      ? _t('레시피 추천 서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', 'Unable to reach the recipe recommendation server. Please try again later.')
+      : _t('레시피 추천 실패', 'Recipe recommendation failed') + ': ' + e.message;
+    if (el) el.innerHTML = '<div class="yt-error">' + _msg + '</div>';
   }
 }
 

@@ -549,7 +549,10 @@ async function openSharedRecipeDetail(id, scrollTo) {
     const avatarHtml = avatarUrl
       ? `<img src="${avatarUrl}" class="cf-avatar-lg" alt="" />`
       : `<div class="cf-avatar-lg cf-avatar-placeholder">${authorName.charAt(0).toUpperCase()}</div>`;
-    const liked = recipe.user_liked ? 'liked' : '';
+    // Sync like state from card if user already liked/unliked before opening detail
+    var cardBtn = document.querySelector(`[data-id="${id}"].cf-like-btn`);
+    var liked = cardBtn ? (cardBtn.classList.contains('liked') ? 'liked' : '') : (recipe.user_liked ? 'liked' : '');
+    var likeCount = cardBtn ? (parseInt(cardBtn.querySelector('.cf-like-count')?.textContent || '0', 10)) : (recipe.like_count || 0);
     const emoji = _getRecipeEmoji(recipe.cuisine || recipe.title || '');
 
     const ingredientsHtml = (recipe.ingredients || []).map(ing => {
@@ -619,7 +622,7 @@ async function openSharedRecipeDetail(id, scrollTo) {
       <div class="cf-det-actions-row">
         <button class="cf-like-btn-lg ${liked}" id="cf-like-btn-${id}" onclick="toggleLike('${id}',this)">
           <span class="cf-heart">${liked ? '<img src="https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'❤️\'">' : '<img src="https://images.pexels.com/photos/6631952/pexels-photo-6631952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🤍\'">'}</span>
-          <span class="cf-like-count">${recipe.like_count || 0}</span> ${_t('좋아요', 'likes')}
+          <span class="cf-like-count">${likeCount}</span> ${_t('좋아요', 'likes')}
         </button>
       </div>
       <div id="cf-comments-section-${id}" class="cf-comments-section">
