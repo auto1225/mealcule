@@ -2762,11 +2762,33 @@ function showFeatureDetail(sectionIdx, itemIdx) {
   var existing = document.getElementById('featureDetailOverlay');
   if (existing) existing.remove();
 
+  // Build step-by-step guide with UI mockups
+  var guide = _getFeatureGuide(sectionIdx, itemIdx, _t);
+  var stepsHtml = '';
+  if (guide && guide.length > 0) {
+    stepsHtml = '<div class="fd-guide">' +
+      '<div class="fd-guide-title">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + sec.color + '" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ' +
+        _t('사용 방법', 'How to Use') +
+      '</div>';
+    guide.forEach(function(step, i) {
+      stepsHtml += '<div class="fd-step">' +
+        '<div class="fd-step-num" style="background:' + sec.color + '">' + (i + 1) + '</div>' +
+        '<div class="fd-step-content">' +
+          '<div class="fd-step-text">' + step.text + '</div>' +
+          (step.mockup ? '<div class="fd-mockup">' + step.mockup + '</div>' : '') +
+          (step.tip ? '<div class="fd-step-tip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg> ' + step.tip + '</div>' : '') +
+        '</div>' +
+      '</div>';
+    });
+    stepsHtml += '</div>';
+  }
+
   var overlay = document.createElement('div');
   overlay.id = 'featureDetailOverlay';
   overlay.className = 'fd-overlay';
   overlay.innerHTML =
-    '<div class="fd-modal">' +
+    '<div class="fd-modal fd-modal-guide">' +
       '<button class="fd-close" onclick="document.getElementById(\'featureDetailOverlay\').remove()" aria-label="Close">' +
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
       '</button>' +
@@ -2776,9 +2798,10 @@ function showFeatureDetail(sectionIdx, itemIdx) {
       '<div class="fd-category" style="color:' + sec.color + '">' + sec.title + '</div>' +
       '<h3 class="fd-title">' + item.label + '</h3>' +
       '<p class="fd-detail">' + (item.detail || item.desc) + '</p>' +
+      stepsHtml +
       '<div class="fd-actions">' +
         '<button class="fd-go-btn" style="background:' + sec.color + '" onclick="document.getElementById(\'featureDetailOverlay\').remove();' + item.action.replace(/'/g, "\\'") + '">' +
-          _t('바로 가기', 'Go to Feature') +
+          _t('바로 사용하기', 'Try It Now') +
           ' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
         '</button>' +
       '</div>' +
@@ -2790,6 +2813,355 @@ function showFeatureDetail(sectionIdx, itemIdx) {
   overlay.addEventListener('click', function(e) {
     if (e.target === overlay) overlay.remove();
   });
+}
+
+// ── Feature Guide Data (step-by-step with UI mockups) ──
+function _getFeatureGuide(si, ii, _t) {
+  // Mockup helper: creates a mini UI capture
+  function _mockNav(tabs, active) {
+    var h = '<div class="fdm-nav">';
+    tabs.forEach(function(t) {
+      h += '<span class="fdm-nav-tab' + (t === active ? ' active' : '') + '">' + t + '</span>';
+    });
+    return h + '</div>';
+  }
+  function _mockBtn(label, primary) {
+    return '<span class="fdm-btn' + (primary ? ' primary' : '') + '">' + label + '</span>';
+  }
+  function _mockSearch(placeholder) {
+    return '<div class="fdm-search"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> <span>' + placeholder + '</span></div>';
+  }
+  function _mockCard(title, sub) {
+    return '<div class="fdm-card"><div class="fdm-card-title">' + title + '</div>' + (sub ? '<div class="fdm-card-sub">' + sub + '</div>' : '') + '</div>';
+  }
+  function _mockChips(chips, activeIdx) {
+    var h = '<div class="fdm-chips">';
+    chips.forEach(function(c, i) {
+      h += '<span class="fdm-chip' + (i === activeIdx ? ' active' : '') + '">' + c + '</span>';
+    });
+    return h + '</div>';
+  }
+  function _mockWizard(steps, activeIdx) {
+    var h = '<div class="fdm-wizard">';
+    steps.forEach(function(s, i) {
+      h += '<span class="fdm-wiz-step' + (i === activeIdx ? ' active' : '') + (i < activeIdx ? ' done' : '') + '">' + (i + 1) + '. ' + s + '</span>';
+    });
+    return h + '</div>';
+  }
+  function _mockImg(emoji, aspect) {
+    return '<div class="fdm-img" style="aspect-ratio:' + (aspect || '16/9') + '">' + emoji + '</div>';
+  }
+  function _mockResult(items) {
+    var h = '<div class="fdm-results">';
+    items.forEach(function(r) { h += '<div class="fdm-result-row">' + r + '</div>'; });
+    return h + '</div>';
+  }
+
+  var guides = {
+    // ── Analyze section (si=0) ──
+    '0_0': [ // Ingredient Analysis
+      { text: _t('하단 메뉴에서 <b>"분석"</b> 탭을 선택합니다', 'Tap the <b>"Analyze"</b> tab in the bottom navigation'),
+        mockup: _mockNav([_t('홈','Home'), _t('분석','Analyze'), _t('플랜','Plan'), _t('커뮤니티','Community'), _t('프로필','Profile')], _t('분석','Analyze'))
+      },
+      { text: _t('<b>Step 1: 재료</b> 단계에서 카테고리를 탐색하거나 검색합니다', 'In <b>Step 1: Ingredients</b>, browse categories or search'),
+        mockup: _mockWizard([_t('재료','Ingredients'), _t('조리','Cooking'), _t('프로필','Profile'), _t('결과','Results')], 0) +
+          _mockSearch(_t('재료 검색...', 'Search ingredients...')) +
+          _mockChips([_t('채소','Vegetables'), _t('육류','Meat'), _t('해산물','Seafood'), _t('유제품','Dairy'), _t('곡류','Grains')], 0)
+      },
+      { text: _t('원하는 재료를 탭하면 목록에 추가됩니다. 여러 개를 선택하세요', 'Tap ingredients to add them to your list. Select multiple'),
+        mockup: '<div class="fdm-ingredients">' +
+          '<div class="fdm-ing selected">' + _t('🥩 소고기','🥩 Beef') + '</div>' +
+          '<div class="fdm-ing selected">' + _t('🧄 마늘','🧄 Garlic') + '</div>' +
+          '<div class="fdm-ing">' + _t('🧅 양파','🧅 Onion') + '</div>' +
+          '<div class="fdm-ing">' + _t('🥕 당근','🥕 Carrot') + '</div>' +
+          '</div>',
+        tip: _t('선택된 재료는 초록색 테두리로 표시됩니다', 'Selected ingredients are highlighted with green border')
+      },
+      { text: _t('<b>"다음"</b> 버튼으로 조리 조건 설정 후 <b>"분석 실행"</b>을 누르세요', 'Press <b>"Next"</b> to set cooking conditions, then <b>"Run Analysis"</b>'),
+        mockup: '<div style="display:flex;gap:8px;justify-content:flex-end">' +
+          _mockBtn(_t('← 이전','← Back'), false) +
+          _mockBtn(_t('분석 실행 →','Run Analysis →'), true) +
+          '</div>'
+      },
+    ],
+    '0_1': [ // Photo Scan
+      { text: _t('<b>"분석"</b> 탭으로 이동 후 상단의 <b>"📷 사진 스캔"</b> 버튼을 누릅니다', 'Go to <b>"Analyze"</b> tab and tap the <b>"📷 Photo Scan"</b> button at top'),
+        mockup: '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+          _mockBtn('📷 ' + _t('사진 스캔','Photo Scan'), true) +
+          _mockBtn('🔗 ' + _t('URL 가져오기','Import URL'), false) +
+          '</div>'
+      },
+      { text: _t('음식 사진을 <b>촬영</b>하거나 <b>갤러리</b>에서 선택합니다', 'Take a photo or pick from gallery'),
+        mockup: _mockImg('📸', '4/3') +
+          '<div style="display:flex;gap:8px;margin-top:8px">' +
+          _mockBtn('📷 ' + _t('촬영','Camera'), true) +
+          _mockBtn('🖼️ ' + _t('갤러리','Gallery'), false) +
+          '</div>'
+      },
+      { text: _t('AI가 재료를 인식하면 목록이 표시됩니다. <b>확인 후 분석</b>을 시작하세요', 'AI shows recognized ingredients. <b>Review and start analysis</b>'),
+        mockup: _mockResult([
+          _t('✅ 닭가슴살 — 95% 확신', '✅ Chicken breast — 95% confidence'),
+          _t('✅ 브로콜리 — 92% 확신', '✅ Broccoli — 92% confidence'),
+          _t('✅ 올리브오일 — 88% 확신', '✅ Olive oil — 88% confidence'),
+        ]),
+        tip: _t('잘못 인식된 재료는 탭하여 제거할 수 있습니다', 'Tap to remove incorrectly recognized ingredients')
+      },
+    ],
+    '0_2': [ // Import Recipe URL
+      { text: _t('<b>"분석"</b> 탭에서 <b>"🔗 URL 가져오기"</b> 버튼을 누릅니다', 'In <b>"Analyze"</b> tab, tap <b>"🔗 Import URL"</b>'),
+        mockup: '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+          _mockBtn('📷 ' + _t('사진 스캔','Photo Scan'), false) +
+          _mockBtn('🔗 ' + _t('URL 가져오기','Import URL'), true) +
+          '</div>'
+      },
+      { text: _t('레시피 URL을 붙여넣고 <b>"가져오기"</b>를 누르세요', 'Paste the recipe URL and tap <b>"Import"</b>'),
+        mockup: '<div class="fdm-search" style="margin-bottom:8px"><span>https://recipe-site.com/kimchi-stew</span></div>' +
+          _mockBtn(_t('가져오기','Import'), true)
+      },
+      { text: _t('추출된 재료와 조리법을 확인 후 <b>분석</b>하거나 <b>레시피 박스에 저장</b>하세요', 'Review extracted ingredients, then <b>analyze</b> or <b>save to Recipe Box</b>'),
+        mockup: _mockResult([
+          _t('🥬 배추김치, 🥩 돼지고기, 🧅 양파, 🧄 마늘', '🥬 Kimchi, 🥩 Pork belly, 🧅 Onion, 🧄 Garlic'),
+        ]) +
+          '<div style="display:flex;gap:8px;margin-top:8px">' +
+          _mockBtn(_t('바로 분석','Analyze Now'), true) +
+          _mockBtn(_t('레시피 박스에 저장','Save to Recipe Box'), false) +
+          '</div>'
+      },
+    ],
+    '0_3': [ // Chemical Reactions
+      { text: _t('재료를 선택하고 <b>Step 2: 조리</b>에서 조리 방법과 온도를 설정합니다', 'Select ingredients, then set cooking method and temperature in <b>Step 2</b>'),
+        mockup: _mockWizard([_t('재료','Ingredients'), _t('조리','Cooking'), _t('프로필','Profile'), _t('결과','Results')], 1) +
+          _mockChips([_t('볶기','Stir-fry'), _t('굽기','Grill'), _t('수비드','Sous Vide'), _t('튀기','Deep-fry')], 2) +
+          '<div class="fdm-card"><div class="fdm-card-title">🌡️ 54.5°C · ⏱️ 2h</div></div>'
+      },
+      { text: _t('<b>"분석 실행"</b> 후 결과에서 <b>"화학 반응"</b> 탭을 확인하세요', 'After <b>"Run Analysis"</b>, check the <b>"Reactions"</b> tab in results'),
+        mockup: _mockNav([_t('영양','Nutrition'), _t('반응','Reactions'), _t('풍미','Flavor'), _t('건강','Health')], _t('반응','Reactions'))
+      },
+      { text: _t('각 반응 카드를 탭하면 상세 설명과 온도/시간 조건을 볼 수 있습니다', 'Tap each reaction card for details and temperature/time conditions'),
+        mockup: _mockResult([
+          _t('🔥 마이야르 반응 — 140°C 이상에서 갈변과 풍미 생성', '🔥 Maillard Reaction — Browning & flavor above 140°C'),
+          _t('🍯 캐러멜화 — 당이 160°C 이상에서 분해', '🍯 Caramelization — Sugars decompose above 160°C'),
+          _t('🥚 단백질 변성 — 열에 의한 구조 변화', '🥚 Protein Denaturation — Structural change by heat'),
+        ]),
+        tip: _t('온도와 시간을 바꿔가며 반응 변화를 비교해보세요', 'Try changing temperature and time to compare reaction changes')
+      },
+    ],
+    '0_4': [ // Health Impact
+      { text: _t('먼저 <b>프로필 탭 → 건강 프로필</b>에서 건강 정보를 설정합니다', 'First, set up your health info in <b>Profile → Health Profile</b>'),
+        mockup: _mockResult([
+          _t('⚕️ 질환: 당뇨, 고혈압', '⚕️ Conditions: Diabetes, Hypertension'),
+          _t('💊 복용약: 메트포르민', '💊 Medications: Metformin'),
+          _t('🚫 알레르기: 땅콩', '🚫 Allergies: Peanut'),
+        ])
+      },
+      { text: _t('분석 위저드 <b>Step 3</b>에서 건강 프로필 적용을 확인합니다', 'In analysis wizard <b>Step 3</b>, confirm health profile is applied'),
+        mockup: _mockWizard([_t('재료','Ingredients'), _t('조리','Cooking'), _t('프로필','Profile'), _t('결과','Results')], 2) +
+          _mockCard(_t('✅ 건강 프로필 적용됨','✅ Health Profile Applied'), _t('당뇨 · 고혈압 · 메트포르민','Diabetes · Hypertension · Metformin'))
+      },
+      { text: _t('분석 결과의 <b>"건강"</b> 탭에서 개인 맞춤 경고와 추천을 확인하세요', 'Check personalized warnings and recommendations in the <b>"Health"</b> results tab'),
+        mockup: _mockNav([_t('영양','Nutrition'), _t('반응','Reactions'), _t('풍미','Flavor'), _t('건강','Health')], _t('건강','Health')) +
+          _mockResult([
+            _t('⚠️ 고GI 식품 — 혈당 급상승 주의', '⚠️ High GI food — Blood sugar spike risk'),
+            _t('💊 메트포르민 상호작용 없음', '💊 No metformin interaction'),
+            _t('✅ 식이섬유 풍부 — 혈당 조절에 도움', '✅ High fiber — Helps blood sugar control'),
+          ]),
+        tip: _t('프로필 설정이 상세할수록 더 정확한 건강 분석을 받을 수 있습니다', 'More detailed profile settings yield more accurate health analysis')
+      },
+    ],
+    // ── Meal Planner (si=1) ──
+    '1_0': [ // Weekly Meal Plan
+      { text: _t('하단 메뉴에서 <b>"플랜"</b> 탭을 선택합니다', 'Tap the <b>"Plan"</b> tab in the bottom navigation'),
+        mockup: _mockNav([_t('홈','Home'), _t('분석','Analyze'), _t('플랜','Plan'), _t('커뮤니티','Community'), _t('프로필','Profile')], _t('플랜','Plan'))
+      },
+      { text: _t('캘린더에서 날짜와 끼니(아침/점심/저녁/간식)의 <b>"+"</b> 버튼을 탭하세요', 'Tap the <b>"+"</b> button on a date and meal slot (breakfast/lunch/dinner/snack)'),
+        mockup: '<div class="fdm-calendar">' +
+          '<div class="fdm-cal-header">' + _t('월','Mon') + '</div>' +
+          '<div class="fdm-cal-slot"><span>' + _t('아침','Breakfast') + '</span><span class="fdm-cal-add">+</span></div>' +
+          '<div class="fdm-cal-slot filled"><span>' + _t('점심','Lunch') + '</span><span>🍜</span></div>' +
+          '<div class="fdm-cal-slot"><span>' + _t('저녁','Dinner') + '</span><span class="fdm-cal-add">+</span></div>' +
+          '</div>',
+        tip: _t('레시피 박스에서 드래그&드롭으로도 추가 가능합니다', 'You can also drag & drop from Recipe Box')
+      },
+      { text: _t('추가된 식단의 일일 영양 합계가 자동으로 표시됩니다', 'Daily nutrition totals are calculated automatically'),
+        mockup: _mockResult([
+          _t('🔥 1,850 kcal / 2,000 목표', '🔥 1,850 kcal / 2,000 target'),
+          _t('💪 단백질 95g · 🍞 탄수화물 220g · 🧈 지방 65g', '💪 Protein 95g · 🍞 Carbs 220g · 🧈 Fat 65g'),
+        ])
+      },
+    ],
+    '1_1': [ // Daily Nutrition Summary
+      { text: _t('<b>"플랜"</b> 탭에서 캘린더에 식단을 배치하면 날짜별 영양 요약이 나타납니다', 'Place meals on the calendar in <b>"Plan"</b> tab to see per-day nutrition'),
+        mockup: '<div class="fdm-calendar">' +
+          '<div class="fdm-cal-header">' + _t('화','Tue') + ' — <span style="color:#10b981">1,920 kcal</span></div>' +
+          '<div class="fdm-cal-slot filled"><span>' + _t('아침','Breakfast') + '</span><span>' + _t('🥗 샐러드','🥗 Salad') + '</span></div>' +
+          '<div class="fdm-cal-slot filled"><span>' + _t('점심','Lunch') + '</span><span>' + _t('🍜 라멘','🍜 Ramen') + '</span></div>' +
+          '<div class="fdm-cal-slot filled"><span>' + _t('저녁','Dinner') + '</span><span>' + _t('🥩 스테이크','🥩 Steak') + '</span></div>' +
+          '</div>'
+      },
+      { text: _t('각 날짜의 칼로리/매크로 막대 그래프로 목표 대비 달성률을 확인하세요', 'Check progress bars showing goal achievement for each day'),
+        mockup: '<div class="fdm-bars">' +
+          '<div class="fdm-bar-row"><span>' + _t('칼로리','Calories') + '</span><div class="fdm-bar"><div class="fdm-bar-fill" style="width:92%;background:#10b981"></div></div><span>92%</span></div>' +
+          '<div class="fdm-bar-row"><span>' + _t('단백질','Protein') + '</span><div class="fdm-bar"><div class="fdm-bar-fill" style="width:78%;background:#3b82f6"></div></div><span>78%</span></div>' +
+          '<div class="fdm-bar-row"><span>' + _t('탄수화물','Carbs') + '</span><div class="fdm-bar"><div class="fdm-bar-fill" style="width:110%;background:#f59e0b"></div></div><span style="color:#f59e0b">110%</span></div>' +
+          '</div>',
+        tip: _t('100%를 초과하는 영양소는 주황색으로 표시됩니다', 'Nutrients exceeding 100% are shown in orange')
+      },
+    ],
+    '1_2': [ // AI Meal Generation
+      { text: _t('<b>"플랜"</b> 탭에서 <b>"AI 식단 생성"</b> 버튼을 누릅니다', 'In <b>"Plan"</b> tab, tap <b>"AI Meal Generation"</b>'),
+        mockup: _mockBtn('🤖 ' + _t('AI 식단 생성','AI Meal Generation'), true)
+      },
+      { text: _t('칼로리 목표와 선호 스타일을 설정하고 <b>"생성"</b>을 누르세요', 'Set calorie target and preferred style, then tap <b>"Generate"</b>'),
+        mockup: _mockResult([
+          _t('🎯 일일 칼로리 목표: 2,000 kcal', '🎯 Daily calorie target: 2,000 kcal'),
+          _t('🍽️ 요리 스타일: 한식 + 양식 혼합', '🍽️ Cuisine style: Korean + Western mix'),
+        ]) +
+          _mockBtn(_t('식단 생성하기','Generate Plan'), true)
+      },
+      { text: _t('AI가 생성한 7일 식단을 확인하고 <b>"플래너에 적용"</b>하세요. 마음에 안 드는 끼니는 탭하여 교체할 수 있습니다', 'Review the AI-generated 7-day plan and <b>"Apply to Planner"</b>. Tap any meal to swap it'),
+        mockup: '<div class="fdm-calendar">' +
+          '<div class="fdm-cal-header">🤖 ' + _t('AI 추천 식단','AI Suggested Plan') + '</div>' +
+          '<div class="fdm-cal-slot filled"><span>' + _t('월 아침','Mon AM') + '</span><span>' + _t('🥣 오트밀','🥣 Oatmeal') + '</span></div>' +
+          '<div class="fdm-cal-slot filled"><span>' + _t('월 점심','Mon PM') + '</span><span>' + _t('🍱 비빔밥','🍱 Bibimbap') + '</span></div>' +
+          '</div>' +
+          '<div style="margin-top:8px">' + _mockBtn(_t('플래너에 적용','Apply to Planner'), true) + '</div>',
+        tip: _t('건강 프로필이 설정되어 있으면 알레르기/질환을 자동 반영합니다', 'If health profile is set, allergies and conditions are automatically applied')
+      },
+    ],
+    // ── Community (si=2) ──
+    '2_0': [ // Recipe Feed
+      { text: _t('하단 메뉴에서 <b>"커뮤니티"</b> 탭을 선택합니다', 'Tap the <b>"Community"</b> tab in the bottom navigation'),
+        mockup: _mockNav([_t('홈','Home'), _t('분석','Analyze'), _t('플랜','Plan'), _t('커뮤니티','Community'), _t('프로필','Profile')], _t('커뮤니티','Community'))
+      },
+      { text: _t('요리 종류별 <b>필터 칩</b>을 탭하거나 검색하여 레시피를 찾으세요', 'Use <b>cuisine filter chips</b> or search to find recipes'),
+        mockup: _mockChips(['All', 'Korean', 'Japanese', 'Italian', 'Chinese'], 1) +
+          _mockSearch(_t('레시피 검색...','Search recipes...'))
+      },
+      { text: _t('레시피 카드의 ❤️ <b>좋아요</b>, 💬 <b>댓글</b>, 🔖 <b>저장</b>으로 참여하세요', 'Engage with ❤️ <b>Like</b>, 💬 <b>Comment</b>, 🔖 <b>Save</b> on recipe cards'),
+        mockup: '<div class="fdm-card">' +
+          _mockImg('🥩', '16/9') +
+          '<div class="fdm-card-title">Sous Vide Wagyu Steak</div>' +
+          '<div class="fdm-card-sub">Chef Marco · 1h ago</div>' +
+          '<div class="fdm-actions-row">' +
+            '<span class="fdm-action">❤️ 342</span>' +
+            '<span class="fdm-action">💬 47</span>' +
+            '<span class="fdm-action">↗️</span>' +
+            '<span class="fdm-action">🔖</span>' +
+          '</div>' +
+          '</div>',
+        tip: _t('카드를 탭하면 레시피 상세 페이지에서 재료, 영양 정보, 댓글을 볼 수 있습니다', 'Tap a card to see full details: ingredients, nutrition, and comments')
+      },
+    ],
+    '2_1': [ // My Recipe Box
+      { text: _t('<b>"커뮤니티"</b> 탭에서 상단의 <b>"내 레시피"</b> 서브탭을 선택합니다', 'In <b>"Community"</b> tab, switch to <b>"My Recipes"</b> sub-tab'),
+        mockup: _mockNav([_t('피드','Feed'), _t('내 레시피','My Recipes')], _t('내 레시피','My Recipes'))
+      },
+      { text: _t('저장된 레시피 목록을 확인하고 컬렉션별로 관리하세요', 'Browse saved recipes and manage by collections'),
+        mockup: _mockChips([_t('전체','All'), _t('즐겨찾기','Favorites'), _t('분자요리','Molecular'), _t('한식','Korean')], 0) +
+          _mockCard(_t('🧪 수비드 스테이크','🧪 Sous Vide Steak'), _t('54.5°C · 2시간 · 분자요리','54.5°C · 2h · Molecular'))
+      },
+      { text: _t('레시피를 탭하면 상세 보기에서 재료, 영양, 조리법을 확인하고 <b>공유</b>할 수 있습니다', 'Tap a recipe for full details — ingredients, nutrition, method — and <b>share</b> it'),
+        mockup: _mockResult([
+          _t('📋 재료 5개 · 🔥 450 kcal', '📋 5 ingredients · 🔥 450 kcal'),
+          _t('⏱️ 조리시간 2시간 30분', '⏱️ Cook time 2h 30min'),
+        ]) +
+          '<div style="display:flex;gap:8px;margin-top:8px">' +
+          _mockBtn(_t('분석 다시 실행','Re-analyze'), false) +
+          _mockBtn(_t('커뮤니티에 공유','Share to Community'), true) +
+          '</div>',
+        tip: _t('분석 결과 페이지에서 "저장" 버튼을 누르면 여기에 자동 추가됩니다', 'Tap "Save" on analysis results to add recipes here automatically')
+      },
+    ],
+    // ── Health & Tracking (si=3) ──
+    '3_0': [ // Calorie Tracker
+      { text: _t('<b>"프로필"</b> 탭 → <b>"칼로리 트래커"</b> 카드를 선택합니다', 'Go to <b>"Profile"</b> tab → tap <b>"Calorie Tracker"</b> card'),
+        mockup: _mockNav([_t('홈','Home'), _t('분석','Analyze'), _t('플랜','Plan'), _t('커뮤니티','Community'), _t('프로필','Profile')], _t('프로필','Profile')) +
+          _mockCard(_t('🔥 칼로리 트래커','🔥 Calorie Tracker'), _t('일일 섭취량 추적','Track daily intake'))
+      },
+      { text: _t('<b>"+ 식사 추가"</b> 버튼으로 먹은 음식을 기록합니다', 'Tap <b>"+ Add Meal"</b> to log what you ate'),
+        mockup: _mockBtn('+ ' + _t('식사 추가','Add Meal'), true) +
+          _mockResult([
+            _t('🌅 아침: 토스트 + 계란 — 350 kcal', '🌅 Breakfast: Toast + Eggs — 350 kcal'),
+            _t('☀️ 점심: 비빔밥 — 650 kcal', '☀️ Lunch: Bibimbap — 650 kcal'),
+          ])
+      },
+      { text: _t('일일 목표 대비 달성률과 매크로 비율을 차트로 확인하세요. 💧 수분 섭취도 기록할 수 있습니다', 'View daily goal progress and macro ratios as charts. Track 💧 water intake too'),
+        mockup: '<div class="fdm-bars">' +
+          '<div class="fdm-bar-row"><span>🔥</span><div class="fdm-bar"><div class="fdm-bar-fill" style="width:65%;background:#10b981"></div></div><span>1,300/2,000</span></div>' +
+          '<div class="fdm-bar-row"><span>💧</span><div class="fdm-bar"><div class="fdm-bar-fill" style="width:50%;background:#3b82f6"></div></div><span>4/8 ' + _t('잔','cups') + '</span></div>' +
+          '</div>',
+        tip: _t('"빠른 식사 기록"으로 텍스트만 입력하면 더 빠르게 기록됩니다', 'Use "Quick Food Log" for even faster logging with text input')
+      },
+    ],
+    '3_1': [ // Health Dashboard
+      { text: _t('<b>"프로필"</b> 탭 → <b>"건강 대시보드"</b> 카드를 선택합니다', 'Go to <b>"Profile"</b> tab → tap <b>"Health Dashboard"</b> card'),
+        mockup: _mockCard(_t('📊 건강 대시보드','📊 Health Dashboard'), _t('영양 트렌드 · 건강 점수','Nutrition trends · Health score'))
+      },
+      { text: _t('주간/월간 영양 섭취 <b>트렌드 차트</b>를 확인하세요', 'View weekly/monthly nutrition <b>trend charts</b>'),
+        mockup: '<div class="fdm-chart">' +
+          '<div class="fdm-chart-bars">' +
+          '<div class="fdm-chart-bar" style="height:60%"></div>' +
+          '<div class="fdm-chart-bar" style="height:80%"></div>' +
+          '<div class="fdm-chart-bar" style="height:75%"></div>' +
+          '<div class="fdm-chart-bar" style="height:90%"></div>' +
+          '<div class="fdm-chart-bar active" style="height:85%"></div>' +
+          '<div class="fdm-chart-bar" style="height:40%"></div>' +
+          '<div class="fdm-chart-bar" style="height:0%"></div>' +
+          '</div>' +
+          '<div class="fdm-chart-labels"><span>' + _t('월','M') + '</span><span>' + _t('화','T') + '</span><span>' + _t('수','W') + '</span><span>' + _t('목','T') + '</span><span>' + _t('금','F') + '</span><span>' + _t('토','S') + '</span><span>' + _t('일','S') + '</span></div>' +
+          '</div>'
+      },
+      { text: _t('종합 <b>건강 점수</b>와 개선 권장 사항을 받으세요', 'Get your overall <b>Health Score</b> and improvement recommendations'),
+        mockup: '<div class="fdm-score"><div class="fdm-score-ring"><span>78</span></div><div class="fdm-score-label">' + _t('건강 점수','Health Score') + '</div></div>' +
+          _mockResult([
+            _t('✅ 단백질 섭취 양호', '✅ Protein intake is good'),
+            _t('⚠️ 식이섬유 부족 — 채소 섭취 늘려보세요', '⚠️ Low fiber — Try eating more vegetables'),
+          ])
+      },
+    ],
+    '3_2': [ // Health Profile
+      { text: _t('<b>"프로필"</b> 탭 → <b>"건강 프로필"</b> 카드를 선택합니다', 'Go to <b>"Profile"</b> tab → tap <b>"Health Profile"</b> card'),
+        mockup: _mockCard(_t('⚕️ 건강 프로필','⚕️ Health Profile'), _t('질환 · 알레르기 · 복용약','Conditions · Allergies · Medications'))
+      },
+      { text: _t('질환, 알레르기, 복용약을 각각 <b>검색하여 추가</b>합니다', 'Search and add conditions, allergies, and medications'),
+        mockup: _mockSearch(_t('질환 검색...','Search conditions...')) +
+          _mockChips([_t('당뇨','Diabetes'), _t('고혈압','Hypertension'), _t('신장질환','Kidney'), _t('통풍','Gout')], -1) +
+          _mockResult([
+            _t('✅ 당뇨 (추가됨)', '✅ Diabetes (added)'),
+            _t('✅ 고혈압 (추가됨)', '✅ Hypertension (added)'),
+          ]),
+        tip: _t('추가한 정보는 자동 저장됩니다. 언제든 수정할 수 있습니다', 'Your info is auto-saved and can be edited anytime')
+      },
+      { text: _t('설정 완료 후 <b>분석할 때마다 자동으로 적용</b>됩니다', 'Once set up, it\'s <b>automatically applied to every analysis</b>'),
+        mockup: _mockResult([
+          _t('🔬 분석 실행 시 → 건강 프로필 자동 반영', '🔬 On analysis → Health profile auto-applied'),
+          _t('⚠️ 약물-음식 상호작용 자동 체크', '⚠️ Drug-food interactions auto-checked'),
+          _t('🚫 알레르기 재료 자동 경고', '🚫 Allergy ingredients auto-warned'),
+        ])
+      },
+    ],
+    '3_3': [ // Quick Food Log
+      { text: _t('<b>홈 화면</b>에서 빠른 기록 버튼을 누르거나, <b>프로필 → 빠른 식사 기록</b>을 선택합니다', 'Tap quick log from <b>Home</b>, or go to <b>Profile → Quick Food Log</b>'),
+        mockup: _mockBtn('✏️ ' + _t('빠른 식사 기록','Quick Food Log'), true)
+      },
+      { text: _t('먹은 음식을 <b>자연어로 입력</b>하세요. 예: "김치찌개 1그릇, 밥 1공기"', 'Type what you ate in <b>natural language</b>. Ex: "chicken salad, 1 cup rice"'),
+        mockup: '<div class="fdm-search"><span>' + _t('김치찌개 1그릇, 밥 1공기','chicken salad, 1 cup rice') + '</span></div>' +
+          _mockBtn(_t('기록','Log'), true)
+      },
+      { text: _t('AI가 자동으로 음식을 인식하고 칼로리를 계산합니다. <b>확인 후 저장</b>하세요', 'AI auto-recognizes food and calculates calories. <b>Review and save</b>'),
+        mockup: _mockResult([
+          _t('🍲 김치찌개 1그릇 — 380 kcal', '🥗 Chicken salad — 350 kcal'),
+          _t('🍚 밥 1공기 — 300 kcal', '🍚 Rice 1 cup — 210 kcal'),
+          _t('──────────────', '──────────────'),
+          _t('📊 합계: 680 kcal', '📊 Total: 560 kcal'),
+        ]) +
+          _mockBtn(_t('칼로리 트래커에 추가','Add to Calorie Tracker'), true),
+        tip: _t('오타가 있어도 퍼지 매칭으로 인식합니다. "치킨샐러드" = "치킨 샐러드"', 'Fuzzy matching handles typos: "chiken salad" = "chicken salad"')
+      },
+    ],
+  };
+
+  return guides[si + '_' + ii] || [];
 }
 
 /** 데이터 관리 UI 렌더링 */
