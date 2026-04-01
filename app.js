@@ -1622,7 +1622,7 @@ const CONDITIONS = {
     label: "셀리악병 (글루텐)", label_en: "Celiac Disease", emoji: "⚠️",
     desc: "글루텐에 의한 소장 자가면역 손상", desc_en: "Autoimmune gluten intolerance",
     rules: [
-      {check:(im)=>Object.keys(im).some(n=>['밀가루','빵','파스타','국수','보리','호밀','맥아'].includes(n)), severity:"danger", title:"⚠️ 글루텐 함유 식품 — 소장 융모 파괴",
+      {check:(im)=>Object.keys(im).some(n=>['밀가루','빵','파스타','국수','보리','호밀','맥아'].includes(n)), severity:"danger", title:"<img src=\"https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop\" style=\"width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle\" onerror=\"this.outerHTML='<span>⚠️</span>'\"> 글루텐 함유 식품 — 소장 융모 파괴",
         detail:(im)=>`${Object.keys(im).filter(n=>['밀가루','빵','파스타','국수','보리','호밀','맥아'].includes(n)).join(', ')}에 글루텐이 포함되어 있습니다. 셀리악 환자는 소량(20ppm 이상)에도 면역 반응이 발생합니다.`,
         tip:"글루텐 프리(쌀가루, 타피오카, 퀴노아, 아마란스, 감자전분) 식재료로 완전히 교체하세요."},
       {check:(im)=>Object.keys(im).some(n=>['간장','된장','고추장'].includes(n)), severity:"caution", title:"발효 장류 — 숨겨진 글루텐 주의",
@@ -1866,7 +1866,7 @@ const CONDITIONS = {
     desc:"폐 악성종양 — 흡연·발암물질·산화 스트레스 연관", desc_en:"Pulmonary malignancy — smoking/carcinogen related",
     rules:[
       {check:(im)=>Object.keys(im).some(n=>['당근','고구마','호박','시금치'].includes(n)), severity:"good", title:"카로티노이드 — 항산화·폐 세포 보호",
-        detail:()=>`식품 형태의 베타카로틴·루테인·리코펜은 폐 세포를 산화 스트레스로부터 보호합니다. ⚠️ 흡연자는 베타카로틴 보충제를 피하세요 (CARET 연구).`,
+        detail:()=>`식품 형태의 베타카로틴·루테인·리코펜은 폐 세포를 산화 스트레스로부터 보호합니다. <img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>⚠️</span>'"> 흡연자는 베타카로틴 보충제를 피하세요 (CARET 연구).`,
         tip:"식품 형태로만 섭취하세요. 보충제 고용량은 흡연자에게 역효과."},
       {check:(im)=>Object.keys(im).some(n=>['브로콜리','브로콜리새싹','케일','양배추'].includes(n)), severity:"good", title:"설포라판 — 발암물질 해독 효소 유도",
         detail:()=>`브로콜리의 설포라판은 Nrf2 경로를 활성화해 흡연 관련 발암물질 제거를 돕습니다.`,
@@ -3176,7 +3176,7 @@ async function init() {
   const statusEl = document.getElementById('dbStatus');
 
   if (sbClient) {
-    statusEl.textContent = '🔄 DB 연결 중...';
+    statusEl.innerHTML = '<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>🔄</span>\'"> DB 연결 중...';
     try {
       await Promise.race([
         Promise.all([loadCategories(), loadCustomMethods()]),
@@ -4192,7 +4192,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
 
   // 계란 알레르기
   if (member.traits.includes('allergy_egg') && '계란' in ingMap) {
-    traitFindings.push({severity:'danger', title:'⚠️ 계란 알레르기 — 알레르겐 포함!',
+    traitFindings.push({severity:'danger', title:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>⚠️</span>\'"> 계란 알레르기 — 알레르겐 포함!',
       detail:`계란이 ${ingMap['계란']}g 포함되어 있습니다. 오보알부민, 오보뮤코이드 등 알레르겐이 가열해도 완전히 파괴되지 않습니다.`,
       tip:'계란을 완전히 제거하세요. 바인딩이 필요하면 아마씨 겔, 두부, 바나나로 대체할 수 있습니다.'});
   }
@@ -4200,7 +4200,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
   // 해산물 알레르기
   if (member.traits.includes('allergy_seafood')) {
     const seafoods = Object.keys(ingMap).filter(n => ['연어','새우','참치','오징어','조개','멸치'].includes(n));
-    if (seafoods.length > 0) traitFindings.push({severity:'danger', title:'⚠️ 해산물 알레르기 — ' + seafoods.join(', ') + ' 포함!',
+    if (seafoods.length > 0) traitFindings.push({severity:'danger', title:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>⚠️</span>\'"> 해산물 알레르기 — ' + seafoods.join(', ') + ' 포함!',
       detail:`${seafoods.join(', ')}이(가) 포함되어 있습니다. 해산물 알레르기는 아나필락시스 위험이 있어 매우 주의해야 합니다.`,
       tip:'해산물을 완전히 제거하세요. 단백질은 두부, 소고기, 닭고기로 대체하세요.'});
   }
@@ -4852,7 +4852,7 @@ function renderCategoryTabs() {
   const allBtn = document.createElement("button");
   allBtn.className = "cat-tab" + (activeCategory === "all" ? " active" : "");
   const allCat = cats.all || CATEGORIES.all;
-  allBtn.innerHTML = `<span>${allCat.img ? '<img src="' + allCat.img + '" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'📋\'">' : '📋'}</span><span>${window.tl ? tl(allCat) : '전체'}</span>`;
+  allBtn.innerHTML = `<span>${allCat.img ? '<img src="' + allCat.img + '" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'📋\'">' : '<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>📋</span>\'">'}</span><span>${window.tl ? tl(allCat) : '전체'}</span>`;
   allBtn.onclick = () => { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
   container.appendChild(allBtn);
   Object.entries(cats).forEach(([key, c]) => {
@@ -5546,7 +5546,7 @@ function analyze(ingMap, method, temp, time) {
     const int = Math.min(100, Math.round(frac * 100));
     if (int > 5) {
       const shrink = Math.min(35, Math.round(frac * 35));
-      rxns.push({name:"단백질 변성 (Protein Denaturation)",key:"protein_denaturation",icon:"🧬",intensity:int,
+      rxns.push({name:"단백질 변성 (Protein Denaturation)",key:"protein_denaturation",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🧬</span>\'">',intensity:int,
         desc:`단백질 ${totalProtein.toFixed(1)}g의 ${int}% 변성 완료 (미오신 40% + 콜라겐 30% + 액틴 30% 가중합산)`,
         effects:["조직 수축·응고","소화율 향상","수분 방출"],
         science:`다성분 시그모이드: f(T)=1/[1+exp(-ΔH/R·(1-Tm/T))] | 수축률≈${shrink}%`,
@@ -5561,7 +5561,7 @@ function analyze(ingMap, method, temp, time) {
     const frac = SCI.starchGelatinization(temp, time);
     const int = Math.min(100, Math.round(frac * 100));
     if (int > 1) {
-      rxns.push({name:"전분 호화 (Starch Gelatinization)",key:"starch_gelatinization",icon:"💧",intensity:int,
+      rxns.push({name:"전분 호화 (Starch Gelatinization)",key:"starch_gelatinization",icon:'<img src="https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>💧</span>\'">',intensity:int,
         desc:`전분 과립 ${int}% 호화 완료 (Avrami 핵생성-성장 모델, n=3)`,
         effects:["점성 증가","투명도 변화","소화율 대폭 향상"],
         science:`Avrami: α=1-exp(-k·tⁿ) | n=3, Ea=260 kJ/mol | 호화율=${int}%`,
@@ -5596,7 +5596,7 @@ function analyze(ingMap, method, temp, time) {
     const ox = SCI.lipidOxidation(temp, time) * Math.max(0.1, md.o2_level || 0.7);
     const int = Math.min(100, Math.round(ox * 100));
     if (int > 5) {
-      rxns.push({name:"지질 산화 (Lipid Oxidation)",key:"lipid_oxidation",icon:"⚠️",intensity:int,
+      rxns.push({name:"지질 산화 (Lipid Oxidation)",key:"lipid_oxidation",icon:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚠️</span>\'">',intensity:int,
         desc:`불포화지방산이 산소(노출도 ${Math.round((md.o2_level||0.7)*100)}%)와 반응 → 과산화지질 생성 위험도 ${int}%`,
         effects:["산패취 발생","과산화지질 생성","필수지방산 손실"],
         science:`유도기간 모델: Ea_개시=150kJ/mol, Ea_전파=60kJ/mol (Frankel 1980)`,
@@ -5645,7 +5645,7 @@ function analyze(ingMap, method, temp, time) {
   // ── Lecithin Emulsification (hydrophilic-lipophilic balance) ──
   if (hasFat && (totalLecithin > 100 || has(d => d.compounds.some(c => c.includes("레시틴"))))) {
     const lecMg = totalLecithin > 0 ? totalLecithin.toFixed(0) : '추정';
-    rxns.push({name:"유화 (Emulsification)",key:"emulsification",icon:"🔄",intensity:60,
+    rxns.push({name:"유화 (Emulsification)",key:"emulsification",icon:'<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🔄</span>\'">',intensity:60,
       desc:`레시틴 ${lecMg}mg (포스파티딜콜린 HLB≈8) → O/W 에멀전 안정화`,
       effects:["크리미한 질감","소스 안정화","풍미 균일 분배"],
       science:"HLB=8 (Griffin 1954) → O/W 에멀전 | 임계미셀농도(CMC) 의존",
@@ -5655,7 +5655,7 @@ function analyze(ingMap, method, temp, time) {
 
   // ── Acid-Protein Coagulation (isoelectric point) ──
   if (hasAcid && hasProt) {
-    rxns.push({name:"산-단백질 응고",key:"acid_coagulation",icon:"⚗️",intensity:55,
+    rxns.push({name:"산-단백질 응고",key:"acid_coagulation",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚗️</span>\'">',intensity:55,
       desc:"시트르산이 pH↓ → 단백질 등전점(pI≈4.5-5.5) 도달 → 응집·응고",
       effects:["단백질 응고","pH 저하","살균 효과"],
       science:"pI에서 순전하=0 → 분자간 인력>척력 → 응집 (Tanford 1961)",
@@ -5679,7 +5679,7 @@ function analyze(ingMap, method, temp, time) {
     const pah = SCI.pahFormation(temp, time) * Math.max(0.3, md.o2_level || 0.7);
     const int = Math.min(100, Math.round(pah * 100));
     if (int > 2) {
-      rxns.push({name:"PAH 생성 (다환방향족탄화수소)",key:"pah",icon:"⚠️",intensity:int,
+      rxns.push({name:"PAH 생성 (다환방향족탄화수소)",key:"pah",icon:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>⚠️</span>\'">',intensity:int,
         desc:`지방 열분해 → 벤조[a]피렌 등 PAH 생성 위험도 ${int}% (IARC Group 1 발암물질)`,
         effects:["벤조[a]피렌 생성","표면 탄화 침착","발암물질 축적"],
         science:`k(T)=A·exp(-Ea/RT) | Ea=120kJ/mol, A=2×10⁹ | Phillips (1999) Mutation Res 443:139`,
@@ -5693,7 +5693,7 @@ function analyze(ingMap, method, temp, time) {
     const hca = SCI.hcaFormation(temp, time);
     const int = Math.min(100, Math.round(hca * 100));
     if (int > 3) {
-      rxns.push({name:"HCA 생성 (이환방향족아민)",key:"hca",icon:"🔴",intensity:int,
+      rxns.push({name:"HCA 생성 (이환방향족아민)",key:"hca",icon:'<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🔴</span>\'">',intensity:int,
         desc:`크레아틴+아미노산+당류 → PhIP 등 HCA 생성 위험도 ${int}% (IARC Group 2A)`,
         effects:["PhIP·MeIQx 생성","고온·장시간 조리시 급증","표면 부착"],
         science:`k(T)=A·exp(-Ea/RT) | Ea=80kJ/mol | Skog et al. (1998) Food Chem Toxicol 36:879`,
@@ -5708,7 +5708,7 @@ function analyze(ingMap, method, temp, time) {
     const nit = SCI.nitrosamineFormation(temp, time);
     const int = Math.min(100, Math.round(nit * 100));
     if (int > 1) {
-      rxns.push({name:"니트로사민 생성",key:"nitrosamine",icon:"☢️",intensity:int,
+      rxns.push({name:"니트로사민 생성",key:"nitrosamine",icon:'<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>☢️</span>\'">',intensity:int,
         desc:`아질산염+2차 아민 → NDMA 등 니트로사민 생성 위험도 ${int}% (IARC Group 1)`,
         effects:["N-니트로소디메틸아민(NDMA) 생성","고온 가공육에서 급증"],
         science:`Ea=95kJ/mol | Honikel (2008) Meat Sci 78:68 | IARC Monograph 114`,
@@ -5738,7 +5738,7 @@ function analyze(ingMap, method, temp, time) {
     const ret = SCI.chlorophyllRetention(temp, time);
     const loss = Math.min(99, Math.round((1-ret)*100));
     if (loss > 5) {
-      rxns.push({name:"클로로필 분해 → 페오피틴",key:"chlorophyll",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Spinach','🥬','rxn-icon-img',20):'🥬'),intensity:loss,
+      rxns.push({name:"클로로필 분해 → 페오피틴",key:"chlorophyll",icon:(typeof FoodImageResolver!=='undefined'?FoodImageResolver.createImgHtml('Spinach','🥬','rxn-icon-img',20):'<img src="https://images.pexels.com/photos/2325843/pexels-photo-2325843.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🥬</span>\'">'),intensity:loss,
         desc:`클로로필 ${loss}% 분해 → 페오피틴(올리브색) 전환 (Mg²⁺ 치환)`,
         effects:["선명 녹색 → 올리브/갈색","Mg²⁺ 이탈","시각 품질 감소"],
         science:`1차 반응: Ea=68kJ/mol | Schwartz & von Elbe (1983) J Food Sci 48:1303`,
@@ -5800,7 +5800,7 @@ function analyze(ingMap, method, temp, time) {
   if (md.medium==='mw' && md.uniformity==='low') warns.push({type:"주의",msg:"마이크로파 유전 가열: 국소 핫스팟 발생 → 온도 불균일(±20°C), 중간에 저어주기 권장"});
   if ((md.leach_factor||0)>=0.8 && time>30) warns.push({type:"정보",msg:`장시간 수침 조리(${time}분): 수용성 영양소(B군, C, 칼륨) 조리수로 용출 최대 ${Math.round((md.leach_factor||0)*90)}% — 국물도 함께 섭취 권장`});
   if (md.medium==='none' && method==='ferment') {
-    rxns.push({name:"발효 (Fermentation)",key:"fermentation",icon:"🧫",intensity:70,
+    rxns.push({name:"발효 (Fermentation)",key:"fermentation",icon:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover" onerror="this.outerHTML=\'<span>🧫</span>\'">',intensity:70,
       desc:"미생물 대사로 유기산·알코올·항균 펩타이드 생성 → 풍미·저장성·프로바이오틱스↑",
       effects:["젖산·초산 생성(pH↓)","단백질 가수분해","프로바이오틱스 증식","비타민 B군 증가"],
       science:"젖산균 Lactobacillus: 포도당→젖산 (Embden-Meyerhof 경로, ΔG=-196kJ/mol)",
@@ -6141,7 +6141,7 @@ async function runAnalysis() {
           hr.findings.forEach(f => {
             const sevClass = f.severity;
             const sevLabel = {danger:'위험',caution:'주의',good:'긍정',info:'참고'}[f.severity];
-            const sevIcon = {danger:'🚫',caution:'⚠️',good:'✅',info:'ℹ️'}[f.severity];
+            const sevIcon = {danger:'<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>🚫</span>\'">',caution:'<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>⚠️</span>\'">',good:'<img src="https://images.pexels.com/photos/586030/pexels-photo-586030.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>✅</span>\'">',info:'<img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>ℹ️</span>\'">'}[f.severity];
             html += `<div class="health-card ${sevClass}">
               <div style="display:flex;align-items:center;margin-bottom:6px">
                 <span class="health-severity sev-${sevClass}">${sevIcon} ${sevLabel}</span>
@@ -6587,7 +6587,7 @@ async function renderHistory() {
     const methodImg = methodData?.img;
     const methodIcon = methodImg
       ? `<img src="${methodImg}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='${methodEmoji} '">`
-      : (methodEmoji + ' ');
+      : `<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px" onerror="this.outerHTML='${methodEmoji} '">`;
     return `<div class="history-item" style="padding:12px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .2s" onclick="replayAnalysis('${h.id}')" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
@@ -6779,9 +6779,9 @@ async function _handlePhotoSelect(input) {
       let html = `<div style="font-size:13px;font-weight:600;margin-bottom:8px">${_t(data.count + '개 재료 인식', data.count + ' ingredients found')}</div>`;
       html += `<div style="display:flex;flex-direction:column;gap:6px">`;
       data.ingredients.forEach((ing, i) => {
-        const conf = ing.confidence === 'high' ? '🟢' : ing.confidence === 'medium' ? '🟡' : '🔴';
+        const conf = ing.confidence === 'high' ? '🟢' : ing.confidence === 'medium' ? '🟡' : '<img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>🔴</span>\'">';
         html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">
-          ${typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(ing.name_en || ing.name, ing.emoji || '🥬', 'fi-photo-result', 28) : '<span>' + (ing.emoji || '🥬') + '</span>'}
+          ${typeof FoodImageResolver !== 'undefined' ? FoodImageResolver.createImgHtml(ing.name_en || ing.name, ing.emoji || '🥬', 'fi-photo-result', 28) : '<img src="https://images.pexels.com/photos/2325843/pexels-photo-2325843.jpeg?auto=compress&cs=tinysrgb&w=28&h=28&fit=crop" style="width:28px;height:28px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>🥬</span>\'">'}
           <span style="flex:1">${I18n?.lang === 'en' ? ing.name_en : ing.name} <span style="color:#888;font-size:11px">~${ing.estimatedGrams}g ${conf}</span></span>
           <button onclick="_addPhotoIngredient('${(ing.name_en || ing.name).replace(/'/g,"\\'")}',${ing.estimatedGrams})" style="padding:4px 10px;border:1px solid #059669;border-radius:6px;background:#fff;color:#059669;font-size:12px;cursor:pointer;font-weight:600">${_t('추가', 'Add')}</button>
         </div>`;
