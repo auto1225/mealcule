@@ -159,7 +159,7 @@ function openCommunityFeed() {
     _cfOpen = true;
     _injectCommunityFeedStyles();
     inlineTarget.innerHTML = '<div class="cf-feed-list" id="cf-feed-list"></div><div class="cf-load-more" id="cf-load-more" style="display:none;"><div class="cf-spinner"></div></div>';
-    _loadFeed();
+    _loadAndRenderFeed();
     return;
   }
 
@@ -764,7 +764,7 @@ async function toggleLike(sharedRecipeId, btnEl) {
 
   try {
     await dbRPC('toggle_recipe_like', {
-      p_user_id: currentUser.id,
+      p_user_id: currentUser?.id || 'guest',
       p_shared_recipe_id: sharedRecipeId,
     });
   } catch (err) {

@@ -2437,6 +2437,11 @@ function switchTab(tabName) {
 }
 
 function switchAnalyzeStep(step) {
+  // Validate: at least 1 ingredient selected before moving to step 2+
+  if (step >= 2 && typeof selCount === 'function' && selCount() === 0) {
+    showToast(_t('재료를 1개 이상 선택해주세요', 'Please select at least 1 ingredient'));
+    return;
+  }
   _currentStep = step;
   document.querySelectorAll('.wizard-panel').forEach(function(p) { p.classList.remove('active'); });
   var panel = document.getElementById('analyze-step-' + step);
@@ -2572,8 +2577,7 @@ function switchRecipeSub(sub) {
     if (target && !target.innerHTML.trim()) toggleRecipeBox();
   }
   if (sub === 'community' && typeof openCommunityFeed === 'function') {
-    var target = document.getElementById('recipesCommunityContent');
-    if (target && !target.innerHTML.trim()) openCommunityFeed();
+    openCommunityFeed(); // Always reload community feed on sub-tab click
   }
 }
 
@@ -7115,8 +7119,13 @@ async function _runUrlImport() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url, userLang: I18n?.lang || 'en' }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Import failed');
+    let data;
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error(_t('URL에서 레시피를 가져올 수 없습니다. 지원되지 않는 사이트이거나 서버에 연결할 수 없습니다.', 'Unable to import recipe from this URL. The site may not be supported or the server is unavailable.'));
+    }
+    data = await res.json();
+    if (!res.ok) throw new Error(data.error || _t('레시피 가져오기에 실패했습니다', 'Failed to import recipe'));
 
     const nutr = data.nutrition || {};
     let html = `<div style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:12px">
