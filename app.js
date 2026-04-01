@@ -7609,7 +7609,7 @@ async function runAnalysis() {
         const svgHtml = `<svg width="80" height="80" style="transform:rotate(-90deg);margin:0 auto">
           <circle cx="40" cy="40" r="34" fill="#fafafa" stroke="#e5e5e5" stroke-width="2"/>
           <circle cx="40" cy="40" r="34" fill="none" stroke="${scoreColor}" stroke-width="2.5" stroke-dasharray="${circumference}" stroke-dashoffset="${dashoffset}" style="transition:stroke-dashoffset 0.8s ease"/>
-          <text x="40" y="45" text-anchor="middle" font-size="22" font-weight="700" fill="${scoreColor}" style="pointer-events:none">${hr.score}</text>
+          <text x="40" y="45" text-anchor="middle" font-size="22" font-weight="700" fill="${scoreColor}" transform="rotate(90, 40, 40)" style="pointer-events:none">${hr.score}</text>
         </svg>`;
 
         html += `<div class="health-score" style="background:${scoreBg};border:1px solid ${scoreColor}30">
