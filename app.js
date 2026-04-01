@@ -5134,25 +5134,43 @@ async function renderIngredientsAPI(filter) {
 
 function renderCategoryTabs() {
   const container = document.getElementById("catTabs");
-  container.innerHTML = "";
   const cats = dbCategories || CATEGORIES;
-  const allBtn = document.createElement("button");
-  allBtn.className = "cat-tab" + (activeCategory === "all" ? " active" : "");
+  // If already built, just update active states
+  if (container.children.length > 0) {
+    container.querySelectorAll('.cat-tab').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.catKey === activeCategory);
+    });
+    return;
+  }
+  // First-time build
   const allCat = cats.all || CATEGORIES.all;
-  allBtn.innerHTML = `<span>${allCat.img ? '<img src="' + allCat.img + '" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'📋\'">' : '<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'<span>📋</span>\'">'}</span><span>${window.tl ? tl(allCat) : '전체'}</span>`;
-  allBtn.onclick = () => { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
+  const allBtn = document.createElement("button");
+  allBtn.className = "cat-tab active";
+  allBtn.dataset.catKey = "all";
+  var allImg = document.createElement('div');
+  allImg.style.cssText = 'width:32px;height:32px;border-radius:8px;background:center/cover no-repeat url(' + (allCat.img || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&fit=crop') + '),var(--card-hover);font-size:20px;display:flex;align-items:center;justify-content:center';
+  allImg.textContent = allCat.emoji || '📋';
+  allBtn.appendChild(allImg);
+  var sp = document.createElement('span'); sp.textContent = window.tl ? tl(allCat) : 'All'; allBtn.appendChild(sp);
+  allBtn.onclick = function() { activeCategory = "all"; renderCategoryTabs(); filterIngredients(); };
   container.appendChild(allBtn);
-  Object.entries(cats).forEach(([key, c]) => {
+  Object.entries(cats).forEach(function([key, c]) {
     if (key === 'all') return;
-    const btn = document.createElement("button");
-    btn.className = "cat-tab" + (activeCategory === key ? " active" : "");
-    btn.innerHTML = `<span>${c.img ? '<img src="' + c.img + '" style="width:24px;height:24px;border-radius:6px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'' + c.emoji + '\'">' : c.emoji}</span><span>${tl(c)}</span>`;
-    btn.onclick = () => { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
+    var btn = document.createElement("button");
+    btn.className = "cat-tab";
+    btn.dataset.catKey = key;
+    {
+      var imgDiv = document.createElement('div');
+      imgDiv.style.cssText = 'width:32px;height:32px;border-radius:8px;font-size:20px;display:flex;align-items:center;justify-content:center';
+      if (c.img) imgDiv.style.background = 'center/cover no-repeat url(' + c.img + '),var(--card-hover)';
+      else imgDiv.style.background = 'var(--card-hover)';
+      imgDiv.textContent = c.emoji || '';
+      btn.appendChild(imgDiv);
+    }
+    var label = document.createElement('span'); label.textContent = tl(c); btn.appendChild(label);
+    btn.onclick = function() { activeCategory = key; renderCategoryTabs(); filterIngredients(); };
     container.appendChild(btn);
   });
-  // Auto-scroll active tab into view
-  var activeTab = container.querySelector('.cat-tab.active');
-  if (activeTab) activeTab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 }
 
 // ── 커뮤니티 조리 방법 Supabase 로드 ────────────────────────────────────────
@@ -7071,11 +7089,19 @@ async function _handlePhotoSelect(input) {
     if (results) results.innerHTML = `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.45)"><div class="loading-spinner" style="margin:0 auto 8px"></div>${_t('사진 분석 중...', 'Analyzing photo...')}</div>`;
 
     try {
+      var _photoAbort = new AbortController();
+      var _photoTimeout = setTimeout(function() { _photoAbort.abort(); }, 15000);
       const res = await fetch('/api/photo-ingredient', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: dataUri, userLang: I18n?.lang || 'en' }),
+        signal: _photoAbort.signal,
       });
+      clearTimeout(_photoTimeout);
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(_t('사진 분석 서버에 연결할 수 없습니다.', 'Unable to connect to photo analysis server.'));
+      }
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Analysis failed');
 
@@ -7100,7 +7126,10 @@ async function _handlePhotoSelect(input) {
       results._ingredients = data.ingredients;
       if (typeof FoodImageResolver !== 'undefined') FoodImageResolver.scheduleScan();
     } catch (err) {
-      results.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444">${err.message}</div>`;
+      var _errMsg = err.name === 'AbortError'
+        ? _t('사진 분석 서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', 'Unable to reach the photo analysis server. Please try again later.')
+        : err.message;
+      results.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444">${_errMsg}</div>`;
     }
   };
   reader.readAsDataURL(file);
