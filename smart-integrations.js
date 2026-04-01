@@ -76,7 +76,7 @@ function _renderAppliancePanel() {
   let html = `
     <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="margin:0;font-size:17px">🏠 ${_t('스마트 가전 연동', 'Smart Appliances')}</h3>
+        <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;vertical-align:middle;border-radius:3px;object-fit:cover;margin-right:4px"> ${_t('스마트 가전 연동', 'Smart Appliances')}</h3>
         <button onclick="closeAppliancePanel()" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>`;
 
@@ -138,7 +138,7 @@ function _renderAppliancePanel() {
 
   html += `
       <div style="margin-top:16px;padding:12px;background:#f5f5f5;border-radius:10px;font-size:12px;color:#888">
-        💡 ${_t(
+        <img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" alt="" style="width:14px;height:14px;vertical-align:middle;border-radius:2px;object-fit:cover;margin-right:3px"> ${_t(
           '실제 가전 연동은 각 제조사의 API 키 설정이 필요합니다. 현재는 시뮬레이션 모드입니다.',
           'Actual appliance connection requires manufacturer API keys. Currently in simulation mode.'
         )}
@@ -194,19 +194,19 @@ function sendToAppliance(temp, timeMin, method) {
 
 const DELIVERY_SERVICES = [
   // Global
-  { id: 'instacart', name: 'Instacart', icon: '🥕', region: 'us,ca', url: 'https://www.instacart.com/store/search_v3/search?term=' },
-  { id: 'amazon_fresh', name: 'Amazon Fresh', icon: '📦', region: 'us,uk,de,jp', url: 'https://www.amazon.com/s?k=' },
-  { id: 'walmart', name: 'Walmart Grocery', icon: '🛒', region: 'us,ca', url: 'https://www.walmart.com/search?q=' },
+  { id: 'instacart', name: 'Instacart', icon: '🥕', img: 'https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'us,ca', url: 'https://www.instacart.com/store/search_v3/search?term=' },
+  { id: 'amazon_fresh', name: 'Amazon Fresh', icon: '📦', img: 'https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'us,uk,de,jp', url: 'https://www.amazon.com/s?k=' },
+  { id: 'walmart', name: 'Walmart Grocery', icon: '🛒', img: 'https://images.pexels.com/photos/264507/pexels-photo-264507.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'us,ca', url: 'https://www.walmart.com/search?q=' },
   // Korea
-  { id: 'coupang', name: 'Coupang', icon: '🚀', region: 'kr', url: 'https://www.coupang.com/np/search?q=' },
-  { id: 'kurly', name: 'Market Kurly', icon: '💜', region: 'kr', url: 'https://www.kurly.com/search?sword=' },
-  { id: 'ssg', name: 'SSG.COM', icon: '🧡', region: 'kr', url: 'https://www.ssg.com/search.ssg?query=' },
+  { id: 'coupang', name: 'Coupang', icon: '🚀', img: 'https://images.pexels.com/photos/586030/pexels-photo-586030.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'kr', url: 'https://www.coupang.com/np/search?q=' },
+  { id: 'kurly', name: 'Market Kurly', icon: '💜', img: 'https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'kr', url: 'https://www.kurly.com/search?sword=' },
+  { id: 'ssg', name: 'SSG.COM', icon: '🧡', img: 'https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'kr', url: 'https://www.ssg.com/search.ssg?query=' },
   // Japan
-  { id: 'rakuten', name: 'Rakuten Seiyu', icon: '🏪', region: 'jp', url: 'https://sm.rakuten.co.jp/search?keyword=' },
+  { id: 'rakuten', name: 'Rakuten Seiyu', icon: '🏪', img: 'https://images.pexels.com/photos/1405717/pexels-photo-1405717.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'jp', url: 'https://sm.rakuten.co.jp/search?keyword=' },
   // UK/EU
-  { id: 'ocado', name: 'Ocado', icon: '🟢', region: 'uk', url: 'https://www.ocado.com/search?entry=' },
-  { id: 'tesco', name: 'Tesco', icon: '🔵', region: 'uk', url: 'https://www.tesco.com/groceries/en-GB/search?query=' },
-  { id: 'rewe', name: 'REWE', icon: '🔴', region: 'de', url: 'https://shop.rewe.de/productList?search=' },
+  { id: 'ocado', name: 'Ocado', icon: '🟢', img: 'https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'uk', url: 'https://www.ocado.com/search?entry=' },
+  { id: 'tesco', name: 'Tesco', icon: '🔵', img: 'https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'uk', url: 'https://www.tesco.com/groceries/en-GB/search?query=' },
+  { id: 'rewe', name: 'REWE', icon: '🔴', img: 'https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop', region: 'de', url: 'https://shop.rewe.de/productList?search=' },
 ];
 
 let _preferredDelivery = null;
@@ -235,7 +235,7 @@ function openGroceryDelivery(groceryItems) {
   let html = `
     <div style="background:#fff;border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="margin:0;font-size:17px">🛒 ${_t('온라인 장보기', 'Order Groceries Online')}</h3>
+        <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/264507/pexels-photo-264507.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;vertical-align:middle;border-radius:3px;object-fit:cover;margin-right:4px"> ${_t('온라인 장보기', 'Order Groceries Online')}</h3>
         <button onclick="document.getElementById('deliveryOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>`;
 
@@ -271,8 +271,12 @@ function openGroceryDelivery(groceryItems) {
 function _renderDeliveryCard(service, searchTerms, isPreferred) {
   const encodedSearch = encodeURIComponent(searchTerms);
   const fullUrl = service.url + encodedSearch;
+  const svcIconHtml = service.img
+    ? `<img src="${service.img}" alt="${service.name}" style="width:24px;height:24px;border-radius:5px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display=''">`
+      + `<span style="font-size:24px;display:none">${service.icon}</span>`
+    : `<span style="font-size:24px">${service.icon}</span>`;
   return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid ${isPreferred ? '#059669' : '#eee'};border-radius:10px;margin-bottom:6px;${isPreferred ? 'background:#ecfdf5;' : ''}">
-    <span style="font-size:24px">${service.icon}</span>
+    ${svcIconHtml}
     <div style="flex:1">
       <div style="font-weight:600;font-size:13px">${service.name}</div>
       ${isPreferred ? `<div style="font-size:10px;color:#059669">★ ${_t('기본 서비스', 'Preferred')}</div>` : ''}
