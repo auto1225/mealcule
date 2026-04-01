@@ -72,6 +72,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard
 .method-btn:hover{border-color:#a3a3a3;background:#fafafa}
 .method-btn.active{border-color:transparent;background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(5,150,105,0.3)}
 .method-btn .emoji{font-size:16px;display:block;margin-bottom:2px}
+.method-btn .method-icon{display:flex;align-items:center;justify-content:center;margin-bottom:2px}
+.method-btn .method-img{width:32px;height:32px;border-radius:8px;object-fit:cover;display:block}
+.method-btn.active .method-img{box-shadow:0 0 0 2px #fff}
 .method-btn.add-method-btn{border-style:dashed;color:#a3a3a3;font-size:18px;display:flex;align-items:center;justify-content:center;min-height:52px}
 .method-btn.add-method-btn:hover{border-color:var(--accent);color:var(--accent);background:#f0fdf4}
 .method-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center}
