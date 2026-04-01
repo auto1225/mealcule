@@ -14,7 +14,7 @@ let _collectionsCache = [];        // loaded collections
 
 // ── Demo/Sample Recipes (shown when database is empty) ─────────────────────
 const _demoCollections = [
-  { id: 'demo-col-fav', name: '즐겨찾기', name_en: 'Favorites', emoji: '⭐', sort_order: 0 },
+  { id: 'demo-col-fav', name: '즐겨찾기', name_en: 'Favorites', emoji: '<img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'⭐\'">', sort_order: 0 },
   { id: 'demo-col-mol', name: '분자요리', name_en: 'Molecular', emoji: '<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;" onerror="this.outerHTML=\'🔬\'">', sort_order: 1 },
   { id: 'demo-col-quick', name: '간단 요리', name_en: 'Quick Meals', emoji: '<img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" alt="" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;" onerror="this.outerHTML=\'⚡\'">', sort_order: 2 },
 ];
@@ -416,7 +416,7 @@ async function renderRecipeBox() {
     <div class="rb-header">
       <div class="rb-title">${_t('레시피 박스', 'Recipe Box')} <span class="rb-count">${showingDemo ? _t('샘플', 'Sample') : recipes.length + (limit !== Infinity ? `/${limit}` : '')}</span></div>
       <div style="display:flex;gap:6px">
-        <button class="rb-new-col-btn" onclick="typeof openUrlImport==='function'&&openUrlImport()">🔗 ${_t('URL 가져오기', 'Import URL')}</button>
+        <button class="rb-new-col-btn" onclick="typeof openUrlImport==='function'&&openUrlImport()"><img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🔗'"> ${_t('URL 가져오기', 'Import URL')}</button>
         <button class="rb-new-col-btn" onclick="promptNewCollection()">+ ${_t('새 컬렉션', 'New Collection')}</button>
       </div>
     </div>`;
@@ -425,17 +425,17 @@ async function renderRecipeBox() {
   if (showingDemo) {
     html += `
       <div style="background:linear-gradient(135deg,#ede9fe,#dbeafe);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#4338ca;display:flex;align-items:center;gap:8px;">
-        <span style="font-size:16px;">🧪</span>
+        <span style="font-size:16px;"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🧪'"></span>
         <span>${_t('샘플 레시피를 둘러보세요! 분석 후 나만의 레시피를 저장해 보세요.', 'Explore sample recipes! Save your own recipes after running an analysis.')}</span>
       </div>`;
   }
 
   // Collection tabs
   html += `<div class="rb-tabs">`;
-  html += _rbTab(null, `📋 ${_t('전체', 'All')}`);
-  html += _rbTab('__favorites__', `⭐ ${_t('즐겨찾기', 'Favorites')}`);
+  html += _rbTab(null, `<img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='📋'"> ${_t('전체', 'All')}`);
+  html += _rbTab('__favorites__', `<img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⭐'"> ${_t('즐겨찾기', 'Favorites')}`);
   for (const c of collections) {
-    html += _rbTab(c.id, `${c.emoji || '📁'} ${_t(c.name, c.name_en || c.name)}`);
+    html += _rbTab(c.id, `${c.emoji || '<img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML=\'📁\'">'} ${_t(c.name, c.name_en || c.name)}`);
   }
   html += `</div>`;
 
@@ -443,7 +443,7 @@ async function renderRecipeBox() {
   if (atLimit && userPlan === 'free') {
     html += `
       <div class="rb-upgrade-banner">
-        <span>🚀 ${_t('무료 플랜 한도에 도달했습니다.', 'You\'ve reached the free plan limit.')}</span>
+        <span><img src="https://images.pexels.com/photos/586030/pexels-photo-586030.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🚀'"> ${_t('무료 플랜 한도에 도달했습니다.', 'You\'ve reached the free plan limit.')}</span>
         <button onclick="openUserMenu()">${_t('Pro 업그레이드', 'Upgrade to Pro')}</button>
       </div>`;
   }
@@ -452,7 +452,7 @@ async function renderRecipeBox() {
   if (recipes.length === 0) {
     html += `
       <div class="rb-empty">
-        <div style="font-size:40px;margin-bottom:8px;">📭</div>
+        <div style="font-size:40px;margin-bottom:8px;"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📭'"></div>
         <div>${_t('저장된 레시피가 없습니다.', 'No saved recipes yet.')}</div>
         <div style="font-size:12px;color:#aaa;margin-top:4px;">
           ${_t('분석 후 레시피를 저장해 보세요!', 'Save recipes after running an analysis!')}
@@ -484,7 +484,7 @@ async function renderRecipeBox() {
             <span class="rb-card-cal">${cal !== '—' ? cal + ' kcal' : ''}</span>
           </div>
           ${recipe.tags?.length ? `<div class="rb-card-tags">${recipe.tags.slice(0, 3).map(t => `<span class="rb-card-tag">#${t}</span>`).join('')}</div>` : ''}
-          ${isDemo ? '' : `<button class="rb-del-btn" onclick="event.stopPropagation();deleteRecipe('${recipe.id}')" title="${_t('삭제', 'Delete')}">🗑</button>`}
+          ${isDemo ? '' : `<button class="rb-del-btn" onclick="event.stopPropagation();deleteRecipe('${recipe.id}')" title="${_t('삭제', 'Delete')}"><img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🗑'"></button>`}
         </div>`;
     }
     html += `</div>`;
@@ -637,21 +637,21 @@ async function openRecipeDetail(id) {
         <div class="rb-det-tags">
           ${recipe.cuisine ? `<span class="recipe-tag cuisine">${recipe.cuisine}</span>` : ''}
           ${recipe.difficulty ? `<span class="recipe-tag diff-${recipe.difficulty}">${recipe.difficulty}</span>` : ''}
-          ${recipe.is_favorite ? `<span class="recipe-tag" style="background:#fef3c7;color:#92400e;">⭐ ${_t('즐겨찾기', 'Favorite')}</span>` : ''}
+          ${recipe.is_favorite ? `<span class="recipe-tag" style="background:#fef3c7;color:#92400e;"><img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⭐'"> ${_t('즐겨찾기', 'Favorite')}</span>` : ''}
         </div>
       </div>
 
       ${recipe.description ? `<div class="rb-det-desc">${recipe.description}</div>` : ''}
-      ${recipe.health_note ? `<div class="rb-det-health">💚 ${recipe.health_note}</div>` : ''}
+      ${recipe.health_note ? `<div class="rb-det-health"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💚'"> ${recipe.health_note}</div>` : ''}
 
       ${ings ? `<div class="rb-det-section"><strong>${_t('재료', 'Ingredients')}</strong><div class="rb-det-ings">${ings}</div></div>` : ''}
 
       <div class="rb-det-section">
         <strong>${_t('조리 정보', 'Cooking Info')}</strong>
         <div class="rb-det-cook">
-          ${recipe.method ? `<span>🍳 ${recipe.method}</span>` : ''}
-          ${recipe.temperature ? `<span>🌡 ${recipe.temperature}°C</span>` : ''}
-          ${recipe.duration ? `<span>⏱ ${recipe.duration}${_t('분', 'min')}</span>` : ''}
+          ${recipe.method ? `<span><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🍳'"> ${recipe.method}</span>` : ''}
+          ${recipe.temperature ? `<span><img src="https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🌡'"> ${recipe.temperature}°C</span>` : ''}
+          ${recipe.duration ? `<span><img src="https://images.pexels.com/photos/2784135/pexels-photo-2784135.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⏱'"> ${recipe.duration}${_t('분', 'min')}</span>` : ''}
         </div>
       </div>
 
@@ -671,24 +671,24 @@ async function openRecipeDetail(id) {
 
       ${recipe.allergens?.length ? `
         <div class="rb-det-section">
-          <strong>⚠ ${_t('알레르기', 'Allergens')}</strong>
+          <strong><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='⚠'"> ${_t('알레르기', 'Allergens')}</strong>
           <div>${recipe.allergens.join(', ')}</div>
         </div>` : ''}
 
       <div class="rb-det-actions">
         ${isDemo ? `
         <div style="width:100%;text-align:center;font-size:12px;color:#7c3aed;background:#f5f3ff;padding:10px;border-radius:8px;">
-          🧪 ${_t('이것은 샘플 레시피입니다. 분석 후 나만의 레시피를 저장해 보세요!', 'This is a sample recipe. Save your own recipes after running an analysis!')}
+          <img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🧪'"> ${_t('이것은 샘플 레시피입니다. 분석 후 나만의 레시피를 저장해 보세요!', 'This is a sample recipe. Save your own recipes after running an analysis!')}
         </div>
         ` : `
         <button class="rb-action-btn fav" onclick="toggleFavorite('${recipe.id}')">
           ${recipe.is_favorite ? '★' : '☆'} ${_t('즐겨찾기', 'Favorite')}
         </button>
         <button class="rb-action-btn" onclick="typeof shareMyRecipe==='function'?shareMyRecipe('${recipe.id}'):showToast('Community not loaded')" style="color:#7c3aed">
-          🌐 ${_t('공유', 'Share')}
+          <img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🌐'"> ${_t('공유', 'Share')}
         </button>
         <button class="rb-action-btn del" onclick="deleteRecipe('${recipe.id}')">
-          🗑 ${_t('삭제', 'Delete')}
+          <img src="https://images.pexels.com/photos/3850571/pexels-photo-3850571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='🗑'"> ${_t('삭제', 'Delete')}
         </button>
         `}
       </div>
@@ -761,7 +761,7 @@ function toggleRecipeBox() {
     panel.className = 'rb-panel';
     panel.innerHTML = `
       <div class="rb-panel-header">
-        <span>📦 ${_t('레시피 박스', 'Recipe Box')}</span>
+        <span><img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='📦'"> ${_t('레시피 박스', 'Recipe Box')}</span>
         <button class="rb-panel-close" onclick="toggleRecipeBox()">✕</button>
       </div>
       <div id="recipeBoxContent" class="rb-panel-body"></div>`;
