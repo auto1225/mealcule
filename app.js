@@ -3341,6 +3341,31 @@ let _condExpanded = new Set(); // 현재 펼쳐진 그룹 키
 let _condTab = 'me'; // 'me' | 'fam'
 let activeMemberId = 1;
 let nextMemberId = 2;
+
+// ── Profile LocalStorage persistence ──
+function _saveProfileToStorage() {
+  try {
+    localStorage.setItem('mealcule_profile', JSON.stringify({
+      members, activeMemberId, nextMemberId,
+      customTraits, customFamilyHx, customSubstances, customConditions
+    }));
+  } catch(e) {}
+}
+function _loadProfileFromStorage() {
+  try {
+    const saved = localStorage.getItem('mealcule_profile');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    if (data.members && data.members.length > 0) members = data.members;
+    if (data.activeMemberId) activeMemberId = data.activeMemberId;
+    if (data.nextMemberId) nextMemberId = data.nextMemberId;
+    if (data.customTraits) customTraits = data.customTraits;
+    if (data.customFamilyHx) customFamilyHx = data.customFamilyHx;
+    if (data.customSubstances) customSubstances = data.customSubstances;
+    if (data.customConditions) customConditions = data.customConditions;
+  } catch(e) {}
+}
+_loadProfileFromStorage();
 let profileOpen = false;
 let method = "pan_fry";
 let charts = {};
@@ -3589,6 +3614,7 @@ function renderConditions() {
           renderConditions();
           updateProfileSummary();
           updateProfileNote();
+          _saveProfileToStorage(); _showProfileSaved();
         };
         subRow.appendChild(cell);
       });
@@ -3629,6 +3655,7 @@ function renderConditions() {
           renderConditions();
           updateProfileSummary();
           updateProfileNote();
+          _saveProfileToStorage(); _showProfileSaved();
         };
         subRow.appendChild(cell);
       });
@@ -3657,6 +3684,8 @@ function toggleCondition(key) {
   else member.conditions.push(key);
   renderConditions();
   updateProfileNote();
+  _saveProfileToStorage();
+  _showProfileSaved();
 }
 
 function toggleProfile() {
@@ -3742,7 +3771,7 @@ function renderTraits() {
   container.appendChild(_healthGrid(
     Object.entries(allTraits), member,
     k => member.traits.includes(k),
-    k => { const i = member.traits.indexOf(k); if (i>=0) member.traits.splice(i,1); else member.traits.push(k); renderTraits(); updateProfileSummary(); },
+    k => { const i = member.traits.indexOf(k); if (i>=0) member.traits.splice(i,1); else member.traits.push(k); renderTraits(); updateProfileSummary(); _saveProfileToStorage(); _showProfileSaved(); },
     'active', k => !!customTraits[k]
   ));
 }
@@ -3773,11 +3802,19 @@ function saveMemberForm() {
   member.ethnicity = document.getElementById("pEthnicity").value || null;
   member.country = document.getElementById("pCountry").value || null;
   member.activity = document.getElementById("pActivity").value || null;
+  _saveProfileToStorage();
+}
+
+// Auto-save feedback indicator
+function _showProfileSaved() {
+  const _en = window.I18n && I18n.lang === 'en';
+  _showSelToast(_en ? 'Saved' : '저장됨', 'add');
 }
 
 function updateProfile() {
   saveMemberForm();
   updateProfileSummary();
+  _showProfileSaved();
 }
 
 function calcBMI(member) {
@@ -3910,7 +3947,7 @@ function renderSubstances() {
         row.appendChild(_healthCell(
           key, s.emoji, tl(s), tl(s, "desc") || '',
           member.substances.includes(key), !!customSubstances[key], 'active',
-          () => { const idx = member.substances.indexOf(key); if (idx>=0) member.substances.splice(idx,1); else member.substances.push(key); renderSubstances(); updateProfileSummary(); }
+          () => { const idx = member.substances.indexOf(key); if (idx>=0) member.substances.splice(idx,1); else member.substances.push(key); renderSubstances(); updateProfileSummary(); _saveProfileToStorage(); _showProfileSaved(); }
         ));
       });
       wrap.appendChild(row);
@@ -5479,16 +5516,48 @@ function toggleParentExpand(name) {
 }
 
 function toggleIngredient(name) {
-  if (name in selected) delete selected[name];
+  const wasSelected = name in selected;
+  if (wasSelected) delete selected[name];
   else selected[name] = DB[name]?.defaultG || 100;
+  const isNowSelected = name in selected;
   // Fast active toggle without full re-render
   const displayName = tl(DB[name], 'en') || name;
   document.querySelectorAll(".ing-cell").forEach(cell => {
     const n = cell.querySelector(".ci-n")?.textContent;
-    if (n === name || n === displayName) cell.classList.toggle("active", name in selected);
+    if (n === name || n === displayName) {
+      cell.classList.toggle("active", isNowSelected);
+      // Brief scale animation for feedback
+      cell.style.transform = 'scale(0.92)';
+      setTimeout(() => { cell.style.transform = ''; }, 120);
+    }
   });
   renderSelected();
   document.getElementById("analyzeBtn").disabled = selCount() === 0;
+  // Brief toast feedback
+  const label = tl(DB[name], 'en') || name;
+  const _en = window.I18n && I18n.lang === 'en';
+  if (isNowSelected) {
+    _showSelToast((_en ? `${label} added` : `${label} 추가`) + ` (${selCount()})`, 'add');
+  } else {
+    _showSelToast((_en ? `${label} removed` : `${label} 제거`), 'remove');
+  }
+}
+
+// Lightweight inline toast for ingredient selection (doesn't use heavy showToast)
+function _showSelToast(msg, type) {
+  let el = document.getElementById('_selToast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_selToast';
+    el.style.cssText = 'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;z-index:10000;pointer-events:none;opacity:0;transition:opacity .2s;white-space:nowrap';
+    document.body.appendChild(el);
+  }
+  el.style.background = type === 'add' ? 'var(--accent)' : 'rgba(239,68,68,0.9)';
+  el.style.color = '#fff';
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(el._tid);
+  el._tid = setTimeout(() => { el.style.opacity = '0'; }, 1200);
 }
 
 function updateGrams(name, val) {

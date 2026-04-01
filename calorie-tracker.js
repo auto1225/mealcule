@@ -447,7 +447,17 @@ function _ctQuickAddCal(mealType) {
   if (!calInput) return;
 
   const cal = parseInt(calInput.value);
-  if (!cal || isNaN(cal) || cal <= 0) return;
+  if (!cal || isNaN(cal) || cal <= 0) {
+    // Show validation feedback
+    calInput.style.borderColor = '#EF4444';
+    calInput.style.animation = 'none';
+    calInput.offsetHeight; // trigger reflow
+    calInput.style.animation = 'ctShake 0.3s';
+    calInput.placeholder = _t('숫자를 입력하세요', 'Enter a number');
+    calInput.focus();
+    setTimeout(() => { calInput.style.borderColor = ''; }, 1500);
+    return;
+  }
 
   const name = (nameInput && nameInput.value.trim()) || _t('빠른 기록', 'Quick Entry');
   const now = new Date();
@@ -665,6 +675,7 @@ function _injectCTStyles() {
     animation: ctSlideUp .3s ease;
   }
   @keyframes ctSlideUp { from { opacity:0; transform:translateY(40px) } to { opacity:1; transform:translateY(0) } }
+  @keyframes ctShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 
   /* Header */
   .ct-header {

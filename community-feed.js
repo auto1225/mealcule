@@ -780,10 +780,12 @@ async function toggleLike(sharedRecipeId, btnEl) {
   });
 
   try {
-    await dbRPC('toggle_recipe_like', {
-      p_user_id: currentUser?.id || 'guest',
-      p_shared_recipe_id: sharedRecipeId,
-    });
+    if (typeof dbRPC === 'function' && typeof sbClient !== 'undefined' && sbClient) {
+      await dbRPC('toggle_recipe_like', {
+        p_user_id: currentUser?.id || 'guest',
+        p_shared_recipe_id: sharedRecipeId,
+      });
+    }
   } catch (err) {
     console.error('toggleLike error:', err);
     // Revert on error
