@@ -459,7 +459,7 @@ function _playRecipeVideo(videoId) {
   if (!overlay) {
     overlay = document.createElement('div');
     overlay.id = 'cf-video-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:12000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;flex-direction:column;';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;flex-direction:column;';
     document.body.appendChild(overlay);
   }
   overlay.innerHTML = `

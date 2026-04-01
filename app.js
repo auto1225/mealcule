@@ -2361,10 +2361,10 @@ let dailyUsage = { analysis_count: 0, search_count: 0, export_count: 0 };
 let isGuest = false;
 let authSession = null;      // Supabase auth session
 
-// 플랜별 제한 — 테스트: 모든 플랜 무제한
+// 플랜별 제한
 const PLAN_LIMITS = {
-  free:       { analysis: -1, export: -1, history: -1, members: -1 },
-  pro:        { analysis: -1, export: -1, history: -1, members: -1 },
+  free:       { analysis: 5, export: 1, history: 10, members: 1 },
+  pro:        { analysis: 50, export: -1, history: -1, members: 5 },
   enterprise: { analysis: -1, export: -1, history: -1, members: -1 }
 };
 
