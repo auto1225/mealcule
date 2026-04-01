@@ -2478,17 +2478,25 @@ function renderHomeDashboard() {
   // Get recent analyses from localStorage
   var recentHtml = '';
   try {
-    var history = JSON.parse(localStorage.getItem('mc_history') || '[]');
-    var recent = history.slice(0, 3);
+    var history = JSON.parse(localStorage.getItem(LOCAL_KEYS.HISTORY) || '[]');
+    var recent = history.slice(0, 5);
     if (recent.length > 0) {
-      recentHtml = '<div class="home-recent"><div class="home-section-title">' + _t('최근 분석', 'Recent Analyses') + '</div><div class="home-recent-list">';
+      recentHtml = '<div class="home-recent"><div class="home-section-title">' +
+        _t('최근 분석', 'Recent Analyses') +
+        ' <span style="font-size:12px;font-weight:400;color:var(--text-secondary);margin-left:8px">(' + history.length + _t('개 저장됨', ' saved') + ')</span>' +
+        '<button onclick="_openAnalysisHistory()" style="float:right;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:11px">' + _t('전체 보기', 'View All') + '</button>' +
+        '</div><div class="home-recent-list">';
       recent.forEach(function(item) {
-        var ingredients = item.ingredients || item.name || _t('분석 결과', 'Analysis');
+        var ingredients = item.ingredients || _t('분석 결과', 'Analysis');
         var date = item.date ? new Date(item.date).toLocaleDateString() : '';
-        recentHtml += '<div class="home-recent-item" onclick="switchTab(\'analyze\')">' +
-          '<span class="recent-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" onerror="this.outerHTML=\'🧪\'"></span>' +
+        var methodTxt = item.method || '';
+        recentHtml += '<div class="home-recent-item" onclick="_openSavedAnalysis(\'' + item.id + '\')">' +
+          '<span class="recent-icon">🧪</span>' +
           '<div class="recent-info"><div class="recent-name">' + escapeHtml(ingredients) + '</div>' +
-          '<div class="recent-meta">' + date + '</div></div></div>';
+          '<div class="recent-meta">' + escapeHtml(methodTxt) + (methodTxt ? ' · ' : '') + (item.temp || '') + '°C · ' + (item.time || '') + _t('분', 'min') +
+          ' · ' + _t('반응 ', '') + (item.rxnCount || 0) + _t('개', ' reactions') +
+          '</div><div class="recent-date">' + date + '</div></div>' +
+          '<span class="recent-arrow">›</span></div>';
       });
       recentHtml += '</div></div>';
     }
@@ -2559,6 +2567,180 @@ function renderHomeDashboard() {
   _tabRendered.home = true;
 }
 
+/** 데이터 관리 UI 렌더링 */
+function _renderDataManagement(container) {
+  var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+
+  // 각 카테고리 데이터 크기 계산
+  function _categorySize(prefix) {
+    var size = 0;
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.startsWith(prefix)) size += (localStorage.getItem(k) || '').length * 2;
+    }
+    return size;
+  }
+  function _keySize(key) {
+    var val = localStorage.getItem(key);
+    return val ? val.length * 2 : 0;
+  }
+  function _fmtSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  var analysesCount = _getLocalAnalyses().length;
+  var analysesSize = _keySize(LOCAL_KEYS.ANALYSES) + _keySize(LOCAL_KEYS.HISTORY) + _keySize(LOCAL_KEYS.RECIPES_CACHE);
+  var calorieSize = _categorySize('mealcule_ct_');
+  var profileSize = _keySize('mealcule_profile');
+  var plannerSize = _categorySize('mp_items_');
+  var imgCacheSize = _keySize('_foodImgCache');
+  var totalSize = _getLocalStorageUsage();
+
+  // 칼로리 일수 계산
+  var calDays = 0;
+  for (var i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i) && localStorage.key(i).startsWith('mealcule_ct_meals_')) calDays++;
+  }
+
+  var rowStyle = 'display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px';
+  var btnStyle = 'padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:11px;font-family:inherit';
+  var delBtnStyle = btnStyle + ';border-color:rgba(239,68,68,0.3);color:#ef4444';
+
+  container.innerHTML =
+    '<div class="card" style="margin-top:16px">' +
+      '<div class="section-title" style="margin-bottom:4px">' + _t('내 데이터 관리', 'My Data Management') + '</div>' +
+      '<p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px">' +
+        _t('모든 개인 데이터는 이 기기에 저장됩니다. 서버에는 계정, 커뮤니티 활동, 저장된 레시피만 보관됩니다.',
+           'All personal data is stored on this device. Only account, community activity, and saved recipes are stored on the server.') +
+      '</p>' +
+
+      // 총 사용량
+      '<div style="padding:16px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;margin-bottom:16px;text-align:center">' +
+        '<div style="font-size:24px;font-weight:700;color:var(--accent)">' + _fmtSize(totalSize) + '</div>' +
+        '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px">' + _t('기기 저장소 사용량', 'Device Storage Usage') + '</div>' +
+      '</div>' +
+
+      // 카테고리별
+      '<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text)">' + _t('📱 기기 저장 데이터 (로컬)', 'Device-Stored Data (Local)') + '</div>' +
+
+      '<div style="' + rowStyle + '">' +
+        '<div><div style="font-size:13px;font-weight:500">🧪 ' + _t('분석 보고서', 'Analysis Reports') + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary)">' + analysesCount + _t('개', ' reports') + ' · ' + _fmtSize(analysesSize) + '</div></div>' +
+        '<div style="display:flex;gap:6px"><button style="' + btnStyle + '" onclick="_openAnalysisHistory()">' + _t('보기', 'View') + '</button>' +
+        '<button style="' + delBtnStyle + '" onclick="if(confirm(\'' + _t('분석 이력을 모두 삭제하시겠습니까?','Delete all analyses?') + '\')){_clearLocalCategory(\'analyses\');showProfileSection(\'data\')}">' + _t('삭제', 'Clear') + '</button></div>' +
+      '</div>' +
+
+      '<div style="' + rowStyle + '">' +
+        '<div><div style="font-size:13px;font-weight:500">🔥 ' + _t('칼로리 기록', 'Calorie Logs') + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary)">' + calDays + _t('일', ' days') + ' · ' + _fmtSize(calorieSize) + '</div></div>' +
+        '<button style="' + delBtnStyle + '" onclick="if(confirm(\'' + _t('칼로리 기록을 모두 삭제하시겠습니까?','Delete all calorie logs?') + '\')){_clearLocalCategory(\'calories\');showProfileSection(\'data\')}">' + _t('삭제', 'Clear') + '</button>' +
+      '</div>' +
+
+      '<div style="' + rowStyle + '">' +
+        '<div><div style="font-size:13px;font-weight:500">🏥 ' + _t('건강 프로필', 'Health Profile') + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary)">' + _fmtSize(profileSize) + '</div></div>' +
+        '<button style="' + delBtnStyle + '" onclick="if(confirm(\'' + _t('프로필 데이터를 삭제하시겠습니까?','Delete profile data?') + '\')){_clearLocalCategory(\'profile\');showProfileSection(\'data\')}">' + _t('삭제', 'Clear') + '</button>' +
+      '</div>' +
+
+      '<div style="' + rowStyle + '">' +
+        '<div><div style="font-size:13px;font-weight:500">📅 ' + _t('식단 플래너', 'Meal Planner') + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary)">' + _fmtSize(plannerSize) + '</div></div>' +
+        '<button style="' + delBtnStyle + '" onclick="if(confirm(\'' + _t('식단 데이터를 삭제하시겠습니까?','Delete meal plans?') + '\')){_clearLocalCategory(\'planner\');showProfileSection(\'data\')}">' + _t('삭제', 'Clear') + '</button>' +
+      '</div>' +
+
+      '<div style="' + rowStyle + '">' +
+        '<div><div style="font-size:13px;font-weight:500">🖼️ ' + _t('이미지 캐시', 'Image Cache') + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary)">' + _fmtSize(imgCacheSize) + '</div></div>' +
+        '<button style="' + delBtnStyle + '" onclick="localStorage.removeItem(\'_foodImgCache\');showProfileSection(\'data\');_showSelToast(\'' + _t('삭제됨','Cleared') + '\',\'remove\')">' + _t('삭제', 'Clear') + '</button>' +
+      '</div>' +
+
+      // 서버 저장 데이터 안내
+      '<div style="font-size:13px;font-weight:600;margin:20px 0 10px;color:var(--text)">' + _t('☁️ 서버 저장 데이터', 'Server-Stored Data') + '</div>' +
+      '<div style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px">' +
+        '• ' + _t('계정 정보 (이메일, 프로필)', 'Account info (email, profile)') + '<br>' +
+        '• ' + _t('커뮤니티 활동 (좋아요, 팔로우)', 'Community activity (likes, follows)') + '<br>' +
+        '• ' + _t('저장된 레시피 (Recipe Box)', 'Saved recipes (Recipe Box)') + '<br>' +
+        '• ' + _t('장보기 목록', 'Grocery lists') + '<br>' +
+        '<span style="font-size:11px;color:var(--text-secondary)">' + _t('※ 서버 데이터는 로그인 계정에 연결됩니다', '※ Server data is linked to your login account') + '</span>' +
+      '</div>' +
+
+      // 백업/복원/전체삭제 버튼
+      '<div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">' +
+        '<button onclick="_exportAllLocalData()" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--accent);background:rgba(16,185,129,0.1);color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit">📥 ' + _t('데이터 백업', 'Backup Data') + '</button>' +
+        '<button onclick="_importLocalData()" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit">📤 ' + _t('데이터 복원', 'Restore Data') + '</button>' +
+      '</div>' +
+      '<button onclick="if(confirm(\'' + _t('모든 로컬 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.','Delete ALL local data? This cannot be undone.') + '\')){_clearLocalCategory(\'all\');showProfileSection(\'data\');_showSelToast(\'' + _t('모든 데이터 삭제됨','All data cleared') + '\',\'remove\')}" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:transparent;color:#ef4444;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit">🗑 ' + _t('모든 로컬 데이터 삭제', 'Delete All Local Data') + '</button>' +
+    '</div>';
+}
+
+/** 저장된 분석 보고서 열기 — 분석 탭으로 이동 후 결과 복원 */
+function _openSavedAnalysis(id) {
+  var entry = _getLocalAnalysis(id);
+  if (!entry) { _showSelToast('Report not found', 'remove'); return; }
+
+  // 분석 상태 복원
+  Object.keys(selected).forEach(function(k) { delete selected[k]; });
+  if (entry.ingredients) Object.assign(selected, entry.ingredients);
+  if (entry.method) method = entry.method;
+
+  // lastAnalysisResult 복원
+  lastAnalysisResult = {
+    rxns: entry.rxns || [],
+    warns: entry.warns || [],
+    nutrition: entry.nutrition || {},
+    flavor: entry.flavor || {},
+    temp: entry.temp || 180,
+    time: entry.time || 10,
+  };
+
+  // 탭 이동 후 결과 렌더링
+  switchTab('analyze');
+  setTimeout(function() {
+    switchAnalyzeStep(4);
+    // 결과 영역 표시
+    var emptyState = document.getElementById('emptyState');
+    if (emptyState) emptyState.style.display = 'none';
+    var results = document.getElementById('results');
+    if (results) results.style.display = 'block';
+    // runAnalysis를 다시 호출하여 UI를 완전히 렌더링
+    window._analysisRunning = false;
+    runAnalysis();
+  }, 200);
+}
+
+/** 분석 이력 전체 보기 모달 */
+function _openAnalysisHistory() {
+  var _t = function(ko, en) { return (window.I18n && I18n.lang === 'en') ? en : ko; };
+  var analyses = _getLocalAnalyses();
+  var ov = document.createElement('div');
+  ov.className = 'mc-data-overlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:16px';
+  var html = '<div style="background:var(--bg);border-radius:16px;max-width:600px;width:100%;max-height:80vh;overflow:auto;padding:24px">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="margin:0;font-size:18px">' + _t('분석 이력', 'Analysis History') + ' (' + analyses.length + ')</h3><button onclick="this.closest(\'.mc-data-overlay\').remove()" style="background:none;border:none;color:var(--text);font-size:20px;cursor:pointer">&times;</button></div>';
+  if (analyses.length === 0) {
+    html += '<p style="text-align:center;color:var(--text-secondary);padding:40px 0">' + _t('저장된 분석이 없습니다', 'No saved analyses') + '</p>';
+  } else {
+    analyses.forEach(function(a) {
+      var date = new Date(a.date).toLocaleDateString();
+      var time = new Date(a.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      html += '<div style="padding:12px;border-radius:10px;background:var(--card);margin-bottom:8px;cursor:pointer;border:1px solid var(--border);display:flex;align-items:center;gap:12px" onclick="_openSavedAnalysis(\'' + a.id + '\');this.closest(\'.mc-data-overlay\').remove()">';
+      html += '<div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:4px">' + escapeHtml(a.ingredientNames ? a.ingredientNames.slice(0,4).join(', ') : '') + '</div>';
+      html += '<div style="font-size:11px;color:var(--text-secondary)">' + escapeHtml(a.methodLabel || '') + ' · ' + a.temp + '°C · ' + a.time + _t('분', 'min') + ' · ' + (a.rxns ? a.rxns.length : 0) + _t('개 반응', ' reactions') + '</div>';
+      html += '<div style="font-size:10px;color:var(--text-secondary);margin-top:2px">' + date + ' ' + time + '</div></div>';
+      html += '<div style="display:flex;gap:6px">';
+      html += '<button onclick="event.stopPropagation();_toggleLocalBookmark(\'' + a.id + '\');this.closest(\'.mc-data-overlay\').remove();_openAnalysisHistory()" style="background:none;border:none;font-size:16px;cursor:pointer" title="Bookmark">' + (a.bookmarked ? '⭐' : '☆') + '</button>';
+      html += '<button onclick="event.stopPropagation();if(confirm(\'' + _t('삭제하시겠습니까?', 'Delete this?') + '\')){_deleteLocalAnalysis(\'' + a.id + '\');this.closest(\'.mc-data-overlay\').remove();_openAnalysisHistory()}" style="background:none;border:none;font-size:14px;cursor:pointer;color:#ef4444" title="Delete">🗑</button>';
+      html += '</div></div>';
+    });
+  }
+  html += '</div>';
+  ov.innerHTML = html;
+  document.body.appendChild(ov);
+  ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+
 function renderPlanTab() {
   var content = document.getElementById('planContent');
   if (!content) return;
@@ -2617,6 +2799,11 @@ function renderProfileTab() {
         '<div class="hub-text"><div class="hub-title">' + _t('건강 대시보드', 'Health Dashboard') + '</div>' +
         '<div class="hub-desc">' + _t('주간/월간 영양 트렌드 분석', 'Weekly/monthly nutrition trend analysis') + '</div></div>' +
       '</div>' +
+      '<div class="profile-hub-card" onclick="showProfileSection(\'data\')">' +
+        '<span class="hub-icon">💾</span>' +
+        '<div class="hub-text"><div class="hub-title">' + _t('내 데이터', 'My Data') + '</div>' +
+        '<div class="hub-desc">' + _t('분석 보고서, 저장 데이터 관리, 백업/복원', 'Manage reports, saved data, backup/restore') + '</div></div>' +
+      '</div>' +
       '<div class="profile-hub-card" onclick="showProfileSection(\'settings\')">' +
         '<span class="hub-icon"><img src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:40px;height:40px;border-radius:10px;object-fit:cover" onerror="this.outerHTML=\'⚙️\'"></span>' +
         '<div class="hub-text"><div class="hub-title">' + _t('설정', 'Settings') + '</div>' +
@@ -2632,9 +2819,14 @@ function showProfileSection(section) {
 
   // Highlight active hub card
   document.querySelectorAll('.profile-hub-card').forEach(function(c, i) {
-    var sections = ['health', 'calories', 'dashboard', 'settings'];
+    var sections = ['health', 'calories', 'dashboard', 'data', 'settings'];
     c.classList.toggle('hub-active', sections[i] === section);
   });
+
+  if (section === 'data') {
+    _renderDataManagement(container);
+    return;
+  }
 
   if (section === 'health') {
     // Show the health profile form (move from analyze step 3 or render inline)
@@ -6322,6 +6514,192 @@ function predictFlavor(ingMap, method, temp, time) {
 let currentTab = "reactions";
 let lastAnalysisResult = null; // 마지막 분석 결과 저장 (보고서용)
 
+// ══════════════════════════════════════════════════
+// LOCAL DATA PERSISTENCE — 기기 로컬 저장소 관리
+// ══════════════════════════════════════════════════
+// DB 서버 저장: 계정, 커뮤니티(좋아요/팔로우), 저장된 레시피, 장보기 목록, 사용량 추적
+// 로컬(스마트폰) 저장: 분석 보고서, 레시피 추천, 칼로리 기록, 프로필, 식단 플래너, 설정
+
+const LOCAL_KEYS = {
+  ANALYSES: 'mc_analyses',       // 분석 보고서 이력
+  HISTORY: 'mc_history',         // 최근 분석 간단 목록 (Home 탭용)
+  RECIPES_CACHE: 'mc_rec_cache', // 레시피 추천 캐시
+};
+const MAX_SAVED_ANALYSES = 50;   // 최대 저장 보고서 수
+
+/** 분석 결과를 로컬에 저장 */
+function _saveAnalysisToLocal(analysisData) {
+  try {
+    const entry = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      date: new Date().toISOString(),
+      ingredients: { ...selected },
+      ingredientNames: Object.keys(selected),
+      method: method,
+      methodLabel: METHODS[method] ? (METHODS[method].label || method) : method,
+      temp: analysisData.temp,
+      time: analysisData.time,
+      rxns: analysisData.rxns.map(r => ({ name: r.name, intensity: r.intensity, icon: r.icon, desc: r.desc, effects: r.effects, health: r.health, science: r.science, key: r.key })),
+      warns: analysisData.warns,
+      nutrition: analysisData.nutrition,
+      flavor: analysisData.flavor,
+      health: analysisData.health || null,
+      summaries: analysisData.summaries || null,
+      recipes: null, // 나중에 레시피 추천 결과 연결
+      bookmarked: false,
+    };
+
+    // 보고서 저장
+    var analyses = [];
+    try { analyses = JSON.parse(localStorage.getItem(LOCAL_KEYS.ANALYSES) || '[]'); } catch(e) { analyses = []; }
+    analyses.unshift(entry);
+    if (analyses.length > MAX_SAVED_ANALYSES) analyses = analyses.slice(0, MAX_SAVED_ANALYSES);
+    localStorage.setItem(LOCAL_KEYS.ANALYSES, JSON.stringify(analyses));
+
+    // Home 탭용 간단 이력
+    var history = [];
+    try { history = JSON.parse(localStorage.getItem(LOCAL_KEYS.HISTORY) || '[]'); } catch(e) { history = []; }
+    history.unshift({
+      id: entry.id,
+      date: entry.date,
+      ingredients: entry.ingredientNames.slice(0, 5).join(', '),
+      method: entry.methodLabel,
+      rxnCount: entry.rxns.length,
+      temp: entry.temp,
+      time: entry.time,
+    });
+    if (history.length > 30) history = history.slice(0, 30);
+    localStorage.setItem(LOCAL_KEYS.HISTORY, JSON.stringify(history));
+
+    return entry.id;
+  } catch(e) {
+    console.warn('[LocalSave] 분석 저장 실패:', e);
+    return null;
+  }
+}
+
+/** 저장된 분석 보고서 목록 가져오기 */
+function _getLocalAnalyses() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_KEYS.ANALYSES) || '[]'); } catch(e) { return []; }
+}
+
+/** ID로 특정 분석 보고서 가져오기 */
+function _getLocalAnalysis(id) {
+  return _getLocalAnalyses().find(a => a.id === id) || null;
+}
+
+/** 분석 보고서 삭제 */
+function _deleteLocalAnalysis(id) {
+  try {
+    var analyses = _getLocalAnalyses().filter(a => a.id !== id);
+    localStorage.setItem(LOCAL_KEYS.ANALYSES, JSON.stringify(analyses));
+    var history = JSON.parse(localStorage.getItem(LOCAL_KEYS.HISTORY) || '[]').filter(h => h.id !== id);
+    localStorage.setItem(LOCAL_KEYS.HISTORY, JSON.stringify(history));
+  } catch(e) {}
+}
+
+/** 분석 보고서 북마크 토글 */
+function _toggleLocalBookmark(id) {
+  try {
+    var analyses = _getLocalAnalyses();
+    var idx = analyses.findIndex(a => a.id === id);
+    if (idx >= 0) {
+      analyses[idx].bookmarked = !analyses[idx].bookmarked;
+      localStorage.setItem(LOCAL_KEYS.ANALYSES, JSON.stringify(analyses));
+    }
+  } catch(e) {}
+}
+
+/** 레시피 추천 결과를 분석 보고서에 연결 저장 */
+function _saveRecipesToAnalysis(analysisId, recipes) {
+  try {
+    var analyses = _getLocalAnalyses();
+    var idx = analyses.findIndex(a => a.id === analysisId);
+    if (idx >= 0) {
+      analyses[idx].recipes = recipes.map(r => ({ name: r.name, name_en: r.name_en, cuisine: r.cuisine, difficulty: r.difficulty, description: r.description, healthNote: r.healthNote, usedIngredients: r.usedIngredients }));
+      localStorage.setItem(LOCAL_KEYS.ANALYSES, JSON.stringify(analyses));
+    }
+  } catch(e) {}
+}
+
+/** 로컬 저장소 사용량 계산 (bytes) */
+function _getLocalStorageUsage() {
+  var total = 0;
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (key && key.startsWith('mc_') || key.startsWith('mealcule_') || key.startsWith('mp_') || key === '_foodImgCache') {
+      total += (localStorage.getItem(key) || '').length * 2; // UTF-16
+    }
+  }
+  return total;
+}
+
+/** 모든 Mealcule 로컬 데이터 내보내기 (JSON) */
+function _exportAllLocalData() {
+  var data = {};
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (key && (key.startsWith('mc_') || key.startsWith('mealcule_') || key.startsWith('mp_'))) {
+      try { data[key] = JSON.parse(localStorage.getItem(key)); } catch(e) { data[key] = localStorage.getItem(key); }
+    }
+  }
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mealcule-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/** JSON 파일에서 로컬 데이터 가져오기 */
+function _importLocalData() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var data = JSON.parse(ev.target.result);
+        var count = 0;
+        Object.entries(data).forEach(function(kv) {
+          var key = kv[0], val = kv[1];
+          if (key.startsWith('mc_') || key.startsWith('mealcule_') || key.startsWith('mp_')) {
+            localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val));
+            count++;
+          }
+        });
+        _showSelToast((window.I18n && I18n.lang === 'en') ? count + ' items restored' : count + '개 항목 복원 완료', 'add');
+      } catch(err) {
+        alert((window.I18n && I18n.lang === 'en') ? 'Invalid backup file' : '잘못된 백업 파일입니다');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+/** 분석/칼로리 등 특정 카테고리 데이터만 삭제 */
+function _clearLocalCategory(category) {
+  var keysToDelete = [];
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (!key) continue;
+    if (category === 'analyses' && (key === LOCAL_KEYS.ANALYSES || key === LOCAL_KEYS.HISTORY || key === LOCAL_KEYS.RECIPES_CACHE)) keysToDelete.push(key);
+    if (category === 'calories' && key.startsWith('mealcule_ct_')) keysToDelete.push(key);
+    if (category === 'profile' && key === 'mealcule_profile') keysToDelete.push(key);
+    if (category === 'planner' && key.startsWith('mp_items_')) keysToDelete.push(key);
+    if (category === 'all' && (key.startsWith('mc_') || key.startsWith('mealcule_') || key.startsWith('mp_'))) keysToDelete.push(key);
+  }
+  keysToDelete.forEach(function(k) { localStorage.removeItem(k); });
+  return keysToDelete.length;
+}
+
+// 현재 분석의 로컬 ID (레시피 추천 연결용)
+var _currentAnalysisLocalId = null;
+
 async function runAnalysis() {
   if (window._analysisRunning) return;
   window._analysisRunning = true;
@@ -6371,6 +6749,12 @@ async function runAnalysis() {
     if (hr.length > 0) allMembersHealth[m.id] = {member: m, results: hr};
   });
   const hasHealth = Object.keys(allMembersHealth).length > 0;
+
+  // ── 로컬 저장소에 분석 결과 저장 ──
+  lastAnalysisResult.health = hasHealth ? allMembersHealth : null;
+  _currentAnalysisLocalId = _saveAnalysisToLocal(lastAnalysisResult);
+  // Home 탭 다시 그리기 위해 플래그 리셋
+  _tabRendered.home = false;
 
   // Tabs + Export
   html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
@@ -6449,6 +6833,18 @@ async function runAnalysis() {
     }
     return s;
   })();
+
+  // 요약 텍스트를 로컬 저장 보고서에 추가
+  if (_currentAnalysisLocalId) {
+    try {
+      var _analyses = _getLocalAnalyses();
+      var _idx = _analyses.findIndex(a => a.id === _currentAnalysisLocalId);
+      if (_idx >= 0) {
+        _analyses[_idx].summaries = { rxn: _rxnSummary, nut: _nutSummary, flavor: _flavorSummary, health: _healthSummary };
+        localStorage.setItem(LOCAL_KEYS.ANALYSES, JSON.stringify(_analyses));
+      }
+    } catch(e) {}
+  }
 
   // Reactions tab
   html += `<div id="tab-reactions" style="display:${currentTab==='reactions'?'block':'none'}">`;
@@ -6834,6 +7230,10 @@ async function loadRecipes(country) {
     const data = await r.json();
     if (!r.ok || data.error) throw new Error(data.error || '알 수 없는 오류');
     _cachedRecipes = { country, recipes: data.recipes };
+    // 레시피 추천 결과를 현재 분석 보고서에 연결 저장
+    if (_currentAnalysisLocalId && data.recipes) {
+      _saveRecipesToAnalysis(_currentAnalysisLocalId, data.recipes);
+    }
     renderRecipeList(data.recipes);
   } catch (e) {
     const el = document.getElementById('recipeList');

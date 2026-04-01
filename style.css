@@ -656,6 +656,8 @@ select option{background:var(--bg-secondary);color:var(--text)}
 .home-recent-item .recent-info{flex:1;min-width:0}
 .home-recent-item .recent-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .home-recent-item .recent-meta{font-size:11px;color:var(--text-tertiary);margin-top:2px}
+.home-recent-item .recent-date{font-size:10px;color:var(--text-tertiary);margin-top:2px}
+.home-recent-item .recent-arrow{font-size:18px;color:var(--text-tertiary);flex-shrink:0}
 
 .home-discover{margin-bottom:32px}
 .home-discover-grid{display:grid;grid-template-columns:1fr;gap:8px}
