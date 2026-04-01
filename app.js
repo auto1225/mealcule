@@ -3223,7 +3223,7 @@ function renderConditions() {
   tabBar.className = "cond-tab-bar";
   const _en = window.I18n && I18n.lang === 'en';
   tabBar.innerHTML = `
-    <button class="cond-tab me${isMe?' active':''}" onclick="switchCondTab('me')">🏥 ${_en ? 'My Conditions' : '본인 질환'}</button>
+    <button class="cond-tab me${isMe?' active':''}" onclick="switchCondTab('me')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> ${_en ? 'My Conditions' : '본인 질환'}</button>
     <button class="cond-tab fam${!isMe?' active':''}" onclick="switchCondTab('fam')"><img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👨‍👩‍👧‍👦'"> ${_en ? 'Family History' : '직계 가족 병력'}</button>`;
   container.appendChild(tabBar);
 
@@ -3292,7 +3292,7 @@ function renderConditions() {
       ? `<span class="cg-badge" style="background:${isMe?'#059669':'#3b82f6'}">${selCount}</span>` : '';
     const hdr = document.createElement("div");
     hdr.className = "cond-group-hdr" + (isOpen ? " expanded" : "");
-    hdr.innerHTML = `<span class="cg-e">🤖</span><span>${_en ? 'Custom Added' : '직접 추가'}</span>${badge}<span class="cg-arr">▶</span>`;
+    hdr.innerHTML = `<span class="cg-e"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🤖'"></span><span>${_en ? 'Custom Added' : '직접 추가'}</span>${badge}<span class="cg-arr">▶</span>`;
     hdr.onclick = () => toggleCondParent(gk);
     wrap.appendChild(hdr);
     const expand = document.createElement("div");
@@ -3893,7 +3893,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
     const tyramineFoods = Object.keys(ingMap).filter(n =>
       ['치즈','된장','간장','김치','살라미','소시지','청어','맥주','와인','두부'].includes(n));
     if (tyramineFoods.length > 0) {
-      substanceFindings.push({severity:'danger', title:`⚠️ MAOI + 티라민 식품(${tyramineFoods.join(', ')}) → 고혈압 위기`,
+      substanceFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> MAOI + 티라민 식품(${tyramineFoods.join(', ')}) → 고혈압 위기`,
         detail:`MAOI 계열 항우울제 복용 중 티라민이 풍부한 식품 섭취는 심각한 고혈압 위기(혈압 급등, 뇌출혈)를 유발할 수 있습니다. 매우 위험합니다.`,
         tip:'MAOI 복용 중에는 숙성 치즈, 발효식품, 훈제육, 알코올을 완전히 피해야 합니다. 의사에게 반드시 확인하세요.'});
     }
@@ -4245,42 +4245,42 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
   // 우유 알레르기
   if (member.traits.includes('allergy_milk')) {
     const milkFoods = Object.keys(ingMap).filter(n => ['우유','버터','치즈','생크림'].includes(n));
-    if (milkFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 우유 알레르기 — ${milkFoods.join(', ')} 포함`,
+    if (milkFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 우유 알레르기 — ${milkFoods.join(', ')} 포함`,
       detail:`${milkFoods.join(', ')}에 카세인·유청 단백질이 포함되어 있습니다. 가열해도 알레르겐이 유지됩니다.`,
       tip:'식물성 대체품(두유, 오트밀크, 코코넛밀크)으로 교체하세요.'});
   }
   // 견과류 알레르기
   if (member.traits.includes('allergy_nuts')) {
     const nutFoods = Object.keys(ingMap).filter(n => ['아몬드','호두','캐슈넛','피스타치오','땅콩','참깨','들깨'].includes(n));
-    if (nutFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 견과류 알레르기 — ${nutFoods.join(', ')} 포함`,
+    if (nutFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 견과류 알레르기 — ${nutFoods.join(', ')} 포함`,
       detail:`견과류 알레르기는 아나필락시스를 유발할 수 있습니다. ${nutFoods.join(', ')}을 완전히 제거해야 합니다.`,
       tip:'에피네프린 자가주사기(에피펜)를 항상 소지하세요.'});
   }
   // 대두 알레르기
   if (member.traits.includes('allergy_soy')) {
     const soyFoods = Object.keys(ingMap).filter(n => ['두부','두유','된장','간장','콩나물','콩'].includes(n));
-    if (soyFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 대두 알레르기 — ${soyFoods.join(', ')} 포함`,
+    if (soyFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 대두 알레르기 — ${soyFoods.join(', ')} 포함`,
       detail:`${soyFoods.join(', ')}에 대두 단백질이 포함되어 있습니다. 가공식품의 숨겨진 대두 성분도 주의하세요.`,
       tip:'두부·두유 대신 귀리, 코코넛, 아몬드 기반 제품을 사용하세요.'});
   }
   // 밀 알레르기
   if (member.traits.includes('allergy_wheat')) {
     const wheatFoods = Object.keys(ingMap).filter(n => ['밀가루','빵','파스타','국수'].includes(n));
-    if (wheatFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 밀 알레르기 — ${wheatFoods.join(', ')} 포함`,
+    if (wheatFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 밀 알레르기 — ${wheatFoods.join(', ')} 포함`,
       detail:`밀 알레르기는 글루텐 민감과 다르게 즉각적인 면역 반응을 일으킵니다. ${wheatFoods.join(', ')}을 제거해야 합니다.`,
       tip:'쌀가루, 감자전분, 타피오카, 퀴노아 등 글루텐 프리 대체재를 사용하세요.'});
   }
   // 생선 알레르기
   if (member.traits.includes('allergy_fish')) {
     const fishFoods = Object.keys(ingMap).filter(n => ['연어','참치','고등어','대구','멸치','광어','청어','방어','갈치','삼치'].includes(n));
-    if (fishFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 생선 알레르기 — ${fishFoods.join(', ')} 포함`,
+    if (fishFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 생선 알레르기 — ${fishFoods.join(', ')} 포함`,
       detail:`어류 단백질(파르발부민)은 가열해도 파괴되지 않습니다. 교차 반응에 주의하세요.`,
       tip:'생선 대신 닭고기, 두부, 콩류로 단백질을 보충하세요.'});
   }
   // 갑각류/연체류 알레르기
   if (member.traits.includes('allergy_shellfish')) {
     const shellFoods = Object.keys(ingMap).filter(n => ['새우','게','가재','오징어','낙지','문어','조개','홍합','굴'].includes(n));
-    if (shellFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 갑각류·연체류 알레르기 — ${shellFoods.join(', ')} 포함`,
+    if (shellFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 갑각류·연체류 알레르기 — ${shellFoods.join(', ')} 포함`,
       detail:`갑각류·연체류 알레르기는 성인에서 가장 흔한 식품 알레르기 중 하나로, 아나필락시스 위험이 높습니다.`,
       tip:'완전히 제거하고, 조리 도구 교차 오염에도 주의하세요.'});
   }
@@ -4315,7 +4315,7 @@ function analyzeHealth(ingMap, method, temp, time, memberForAnalysis) {
   // 할랄
   if (member.traits.includes('halal')) {
     const haramFoods = Object.keys(ingMap).filter(n => ['돼지고기','삼겹살','베이컨'].includes(n));
-    if (haramFoods.length > 0) traitFindings.push({severity:'danger', title:`⚠️ 할랄 식이 — 금지 식품 포함: ${haramFoods.join(', ')}`,
+    if (haramFoods.length > 0) traitFindings.push({severity:'danger', title:`<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 할랄 식이 — 금지 식품 포함: ${haramFoods.join(', ')}`,
       detail:'이슬람 율법상 돼지고기와 파생 제품은 금지(하람)입니다.',
       tip:'닭고기, 소고기, 양고기(할랄 인증)로 대체하세요.'});
   }
@@ -4808,7 +4808,7 @@ function renderIngredients(filter = "") {
   }
   if (count === 0 && !!sbClient && lower) {
     const _srMsg = (window.I18n && I18n.lang === 'en') ? 'Searching database...' : 'DB에서 검색 중...';
-    grid.innerHTML = `<div style="padding:12px;text-align:center;color:#737373;font-size:13px">🔍 ${_srMsg}</div>`;
+    grid.innerHTML = `<div style="padding:12px;text-align:center;color:#737373;font-size:13px"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"> ${_srMsg}</div>`;
   }
 }
 
@@ -4832,7 +4832,7 @@ async function renderIngredientsAPI(filter) {
     const hdr = document.createElement('div');
     hdr.className = 'ing-cat-hdr';
     const _dbLabel = (window.I18n && I18n.lang === 'en') ? `Database results (${Object.keys(newItems).length})` : `DB 검색 결과 (${Object.keys(newItems).length}건)`;
-    hdr.textContent = `🌐 ${_dbLabel}`;
+    hdr.innerHTML = `<img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🌐'"> ${_dbLabel}`;
     grid.appendChild(hdr);
 
     renderIngredientsFromData(newItems, grid);
@@ -4924,10 +4924,10 @@ let _healthModalType = 'trait';
 let _healthModalPendingItem = null;
 
 const HEALTH_MODAL_CONFIG = {
-  trait:     {title:'🧬 체질/식이 특이사항 추가', title_en:'🧬 Add Constitution / Dietary Trait', placeholder:'예: 옥수수 알레르기, 저인산식, 프럭토스 불내증...', placeholder_en:'e.g., Corn allergy, Low phosphorus diet, Fructose intolerance...'},
+  trait:     {title:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🧬\'"> 체질/식이 특이사항 추가', title_en:'<img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🧬\'"> Add Constitution / Dietary Trait', placeholder:'예: 옥수수 알레르기, 저인산식, 프럭토스 불내증...', placeholder_en:'e.g., Corn allergy, Low phosphorus diet, Fructose intolerance...'},
   family:    {title:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> 가족 병력 추가', title_en:'<img src="https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'👨‍👩‍👧‍👦\'"> Add Family History', placeholder:'예: 췌장암, 파킨슨병, 다발성경화증...', placeholder_en:'e.g., Pancreatic cancer, Parkinson\'s, Multiple sclerosis...'},
   substance: {title:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> 약물·영양제·생활습관 추가', title_en:'<img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'💊\'"> Add Medication / Supplement / Lifestyle', placeholder:'예: 클로피도그렐, NAC, 간헐적 단식...', placeholder_en:'e.g., Clopidogrel, NAC, Intermittent fasting...'},
-  condition: {title:'🏥 질환/건강 상태 추가', title_en:'🏥 Add Condition / Health Status', placeholder:'예: 크론병, 셀리악병, 루푸스, 갑상선 기능항진증...', placeholder_en:'e.g., Crohn\'s, Celiac, Lupus, Hyperthyroidism...'},
+  condition: {title:'<img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏥\'"> 질환/건강 상태 추가', title_en:'<img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🏥\'"> Add Condition / Health Status', placeholder:'예: 크론병, 셀리악병, 루푸스, 갑상선 기능항진증...', placeholder_en:'e.g., Crohn\'s, Celiac, Lupus, Hyperthyroidism...'},
 };
 
 function openAddHealthModal(type) {
@@ -4935,7 +4935,7 @@ function openAddHealthModal(type) {
   _healthModalPendingItem = null;
   const cfg = HEALTH_MODAL_CONFIG[type] || HEALTH_MODAL_CONFIG.trait;
   const _en = window.I18n && I18n.lang === 'en';
-  document.getElementById('healthModalTitle').textContent = (_en && cfg.title_en) ? cfg.title_en : cfg.title;
+  document.getElementById('healthModalTitle').innerHTML = (_en && cfg.title_en) ? cfg.title_en : cfg.title;
   document.getElementById('healthModalInput').placeholder = (_en && cfg.placeholder_en) ? cfg.placeholder_en : cfg.placeholder;
   document.getElementById('healthModalInput').value = '';
   document.getElementById('healthModalStatus').textContent = '';
@@ -4968,7 +4968,7 @@ async function analyzeHealthItem() {
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = (window.I18n && I18n.lang === 'en') ? 'Analyzing...' : '분석 중...';
   statusEl.className = 'health-modal-status';
-  statusEl.textContent = `⏳ AI가 "${name}" 분석 중...`;
+  statusEl.innerHTML = `<img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> AI가 "${name}" 분석 중...`;
   resultEl.style.display = 'none';
 
   try {
@@ -4983,7 +4983,7 @@ async function analyzeHealthItem() {
     const item = data.item;
     if (!item.valid) {
       statusEl.className = 'health-modal-status error';
-      statusEl.textContent = `❌ ${item.reason || '유효하지 않은 항목입니다. 다시 입력하세요.'}`;
+      statusEl.innerHTML = `<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='❌'"> ${item.reason || '유효하지 않은 항목입니다. 다시 입력하세요.'}`;
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = (window.I18n && I18n.lang === 'en') ? 'AI Analyze' : 'AI 분석';
       return;
@@ -5009,7 +5009,7 @@ async function analyzeHealthItem() {
     analyzeBtn.disabled = false;
   } catch(e) {
     statusEl.className = 'health-modal-status error';
-    statusEl.textContent = `❌ ${e.message}`;
+    statusEl.innerHTML = `<img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='❌'"> ${e.message}`;
     analyzeBtn.disabled = false;
     analyzeBtn.textContent = (window.I18n && I18n.lang === 'en') ? 'AI Analyze' : 'AI 분석';
   }
@@ -5049,7 +5049,7 @@ function _addHealthItemToProfile(item) {
 
   updateProfileSummary();
   closeAddHealthModal();
-  const _addedMsg = (window.I18n && I18n.lang === 'en') ? `✨ "${tl(item)}" added to profile` : `✨ "${item.label}" 프로필에 추가되었습니다`;
+  const _addedMsg = (window.I18n && I18n.lang === 'en') ? `<img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='✨'"> "${tl(item)}" added to profile` : `<img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='✨'"> "${item.label}" 프로필에 추가되었습니다`;
   showToast(_addedMsg);
 }
 
@@ -5067,7 +5067,7 @@ async function confirmAddMethod() {
   const name = document.getElementById('methodModalInput').value.trim();
   if (!name) return;
   document.getElementById('methodModalConfirmBtn').disabled = true;
-  document.getElementById('methodModalStatus').innerHTML = `<span style="color:#737373">⏳ AI가 '${name.replace(/</g,'&lt;')}' 분석 중...</span>`;
+  document.getElementById('methodModalStatus').innerHTML = `<span style="color:#737373"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> AI가 '${name.replace(/</g,'&lt;')}' 분석 중...</span>`;
   await addMethodWithAI(name);
 }
 
@@ -5080,12 +5080,12 @@ async function addMethodWithAI(name) {
     try { data = await res.json(); } catch { throw new Error('서버 응답 오류'); }
 
     if (res.status === 404 || res.status === 422 || res.status === 409) {
-      statusEl.innerHTML = `<span style="color:#f59e0b">⚠️ ${data.error}</span>`;
+      statusEl.innerHTML = `<span style="color:#f59e0b"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> ${data.error}</span>`;
       document.getElementById('methodModalConfirmBtn').disabled = false;
       return;
     }
     if (!res.ok || !data.method) {
-      statusEl.innerHTML = `<span style="color:#ef4444">❌ ${data.error || '분석 실패'}</span>`;
+      statusEl.innerHTML = `<span style="color:#ef4444"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='❌'"> ${data.error || '분석 실패'}</span>`;
       document.getElementById('methodModalConfirmBtn').disabled = false;
       return;
     }
@@ -5107,11 +5107,11 @@ async function addMethodWithAI(name) {
     const _mEn = window.I18n && I18n.lang === 'en';
     const _mLabel = tl(METHODS[m.key] || m);
     showToast(isNew
-      ? (_mEn ? `✨ '${_mLabel}' added! Shared with all users.` : `✨ '${m.label}' 추가 완료! 전체 사용자와 공유됩니다.`)
+      ? (_mEn ? `<img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='✨'"> '${_mLabel}' added! Shared with all users.` : `<img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='✨'"> '${m.label}' 추가 완료! 전체 사용자와 공유됩니다.`)
       : (_mEn ? `'${_mLabel}' loaded from database.` : `'${m.label}' DB에서 불러왔습니다.`));
   } catch(e) {
     const _errLabel = (window.I18n && I18n.lang === 'en') ? 'Error' : '오류';
-    statusEl.innerHTML = `<span style="color:#ef4444">❌ ${_errLabel}: ${e.message}</span>`;
+    statusEl.innerHTML = `<span style="color:#ef4444"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='❌'"> ${_errLabel}: ${e.message}</span>`;
     document.getElementById('methodModalConfirmBtn').disabled = false;
   }
 }
@@ -5220,7 +5220,7 @@ function showAIAddButton(query) {
       <div style="color:#737373;font-size:13px;margin-bottom:14px">'${safe}' ${_en ? 'not found' : '검색 결과 없음'}</div>
       <button id="aiAddBtn" onclick="addIngredientWithAI('${query.replace(/'/g,"\\'")}')"
         style="background:#10b981;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;font-weight:600">
-        🤖 ${_en ? `Add '${safe}' with AI` : `AI로 '${safe}' 추가하기`}
+        <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🤖'"> ${_en ? `Add '${safe}' with AI` : `AI로 '${safe}' 추가하기`}
       </button>
       <div style="color:#a3a3a3;font-size:11px;margin-top:8px">${_en ? 'AI analyzes nutrition data and saves to database' : 'AI가 영양 데이터를 분석해 DB에 저장합니다'}</div>
     </div>`;
@@ -5230,7 +5230,7 @@ async function addIngredientWithAI(name) {
   const grid = document.getElementById("ingGrid");
   const safe = name.replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const _aiMsg = (window.I18n && I18n.lang === 'en') ? `AI analyzing '${safe}'...` : `AI가 '${safe}' 분석 중...`;
-  grid.innerHTML = `<div style="text-align:center;padding:24px;color:#737373;font-size:13px">⏳ ${_aiMsg}</div>`;
+  grid.innerHTML = `<div style="text-align:center;padding:24px;color:#737373;font-size:13px"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏳'"> ${_aiMsg}</div>`;
 
   try {
     const res = await fetch(`${API_BASE}/api/add-ingredient?name=${encodeURIComponent(name)}`);
@@ -5238,11 +5238,11 @@ async function addIngredientWithAI(name) {
     try { data = await res.json(); } catch { throw new Error('서버 응답 오류 — 잠시 후 다시 시도해주세요'); }
 
     if (res.status === 404 || res.status === 422) {
-      grid.innerHTML = `<div style="text-align:center;padding:20px;color:#f59e0b;font-size:13px">⚠️ ${data.error}</div>`;
+      grid.innerHTML = `<div style="text-align:center;padding:20px;color:#f59e0b;font-size:13px"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> ${data.error}</div>`;
       return;
     }
     if (!res.ok || !data.ingredient) {
-      grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px">❌ 분석 실패: ${data.error || '다시 시도해주세요'}</div>`;
+      grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='❌'"> 분석 실패: ${data.error || '다시 시도해주세요'}</div>`;
       return;
     }
 
@@ -5265,9 +5265,9 @@ async function addIngredientWithAI(name) {
     renderIngredients(ing.name);
 
     const isNew = data.source === 'ai_generated';
-    showToast(isNew ? `✨ '${ing.name}' AI 추가 완료! 모든 사용자가 이용할 수 있습니다.` : `'${ing.name}' DB에서 불러왔습니다.`);
+    showToast(isNew ? `<img src="https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='✨'"> '${ing.name}' AI 추가 완료! 모든 사용자가 이용할 수 있습니다.` : `'${ing.name}' DB에서 불러왔습니다.`);
   } catch (e) {
-    grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px">❌ 오류: ${e.message}</div>`;
+    grid.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:13px"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='❌'"> 오류: ${e.message}</div>`;
   }
 }
 
@@ -5957,7 +5957,7 @@ async function runAnalysis() {
 
   // Warnings
   warns.forEach(w => {
-    html += `<div class="warning ${w.type==='경고'?'error':'warn'}">⚠️ <span><strong>[${w.type}]</strong> ${w.msg}</span></div>`;
+    html += `<div class="warning ${w.type==='경고'?'error':'warn'}"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> <span><strong>[${w.type}]</strong> ${w.msg}</span></div>`;
   });
 
   // Health analysis
@@ -5972,19 +5972,19 @@ async function runAnalysis() {
   // Tabs + Export
   html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
     <div class="tabs" style="flex:1;margin-bottom:0">
-      <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchTab('reactions')">🧪 화학 반응</button>
+      <button class="tab-btn ${currentTab==='reactions'?'active':''}" onclick="switchTab('reactions')"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> 화학 반응</button>
       <button class="tab-btn ${currentTab==='nutrition'?'active':''}" onclick="switchTab('nutrition')"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📊'"> 영양소 변화</button>
       <button class="tab-btn ${currentTab==='flavor'?'active':''}" onclick="switchTab('flavor')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽️'"> 맛 프로파일</button>
-      ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchTab('health')">🏥 건강 분석</button>` : ''}
-      <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchTab('recipes')">🍴 레시피 추천</button>
+      ${hasHealth ? `<button class="tab-btn ${currentTab==='health'?'active':''}" onclick="switchTab('health')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> 건강 분석</button>` : ''}
+      <button class="tab-btn ${currentTab==='recipes'?'active':''}" onclick="switchTab('recipes')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍴'"> 레시피 추천</button>
     </div>
-    <button class="export-btn" onclick="exportReport()" title="${userPlan==='free'?'프로 플랜 필요':'보고서 다운로드'}">📥 보고서${userPlan==='free'?' <span class="pro-badge">PRO</span>':''}</button>
+    <button class="export-btn" onclick="exportReport()" title="${userPlan==='free'?'프로 플랜 필요':'보고서 다운로드'}"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📥'"> 보고서${userPlan==='free'?' <span class="pro-badge">PRO</span>':''}</button>
   </div>`;
 
   // Reactions tab
   html += `<div id="tab-reactions" style="display:${currentTab==='reactions'?'block':'none'}">`;
   if (rxns.length === 0) {
-    html += `<div class="empty-state"><div class="big-icon">🧪</div><p style="color:#737373;margin-top:12px">특별한 화학 반응이 예측되지 않습니다</p><p style="font-size:13px;color:#737373">온도를 높이거나 재료를 추가해보세요</p></div>`;
+    html += `<div class="empty-state"><div class="big-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='🧪'"></div><p style="color:#737373;margin-top:12px">특별한 화학 반응이 예측되지 않습니다</p><p style="font-size:13px;color:#737373">온도를 높이거나 재료를 추가해보세요</p></div>`;
   } else {
     rxns.forEach((r, idx) => {
       const barColor = r.intensity>70 ? "linear-gradient(90deg,#f97316,#ef4444)" : r.intensity>40 ? "linear-gradient(90deg,#eab308,#f97316)" : "linear-gradient(90deg,#22c55e,#eab308)";
@@ -6000,7 +6000,7 @@ async function runAnalysis() {
             ${conf ? `<span class="rxn-confidence">신뢰도 ${conf}%</span>` : ''}
           </div>
           <div style="display:flex;align-items:center;gap:10px">
-            ${ref ? `<button class="ref-toggle" onclick="toggleRef('rxn${idx}')">📖 출처</button>` : ''}
+            ${ref ? `<button class="ref-toggle" onclick="toggleRef('rxn${idx}')"><img src="https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📖'"> 출처</button>` : ''}
             <div style="text-align:right;min-width:80px">
               <div style="font-size:11px;color:#737373;margin-bottom:4px">반응 강도</div>
               <div class="intensity-bar"><div class="intensity-fill" style="width:${r.intensity}%;background:${barColor}"></div></div>
@@ -6106,7 +6106,7 @@ async function runAnalysis() {
 
       // 멤버 헤더
       html += `<div style="margin-top:16px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;margin-bottom:12px">
-        <div style="font-size:14px;font-weight:600;color:#047857">👤 ${member.name}${member.age ? ' (' + member.age + '세)' : ''}</div>
+        <div style="font-size:14px;font-weight:600;color:#047857"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"> ${member.name}${member.age ? ' (' + member.age + '세)' : ''}</div>
       </div>`;
 
       healthResults.forEach(hr => {
@@ -6148,7 +6148,7 @@ async function runAnalysis() {
                 <span style="font-size:14px;font-weight:600;color:#171717">${f.title}</span>
               </div>
               <div class="health-detail">${f.detail}</div>
-              ${f.tip ? `<div class="health-tip">💡 <strong>개선 팁:</strong> ${f.tip}</div>` : ''}
+              ${f.tip ? `<div class="health-tip"><img src="https://images.pexels.com/photos/355952/pexels-photo-355952.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💡'"> <strong>개선 팁:</strong> ${f.tip}</div>` : ''}
             </div>`;
           });
         }
@@ -6165,7 +6165,7 @@ async function runAnalysis() {
   const member0 = members[0] || {};
   html += `<div id="tab-recipes" style="display:${currentTab==='recipes'?'block':'none'}">
     <div class="cuisine-bar">
-      <span class="cuisine-label">🌍 요리 국가:</span>
+      <span class="cuisine-label"><img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🌍'"> 요리 국가:</span>
       <button class="cuisine-chip active" data-country="" onclick="selectCuisine(this,'')">자동</button>
       <button class="cuisine-chip" data-country="kr" onclick="selectCuisine(this,'kr')">🇰🇷 한국</button>
       <button class="cuisine-chip" data-country="jp" onclick="selectCuisine(this,'jp')">🇯🇵 일본</button>
@@ -6184,7 +6184,7 @@ async function runAnalysis() {
       <button class="cuisine-chip" data-country="id" onclick="selectCuisine(this,'id')">🇮🇩 인도네시아</button>
       <button class="cuisine-chip" data-country="pe" onclick="selectCuisine(this,'pe')">🇵🇪 페루</button>
     </div>
-    <div id="recipeList"><div class="yt-loading">🍳 AI가 레시피를 추천하는 중...</div></div>
+    <div id="recipeList"><div class="yt-loading"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍳'"> AI가 레시피를 추천하는 중...</div></div>
   </div>`;
 
   html += "</div>";
@@ -6321,7 +6321,7 @@ function selectCuisine(btn, country) {
   if (prev !== country) {
     _cachedRecipes = null;
     _ytCache = {};
-    document.getElementById('recipeList').innerHTML = '<div class="yt-loading">🍳 AI가 레시피를 추천하는 중...</div>';
+    document.getElementById('recipeList').innerHTML = '<div class="yt-loading"><img src="https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🍳\'"> AI가 레시피를 추천하는 중...</div>';
     loadRecipes(country);
   }
 }
@@ -6378,27 +6378,27 @@ function renderRecipeList(recipes) {
           <div class="recipe-meta">
             <span class="recipe-tag cuisine">${r.cuisine}</span>
             <span class="recipe-tag diff-${r.difficulty}">${r.difficulty}</span>
-            ${r.allergens?.length ? `<span class="recipe-tag" style="background:#fff7ed;color:#9a3412;border:1px solid #fdba74">⚠ ${r.allergens.join(', ')}</span>` : ''}
+            ${r.allergens?.length ? `<span class="recipe-tag" style="background:#fff7ed;color:#9a3412;border:1px solid #fdba74"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠'"> ${r.allergens.join(', ')}</span>` : ''}
           </div>
         </div>
       </div>
       <div class="recipe-body">
         <div class="recipe-desc">${r.description}</div>
-        ${r.healthNote ? `<div class="recipe-health">💚 ${r.healthNote}</div>` : ''}
+        ${r.healthNote ? `<div class="recipe-health"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💚'"> ${r.healthNote}</div>` : ''}
         ${r.usedIngredients?.length ? `<div class="recipe-ings">${r.usedIngredients.map(ing=>`<span class="recipe-ing">${ing}</span>`).join('')}</div>` : ''}
       </div>
       <div class="recipe-yt-footer">
-        <button class="recipe-save-btn" onclick="event.stopPropagation();typeof saveRecipe==='function'?saveRecipe(${i}):showToast('Recipe Box not loaded')">💾 ${(window.I18n&&I18n.lang==='en')?'Save':'저장'}</button>
+        <button class="recipe-save-btn" onclick="event.stopPropagation();typeof saveRecipe==='function'?saveRecipe(${i}):showToast('Recipe Box not loaded')"><img src="https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='💾'"> ${(window.I18n&&I18n.lang==='en')?'Save':'저장'}</button>
         <button class="yt-open-btn" id="yt-btn-${i}" onclick="event.stopPropagation();toggleYtPanel(${i})">${ytIcon} YouTube ${(window.I18n&&I18n.lang==='en')?'Videos':'레시피 영상 보기'}</button>
       </div>
       <div class="yt-panel" id="yt-panel-${i}">
         <div class="yt-panel-inner">
           <div class="yt-sort-bar">
             <span class="yt-sort-label">${(window.I18n&&I18n.lang==='en')?'Sort:':'정렬:'}</span>
-            <button class="yt-sort-btn active" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','relevance',this)">🔍 ${(window.I18n&&I18n.lang==='en')?'Relevant':'관련도순'}</button>
-            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','date',this)">📅 ${(window.I18n&&I18n.lang==='en')?'Newest':'최신순'}</button>
-            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','viewCount',this)">👁 ${(window.I18n&&I18n.lang==='en')?'Views':'조회수순'}</button>
-            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','rating',this)">👍 ${(window.I18n&&I18n.lang==='en')?'Likes':'좋아요순'}</button>
+            <button class="yt-sort-btn active" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','relevance',this)"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"> ${(window.I18n&&I18n.lang==='en')?'Relevant':'관련도순'}</button>
+            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','date',this)"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📅'"> ${(window.I18n&&I18n.lang==='en')?'Newest':'최신순'}</button>
+            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','viewCount',this)"><img src="https://images.pexels.com/photos/2156881/pexels-photo-2156881.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👁'"> ${(window.I18n&&I18n.lang==='en')?'Views':'조회수순'}</button>
+            <button class="yt-sort-btn" onclick="loadYt(${i},'${escQ(r.youtubeQuery)}','rating',this)"><img src="https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👍'"> ${(window.I18n&&I18n.lang==='en')?'Likes':'좋아요순'}</button>
           </div>
           <div id="yt-videos-${i}"></div>
         </div>
@@ -6433,7 +6433,7 @@ async function loadYt(idx, query, order, btn) {
 
   if (_ytCache[cacheKey]) { renderYtVideos(videosEl, _ytCache[cacheKey]); return; }
 
-  videosEl.innerHTML = '<div class="yt-loading">🎬 YouTube에서 영상을 검색하는 중...</div>';
+  videosEl.innerHTML = '<div class="yt-loading"><img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'🎬\'"> YouTube에서 영상을 검색하는 중...</div>';
 
   // Country lang params
   const activeCountry = document.querySelector('.cuisine-chip.active')?.dataset?.country || '';
@@ -6470,10 +6470,10 @@ function renderYtVideos(container, videos) {
       <div class="yt-feat-info">
         <div class="yt-feat-title">${feat.title}</div>
         <div class="yt-feat-meta">
-          <span class="yt-feat-channel">📺 ${feat.channel}</span>
-          <span class="yt-feat-stat">👁 ${fmtNum(feat.viewCount)}</span>
-          <span class="yt-feat-stat">👍 ${fmtNum(feat.likeCount)}</span>
-          <span class="yt-feat-stat">📅 ${fmtDate(feat.publishedAt)}</span>
+          <span class="yt-feat-channel"><img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📺'"> ${feat.channel}</span>
+          <span class="yt-feat-stat"><img src="https://images.pexels.com/photos/2156881/pexels-photo-2156881.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👁'"> ${fmtNum(feat.viewCount)}</span>
+          <span class="yt-feat-stat"><img src="https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👍'"> ${fmtNum(feat.likeCount)}</span>
+          <span class="yt-feat-stat"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📅'"> ${fmtDate(feat.publishedAt)}</span>
         </div>
       </div>
     </div>`;
@@ -6490,9 +6490,9 @@ function renderYtVideos(container, videos) {
             <div class="yt-vtitle">${v.title}</div>
             <div class="yt-vchannel">${v.channel}</div>
             <div class="yt-vstats">
-              <span class="yt-vstat">👁 ${fmtNum(v.viewCount)}</span>
-              <span class="yt-vstat">👍 ${fmtNum(v.likeCount)}</span>
-              <span class="yt-vstat">📅 ${fmtDate(v.publishedAt)}</span>
+              <span class="yt-vstat"><img src="https://images.pexels.com/photos/2156881/pexels-photo-2156881.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👁'"> ${fmtNum(v.viewCount)}</span>
+              <span class="yt-vstat"><img src="https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👍'"> ${fmtNum(v.likeCount)}</span>
+              <span class="yt-vstat"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📅'"> ${fmtDate(v.publishedAt)}</span>
             </div>
           </div>
         </div>`).join('')}
@@ -6595,8 +6595,8 @@ async function renderHistory() {
           <div style="font-size:12px;color:#737373;margin-top:2px">${h.temperature}°C · ${h.duration}분 · ${date}</div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
-          ${h.is_bookmarked ? '<span style="color:#eab308">⭐</span>' : ''}
-          <button onclick="event.stopPropagation();toggleBookmark('${h.id}').then(()=>renderHistory())" style="border:none;background:none;cursor:pointer;font-size:14px;opacity:.5" title="북마크">${h.is_bookmarked ? '⭐' : '☆'}</button>
+          ${h.is_bookmarked ? '<span style="color:#eab308"><img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'⭐\'"></span>' : ''}
+          <button onclick="event.stopPropagation();toggleBookmark('${h.id}').then(()=>renderHistory())" style="border:none;background:none;cursor:pointer;font-size:14px;opacity:.5" title="북마크">${h.is_bookmarked ? '<img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML=\'⭐\'">' : '☆'}</button>
         </div>
       </div>
     </div>`;
@@ -6726,17 +6726,17 @@ function openPhotoScanner() {
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:16px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="margin:0;font-size:17px">📷 ${_t('사진으로 재료 인식', 'Photo Ingredient Scanner')}</h3>
+        <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📷'"> ${_t('사진으로 재료 인식', 'Photo Ingredient Scanner')}</h3>
         <button onclick="document.getElementById('photoScanOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
       <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('재료 사진을 촬영하거나 업로드하면 AI가 자동 인식합니다', 'Take or upload a photo of ingredients — AI identifies them automatically')}</p>
       <div style="display:flex;gap:8px;margin-bottom:16px">
         <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#555;transition:border-color .2s" onmouseenter="this.style.borderColor='#059669'" onmouseleave="this.style.borderColor='#ddd'">
-          📁 ${_t('사진 선택', 'Choose photo')}
+          <img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📁'"> ${_t('사진 선택', 'Choose photo')}
           <input type="file" accept="image/*" style="display:none" onchange="_handlePhotoSelect(this)">
         </label>
         <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:2px dashed #ddd;border-radius:10px;cursor:pointer;font-size:13px;color:#555;transition:border-color .2s" onmouseenter="this.style.borderColor='#059669'" onmouseleave="this.style.borderColor='#ddd'">
-          📸 ${_t('촬영', 'Take photo')}
+          <img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📸'"> ${_t('촬영', 'Take photo')}
           <input type="file" accept="image/*" capture="environment" style="display:none" onchange="_handlePhotoSelect(this)">
         </label>
       </div>
@@ -6843,7 +6843,7 @@ function openUrlImport() {
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="margin:0;font-size:17px">🔗 ${_t('URL에서 레시피 가져오기', 'Import Recipe from URL')}</h3>
+        <h3 style="margin:0;font-size:17px"><img src="https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔗'"> ${_t('URL에서 레시피 가져오기', 'Import Recipe from URL')}</h3>
         <button onclick="document.getElementById('urlImportOverlay').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer">&times;</button>
       </div>
       <p style="font-size:13px;color:#666;margin-bottom:16px">${_t('레시피 URL을 붙여넣으면 AI가 재료, 단계, 영양 정보를 추출합니다', 'Paste a recipe URL and AI will extract ingredients, steps, and nutrition')}</p>
@@ -6881,8 +6881,8 @@ async function _runUrlImport() {
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
         ${data.cuisine ? `<span class="recipe-tag cuisine">${data.cuisine}</span>` : ''}
         ${data.difficulty ? `<span class="recipe-tag">${data.difficulty}</span>` : ''}
-        ${data.duration ? `<span class="recipe-tag">⏱ ${data.duration}min</span>` : ''}
-        ${data.servings ? `<span class="recipe-tag">🍽 ${data.servings} servings</span>` : ''}
+        ${data.duration ? `<span class="recipe-tag"><img src="https://images.pexels.com/photos/2784135/pexels-photo-2784135.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⏱'"> ${data.duration}min</span>` : ''}
+        ${data.servings ? `<span class="recipe-tag"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🍽'"> ${data.servings} servings</span>` : ''}
       </div>
       ${nutr.calories ? `<div style="font-size:12px;color:#666;margin-top:8px">${nutr.calories}kcal · P${nutr.protein||0}g · F${nutr.fat||0}g · C${nutr.carbs||0}g</div>` : ''}
     </div>`;
