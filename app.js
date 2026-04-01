@@ -7617,7 +7617,12 @@ async function submitFeedback() {
 }
 
 // Boot
-init();
+init().then(function() {
+  // Re-apply i18n after init completes (async DB load may cause timing issues)
+  if (typeof I18n !== 'undefined' && typeof I18n.applyTranslations === 'function') {
+    I18n.applyTranslations();
+  }
+});
 // Add bottom padding so content isn't hidden behind dev nav
 document.body.style.paddingBottom = '48px';
 
