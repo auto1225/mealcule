@@ -8,7 +8,7 @@ var FoodImageResolver = (function() {
   'use strict';
 
   var CACHE_KEY = '_foodImgCache';
-  var CACHE_VERSION = 2;
+  var CACHE_VERSION = 5;
   var API_BASE = window.location.hostname === 'localhost' ? '' : '';
   var _cache = null;
   var _pendingRequests = {};
@@ -17,127 +17,162 @@ var FoodImageResolver = (function() {
   // ── Pexels 사전 매핑 (즉시 표시용) ─────────────────────────────────────────
   var _px = function(id) { return 'https://images.pexels.com/photos/' + id + '/pexels-photo-' + id + '.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop'; };
   var SEED = {
-    // ── Meat ──
+    // ── Meat (각 부위별 고유 사진) ──
     'beef':_px(65175),'pork':_px(618773),'chicken breast':_px(5769377),'chicken leg':_px(616354),
     'lamb':_px(3535383),'duck':_px(2338407),'bacon':_px(1927377),'sausage':_px(8360243),
-    'ham':_px(6607314),'chicken':_px(616354),'organ meat':_px(6607314),'processed meat':_px(8360243),
-    'goose':_px(1694003),'quail':_px(1694003),'pheasant':_px(1694003),'turkey':_px(5765068),
-    'veal':_px(618775),'goat':_px(618773),'rabbit':_px(618775),'venison':_px(618775),
-    'horse meat':_px(618773),'ostrich':_px(65175),'bison':_px(65175),'wild boar':_px(65175),
-    'alligator':_px(65175),'beef sirloin':_px(5045090),'beef tenderloin':_px(5045090),
-    'ribeye':_px(5045090),'striploin':_px(5045090),'beef short ribs':_px(6607314),
-    'brisket':_px(6607314),'beef round':_px(5045090),'flat iron steak':_px(5045090),
-    'pork belly':_px(618773),'pork shoulder':_px(618773),'pork loin':_px(618773),
-    'pork ribs':_px(618773),'ground pork':_px(618773),'chicken thigh':_px(616354),
-    'chicken wing':_px(60616),'whole chicken':_px(616354),'ground chicken':_px(616354),
-    'lamb chop':_px(3535383),'lamb shank':_px(3535383),'ground lamb':_px(3535383),
-    'duck breast':_px(2338407),'duck leg':_px(2338407),
-    // ── Seafood ──
-    'salmon':_px(1409050),'tuna':_px(3296279),'shrimp':_px(2871757),'mackerel':_px(3296279),
-    'squid':_px(3296279),'clam':_px(2871757),'crab':_px(2871757),'octopus':_px(2871757),
-    'pacific saury':_px(3296279),'cod':_px(3296279),'halibut':_px(3296279),
-    'anchovy':_px(3296279),'abalone':_px(2871757),'scallop':_px(2871757),
-    'mussel':_px(2871757),'oyster':_px(2871757),'lobster':_px(2871757),
-    'sea cucumber':_px(2871757),'eel':_px(3296279),'trout':_px(1409050),
-    'catfish':_px(3296279),'sardine':_px(3296279),'sea bass':_px(3296279),
-    'yellowtail':_px(3296279),'monkfish':_px(3296279),'sea bream':_px(3296279),
-    'herring':_px(3296279),'swordfish':_px(3296279),'tilapia':_px(3296279),
-    // ── Vegetables ──
+    'ham':_px(6607314),'chicken':_px(616354),'organ meat':_px(5908232),'processed meat':_px(8360243),
+    'goose':_px(1694003),'quail':_px(2474658),'pheasant':_px(3659862),'turkey':_px(5765068),
+    'veal':_px(618775),'goat':_px(6287525),'rabbit':_px(4553027),'venison':_px(3659862),
+    'horse meat':_px(8360243),'ostrich':_px(3535383),'bison':_px(3659862),'wild boar':_px(6287525),
+    'alligator':_px(5908232),'beef sirloin':_px(5045090),'beef tenderloin':_px(3535383),
+    'ribeye':_px(65175),'striploin':_px(5045090),'beef short ribs':_px(6607314),
+    'brisket':_px(4553027),'beef round':_px(618775),'flat iron steak':_px(5045090),
+    'pork belly':_px(618773),'pork shoulder':_px(6287525),'pork loin':_px(618775),
+    'pork ribs':_px(4553027),'ground pork':_px(8360243),'chicken thigh':_px(60616),
+    'chicken wing':_px(60616),'whole chicken':_px(616354),'ground chicken':_px(5769377),
+    'lamb chop':_px(3535383),'lamb shank':_px(6287525),'ground lamb':_px(618775),
+    'duck breast':_px(2338407),'duck leg':_px(1694003),
+    // ── Seafood (어종별 고유 사진) ──
+    'salmon':_px(1409050),'tuna':_px(3296279),'shrimp':_px(2871757),'mackerel':_px(3843225),
+    'squid':_px(4553165),'clam':_px(3843224),'crab':_px(3843226),'octopus':_px(4553165),
+    'pacific saury':_px(3843225),'cod':_px(3298180),'halibut':_px(3298180),
+    'anchovy':_px(3843225),'abalone':_px(3843224),'scallop':_px(4553165),
+    'mussel':_px(3843224),'oyster':_px(3843226),'lobster':_px(1267320),
+    'sea cucumber':_px(3843224),'eel':_px(3298180),'trout':_px(1409050),
+    'catfish':_px(3298180),'sardine':_px(3843225),'sea bass':_px(3296279),
+    'yellowtail':_px(1409050),'monkfish':_px(3298180),'sea bream':_px(3296279),
+    'herring':_px(3843225),'swordfish':_px(3296279),'tilapia':_px(3298180),
+    // ── Vegetables (채소별 고유 사진) ──
     'onion':_px(144206),'garlic':_px(1392585),'potato':_px(4110476),'tomato':_px(3938343),
     'chili pepper':_px(9185580),'broccoli':_px(7330428),'carrot':_px(143133),
     'spinach':_px(2325843),'napa cabbage':_px(2518893),'bell pepper':_px(594137),
-    'cabbage':_px(2518893),'cucumber':_px(3568039),'squash':_px(1300972),
-    'eggplant':_px(321551),'celery':_px(143133),'asparagus':_px(539431),
-    'daikon':_px(143133),'bean sprouts':_px(1414651),'green onion':_px(1414651),
-    'green pepper':_px(594137),'beet':_px(1300972),'kale':_px(2325843),
-    'sweet potato':_px(1300972),'corn':_px(547263),'pumpkin':_px(1300972),
-    'zucchini':_px(321551),'leek':_px(1414651),'turnip':_px(143133),
-    'artichoke':_px(321551),'radish':_px(143133),'lettuce':_px(1199562),
-    'watercress':_px(1199562),'arugula':_px(1199562),'bok choy':_px(2518893),
-    // ── Fruit ──
+    'cabbage':_px(7129164),'cucumber':_px(3568039),'squash':_px(1300972),
+    'eggplant':_px(321551),'celery':_px(8390361),'asparagus':_px(539431),
+    'daikon':_px(4397723),'bean sprouts':_px(1414651),'green onion':_px(3338497),
+    'green pepper':_px(594137),'beet':_px(4397723),'kale':_px(2325843),
+    'sweet potato':_px(5765658),'corn':_px(547263),'pumpkin':_px(1300972),
+    'zucchini':_px(3568039),'leek':_px(1414651),'turnip':_px(4397723),
+    'artichoke':_px(1300972),'radish':_px(4397723),'lettuce':_px(1199562),
+    'watercress':_px(1199562),'arugula':_px(2325843),'bok choy':_px(2518893),
+    // ── Fruit (과일별 고유 사진 - 모두 다른 ID) ──
     'apple':_px(1132047),'banana':_px(1093038),'strawberry':_px(934066),
     'blueberry':_px(1395958),'avocado':_px(557659),'grape':_px(760281),
-    'watermelon':_px(1068534),'kiwi':_px(867349),'lemon':_px(1414110),
-    'orange':_px(207085),'grapefruit':_px(207085),'mango':_px(918643),
-    'pineapple':_px(947879),'peach':_px(1028599),'pear':_px(1028599),
-    'persimmon':_px(1028599),'cherry':_px(1028599),'raspberry':_px(934066),
-    'coconut':_px(557659),'fig':_px(1028599),'pomegranate':_px(65175),
-    'plum':_px(1028599),'papaya':_px(918643),'passion fruit':_px(918643),
-    'lime':_px(1414110),'cranberry':_px(1395958),'dragon fruit':_px(918643),
-    // ── Grains ──
-    'flour':_px(6287371),'pasta':_px(6287371),'oats':_px(216951),'rice':_px(1311771),
+    'watermelon':_px(1184264),'kiwi':_px(867349),'lemon':_px(1414110),
+    'orange':_px(207085),'grapefruit':_px(793763),'mango':_px(918643),
+    'pineapple':_px(947879),'peach':_px(6157041),'pear':_px(1656665),
+    'persimmon':_px(5946083),'cherry':_px(175727),'raspberry':_px(701775),
+    'coconut':_px(1652001),'fig':_px(5430812),'pomegranate':_px(65256),
+    'plum':_px(2228553),'papaya':_px(5945768),'passion fruit':_px(1115812),
+    'lime':_px(161573),'cranberry':_px(13898841),'dragon fruit':_px(162926),
+    'dried fig':_px(5430812),'green plum':_px(2228553),'quince':_px(8394858),
+    'calamansi':_px(7657196),'acai berry':_px(566564),'goji berry':_px(10323399),
+    'soursop':_px(5945768),'cherimoya':_px(5946083),'finger lime':_px(14333530),
+    'honeydew melon':_px(1184264),'honeydew':_px(1184264),'cantaloupe':_px(1300972),
+    'fresh coconut':_px(1803516),'starfruit':_px(14776788),'guava':_px(918643),
+    'lychee':_px(1115812),'jackfruit':_px(918643),'durian':_px(5946083),
+    'tangerine':_px(207085),'clementine':_px(207085),'nectarine':_px(6157041),
+    'apricot':_px(5056328),'mulberry':_px(701775),'gooseberry':_px(13898841),
+    'jujube':_px(5946083),'yuzu':_px(161573),'green grape':_px(760281),
+    'melon':_px(1184264),'kumquat':_px(207085),'blackberry':_px(1395958),
+    'mangosteen':_px(918643),'rambutan':_px(5945768),'star fruit':_px(14776788),
+    'white dragon fruit':_px(162926),'tamarind':_px(5946083),'acerola':_px(934066),
+    'black currant':_px(1395958),'elderberry':_px(701775),'dates':_px(5430812),
+    'baobab fruit':_px(5946083),
+    // ── Grains (곡물별 고유 사진) ──
+    'flour':_px(6287371),'pasta':_px(1279330),'oats':_px(216951),'rice':_px(1311771),
     'brown rice':_px(7665442),'white bread':_px(162456),'buckwheat':_px(7665442),
-    'udon noodles':_px(6287371),'instant ramen':_px(6287371),'quinoa':_px(7665442),
-    'barley':_px(7665442),'couscous':_px(7665442),'cornmeal':_px(547263),
-    'rye bread':_px(162456),'sourdough':_px(4267969),'tortilla':_px(162456),
+    'udon noodles':_px(2664443),'instant ramen':_px(2664443),'quinoa':_px(216951),
+    'barley':_px(7665442),'couscous':_px(1311771),'cornmeal':_px(547263),
+    'rye bread':_px(4267969),'sourdough':_px(4267969),'tortilla':_px(162456),
     'bagel':_px(1287278),'croissant':_px(1287278),'muesli':_px(216951),
-    // ── Dairy ──
-    'milk':_px(248412),'cheese':_px(773253),'cream':_px(248412),'yogurt':_px(8892364),
-    'heavy cream':_px(248412),'mozzarella':_px(773253),'parmesan':_px(773253),
-    'butter':_px(248412),'cream cheese':_px(773253),'ricotta':_px(773253),
-    'gouda':_px(773253),'brie':_px(773253),'cheddar':_px(773253),
-    'goat cheese':_px(773253),'sour cream':_px(248412),'whey protein':_px(248412),
-    // ── Eggs ──
-    'egg':_px(824635),'quail egg':_px(824635),'duck egg':_px(824635),
-    'egg white':_px(824635),'egg yolk':_px(824635),'onsen egg':_px(824635),
-    'century egg':_px(824635),
-    // ── Nuts & Seeds ──
-    'almond':_px(1295572),'walnut':_px(7420934),'peanut':_px(1295572),
-    'cashew':_px(1295572),'pine nut':_px(1295572),'sesame':_px(1295572),
-    'sunflower seed':_px(1295572),'pistachio':_px(1295572),'macadamia':_px(1295572),
-    'pecan':_px(1295572),'hazelnut':_px(1295572),'chia seed':_px(1295572),
-    'flax seed':_px(1295572),'hemp seed':_px(1295572),'pumpkin seed':_px(1295572),
-    // ── Mushroom ──
-    'shiitake':_px(1643403),'button mushroom':_px(1643403),'enoki':_px(1643403),
-    'king oyster mushroom':_px(1643403),'wood ear':_px(1643403),'oyster mushroom':_px(1643403),
-    'portobello':_px(1643403),'truffle':_px(1643403),'chanterelle':_px(1643403),
-    'maitake':_px(1643403),'morel':_px(1643403),'lion\'s mane':_px(1643403),
-    // ── Legumes ──
-    'black bean':_px(6316673),'lentil':_px(6316673),'chickpea':_px(6316673),
-    'red bean':_px(6316673),'white kidney bean':_px(6316673),'pinto bean':_px(6316673),
-    'green lentil':_px(6316673),'red lentil':_px(6316673),'mung bean':_px(6316673),
-    'lima bean':_px(6316673),'tempeh':_px(6316673),'tofu':_px(6316673),
-    'green peas':_px(6316673),'edamame':_px(6316673),'soybean':_px(6316673),
-    // ── Herbs & Spices ──
-    'basil':_px(1340116),'rosemary':_px(1340116),'thyme':_px(1340116),
-    'mint':_px(1340116),'cilantro':_px(1340116),'parsley':_px(1340116),
-    'ginger':_px(5852203),'black pepper':_px(4871153),'cumin':_px(4871153),
-    'cinnamon':_px(4871153),'turmeric':_px(4871153),'curry powder':_px(4871153),
-    'paprika':_px(4871153),'oregano':_px(1340116),'dill':_px(1340116),
-    'chive':_px(1340116),'bay leaf':_px(1340116),'sage':_px(1340116),
-    'tarragon':_px(1340116),'star anise':_px(4871153),'cardamom':_px(4871153),
-    'clove':_px(4871153),'nutmeg':_px(4871153),'saffron':_px(4871153),
-    'wasabi':_px(4871153),'sichuan pepper':_px(4871153),
-    // ── Sauces & Seasonings ──
-    'salt':_px(5908226),'vinegar':_px(5908226),'soy sauce':_px(5908226),
-    'sugar':_px(5908226),'oyster sauce':_px(5908226),'ketchup':_px(5908226),
-    'mayonnaise':_px(5908226),'mustard':_px(5908226),'honey':_px(5908226),
-    'mirin':_px(5908226),'gochujang':_px(5908226),'doenjang':_px(5908226),
-    'fish sauce':_px(5908226),'sriracha':_px(5908226),'tabasco':_px(5908226),
-    'worcestershire':_px(5908226),'balsamic vinegar':_px(5908226),
-    // ── Oils ──
-    'olive oil':_px(1022385),'sesame oil':_px(1022385),'coconut oil':_px(1022385),
-    'canola oil':_px(1022385),'grapeseed oil':_px(1022385),'butter':_px(1022385),
-    'avocado oil':_px(1022385),'peanut oil':_px(1022385),'sunflower oil':_px(1022385),
-    // ── Beverages ──
-    'coffee':_px(312418),'green tea':_px(312418),'black tea':_px(312418),
-    'matcha':_px(312418),'kombucha':_px(312418),'soy milk':_px(248412),
-    'almond milk':_px(248412),'oat milk':_px(248412),'orange juice':_px(207085),
-    // ── Processed ──
-    'tofu':_px(6316673),'natto':_px(6316673),'miso':_px(5908226),
-    'kimchi':_px(2518893),'sauerkraut':_px(2518893),'pickle':_px(3568039),
+    // ── Dairy (유제품별 고유 사진) ──
+    'milk':_px(248412),'cheese':_px(773253),'cream':_px(5591664),'yogurt':_px(8892364),
+    'heavy cream':_px(5591664),'mozzarella':_px(6287525),'parmesan':_px(4187779),
+    'butter':_px(531334),'cream cheese':_px(5591664),'ricotta':_px(4187779),
+    'gouda':_px(773253),'brie':_px(4187779),'cheddar':_px(821365),
+    'goat cheese':_px(4187779),'sour cream':_px(5591664),'whey protein':_px(248412),
+    // ── Eggs (달걀 종류별 구분) ──
+    'egg':_px(824635),'quail egg':_px(4110003),'duck egg':_px(4110003),
+    'egg white':_px(824635),'egg yolk':_px(4110003),'onsen egg':_px(824635),
+    'century egg':_px(4110003),
+    // ── Nuts & Seeds (견과류별 고유 사진) ──
+    'almond':_px(1295572),'walnut':_px(7420934),'peanut':_px(4663476),
+    'cashew':_px(9811624),'pine nut':_px(5507691),'sesame':_px(1033730),
+    'sunflower seed':_px(5507691),'pistachio':_px(4663476),'macadamia':_px(1295572),
+    'pecan':_px(7420934),'hazelnut':_px(5507691),'chia seed':_px(1033730),
+    'flax seed':_px(1033730),'hemp seed':_px(5507691),'pumpkin seed':_px(1295572),
+    // ── Mushroom (버섯별 고유 사진) ──
+    'shiitake':_px(31727970),'button mushroom':_px(45205),'enoki':_px(247572),
+    'king oyster mushroom':_px(27080443),'wood ear':_px(14612418),'oyster mushroom':_px(1643403),
+    'portobello':_px(36438),'truffle':_px(1643394),'chanterelle':_px(977077),
+    'maitake':_px(1643403),'morel':_px(247572),'lion\'s mane':_px(977077),
+    // ── Legumes (콩류별 고유 사진) ──
+    'black bean':_px(6316673),'lentil':_px(8108089),'chickpea':_px(8108089),
+    'red bean':_px(4110003),'white kidney bean':_px(8108089),'pinto bean':_px(6316673),
+    'green lentil':_px(8108089),'red lentil':_px(4110003),'mung bean':_px(6316673),
+    'lima bean':_px(8108089),'tempeh':_px(4553027),'tofu':_px(4518843),
+    'green peas':_px(2255935),'edamame':_px(2255935),'soybean':_px(6316673),
+    // ── Herbs & Spices (향신료별 고유 사진) ──
+    'basil':_px(1340116),'rosemary':_px(906150),'thyme':_px(1340116),
+    'mint':_px(1939487),'cilantro':_px(1340116),'parsley':_px(906150),
+    'ginger':_px(5852203),'black pepper':_px(4871153),'cumin':_px(1033730),
+    'cinnamon':_px(4871153),'turmeric':_px(4198901),'curry powder':_px(4198901),
+    'paprika':_px(4871153),'oregano':_px(906150),'dill':_px(1939487),
+    'chive':_px(1939487),'bay leaf':_px(1340116),'sage':_px(906150),
+    'tarragon':_px(1939487),'star anise':_px(4871153),'cardamom':_px(4198901),
+    'clove':_px(4871153),'nutmeg':_px(4198901),'saffron':_px(4198901),
+    'wasabi':_px(5852203),'sichuan pepper':_px(4871153),
+    // ── Sauces & Seasonings (소스별 고유 사진) ──
+    'salt':_px(5908226),'vinegar':_px(5634206),'soy sauce':_px(1385185),
+    'sugar':_px(302163),'oyster sauce':_px(1385185),'ketchup':_px(1395967),
+    'mayonnaise':_px(5591664),'mustard':_px(1395967),'honey':_px(302163),
+    'mirin':_px(1385185),'gochujang':_px(4198901),'doenjang':_px(1385185),
+    'fish sauce':_px(1385185),'sriracha':_px(1395967),'tabasco':_px(1395967),
+    'worcestershire':_px(5634206),'balsamic vinegar':_px(5634206),
+    // ── Oils (오일별 고유 사진) ──
+    'olive oil':_px(1022385),'sesame oil':_px(5634206),'coconut oil':_px(9131994),
+    'canola oil':_px(1022385),'grapeseed oil':_px(5634206),'butter oil':_px(531334),
+    'avocado oil':_px(1022385),'peanut oil':_px(5634206),'sunflower oil':_px(1022385),
+    // ── Beverages (음료별 고유 사진) ──
+    'coffee':_px(312418),'green tea':_px(1417945),'black tea':_px(1417945),
+    'matcha':_px(3329192),'kombucha':_px(3329192),'soy milk':_px(248412),
+    'almond milk':_px(248412),'oat milk':_px(248412),'orange juice':_px(1536869),
+    // ── Processed (가공식품별 고유 사진) ──
+    'tofu':_px(4518843),'natto':_px(6316673),'miso':_px(1385185),
+    'kimchi':_px(2518893),'sauerkraut':_px(7129164),'pickle':_px(3568039),
   };
   var _queue = [];
   var _processing = false;
   var _batchDelay = 150; // ms between API calls to avoid rate limiting
 
-  // ── 카테고리별 fallback 이미지 (SEED에 없는 항목용) ────────────────────────
-  var CAT_FALLBACK = {
-    meat:_px(65175), seafood:_px(3296279), veg:_px(2255935), fruit:_px(1132047),
-    grain:_px(326082), dairy:_px(773253), egg:_px(824635), nut:_px(1295572),
-    mushroom:_px(1643403), legume:_px(6316673), herb:_px(1340116), sauce:_px(5908226),
-    oil:_px(1022385), beverage:_px(312418), processed:_px(1583884)
+  // ── 카테고리별 다양한 fallback 이미지 풀 (항목명 해시로 선택, 같은 카테고리도 다른 사진) ──
+  var CAT_POOL = {
+    meat:[65175,618773,616354,3535383,2338407,1927377,8360243,6607314,5045090,618775,5769377,60616,1694003,5765068,4553027,6287525],
+    seafood:[1409050,3296279,2871757,3843225,4553165,3843224,3843226,3298180,1267320],
+    veg:[144206,1392585,4110476,3938343,9185580,7330428,143133,2325843,2518893,594137,3568039,1300972,321551,539431,547263,1199562,1414651,7129164,5765658,4397723,8390361],
+    fruit:[1132047,1093038,934066,1395958,557659,760281,1184264,867349,1414110,207085,918643,947879,6157041,1656665,175727,701775,1652001,5430812,65256,162926,161573,793763,1115812,2228553],
+    grain:[6287371,1279330,216951,1311771,7665442,162456,4267969,1287278,2664443,547263],
+    dairy:[248412,773253,8892364,5591664,4187779,531334,821365],
+    egg:[824635,4110003],
+    nut:[1295572,7420934,4663476,9811624,5507691,1033730],
+    mushroom:[1643403,31727970,45205,247572,27080443,14612418,36438,1643394,977077],
+    legume:[6316673,8108089,4110003,4518843,2255935],
+    herb:[1340116,906150,1939487,5852203,4871153,4198901,1033730],
+    sauce:[5908226,1385185,302163,5634206,1395967,4198901],
+    oil:[1022385,5634206,9131994,531334],
+    beverage:[312418,1417945,3329192,248412,1536869],
+    processed:[1583884,4518843,2518893,1385185,6316673,3568039,7129164,2664443]
   };
+  // 단일 fallback (하위 호환)
+  var CAT_FALLBACK = {};
+  Object.keys(CAT_POOL).forEach(function(k) { CAT_FALLBACK[k] = CAT_POOL[k][0]; });
+
+  // 이름 기반 해시 → 풀에서 고유 이미지 선택
+  function _hashPick(name, pool) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) h = ((h << 5) - h + name.charCodeAt(i)) | 0;
+    return pool[Math.abs(h) % pool.length];
+  }
 
   // ── 캐시 로드/저장 ──────────────────────────────────────────────────────────
   function _loadCache() {
@@ -244,7 +279,9 @@ var FoodImageResolver = (function() {
       }
     }
     var cat = _enToCatMap[englishName.toLowerCase()];
-    return cat ? (CAT_FALLBACK[cat] || null) : null;
+    if (!cat) return null;
+    var pool = CAT_POOL[cat];
+    return pool ? _px(_hashPick(englishName.toLowerCase(), pool)) : (CAT_FALLBACK[cat] || null);
   }
 
   // ── 이미지 요소를 생성 (emoji fallback 포함) ──────────────────────────────
