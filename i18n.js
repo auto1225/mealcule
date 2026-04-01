@@ -143,7 +143,7 @@
       window.I18n.setLang(next);
       renderLangBtn(btn);
     });
-    const actions = document.querySelector('.header-actions');
+    const actions = document.querySelector('.header-right') || document.querySelector('.header-actions');
     if (actions) actions.insertBefore(btn, actions.firstChild);
   }
 
