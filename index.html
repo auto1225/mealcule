@@ -120,7 +120,7 @@
 <!-- MAIN APP (hidden until login)           -->
 <!-- ═══════════════════════════════════════ -->
 
-<!-- Header -->
+<!-- Header with Tab Navigation -->
 <header class="header">
   <div style="display:flex;align-items:center;gap:14px">
     <div class="logo" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px)">
@@ -147,11 +147,19 @@
       <p style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px" data-i18n="app.tagline">분자 요리 과학 플랫폼</p>
     </div>
   </div>
-  <div class="header-actions">
+
+  <!-- Desktop Tab Navigation -->
+  <div class="header-tabs">
+    <button class="header-tab active" data-tab="home" onclick="switchTab('home')" data-i18n="nav.home">Home</button>
+    <button class="header-tab" data-tab="analyze" onclick="switchTab('analyze')" data-i18n="nav.analyze">Analyze</button>
+    <button class="header-tab" data-tab="plan" onclick="switchTab('plan')" data-i18n="nav.plan">Plan</button>
+    <button class="header-tab" data-tab="recipes" onclick="switchTab('recipes')" data-i18n="nav.recipes">Recipes</button>
+    <button class="header-tab" data-tab="profile" onclick="switchTab('profile')" data-i18n="nav.profile">Profile</button>
+  </div>
+
+  <!-- Right: Language + Auth -->
+  <div class="header-right">
     <button class="mode-toggle" id="modeToggle" onclick="toggleProMode()" data-i18n="header.modeNormal">Standard Mode</button>
-    <button class="calorie-btn" onclick="typeof openCalorieTracker==='function'&&openCalorieTracker()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.15);color:#fff;font-size:12px;font-weight:600;cursor:pointer"><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"> Calories</button>
-    <button class="community-btn" onclick="typeof openCommunityFeed==='function'&&openCommunityFeed()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;cursor:pointer" data-i18n="community.title">Community</button>
-    <button class="dashboard-btn" onclick="typeof openHealthDashboard==='function'&&openHealthDashboard()" style="padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;cursor:pointer"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📊</span>'"></button>
     <button class="pricing-btn" onclick="openPricingModal()" data-i18n="header.pricing">Pricing</button>
     <button class="auth-btn" id="authBtn" onclick="openAuthModal()" data-i18n="header.login">로그인</button>
     <div class="user-avatar" id="userAvatar" style="display:none" onclick="openUserMenu()">
@@ -216,255 +224,347 @@
   </div>
 </div>
 
-<div class="container">
-  <!-- Loading Skeleton -->
-  <div id="appSkeleton" class="skeleton-container" style="display:none">
-    <div class="skeleton" style="height:40px;width:60%;margin-bottom:16px"></div>
-    <div class="skeleton" style="height:200px;margin-bottom:16px"></div>
-    <div class="skeleton" style="height:300px"></div>
-  </div>
+<!-- ═══════════════════════════════════════ -->
+<!-- APP CONTENT: 5-Tab Sections             -->
+<!-- ═══════════════════════════════════════ -->
+<div id="app-content">
 
-  <!-- Methodology Banner -->
-  <div class="methodology-banner" onclick="toggleMethodology()">
-    <span style="font-size:20px"><img src="https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🔬</span>'"></span>
-    <div>
-      <strong data-i18n="methodology.bannerTitle">Research-based scientific analysis</strong> — <span data-i18n="methodology.bannerSub">USDA, WHO/FDA, peer-reviewed data</span>
-      <span style="margin-left:6px;color:var(--accent, #059669)" data-i18n="methodology.bannerLink">Learn more ▸</span>
+  <!-- ══ TAB: HOME ══ -->
+  <section id="tab-home" class="tab-section active">
+    <div class="container">
+      <div id="homeContent"></div>
     </div>
-  </div>
-  <div class="methodology-content" id="methodologyContent">
-    <h3 data-i18n="methodology.dataTitle">Data Sources</h3>
-    <p data-i18n="methodology.dataBody">Built on 1,300+ ingredient nutrition data from USDA FoodData Central, WHO dietary guidelines, and regional nutrition databases (FDA, EFSA, KFDA, and others).</p>
-    <h3 data-i18n="methodology.reactionTitle">Chemical Reaction Models</h3>
-    <p data-i18n="methodology.reactionBody">Major reactions — Maillard (Hodge, 1953; Martins et al., 2000), Caramelization (Kroh, 1994), Protein denaturation (Tornberg, 2005), Starch gelatinization (Ratnayake & Jackson, 2006) — use Arrhenius kinetics models. Activation energy (Ea) and frequency factor (A) values are derived from original experimental data.</p>
-    <h3 data-i18n="methodology.nutrientTitle">Nutrient Retention Models</h3>
-    <p data-i18n="methodology.nutrientBody">Nutrient retention rates by cooking method are calculated based on USDA Table of Nutrient Retention Factors, Release 6 (2007) and Santos & Silva (2008) vitamin C degradation kinetics.</p>
-    <h3 data-i18n="methodology.confidenceTitle">Confidence Levels</h3>
-    <p data-i18n="methodology.confidenceBody">Each reaction model includes a literature-validated Confidence Level. High confidence (90%+) indicates models reproduced in multiple independent studies; moderate (80–89%) indicates models validated under limited conditions.</p>
-    <h3 data-i18n="methodology.limitTitle">Limitations</h3>
-    <p data-i18n="methodology.limitBody">This analysis is based on theoretical models. Actual results may vary depending on cooking environment (equipment, humidity, ingredient conditions, etc.). This does not replace medical advice.</p>
-  </div>
+  </section>
 
-  <!-- Input Section -->
-  <div class="grid2">
-    <!-- Ingredients -->
-    <div class="card">
-      <div class="section-title"><img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=24&h=24&fit=crop" style="width:24px;height:24px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🥬</span>'"> <span data-i18n="ingredients.sectionTitle">재료 선택</span> <span id="dbStatus" style="font-size:11px;font-weight:400;color:var(--text-muted, #737373);margin-left:auto"></span></div>
-      <div class="search-wrap">
-        <span class="search-icon"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"></span>
-        <input type="text" id="searchInput" data-i18n-placeholder="ingredients.searchPlaceholder" placeholder="재료 이름으로 검색..." oninput="onSearchInput()" autocomplete="off">
-        <button class="photo-scan-btn" onclick="openPhotoScanner()" title="Scan ingredients from photo" data-i18n-title="ai.photoBtn"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📷'"></button>
+  <!-- ══ TAB: ANALYZE (Step Wizard) ══ -->
+  <section id="tab-analyze" class="tab-section">
+    <div class="container">
+
+      <!-- Wizard Progress Bar -->
+      <div class="wizard-progress">
+        <button class="wizard-step active" data-step="1" onclick="switchAnalyzeStep(1)">
+          <span class="wizard-step-num">1</span>
+          <span class="wizard-step-label" data-i18n="wizard.ingredients">Ingredients</span>
+        </button>
+        <button class="wizard-step" data-step="2" onclick="switchAnalyzeStep(2)">
+          <span class="wizard-step-num">2</span>
+          <span class="wizard-step-label" data-i18n="wizard.cooking">Cooking</span>
+        </button>
+        <button class="wizard-step" data-step="3" onclick="switchAnalyzeStep(3)">
+          <span class="wizard-step-num">3</span>
+          <span class="wizard-step-label" data-i18n="wizard.profile">Profile</span>
+        </button>
+        <button class="wizard-step" data-step="4" onclick="switchAnalyzeStep(4)">
+          <span class="wizard-step-num">4</span>
+          <span class="wizard-step-label" data-i18n="wizard.results">Results</span>
+        </button>
       </div>
-      <div class="cat-scroll-wrap">
-        <div class="cat-scroll" id="catTabs"></div>
-      </div>
-      <div class="ing-table" id="ingGrid"></div>
-      <div id="selectedArea" style="display:none">
-        <div class="sel-bar">
-          <div class="sel-bar-head">
-            <span class="sel-bar-title"><span data-i18n="ingredients.selectedLabel">선택된 재료</span> <span id="selCount" class="sel-count-badge"></span></span>
-            <button class="sel-bar-clear" onclick="clearAllIngredients()" data-i18n="ingredients.clearAll">전체 해제</button>
+
+      <!-- Step 1: Ingredients -->
+      <div id="analyze-step-1" class="wizard-panel active">
+        <!-- Methodology Banner -->
+        <div class="methodology-banner" onclick="toggleMethodology()">
+          <span style="font-size:20px"><img src="https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🔬</span>'"></span>
+          <div>
+            <strong data-i18n="methodology.bannerTitle">Research-based scientific analysis</strong> — <span data-i18n="methodology.bannerSub">USDA, WHO/FDA, peer-reviewed data</span>
+            <span style="margin-left:6px;color:var(--accent, #059669)" data-i18n="methodology.bannerLink">Learn more ▸</span>
           </div>
-          <div class="sel-chips" id="selTags"></div>
+        </div>
+        <div class="methodology-content" id="methodologyContent">
+          <h3 data-i18n="methodology.dataTitle">Data Sources</h3>
+          <p data-i18n="methodology.dataBody">Built on 1,300+ ingredient nutrition data from USDA FoodData Central, WHO dietary guidelines, and regional nutrition databases (FDA, EFSA, KFDA, and others).</p>
+          <h3 data-i18n="methodology.reactionTitle">Chemical Reaction Models</h3>
+          <p data-i18n="methodology.reactionBody">Major reactions — Maillard (Hodge, 1953; Martins et al., 2000), Caramelization (Kroh, 1994), Protein denaturation (Tornberg, 2005), Starch gelatinization (Ratnayake & Jackson, 2006) — use Arrhenius kinetics models. Activation energy (Ea) and frequency factor (A) values are derived from original experimental data.</p>
+          <h3 data-i18n="methodology.nutrientTitle">Nutrient Retention Models</h3>
+          <p data-i18n="methodology.nutrientBody">Nutrient retention rates by cooking method are calculated based on USDA Table of Nutrient Retention Factors, Release 6 (2007) and Santos & Silva (2008) vitamin C degradation kinetics.</p>
+          <h3 data-i18n="methodology.confidenceTitle">Confidence Levels</h3>
+          <p data-i18n="methodology.confidenceBody">Each reaction model includes a literature-validated Confidence Level. High confidence (90%+) indicates models reproduced in multiple independent studies; moderate (80–89%) indicates models validated under limited conditions.</p>
+          <h3 data-i18n="methodology.limitTitle">Limitations</h3>
+          <p data-i18n="methodology.limitBody">This analysis is based on theoretical models. Actual results may vary depending on cooking environment (equipment, humidity, ingredient conditions, etc.). This does not replace medical advice.</p>
+        </div>
+
+        <!-- Ingredients Card -->
+        <div class="card">
+          <div class="section-title"><img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=24&h=24&fit=crop" style="width:24px;height:24px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🥬</span>'"> <span data-i18n="ingredients.sectionTitle">재료 선택</span> <span id="dbStatus" style="font-size:11px;font-weight:400;color:var(--text-muted, #737373);margin-left:auto"></span></div>
+          <div class="search-wrap">
+            <span class="search-icon"><img src="https://images.pexels.com/photos/210661/pexels-photo-210661.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔍'"></span>
+            <input type="text" id="searchInput" data-i18n-placeholder="ingredients.searchPlaceholder" placeholder="재료 이름으로 검색..." oninput="onSearchInput()" autocomplete="off">
+            <button class="photo-scan-btn" onclick="openPhotoScanner()" title="Scan ingredients from photo" data-i18n-title="ai.photoBtn"><img src="https://images.pexels.com/photos/821749/pexels-photo-821749.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📷'"></button>
+          </div>
+          <div class="cat-scroll-wrap">
+            <div class="cat-scroll" id="catTabs"></div>
+          </div>
+          <div class="ing-table" id="ingGrid"></div>
+          <div id="selectedArea" style="display:none">
+            <div class="sel-bar">
+              <div class="sel-bar-head">
+                <span class="sel-bar-title"><span data-i18n="ingredients.selectedLabel">선택된 재료</span> <span id="selCount" class="sel-count-badge"></span></span>
+                <button class="sel-bar-clear" onclick="clearAllIngredients()" data-i18n="ingredients.clearAll">전체 해제</button>
+              </div>
+              <div class="sel-chips" id="selTags"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Nav -->
+        <div class="wizard-nav">
+          <div></div>
+          <button class="wizard-next-btn" onclick="switchAnalyzeStep(2)" data-i18n="wizard.nextCooking">Next: Cooking Conditions &rarr;</button>
         </div>
       </div>
+
+      <!-- Step 2: Cooking Conditions -->
+      <div id="analyze-step-2" class="wizard-panel">
+        <div class="card">
+          <div class="section-title"><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"> <span data-i18n="cooking.sectionTitle">조리 조건</span></div>
+          <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px" data-i18n="cooking.methodLabel">조리 방법</p>
+          <div class="method-grid" id="methodGrid"></div>
+
+          <div class="slider-row">
+            <label><img src="https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🌡️</span>'"> <span data-i18n="cooking.tempLabel">온도</span></label>
+            <span id="tempVal" style="font-size:16px;font-weight:700">180°C</span>
+          </div>
+          <input type="range" id="tempSlider" min="0" max="300" value="180" oninput="updateTemp()">
+          <div class="range-labels">
+            <span data-i18n="cooking.tempMin">0°C</span>
+            <span data-i18n="cooking.tempMaillard">140°C 마이야르</span>
+            <span data-i18n="cooking.tempHigh">200°C+ 주의</span>
+            <span data-i18n="cooking.tempMax">300°C</span>
+          </div>
+
+          <div class="slider-row">
+            <label><img src="https://images.pexels.com/photos/2784135/pexels-photo-2784135.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>⏱️</span>'"> <span data-i18n="cooking.timeLabel">조리 시간</span></label>
+            <span id="timeVal" style="font-size:16px;font-weight:700">15분</span>
+          </div>
+          <input type="range" id="timeSlider" min="1" max="120" value="15" oninput="updateTime()">
+          <div class="range-labels">
+            <span data-i18n="cooking.timeMin">1분</span>
+            <span data-i18n="cooking.time30">30분</span>
+            <span data-i18n="cooking.time60">60분</span>
+            <span data-i18n="cooking.timeMax">120분</span>
+          </div>
+        </div>
+
+        <!-- Wizard Nav -->
+        <div class="wizard-nav">
+          <button class="wizard-back-btn" onclick="switchAnalyzeStep(1)" data-i18n="wizard.backIngredients">&larr; Back: Ingredients</button>
+          <button class="wizard-next-btn" onclick="switchAnalyzeStep(3)" data-i18n="wizard.nextProfile">Next: Health Profile &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Health Profile -->
+      <div id="analyze-step-3" class="wizard-panel">
+        <div class="card" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="section-title" style="margin-bottom:0"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"> <span data-i18n="profile.sectionTitle">개인 건강 프로필</span></div>
+            <button class="toggle-btn" id="profileToggle" onclick="toggleProfile()" data-i18n="profile.toggleShow">프로필 입력 ▼</button>
+          </div>
+
+          <!-- 멤버 탭 -->
+          <div id="memberTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
+
+          <div id="profileSummary" class="profile-summary" style="display:none"></div>
+
+          <div id="profilePanel" style="display:none">
+            <!-- Progressive Disclosure Step Tabs -->
+            <div class="profile-steps" id="profileSteps">
+              <button class="profile-step active" data-step="basic" onclick="switchProfileStep('basic')">
+                <span class="step-num">1</span>
+                <span data-i18n="profile.basicStep">기본 정보</span>
+              </button>
+              <div class="step-connector"></div>
+              <button class="profile-step" data-step="health" onclick="switchProfileStep('health')">
+                <span class="step-num">2</span>
+                <span data-i18n="profile.healthStep">건강 상태</span>
+              </button>
+              <div class="step-connector"></div>
+              <button class="profile-step" data-step="advanced" onclick="switchProfileStep('advanced')">
+                <span class="step-num">3</span>
+                <span data-i18n="profile.advancedStep">상세 설정</span>
+              </button>
+            </div>
+
+            <!-- Step 1: 기본 정보 -->
+            <div id="profileStep-basic" class="profile-step-panel">
+              <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="profile.basicInfo">기본 정보</span></p>
+              <div class="profile-grid">
+                <div class="profile-field"><label data-i18n="profile.nameLabel">이름</label><input type="text" id="pName" value="" data-i18n-placeholder="profile.namePlaceholder" placeholder="이름" onchange="updateProfile()"></div>
+                <div class="profile-field"><label data-i18n="profile.ageLabel">나이</label><input type="number" id="pAge" min="1" max="120" value="" data-i18n-placeholder="profile.agePlaceholder" placeholder="만 나이" onchange="updateProfile()"></div>
+                <div class="profile-field"><label data-i18n="profile.genderLabel">성별</label><select id="pGender" onchange="updateProfile()"><option value="" data-i18n="profile.selectDefault">선택</option><option value="male" data-i18n="profile.male">남성</option><option value="female" data-i18n="profile.female">여성</option></select></div>
+                <div class="profile-field"><label data-i18n="profile.heightLabel">키 (cm)</label><input type="number" id="pHeight" min="100" max="250" value="" data-i18n-placeholder="profile.heightPlaceholder" placeholder="cm" onchange="updateProfile()"></div>
+                <div class="profile-field"><label data-i18n="profile.weightLabel">체중 (kg)</label><input type="number" id="pWeight" min="20" max="300" value="" data-i18n-placeholder="profile.weightPlaceholder" placeholder="kg" onchange="updateProfile()"></div>
+                <div class="profile-field"><label data-i18n="profile.activityLabel">활동 수준</label><select id="pActivity" onchange="updateProfile()">
+                  <option value="" data-i18n="profile.selectDefault">선택</option>
+                  <option value="sedentary" data-i18n="profile.activitySedentary">비활동적 (사무직)</option>
+                  <option value="light" data-i18n="profile.activityLight">가벼운 활동</option>
+                  <option value="moderate" data-i18n="profile.activityModerate">중간 활동</option>
+                  <option value="active" data-i18n="profile.activityActive">활발한 활동</option>
+                  <option value="very_active" data-i18n="profile.activityVeryActive">매우 활발 (운동선수)</option>
+                </select></div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;margin-top:12px">
+                <button class="step-next-btn" onclick="switchProfileStep('health')" data-i18n="profile.stepNextHealth">건강 상태 입력 →</button>
+              </div>
+            </div>
+
+            <!-- Step 2: 건강 상태 -->
+            <div id="profileStep-health" class="profile-step-panel" style="display:none">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:12px">
+                <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧬'"> <span data-i18n="profile.traitsTitle">체질 및 식이 특이사항</span></p>
+                <button class="add-health-btn" onclick="openAddHealthModal('trait')" data-i18n="profile.traitsAddBtn">+ 직접 추가</button>
+              </div>
+              <div class="family-grid" id="traitGrid"></div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
+                <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> <span data-i18n="profile.conditionsTitle">질환 · 가족력</span></p>
+                <button class="add-health-btn" onclick="openAddHealthModal(_condTab==='me'?'condition':'family')" data-i18n="profile.conditionsAddBtn">+ 직접 추가</button>
+              </div>
+              <div class="condition-grid" id="condGrid"></div>
+
+              <div style="display:flex;justify-content:space-between;margin-top:12px">
+                <button class="step-back-btn" onclick="switchProfileStep('basic')" data-i18n="profile.stepBackBasic">← 기본 정보</button>
+                <button class="step-next-btn" onclick="switchProfileStep('advanced')" data-i18n="profile.stepNextAdvanced">상세 설정 →</button>
+              </div>
+            </div>
+
+            <!-- Step 3: 상세 설정 -->
+            <div id="profileStep-advanced" class="profile-step-panel" style="display:none">
+              <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🌍'"> 인종 · 국적</p>
+              <div class="profile-grid">
+                <div class="profile-field"><label data-i18n="profile.ethnicityLabel">인종/민족</label><select id="pEthnicity" onchange="updateProfile()">
+                  <option value="" data-i18n="profile.selectDefault">선택</option>
+                  <option value="east_asian" data-i18n="profile.ethnicityEastAsian">동아시아인</option>
+                  <option value="southeast_asian" data-i18n="profile.ethnicitySEAsian">동남아시아인</option>
+                  <option value="south_asian" data-i18n="profile.ethnicitySAsian">남아시아인</option>
+                  <option value="caucasian" data-i18n="profile.ethnicityCaucasian">유럽계</option>
+                  <option value="african" data-i18n="profile.ethnicityAfrican">아프리카계</option>
+                  <option value="hispanic" data-i18n="profile.ethnicityHispanic">히스패닉</option>
+                  <option value="middle_eastern" data-i18n="profile.ethnicityMiddleEastern">중동계</option>
+                </select></div>
+                <div class="profile-field"><label data-i18n="profile.countryLabel">국적</label><select id="pCountry" onchange="updateProfile()">
+                  <option value="">선택</option>
+                  <option value="kr">🇰🇷 한국</option><option value="jp">🇯🇵 일본</option><option value="cn">🇨🇳 중국</option>
+                  <option value="us">🇺🇸 미국</option><option value="gb">🇬🇧 영국</option><option value="fr">🇫🇷 프랑스</option>
+                  <option value="de">🇩🇪 독일</option><option value="it">🇮🇹 이탈리아</option><option value="es">🇪🇸 스페인</option>
+                  <option value="th">🇹🇭 태국</option><option value="vn">🇻🇳 베트남</option><option value="in">🇮🇳 인도</option>
+                  <option value="id">🇮🇩 인도네시아</option><option value="ph">🇵🇭 필리핀</option><option value="mx">🇲🇽 멕시코</option>
+                  <option value="br">🇧🇷 브라질</option><option value="tr">🇹🇷 터키</option><option value="sa">🇸🇦 사우디아라비아</option>
+                  <option value="eg">🇪🇬 이집트</option><option value="ng">🇳🇬 나이지리아</option><option value="other">기타</option>
+                </select></div>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:16px">
+                <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💊</span>'"> <span data-i18n="profile.substancesTitle">약물 · 영양제 · 생활습관</span></p>
+                <button class="add-health-btn" onclick="openAddHealthModal('substance')" data-i18n="profile.substancesAddBtn">+ 직접 추가</button>
+              </div>
+              <p style="font-size:11px;color:var(--text-muted, #737373);margin-bottom:8px" data-i18n="profile.substancesDesc">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
+              <div class="family-grid" id="substanceGrid"></div>
+
+              <div style="display:flex;justify-content:flex-start;margin-top:12px">
+                <button class="step-back-btn" onclick="switchProfileStep('health')" data-i18n="profile.stepBackHealth">← 건강 상태</button>
+              </div>
+            </div>
+          </div>
+          <p id="condNote" style="font-size:11px;color:var(--text-muted, #737373);margin-top:8px;display:none" data-i18n="profile.condNote"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
+        </div>
+
+        <!-- Analyze Button -->
+        <div style="display:flex;gap:8px">
+          <button class="analyze-btn analyze-btn--main" id="analyzeBtn" disabled onclick="runAnalysis()" style="flex:1">
+            <img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> <span data-i18n="cooking.analyzeBtn">Analyze Chemical Reactions &rarr;</span>
+          </button>
+          <button class="analyze-btn" onclick="typeof sendToAppliance==='function'&&sendToAppliance(document.getElementById('tempSlider')?.value,document.getElementById('timeSlider')?.value,method)" style="padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);cursor:pointer;font-size:16px" title="Send to smart appliance" data-i18n-title="smartIntegrations.sendToDevice"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏠'"></button>
+        </div>
+
+        <!-- Wizard Nav -->
+        <div class="wizard-nav">
+          <button class="wizard-back-btn" onclick="switchAnalyzeStep(2)" data-i18n="wizard.backCooking">&larr; Back: Cooking</button>
+          <button class="wizard-next-btn" onclick="runAnalysis()" data-i18n="wizard.runAnalysis">Run Analysis &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Results -->
+      <div id="analyze-step-4" class="wizard-panel">
+        <div id="results" style="display:none"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <div class="big-icon"><img src="https://images.pexels.com/photos/887827/pexels-photo-887827.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop" style="width:64px;height:64px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>👨‍🍳</span>'"></div>
+          <h3 style="color:var(--text-muted, #737373);font-weight:500;font-size:18px;margin-bottom:8px" data-i18n="emptyState.title">재료를 선택하고 조리 조건을 설정해보세요</h3>
+          <p style="color:var(--text-muted, #737373);font-size:14px" data-i18n="emptyState.desc">화학 반응 · 영양소 변화 · 맛 프로파일을 과학적으로 분석합니다</p>
+        </div>
+
+        <!-- Analysis History Panel -->
+        <div id="historyPanel" style="display:none">
+          <div class="card" style="margin-top:16px">
+            <div class="section-title"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="history.sectionTitle">분석 기록</span> <span id="historyCount" style="font-size:12px;color:var(--text-muted, #737373);font-weight:400"></span></div>
+            <div id="historyList" style="max-height:400px;overflow-y:auto"></div>
+            <div id="historyEmpty" style="text-align:center;padding:24px;color:var(--text-muted, #737373);font-size:13px;display:none" data-i18n="history.empty">
+              분석 기록이 없습니다. 분석을 실행하면 자동으로 저장됩니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Nav -->
+        <div class="wizard-nav">
+          <button class="wizard-back-btn" onclick="switchAnalyzeStep(3)" data-i18n="wizard.backProfile">&larr; Back: Profile</button>
+          <button class="wizard-next-btn" onclick="switchAnalyzeStep(1)" data-i18n="wizard.newAnalysis">New Analysis &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton -->
+      <div id="appSkeleton" class="skeleton-container" style="display:none">
+        <div class="skeleton" style="height:40px;width:60%;margin-bottom:16px"></div>
+        <div class="skeleton" style="height:200px;margin-bottom:16px"></div>
+        <div class="skeleton" style="height:300px"></div>
+      </div>
+
     </div>
+  </section>
 
-    <!-- Cooking Conditions -->
-    <div class="card">
-      <div class="section-title"><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"> <span data-i18n="cooking.sectionTitle">조리 조건</span></div>
-      <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px" data-i18n="cooking.methodLabel">조리 방법</p>
-      <div class="method-grid" id="methodGrid"></div>
-
-      <div class="slider-row">
-        <label><img src="https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🌡️</span>'"> <span data-i18n="cooking.tempLabel">온도</span></label>
-        <span id="tempVal" style="font-size:16px;font-weight:700">180°C</span>
-      </div>
-      <input type="range" id="tempSlider" min="0" max="300" value="180" oninput="updateTemp()">
-      <div class="range-labels">
-        <span data-i18n="cooking.tempMin">0°C</span>
-        <span data-i18n="cooking.tempMaillard">140°C 마이야르</span>
-        <span data-i18n="cooking.tempHigh">200°C+ 주의</span>
-        <span data-i18n="cooking.tempMax">300°C</span>
-      </div>
-
-      <div class="slider-row">
-        <label><img src="https://images.pexels.com/photos/2784135/pexels-photo-2784135.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>⏱️</span>'"> <span data-i18n="cooking.timeLabel">조리 시간</span></label>
-        <span id="timeVal" style="font-size:16px;font-weight:700">15분</span>
-      </div>
-      <input type="range" id="timeSlider" min="1" max="120" value="15" oninput="updateTime()">
-      <div class="range-labels">
-        <span data-i18n="cooking.timeMin">1분</span>
-        <span data-i18n="cooking.time30">30분</span>
-        <span data-i18n="cooking.time60">60분</span>
-        <span data-i18n="cooking.timeMax">120분</span>
-      </div>
+  <!-- ══ TAB: PLAN ══ -->
+  <section id="tab-plan" class="tab-section">
+    <div class="container">
+      <div id="planContent"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- Personal Profile + Health Conditions -->
-  <div class="card" style="margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div class="section-title" style="margin-bottom:0"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=20&h=20&fit=crop" style="width:20px;height:20px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"> <span data-i18n="profile.sectionTitle">개인 건강 프로필</span></div>
-      <button class="toggle-btn" id="profileToggle" onclick="toggleProfile()" data-i18n="profile.toggleShow">프로필 입력 ▼</button>
+  <!-- ══ TAB: RECIPES ══ -->
+  <section id="tab-recipes" class="tab-section">
+    <div class="container">
+      <!-- Sub-tabs: My Recipes / Community -->
+      <div class="sub-tabs">
+        <button class="sub-tab active" data-sub="mine" onclick="switchRecipeSub('mine')" data-i18n="recipes.myRecipes">My Recipes</button>
+        <button class="sub-tab" data-sub="community" onclick="switchRecipeSub('community')" data-i18n="recipes.community">Community</button>
+      </div>
+      <div id="recipesMyContent"></div>
+      <div id="recipesCommunityContent" style="display:none"></div>
     </div>
+  </section>
 
-    <!-- 멤버 탭 -->
-    <div id="memberTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
-
-    <div id="profileSummary" class="profile-summary" style="display:none"></div>
-
-    <div id="profilePanel" style="display:none">
-      <!-- ── Progressive Disclosure Step Tabs ── -->
-      <div class="profile-steps" id="profileSteps">
-        <button class="profile-step active" data-step="basic" onclick="switchProfileStep('basic')">
-          <span class="step-num">1</span>
-          <span data-i18n="profile.basicStep">기본 정보</span>
-        </button>
-        <div class="step-connector"></div>
-        <button class="profile-step" data-step="health" onclick="switchProfileStep('health')">
-          <span class="step-num">2</span>
-          <span data-i18n="profile.healthStep">건강 상태</span>
-        </button>
-        <div class="step-connector"></div>
-        <button class="profile-step" data-step="advanced" onclick="switchProfileStep('advanced')">
-          <span class="step-num">3</span>
-          <span data-i18n="profile.advancedStep">상세 설정</span>
-        </button>
-      </div>
-
-      <!-- Step 1: 기본 정보 -->
-      <div id="profileStep-basic" class="profile-step-panel">
-        <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="profile.basicInfo">기본 정보</span></p>
-        <div class="profile-grid">
-          <div class="profile-field"><label data-i18n="profile.nameLabel">이름</label><input type="text" id="pName" value="" data-i18n-placeholder="profile.namePlaceholder" placeholder="이름" onchange="updateProfile()"></div>
-          <div class="profile-field"><label data-i18n="profile.ageLabel">나이</label><input type="number" id="pAge" min="1" max="120" value="" data-i18n-placeholder="profile.agePlaceholder" placeholder="만 나이" onchange="updateProfile()"></div>
-          <div class="profile-field"><label data-i18n="profile.genderLabel">성별</label><select id="pGender" onchange="updateProfile()"><option value="" data-i18n="profile.selectDefault">선택</option><option value="male" data-i18n="profile.male">남성</option><option value="female" data-i18n="profile.female">여성</option></select></div>
-          <div class="profile-field"><label data-i18n="profile.heightLabel">키 (cm)</label><input type="number" id="pHeight" min="100" max="250" value="" data-i18n-placeholder="profile.heightPlaceholder" placeholder="cm" onchange="updateProfile()"></div>
-          <div class="profile-field"><label data-i18n="profile.weightLabel">체중 (kg)</label><input type="number" id="pWeight" min="20" max="300" value="" data-i18n-placeholder="profile.weightPlaceholder" placeholder="kg" onchange="updateProfile()"></div>
-          <div class="profile-field"><label data-i18n="profile.activityLabel">활동 수준</label><select id="pActivity" onchange="updateProfile()">
-            <option value="" data-i18n="profile.selectDefault">선택</option>
-            <option value="sedentary" data-i18n="profile.activitySedentary">비활동적 (사무직)</option>
-            <option value="light" data-i18n="profile.activityLight">가벼운 활동</option>
-            <option value="moderate" data-i18n="profile.activityModerate">중간 활동</option>
-            <option value="active" data-i18n="profile.activityActive">활발한 활동</option>
-            <option value="very_active" data-i18n="profile.activityVeryActive">매우 활발 (운동선수)</option>
-          </select></div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;margin-top:12px">
-          <button class="step-next-btn" onclick="switchProfileStep('health')" data-i18n="profile.stepNextHealth">건강 상태 입력 →</button>
-        </div>
-      </div>
-
-      <!-- Step 2: 건강 상태 -->
-      <div id="profileStep-health" class="profile-step-panel" style="display:none">
-        <!-- 체질/특이사항 -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:12px">
-          <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧬'"> <span data-i18n="profile.traitsTitle">체질 및 식이 특이사항</span></p>
-          <button class="add-health-btn" onclick="openAddHealthModal('trait')" data-i18n="profile.traitsAddBtn">+ 직접 추가</button>
-        </div>
-        <div class="family-grid" id="traitGrid"></div>
-
-        <!-- 질환 + 가족력 통합 탭 -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:16px">
-          <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏥'"> <span data-i18n="profile.conditionsTitle">질환 · 가족력</span></p>
-          <button class="add-health-btn" onclick="openAddHealthModal(_condTab==='me'?'condition':'family')" data-i18n="profile.conditionsAddBtn">+ 직접 추가</button>
-        </div>
-        <div class="condition-grid" id="condGrid"></div>
-
-        <div style="display:flex;justify-content:space-between;margin-top:12px">
-          <button class="step-back-btn" onclick="switchProfileStep('basic')" data-i18n="profile.stepBackBasic">← 기본 정보</button>
-          <button class="step-next-btn" onclick="switchProfileStep('advanced')" data-i18n="profile.stepNextAdvanced">상세 설정 →</button>
-        </div>
-      </div>
-
-      <!-- Step 3: 상세 설정 -->
-      <div id="profileStep-advanced" class="profile-step-panel" style="display:none">
-        <!-- 인종/국적 -->
-        <p style="font-size:12px;color:var(--text-muted, #737373);margin-bottom:8px;margin-top:12px"><img src="https://images.pexels.com/photos/87651/pexels-photo-87651.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🌍'"> 인종 · 국적</p>
-        <div class="profile-grid">
-          <div class="profile-field"><label data-i18n="profile.ethnicityLabel">인종/민족</label><select id="pEthnicity" onchange="updateProfile()">
-            <option value="" data-i18n="profile.selectDefault">선택</option>
-            <option value="east_asian" data-i18n="profile.ethnicityEastAsian">동아시아인</option>
-            <option value="southeast_asian" data-i18n="profile.ethnicitySEAsian">동남아시아인</option>
-            <option value="south_asian" data-i18n="profile.ethnicitySAsian">남아시아인</option>
-            <option value="caucasian" data-i18n="profile.ethnicityCaucasian">유럽계</option>
-            <option value="african" data-i18n="profile.ethnicityAfrican">아프리카계</option>
-            <option value="hispanic" data-i18n="profile.ethnicityHispanic">히스패닉</option>
-            <option value="middle_eastern" data-i18n="profile.ethnicityMiddleEastern">중동계</option>
-          </select></div>
-          <div class="profile-field"><label data-i18n="profile.countryLabel">국적</label><select id="pCountry" onchange="updateProfile()">
-            <option value="">선택</option>
-            <option value="kr">🇰🇷 한국</option><option value="jp">🇯🇵 일본</option><option value="cn">🇨🇳 중국</option>
-            <option value="us">🇺🇸 미국</option><option value="gb">🇬🇧 영국</option><option value="fr">🇫🇷 프랑스</option>
-            <option value="de">🇩🇪 독일</option><option value="it">🇮🇹 이탈리아</option><option value="es">🇪🇸 스페인</option>
-            <option value="th">🇹🇭 태국</option><option value="vn">🇻🇳 베트남</option><option value="in">🇮🇳 인도</option>
-            <option value="id">🇮🇩 인도네시아</option><option value="ph">🇵🇭 필리핀</option><option value="mx">🇲🇽 멕시코</option>
-            <option value="br">🇧🇷 브라질</option><option value="tr">🇹🇷 터키</option><option value="sa">🇸🇦 사우디아라비아</option>
-            <option value="eg">🇪🇬 이집트</option><option value="ng">🇳🇬 나이지리아</option><option value="other">기타</option>
-          </select></div>
-        </div>
-
-        <!-- 약물/생활습관 -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:16px">
-          <p style="font-size:12px;color:var(--text-muted, #737373);margin:0"><img src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💊</span>'"> <span data-i18n="profile.substancesTitle">약물 · 영양제 · 생활습관</span></p>
-          <button class="add-health-btn" onclick="openAddHealthModal('substance')" data-i18n="profile.substancesAddBtn">+ 직접 추가</button>
-        </div>
-        <p style="font-size:11px;color:var(--text-muted, #737373);margin-bottom:8px" data-i18n="profile.substancesDesc">음주/흡연 상태 및 복용 중인 약물·영양제를 선택하세요</p>
-        <div class="family-grid" id="substanceGrid"></div>
-
-        <div style="display:flex;justify-content:flex-start;margin-top:12px">
-          <button class="step-back-btn" onclick="switchProfileStep('health')" data-i18n="profile.stepBackHealth">← 건강 상태</button>
-        </div>
-      </div>
+  <!-- ══ TAB: PROFILE ══ -->
+  <section id="tab-profile" class="tab-section">
+    <div class="container">
+      <div id="profileHubContent"></div>
     </div>
-    <p id="condNote" style="font-size:11px;color:var(--text-muted, #737373);margin-top:8px;display:none" data-i18n="profile.condNote"><img src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='⚠️'"> 이 분석은 참고용이며, 실제 식이 관리는 반드시 의료 전문가와 상담하세요.</p>
-  </div>
+  </section>
 
-  <!-- ── Analyze Button (below all inputs) ── -->
-  <div style="display:flex;gap:8px">
-    <button class="analyze-btn analyze-btn--main" id="analyzeBtn" disabled onclick="runAnalysis()" style="flex:1">
-      <img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🧪'"> <span data-i18n="cooking.analyzeBtn">Analyze Chemical Reactions →</span>
-    </button>
-    <button class="analyze-btn" onclick="typeof sendToAppliance==='function'&&sendToAppliance(document.getElementById('tempSlider')?.value,document.getElementById('timeSlider')?.value,method)" style="padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);cursor:pointer;font-size:16px" title="Send to smart appliance" data-i18n-title="smartIntegrations.sendToDevice"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🏠'"></button>
-  </div>
+</div>
 
-  <!-- Results -->
-  <div id="results" style="display:none"></div>
-
-  <!-- Empty State -->
-  <div id="emptyState" class="empty-state">
-    <div class="big-icon"><img src="https://images.pexels.com/photos/887827/pexels-photo-887827.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop" style="width:64px;height:64px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>👨‍🍳</span>'"></div>
-    <h3 style="color:var(--text-muted, #737373);font-weight:500;font-size:18px;margin-bottom:8px" data-i18n="emptyState.title">재료를 선택하고 조리 조건을 설정해보세요</h3>
-    <p style="color:var(--text-muted, #737373);font-size:14px" data-i18n="emptyState.desc">화학 반응 · 영양소 변화 · 맛 프로파일을 과학적으로 분석합니다</p>
-  </div>
-
-  <!-- Analysis History Panel -->
-  <div id="historyPanel" style="display:none">
-    <div class="card" style="margin-top:16px">
-      <div class="section-title"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📋'"> <span data-i18n="history.sectionTitle">분석 기록</span> <span id="historyCount" style="font-size:12px;color:var(--text-muted, #737373);font-weight:400"></span></div>
-      <div id="historyList" style="max-height:400px;overflow-y:auto"></div>
-      <div id="historyEmpty" style="text-align:center;padding:24px;color:var(--text-muted, #737373);font-size:13px;display:none" data-i18n="history.empty">
-        분석 기록이 없습니다. 분석을 실행하면 자동으로 저장됩니다.
-      </div>
-    </div>
-  </div>
-
-  <!-- Feedback Modal -->
-  <div id="feedbackModal" class="modal glass-overlay" style="display:none">
-    <div class="modal-content" style="max-width:400px;padding:24px;border-radius:16px">
-      <h3 style="margin-bottom:12px;font-size:17px" data-i18n="feedback.title"><img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💬</span>'"> Send Feedback</h3>
-      <select id="feedbackType" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;margin-bottom:10px;font-size:14px;background:transparent;color:inherit">
-        <option value="general" data-i18n="feedback.general">General feedback</option>
-        <option value="bug" data-i18n="feedback.bug">Bug report</option>
-        <option value="feature" data-i18n="feedback.feature">Feature request</option>
-        <option value="data_correction" data-i18n="feedback.dataFix">Data correction</option>
-      </select>
-      <textarea id="feedbackMsg" data-i18n-placeholder="feedback.placeholder" placeholder="Share your feedback..." style="width:100%;height:120px;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;resize:vertical;font-size:14px;font-family:inherit;background:transparent;color:inherit"></textarea>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button onclick="closeFeedbackModal()" style="flex:1;padding:10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;background:rgba(255,255,255,0.05);cursor:pointer;font-size:14px;color:inherit" data-i18n="modal.cancel">Cancel</button>
-        <button onclick="submitFeedback()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;cursor:pointer;font-size:14px;font-weight:600" data-i18n="feedback.send">Send</button>
-      </div>
+<!-- Feedback Modal -->
+<div id="feedbackModal" class="modal glass-overlay" style="display:none">
+  <div class="modal-content" style="max-width:400px;padding:24px;border-radius:16px">
+    <h3 style="margin-bottom:12px;font-size:17px" data-i18n="feedback.title"><img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💬</span>'"> Send Feedback</h3>
+    <select id="feedbackType" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;margin-bottom:10px;font-size:14px;background:transparent;color:inherit">
+      <option value="general" data-i18n="feedback.general">General feedback</option>
+      <option value="bug" data-i18n="feedback.bug">Bug report</option>
+      <option value="feature" data-i18n="feedback.feature">Feature request</option>
+      <option value="data_correction" data-i18n="feedback.dataFix">Data correction</option>
+    </select>
+    <textarea id="feedbackMsg" data-i18n-placeholder="feedback.placeholder" placeholder="Share your feedback..." style="width:100%;height:120px;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;resize:vertical;font-size:14px;font-family:inherit;background:transparent;color:inherit"></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button onclick="closeFeedbackModal()" style="flex:1;padding:10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;background:rgba(255,255,255,0.05);cursor:pointer;font-size:14px;color:inherit" data-i18n="modal.cancel">Cancel</button>
+      <button onclick="submitFeedback()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;cursor:pointer;font-size:14px;font-weight:600" data-i18n="feedback.send">Send</button>
     </div>
   </div>
 </div>
@@ -479,79 +579,41 @@
 <script src="calorie-tracker.js"></script>
 <script src="health-dashboard.js"></script>
 <script src="smart-integrations.js"></script>
+
 <!-- Trust Footer -->
 <footer class="trust-footer">
   <div style="margin-bottom:8px"><strong>Mealcule</strong> v2.0 · <span data-i18n="app.tagline">Molecular Cooking Science Platform</span></div>
   <span data-i18n="app.footerData">Data as of March 2026 · USDA FoodData Central · WHO/FDA · EFSA</span><br>
-  <a href="#" onclick="toggleMethodology();window.scrollTo(0,0);return false" data-i18n="footer.methodology">Scientific Methodology</a> ·
-  <a href="#" onclick="openPricingModal();return false" data-i18n="footer.pricing">Pricing</a> ·
-  <a href="#" onclick="toggleHistory();return false" data-i18n="footer.history">History</a> ·
-  <a href="#" onclick="openMealPlanner();return false" data-i18n="nav.planner">Planner</a> ·
-  <a href="#" onclick="toggleRecipeBox();return false" data-i18n="nav.recipeBox">Recipes</a> ·
-  <a href="#" onclick="typeof openCommunityFeed==='function'&&openCommunityFeed();return false" data-i18n="community.title">Community</a> ·
-  <a href="#" onclick="typeof openHealthDashboard==='function'&&openHealthDashboard();return false" data-i18n="healthDashboard.title">Health Dashboard</a> ·
-  <a href="#" onclick="openFeedbackModal();return false" data-i18n="footer.feedback">Feedback</a> ·
-  <a href="mailto:contact@mealcule.com" data-i18n="app.contact">Contact</a> ·
   <a href="#" data-i18n="app.terms">Terms of Service</a> ·
-  <a href="#" data-i18n="app.privacy">Privacy Policy</a><br>
+  <a href="#" data-i18n="app.privacy">Privacy Policy</a> ·
+  <a href="mailto:contact@mealcule.com" data-i18n="app.contact">Contact</a> ·
+  <a href="#" onclick="openFeedbackModal();return false" data-i18n="footer.feedback">Feedback</a><br>
   <span style="color:var(--text-muted, #a3a3a3)" data-i18n="app.copyright">&copy; 2026 Mealcule. All rights reserved.</span>
 </footer>
 
-<!-- ══ MOBILE BOTTOM NAV ══ -->
+<!-- ══ MOBILE BOTTOM NAV (5-Tab) ══ -->
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-  <button class="mobile-nav-btn active" id="mnav-ingredients" onclick="mobileNavTo('ingredients')" data-i18n-aria="nav.ingredients">
-    <span class="mnav-icon"><img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🥬</span>'"></span>
-    <span class="mnav-label" data-i18n="nav.ingredients">Ingredients</span>
+  <button class="mobile-nav-btn active" data-tab="home" onclick="switchTab('home')">
+    <span class="mnav-icon"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🏠</span>'"></span>
+    <span class="mnav-label" data-i18n="nav.home">Home</span>
   </button>
-  <button class="mobile-nav-btn" id="mnav-cooking" onclick="mobileNavTo('cooking')" data-i18n-aria="nav.cooking">
-    <span class="mnav-icon"><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"></span>
-    <span class="mnav-label" data-i18n="nav.cooking">Cooking</span>
+  <button class="mobile-nav-btn" data-tab="analyze" onclick="switchTab('analyze')">
+    <span class="mnav-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🧪</span>'"></span>
+    <span class="mnav-label" data-i18n="nav.analyze">Analyze</span>
   </button>
-  <button class="mobile-nav-btn" id="mnav-results" onclick="mobileNavTo('results')" data-i18n-aria="nav.results">
-    <span class="mnav-icon"><img src="https://images.pexels.com/photos/3026808/pexels-photo-3026808.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🔬</span>'"></span>
-    <span class="mnav-label" data-i18n="nav.results">Results</span>
+  <button class="mobile-nav-btn" data-tab="plan" onclick="switchTab('plan')">
+    <span class="mnav-icon"><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📅</span>'"></span>
+    <span class="mnav-label" data-i18n="nav.plan">Plan</span>
   </button>
-  <button class="mobile-nav-btn" id="mnav-calories" onclick="openCalorieTracker()" data-i18n-aria="nav.calories">
-    <span class="mnav-icon"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📊</span>'"></span>
-    <span class="mnav-label">Calories</span>
+  <button class="mobile-nav-btn" data-tab="recipes" onclick="switchTab('recipes')">
+    <span class="mnav-icon"><img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📖</span>'"></span>
+    <span class="mnav-label" data-i18n="nav.recipes">Recipes</span>
   </button>
-  <button class="mobile-nav-btn" id="mnav-more" onclick="toggleMoreMenu()" data-i18n-aria="nav.more">
-    <span class="mnav-icon">⋯</span>
-    <span class="mnav-label">More</span>
+  <button class="mobile-nav-btn" data-tab="profile" onclick="switchTab('profile')">
+    <span class="mnav-icon"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>👤</span>'"></span>
+    <span class="mnav-label" data-i18n="nav.profile">Profile</span>
   </button>
 </nav>
-
-<!-- ══ MORE MENU OVERLAY ══ -->
-<div class="more-menu-overlay glass-overlay" id="moreMenuOverlay" style="display:none" onclick="if(event.target===this)closeMoreMenu()">
-  <div class="more-menu" id="moreMenu">
-    <button onclick="mobileNavTo('profile');closeMoreMenu()"><span><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='👤'"></span> Profile</button>
-    <button onclick="openCalorieTracker();closeMoreMenu()"><span><img src="https://images.pexels.com/photos/266526/pexels-photo-266526.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='🔥'"></span> Calorie Tracker</button>
-    <button onclick="openMealPlanner();closeMoreMenu()"><span><img src="https://images.pexels.com/photos/273153/pexels-photo-273153.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📅'"></span> Meal Planner</button>
-    <button onclick="toggleRecipeBox();closeMoreMenu()"><span><img src="https://images.pexels.com/photos/4498362/pexels-photo-4498362.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📦'"></span> Recipe Box</button>
-    <button onclick="typeof openCommunityFeed==='function'&&openCommunityFeed();closeMoreMenu()"><span><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>👥</span>'"></span> Community</button>
-    <button onclick="typeof openHealthDashboard==='function'&&openHealthDashboard();closeMoreMenu()"><span><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📊</span>'"></span> Health Dashboard</button>
-  </div>
-</div>
-
-<!-- ══ DEV NAVIGATION ══ -->
-<div id="devNav">
-  <span class="dev-label">DEV</span>
-  <button onclick="devGoMain()"><img src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🏠</span>'"> 메인</button>
-  <button onclick="devRunSample()"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🧪</span>'"> 샘플분석</button>
-  <div class="dev-sep"></div>
-  <button onclick="devTab('reactions')"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>⚗️</span>'"> 반응</button>
-  <button onclick="devTab('nutrition')"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📊</span>'"> 영양</button>
-  <button onclick="devTab('flavor')"><img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🍽️</span>'"> 맛</button>
-  <button onclick="devTab('health')"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🏥</span>'"> 건강</button>
-  <div class="dev-sep"></div>
-  <button onclick="devGoProfile()"><img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>👤</span>'"> 프로필</button>
-  <button onclick="devGoHistory()"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>📋</span>'"> 기록</button>
-  <button onclick="openPricingModal()"><img src="https://images.pexels.com/photos/3826678/pexels-photo-3826678.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💎</span>'"> 요금제</button>
-  <button onclick="openFeedbackModal()"><img src="https://images.pexels.com/photos/3483098/pexels-photo-3483098.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>💬</span>'"> 피드백</button>
-  <button onclick="showLoginPage()"><img src="https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=18&h=18&fit=crop" style="width:18px;height:18px;border-radius:4px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='<span>🔑</span>'"> 로그인</button>
-  <button class="dev-close" onclick="document.getElementById('devNav').style.display='none'" title="닫기">✕</button>
-</div>
-
 
 <!-- 조리 방법 추가 모달 -->
 <div class="method-modal-overlay glass-overlay" id="methodModalOverlay" onclick="if(event.target===this)closeMethodModal()">
@@ -601,18 +663,9 @@
 </div>
 
 <script>
-/* ── More Menu ── */
-function toggleMoreMenu() {
-  const overlay = document.getElementById('moreMenuOverlay');
-  overlay.style.display = overlay.style.display === 'none' ? 'flex' : 'none';
-}
-function closeMoreMenu() {
-  document.getElementById('moreMenuOverlay').style.display = 'none';
-}
-
 /* ── Confirm Action Utility ── */
 function confirmAction(message, onConfirm) {
-  const overlay = document.createElement('div');
+  var overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
   overlay.innerHTML = '<div style="background:rgba(30,32,36,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center">' +
     '<p style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.9);margin:0 0 16px">' + message + '</p>' +
@@ -621,9 +674,9 @@ function confirmAction(message, onConfirm) {
     '<button id="_cfmOk" style="flex:1;padding:10px;border-radius:10px;border:none;background:#ef4444;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Delete</button>' +
     '</div></div>';
   document.body.appendChild(overlay);
-  overlay.querySelector('#_cfmCancel').onclick = () => overlay.remove();
-  overlay.querySelector('#_cfmOk').onclick = () => { overlay.remove(); onConfirm(); };
-  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.querySelector('#_cfmCancel').onclick = function() { overlay.remove(); };
+  overlay.querySelector('#_cfmOk').onclick = function() { overlay.remove(); onConfirm(); };
+  overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
 }
 </script>
 </body>

@@ -219,13 +219,34 @@
     "close": "닫기"
   },
   "nav": {
+    "home": "홈",
+    "analyze": "분석",
+    "plan": "플랜",
+    "recipes": "레시피",
+    "profile": "프로필",
     "ingredients": "재료",
     "cooking": "조리",
-    "profile": "프로필",
     "results": "결과",
     "history": "기록",
     "planner": "플래너",
     "recipeBox": "레시피"
+  },
+  "wizard": {
+    "ingredients": "재료 선택",
+    "cooking": "조리 조건",
+    "profile": "건강 프로필",
+    "results": "분석 결과",
+    "nextCooking": "다음: 조리 조건 →",
+    "backIngredients": "← 이전: 재료 선택",
+    "nextProfile": "다음: 건강 프로필 →",
+    "backCooking": "← 이전: 조리 조건",
+    "runAnalysis": "분석 시작 →",
+    "backProfile": "← 이전: 건강 프로필",
+    "newAnalysis": "새 분석 →"
+  },
+  "recipes": {
+    "myRecipes": "내 레시피",
+    "community": "커뮤니티"
   },
   "dynamic": {
     "online": "온라인",

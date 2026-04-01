@@ -219,13 +219,34 @@
     "close": "Close"
   },
   "nav": {
+    "home": "Home",
+    "analyze": "Analyze",
+    "plan": "Plan",
+    "recipes": "Recipes",
+    "profile": "Profile",
     "ingredients": "Ingredients",
     "cooking": "Cooking",
-    "profile": "Profile",
     "results": "Results",
     "history": "History",
     "planner": "Planner",
     "recipeBox": "Recipes"
+  },
+  "wizard": {
+    "ingredients": "Ingredients",
+    "cooking": "Cooking",
+    "profile": "Health Profile",
+    "results": "Results",
+    "nextCooking": "Next: Cooking Conditions →",
+    "backIngredients": "← Back: Ingredients",
+    "nextProfile": "Next: Health Profile →",
+    "backCooking": "← Back: Cooking",
+    "runAnalysis": "Run Analysis →",
+    "backProfile": "← Back: Profile",
+    "newAnalysis": "New Analysis →"
+  },
+  "recipes": {
+    "myRecipes": "My Recipes",
+    "community": "Community"
   },
   "dynamic": {
     "online": "Online",

@@ -147,13 +147,24 @@ const CF_DEMO_RECIPES = [
 // ── 1. Open Community Feed ──────────────────────────────────────────────────
 
 function openCommunityFeed() {
-  if (_cfOpen) return;
-  _cfOpen = true;
   _cfTab = 'latest';
   _cfOffset = 0;
   _cfHasMore = true;
   _cfFeedCache = [];
   _cfSearchQuery = '';
+
+  // Inline rendering for Recipes > Community sub-tab
+  var inlineTarget = document.getElementById('recipesCommunityContent');
+  if (inlineTarget) {
+    _cfOpen = true;
+    _injectCommunityFeedStyles();
+    inlineTarget.innerHTML = '<div class="cf-feed-list" id="cf-feed-list"></div><div class="cf-load-more" id="cf-load-more" style="display:none;"><div class="cf-spinner"></div></div>';
+    _loadFeed();
+    return;
+  }
+
+  if (_cfOpen) return;
+  _cfOpen = true;
 
   _injectCommunityFeedStyles();
 

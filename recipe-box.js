@@ -752,6 +752,17 @@ async function updateRecipeRating(id, rating) {
 // ── 13. Toggle Recipe Box Panel ─────────────────────────────────────────────
 
 function toggleRecipeBox() {
+  // Inline rendering for Recipes tab
+  var inlineTarget = document.getElementById('recipesMyContent');
+  if (inlineTarget) {
+    if (!document.getElementById('recipeBoxContent')) {
+      inlineTarget.innerHTML = '<div id="recipeBoxContent" class="rb-panel-body"></div>';
+    }
+    _recipeBoxOpen = true;
+    renderRecipeBox();
+    return;
+  }
+  // Fallback: side panel
   _recipeBoxOpen = !_recipeBoxOpen;
   let panel = document.getElementById('recipeBoxPanel');
 

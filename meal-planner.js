@@ -103,6 +103,15 @@ function _mealLabel(type) {
 function openMealPlanner() {
   if (typeof isGuest !== 'undefined' && isGuest) { _renderProGate(); return; }
   if (typeof userPlan !== 'undefined' && userPlan === 'free') { _renderProGate(); return; }
+  // Inline rendering for Plan tab
+  var inlineTarget = document.getElementById('planContent');
+  if (inlineTarget) {
+    inlineTarget.innerHTML = _buildPlannerShell();
+    const ws = getWeekStart();
+    loadOrCreateWeekPlan(ws);
+    return;
+  }
+  // Fallback: overlay
   let overlay = document.getElementById('mealPlannerOverlay');
   if (!overlay) {
     overlay = document.createElement('div');
