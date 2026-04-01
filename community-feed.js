@@ -267,7 +267,7 @@ async function loadFeedRecipes(tab, offset) {
         page_limit: CF_PAGE_SIZE,
       }) || [];
     } else if (tab === 'following') {
-      if (isGuest || !currentUser) {
+      if (false && (isGuest || !currentUser)) { // [TEST MODE] disabled
         result = [];
       } else {
         result = await dbRPC('get_community_feed', {
@@ -638,10 +638,11 @@ function _closeCfDetail() {
 // ── 6. Share My Recipe ──────────────────────────────────────────────────────
 
 async function shareMyRecipe(savedRecipeId) {
-  if (isGuest || !currentUser) {
-    showToast(_t('로그인 후 레시피를 공유할 수 있습니다.', 'Please log in to share recipes.'));
-    return;
-  }
+  // [TEST MODE] login gate disabled
+  // if (isGuest || !currentUser) {
+  //   showToast(_t('로그인 후 레시피를 공유할 수 있습니다.', 'Please log in to share recipes.'));
+  //   return;
+  // }
 
   // Fetch the saved recipe
   const saved = await dbQuery('saved_recipes', 'select', {
@@ -725,10 +726,11 @@ async function _submitShare(savedRecipeId) {
 // ── 7. Toggle Like ──────────────────────────────────────────────────────────
 
 async function toggleLike(sharedRecipeId, btnEl) {
-  if (isGuest || !currentUser) {
-    showToast(_t('로그인 후 좋아요를 누를 수 있습니다.', 'Please log in to like recipes.'));
-    return;
-  }
+  // [TEST MODE] login gate disabled
+  // if (isGuest || !currentUser) {
+  //   showToast(_t('로그인 후 좋아요를 누를 수 있습니다.', 'Please log in to like recipes.'));
+  //   return;
+  // }
 
   // Optimistic UI update
   const isLiked = btnEl.classList.contains('liked');
@@ -783,10 +785,11 @@ async function toggleLike(sharedRecipeId, btnEl) {
 // ── 8. Add Comment ──────────────────────────────────────────────────────────
 
 async function addComment(sharedRecipeId, body, parentId = null) {
-  if (isGuest || !currentUser) {
-    showToast(_t('로그인 후 댓글을 작성할 수 있습니다.', 'Please log in to comment.'));
-    return null;
-  }
+  // [TEST MODE] login gate disabled
+  // if (isGuest || !currentUser) {
+  //   showToast(_t('로그인 후 댓글을 작성할 수 있습니다.', 'Please log in to comment.'));
+  //   return null;
+  // }
 
   body = body.trim();
   if (!body) return null;
@@ -921,11 +924,12 @@ async function _submitReply(recipeId, parentId) {
 // ── 10. Toggle Follow ───────────────────────────────────────────────────────
 
 async function toggleFollow(userId, btnEl) {
-  if (isGuest || !currentUser) {
-    showToast(_t('로그인 후 팔로우할 수 있습니다.', 'Please log in to follow users.'));
-    return;
-  }
-  if (userId === currentUser.id) return;
+  // [TEST MODE] login gate disabled
+  // if (isGuest || !currentUser) {
+  //   showToast(_t('로그인 후 팔로우할 수 있습니다.', 'Please log in to follow users.'));
+  //   return;
+  // }
+  if (userId === currentUser?.id) return;
 
   const isFollowing = btnEl.classList.contains('following');
 

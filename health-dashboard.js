@@ -218,9 +218,8 @@ function openHealthDashboard() {
     document.body.appendChild(overlay);
   }
 
-  // Pro-only gate (skip in demo/dev mode to show sample data)
-  const isFree = typeof isGuest !== 'undefined' && isGuest
-    || (typeof userPlan !== 'undefined' && userPlan === 'free');
+  // [TEST MODE] Pro-only gate disabled for testing
+  const isFree = false; // was: typeof isGuest !== 'undefined' && isGuest || ...
   const hasRealUser = typeof currentUser !== 'undefined' && currentUser && !isGuest;
 
   if (isFree && hasRealUser) {

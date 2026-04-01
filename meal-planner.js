@@ -101,8 +101,9 @@ function _mealLabel(type) {
 // ── Open / Close ──
 
 function openMealPlanner() {
-  if (typeof isGuest !== 'undefined' && isGuest) { _renderProGate(); return; }
-  if (typeof userPlan !== 'undefined' && userPlan === 'free') { _renderProGate(); return; }
+  // [TEST MODE] Pro gate disabled for testing
+  // if (typeof isGuest !== 'undefined' && isGuest) { _renderProGate(); return; }
+  // if (typeof userPlan !== 'undefined' && userPlan === 'free') { _renderProGate(); return; }
   // Inline rendering for Plan tab
   var inlineTarget = document.getElementById('planContent');
   if (inlineTarget) {

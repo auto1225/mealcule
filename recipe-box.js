@@ -287,26 +287,15 @@ function _isDemoRecipe(id) { return typeof id === 'string' && id.startsWith('dem
 // ── 1. Save Recipe ──────────────────────────────────────────────────────────
 
 async function saveRecipe(recipeIndex) {
-  if (isGuest || !currentUser) {
-    showToast(_t('로그인 후 레시피를 저장할 수 있습니다.', 'Please log in to save recipes.'));
-    return null;
-  }
+  // [TEST MODE] Login/plan gate disabled for testing
+  // if (isGuest || !currentUser) {
+  //   showToast(_t('로그인 후 레시피를 저장할 수 있습니다.', 'Please log in to save recipes.'));
+  //   return null;
+  // }
 
-  // Plan limit check
-  const limit = RECIPE_BOX_LIMITS[userPlan] || RECIPE_BOX_LIMITS.free;
-  if (limit !== Infinity) {
-    const existing = await dbQuery('saved_recipes', 'select', {
-      select: 'id',
-      eq: { user_id: currentUser.id },
-    });
-    if (existing && existing.length >= limit) {
-      showToast(_t(
-        `무료 플랜은 최대 ${limit}개까지 저장 가능합니다. Pro로 업그레이드하세요!`,
-        `Free plan allows up to ${limit} saved recipes. Upgrade to Pro!`
-      ));
-      return null;
-    }
-  }
+  // [TEST MODE] Plan limit check disabled
+  // const limit = RECIPE_BOX_LIMITS[userPlan] || RECIPE_BOX_LIMITS.free;
+  // if (limit !== Infinity) { ... }
 
   const recipes = _cachedRecipes?.recipes;
   if (!recipes || !recipes[recipeIndex]) {

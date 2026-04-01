@@ -7177,8 +7177,9 @@ async function _importToRecipeBox() {
   const results = document.getElementById('urlImportResults');
   const recipe = results?._importedRecipe;
   if (!recipe) return;
-  if (typeof saveRecipe !== 'function' || isGuest || !currentUser) {
-    showToast((window.I18n && I18n.lang === 'en') ? 'Please log in to save recipes' : '로그인 후 저장 가능합니다');
+  // [TEST MODE] login gate disabled
+  if (typeof saveRecipe !== 'function') {
+    showToast((window.I18n && I18n.lang === 'en') ? 'Recipe box not available' : '레시피 박스를 사용할 수 없습니다');
     return;
   }
   const row = {

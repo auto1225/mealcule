@@ -35,7 +35,8 @@ function closeGroceryList() {
 
 // ── Generate from Meal Plan ──
 async function generateGroceryList(mealPlanId) {
-  if (!currentUser) { showToast(_t('로그인이 필요합니다', 'Please sign in')); return null; }
+  // [TEST MODE] login gate disabled
+  // if (!currentUser) { showToast(_t('로그인이 필요합니다', 'Please sign in')); return null; }
   showToast(_t('장보기 목록 생성 중...', 'Generating grocery list...'));
   const listId = await dbRPC('generate_grocery_from_plan', {
     p_plan_id: mealPlanId,
