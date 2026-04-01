@@ -2355,8 +2355,8 @@ const RXN_REF_MAP = {
 // ══════════════════════════════════════════════════
 let currentUser = null;      // { id, email, name, avatar_url }
 let userProfile = null;      // DB profiles row
-let userPlan = 'free';       // 'free', 'pro', 'enterprise'
-let proMode = false;
+let userPlan = 'pro';        // [TEST MODE] all features unlocked
+let proMode = true;
 let dailyUsage = { analysis_count: 0, search_count: 0, export_count: 0 };
 let isGuest = false;
 let authSession = null;      // Supabase auth session
@@ -6384,8 +6384,75 @@ async function runAnalysis() {
     <button class="export-btn" onclick="exportReport()" title="${userPlan==='free'?'프로 플랜 필요':'보고서 다운로드'}"><img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=16&h=16&fit=crop" style="width:16px;height:16px;border-radius:3px;object-fit:cover;vertical-align:middle" onerror="this.outerHTML='📥'"> 보고서${userPlan==='free'?' <span class="pro-badge">PRO</span>':''}</button>
   </div>`;
 
+  // ── Summary generation for each tab ──
+  const _summaryStyle = 'margin-bottom:16px;padding:14px 16px;border-radius:12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);font-size:13px;line-height:1.7;color:var(--text)';
+
+  // Reactions summary
+  const _rxnSummary = (() => {
+    if (rxns.length === 0) return '';
+    const highRxns = rxns.filter(r => r.intensity > 60);
+    const midRxns = rxns.filter(r => r.intensity > 30 && r.intensity <= 60);
+    const methodName = METHODS[method] ? tl(METHODS[method]) : method;
+    let s = `<strong>화학 반응 요약:</strong> ${methodName} ${temp}°C, ${time}분 조건에서 총 <strong>${rxns.length}개</strong>의 화학 반응이 예측됩니다. `;
+    if (highRxns.length > 0) s += `강한 반응: ${highRxns.map(r => r.name + '(' + r.intensity + '%)').join(', ')}. `;
+    if (midRxns.length > 0) s += `중간 반응: ${midRxns.map(r => r.name).join(', ')}. `;
+    const effects = [...new Set(rxns.flatMap(r => r.effects))].slice(0, 5);
+    if (effects.length > 0) s += `주요 효과: ${effects.join(', ')}.`;
+    return s;
+  })();
+
+  // Nutrition summary
+  const _nutSummary = (() => {
+    const entries = Object.entries(nutrition).filter(([,v]) => v.orig > 0);
+    if (entries.length === 0) return '';
+    const lost = entries.filter(([,v]) => v.ret < 70).sort((a,b) => a[1].ret - b[1].ret);
+    const kept = entries.filter(([,v]) => v.ret >= 80);
+    let s = `<strong>영양소 변화 요약:</strong> 총 <strong>${entries.length}개</strong> 영양소 분석 완료. `;
+    if (kept.length > 0) s += `잘 보존되는 영양소(80%↑): ${kept.slice(0,4).map(([k,v]) => k + ' ' + v.ret + '%').join(', ')}. `;
+    if (lost.length > 0) s += `손실 주의 영양소(70%↓): ${lost.slice(0,4).map(([k,v]) => k + ' ' + v.ret + '%').join(', ')}. `;
+    const avgRet = Math.round(entries.reduce((a,[,v]) => a + v.ret, 0) / entries.length);
+    s += `평균 잔존율: <strong>${avgRet}%</strong>.`;
+    return s;
+  })();
+
+  // Flavor summary
+  const _flavorSummary = (() => {
+    const sorted = Object.entries(flavor).sort((a,b) => b[1] - a[1]);
+    const flvNames = {umami:'감칠맛',sweet:'단맛',salty:'짠맛',sour:'신맛',bitter:'쓴맛'};
+    const top = sorted[0];
+    const second = sorted[1];
+    let s = `<strong>맛 프로파일 요약:</strong> 이 조합의 지배적인 맛은 <strong>${flvNames[top[0]]}(${top[1]})</strong>이며, `;
+    s += `그 다음으로 ${flvNames[second[0]]}(${second[1]})이 두드러집니다. `;
+    const balance = Math.max(...sorted.map(x=>x[1])) - Math.min(...sorted.map(x=>x[1]));
+    if (balance < 20) s += '전체적으로 균형 잡힌 맛 프로파일입니다. ';
+    else if (balance > 50) s += '특정 맛이 강하게 지배적인 프로파일입니다. ';
+    const compounds = selNames().flatMap(n => DB[n]?.compounds || []).slice(0, 5);
+    if (compounds.length > 0) s += `핵심 풍미 화합물: ${compounds.join(', ')}.`;
+    return s;
+  })();
+
+  // Health summary
+  const _healthSummary = (() => {
+    if (!hasHealth) return '';
+    const allFindings = Object.values(allMembersHealth).flatMap(m => m.results.flatMap(r => r.findings));
+    const dangers = allFindings.filter(f => f.severity === 'danger');
+    const cautions = allFindings.filter(f => f.severity === 'caution');
+    const goods = allFindings.filter(f => f.severity === 'good');
+    let s = `<strong>건강 분석 요약:</strong> 총 <strong>${allFindings.length}개</strong> 항목 분석. `;
+    if (dangers.length > 0) s += `<span style="color:#ef4444">위험 ${dangers.length}건</span>(${dangers.slice(0,2).map(f => f.title).join(', ')}). `;
+    if (cautions.length > 0) s += `<span style="color:#eab308">주의 ${cautions.length}건</span>. `;
+    if (goods.length > 0) s += `<span style="color:#22c55e">긍정 ${goods.length}건</span>. `;
+    const scores = Object.values(allMembersHealth).flatMap(m => m.results.map(r => r.score));
+    if (scores.length > 0) {
+      const avg = Math.round(scores.reduce((a,b) => a+b, 0) / scores.length);
+      s += `평균 적합도: <strong>${avg}점</strong>.`;
+    }
+    return s;
+  })();
+
   // Reactions tab
   html += `<div id="tab-reactions" style="display:${currentTab==='reactions'?'block':'none'}">`;
+  if (_rxnSummary) html += `<div style="${_summaryStyle}">${_rxnSummary}</div>`;
   if (rxns.length === 0) {
     html += `<div class="empty-state"><div class="big-icon"><img src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=48&h=48&fit=crop" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='🧪'"></div><p style="color:rgba(255,255,255,0.6);margin-top:12px">특별한 화학 반응이 예측되지 않습니다</p><p style="font-size:13px;color:rgba(255,255,255,0.6)">온도를 높이거나 재료를 추가해보세요</p></div>`;
   } else {
@@ -6426,8 +6493,9 @@ async function runAnalysis() {
   html += "</div>";
 
   // Nutrition tab
-  html += `<div id="tab-nutrition" style="display:${currentTab==='nutrition'?'block':'none'}">
-    <div class="grid2">
+  html += `<div id="tab-nutrition" style="display:${currentTab==='nutrition'?'block':'none'}">`;
+  if (_nutSummary) html += `<div style="${_summaryStyle}">${_nutSummary}</div>`;
+  html += `<div class="grid2">
       <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:16px;color:#F5F5F5">영양소 조리 전후 비교</h3>
         <div class="chart-wrap"><canvas id="nutChart" height="300"></canvas></div>
       </div>
@@ -6452,8 +6520,9 @@ async function runAnalysis() {
   const flavorNames = {umami:"감칠맛",sweet:"단맛",salty:"짠맛",sour:"신맛",bitter:"쓴맛"};
   const flavorDescs = {umami:"글루탐산, 이노신산에 의한 깊은 맛",sweet:"당류, 마이야르 반응 산물",salty:"나트륨, 미네랄",sour:"유기산(시트르산 등)",bitter:"폴리페놀, 캐러멜화 산물"};
 
-  html += `<div id="tab-flavor" style="display:${currentTab==='flavor'?'block':'none'}">
-    <div class="grid2">
+  html += `<div id="tab-flavor" style="display:${currentTab==='flavor'?'block':'none'}">`;
+  if (_flavorSummary) html += `<div style="${_summaryStyle}">${_flavorSummary}</div>`;
+  html += `<div class="grid2">
       <div class="card"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:#F5F5F5">예상 맛 프로파일</h3>
         <div class="chart-wrap"><canvas id="flavorChart" height="320"></canvas></div>
       </div>
@@ -6479,6 +6548,7 @@ async function runAnalysis() {
   // Health tab
   if (hasHealth) {
     html += `<div id="tab-health" style="display:${currentTab==='health'?'block':'none'}">`;
+    if (_healthSummary) html += `<div style="${_summaryStyle}">${_healthSummary}</div>`;
 
     // 총 성분 요약 (첫 번째 결과에서 composition 사용)
     const firstResults = Object.values(allMembersHealth)[0];
@@ -6743,7 +6813,7 @@ async function loadRecipes(country) {
   const ingredients = Object.entries(selected).map(([name, grams]) => ({ name, grams }));
   try {
     var _recipeAbort = new AbortController();
-    var _recipeTimeout = setTimeout(function() { _recipeAbort.abort(); }, 10000);
+    var _recipeTimeout = setTimeout(function() { _recipeAbort.abort(); }, 25000);
     const r = await fetch(`${API_BASE}/api/recommend-recipes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -6781,8 +6851,18 @@ function renderRecipeList(recipes) {
     el.innerHTML = '<div class="yt-loading">추천 레시피가 없습니다.</div>';
     return;
   }
+  // Recipe summary
+  const cuisines = [...new Set(recipes.map(r => r.cuisine).filter(Boolean))];
+  const difficulties = recipes.map(r => r.difficulty).filter(Boolean);
+  const _en = window.I18n && I18n.lang === 'en';
+  let recipeSummary = `<div style="margin-bottom:16px;padding:14px 16px;border-radius:12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);font-size:13px;line-height:1.7;color:var(--text)">`;
+  recipeSummary += `<strong>${_en ? 'Recipe Summary' : '레시피 추천 요약'}:</strong> `;
+  recipeSummary += `${_en ? `${recipes.length} recipes recommended` : `총 <strong>${recipes.length}개</strong> 레시피 추천`}. `;
+  if (cuisines.length > 0) recipeSummary += `${_en ? 'Cuisines' : '요리 종류'}: ${cuisines.join(', ')}. `;
+  recipeSummary += recipes.slice(0, 3).map((r, i) => `${i+1}. ${r.name}${r.healthNote ? ' — ' + r.healthNote.substring(0, 40) : ''}`).join(' ');
+  recipeSummary += `</div>`;
   const ytIcon = `<svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>`;
-  el.innerHTML = recipes.map((r, i) => `
+  el.innerHTML = recipeSummary + recipes.map((r, i) => `
     <div class="recipe-card">
       <div class="recipe-card-header" onclick="toggleYtPanel(${i})">
         <div class="recipe-num">${i+1}</div>
