@@ -24,13 +24,12 @@ const _demoRecipes = [
     id: 'demo-1',
     name: '수비드 연어 스테이크',
     name_en: 'Sous Vide Salmon',
-    description: _t(
-      '정밀 온도 제어로 완벽한 식감을 구현한 연어 스테이크. 52°C에서 45분간 수비드 조리하여 단백질 변성을 최소화합니다.',
-      'Precision temperature-controlled salmon steak. Sous vide at 52°C for 45 minutes to minimize protein denaturation.'
-    ),
+    description: '정밀 온도 제어로 완벽한 식감을 구현한 연어 스테이크. 52°C에서 45분간 수비드 조리하여 단백질 변성을 최소화합니다.',
+    description_en: 'Precision temperature-controlled salmon steak. Sous vide at 52°C for 45 minutes to minimize protein denaturation.',
     cuisine: 'Molecular',
     difficulty: 'Medium',
-    health_note: _t('오메가-3 지방산이 풍부하고 저온 조리로 영양소 보존율이 높습니다.', 'Rich in omega-3 fatty acids with high nutrient retention from low-temperature cooking.'),
+    health_note: '오메가-3 지방산이 풍부하고 저온 조리로 영양소 보존율이 높습니다.',
+    health_note_en: 'Rich in omega-3 fatty acids with high nutrient retention from low-temperature cooking.',
     allergens: ['Fish'],
     ingredients: [
       { name: 'Atlantic Salmon Fillet', grams: 200 },
@@ -46,7 +45,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 380, protein: 34, fat: 24, carbs: 1, fiber: 0 },
     flavor_snapshot: { umami: 0.8, salt: 0.4, sweet: 0.1, sour: 0.2, bitter: 0.0 },
     collection_id: 'demo-col-mol',
-    notes: _t('레몬 버터 소스와 함께 서빙하면 풍미가 극대화됩니다.', 'Serve with lemon butter sauce for maximum flavor.'),
+    notes: '레몬 버터 소스와 함께 서빙하면 풍미가 극대화됩니다.',
+    notes_en: 'Serve with lemon butter sauce for maximum flavor.',
     rating: 5,
     tags: ['sous-vide', 'seafood', 'high-protein', 'molecular'],
     is_favorite: true,
@@ -60,13 +60,12 @@ const _demoRecipes = [
     id: 'demo-2',
     name: '저온 조리 소고기 안심',
     name_en: 'Slow-Cooked Beef Tenderloin',
-    description: _t(
-      '56°C 정밀 조리로 미오신 단백질만 변성시켜 최상의 육즙을 유지하는 안심 스테이크.',
-      'Precision-cooked at 56°C to denature only myosin proteins, retaining maximum juiciness in beef tenderloin.'
-    ),
+    description: '56°C 정밀 조리로 미오신 단백질만 변성시켜 최상의 육즙을 유지하는 안심 스테이크.',
+    description_en: 'Precision-cooked at 56°C to denature only myosin proteins, retaining maximum juiciness in beef tenderloin.',
     cuisine: 'Molecular',
     difficulty: 'Hard',
-    health_note: _t('고단백 저탄수화물 식단에 적합합니다. 철분과 아연이 풍부합니다.', 'Ideal for high-protein low-carb diets. Rich in iron and zinc.'),
+    health_note: '고단백 저탄수화물 식단에 적합합니다. 철분과 아연이 풍부합니다.',
+    health_note_en: 'Ideal for high-protein low-carb diets. Rich in iron and zinc.',
     allergens: [],
     ingredients: [
       { name: 'Beef Tenderloin', grams: 250 },
@@ -83,7 +82,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 520, protein: 52, fat: 32, carbs: 2, fiber: 0 },
     flavor_snapshot: { umami: 0.9, salt: 0.5, sweet: 0.1, sour: 0.0, bitter: 0.0 },
     collection_id: 'demo-col-mol',
-    notes: _t('시어링 전에 표면을 완전히 건조시키는 것이 핵심입니다.', 'Key is to fully dry the surface before searing.'),
+    notes: '시어링 전에 표면을 완전히 건조시키는 것이 핵심입니다.',
+    notes_en: 'Key is to fully dry the surface before searing.',
     rating: 5,
     tags: ['sous-vide', 'beef', 'high-protein', 'molecular'],
     is_favorite: true,
@@ -97,13 +97,12 @@ const _demoRecipes = [
     id: 'demo-3',
     name: '발효 퀴노아 부다볼',
     name_en: 'Fermented Quinoa Buddha Bowl',
-    description: _t(
-      '발효 과정을 거친 퀴노아와 신선한 채소로 구성된 영양 균형 볼. 프로바이오틱스가 풍부합니다.',
-      'Nutrient-balanced bowl with fermented quinoa and fresh vegetables. Rich in probiotics.'
-    ),
+    description: '발효 과정을 거친 퀴노아와 신선한 채소로 구성된 영양 균형 볼. 프로바이오틱스가 풍부합니다.',
+    description_en: 'Nutrient-balanced bowl with fermented quinoa and fresh vegetables. Rich in probiotics.',
     cuisine: 'Fusion',
     difficulty: 'Easy',
-    health_note: _t('발효 과정이 피트산을 분해하여 미네랄 흡수율을 높입니다.', 'Fermentation breaks down phytic acid, improving mineral absorption.'),
+    health_note: '발효 과정이 피트산을 분해하여 미네랄 흡수율을 높입니다.',
+    health_note_en: 'Fermentation breaks down phytic acid, improving mineral absorption.',
     allergens: ['Sesame'],
     ingredients: [
       { name: 'Quinoa (fermented)', grams: 150 },
@@ -120,7 +119,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 445, protein: 18, fat: 22, carbs: 48, fiber: 12 },
     flavor_snapshot: { umami: 0.3, salt: 0.3, sweet: 0.3, sour: 0.4, bitter: 0.2 },
     collection_id: 'demo-col-quick',
-    notes: _t('퀴노아는 24시간 발효 후 사용하세요.', 'Use quinoa after 24-hour fermentation.'),
+    notes: '퀴노아는 24시간 발효 후 사용하세요.',
+    notes_en: 'Use quinoa after 24-hour fermentation.',
     rating: 4,
     tags: ['fermented', 'vegan', 'high-fiber', 'probiotic'],
     is_favorite: false,
@@ -134,13 +134,12 @@ const _demoRecipes = [
     id: 'demo-4',
     name: '효소 활성 샐러드',
     name_en: 'Enzyme-Active Salad',
-    description: _t(
-      '가열하지 않아 효소가 활성 상태인 채소 샐러드. 소화 효소 보충에 효과적입니다.',
-      'Unheated vegetable salad with active enzymes. Effective for supplementing digestive enzymes.'
-    ),
+    description: '가열하지 않아 효소가 활성 상태인 채소 샐러드. 소화 효소 보충에 효과적입니다.',
+    description_en: 'Unheated vegetable salad with active enzymes. Effective for supplementing digestive enzymes.',
     cuisine: 'Raw',
     difficulty: 'Easy',
-    health_note: _t('가열하지 않아 비타민 C와 엽산이 100% 보존됩니다.', 'No heating preserves 100% of vitamin C and folate.'),
+    health_note: '가열하지 않아 비타민 C와 엽산이 100% 보존됩니다.',
+    health_note_en: 'No heating preserves 100% of vitamin C and folate.',
     allergens: ['Tree Nuts'],
     ingredients: [
       { name: 'Mixed Greens', grams: 100 },
@@ -156,7 +155,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 265, protein: 8, fat: 20, carbs: 16, fiber: 6 },
     flavor_snapshot: { umami: 0.1, salt: 0.2, sweet: 0.3, sour: 0.4, bitter: 0.3 },
     collection_id: 'demo-col-quick',
-    notes: _t('브로콜리 스프라우트의 설포라판이 항산화 효과를 극대화합니다.', 'Sulforaphane in broccoli sprouts maximizes antioxidant effects.'),
+    notes: '브로콜리 스프라우트의 설포라판이 항산화 효과를 극대화합니다.',
+    notes_en: 'Sulforaphane in broccoli sprouts maximizes antioxidant effects.',
     rating: 4,
     tags: ['raw', 'enzyme', 'antioxidant', 'quick'],
     is_favorite: false,
@@ -170,13 +170,12 @@ const _demoRecipes = [
     id: 'demo-5',
     name: '마이야르 반응 된장 라멘',
     name_en: 'Maillard Reaction Miso Ramen',
-    description: _t(
-      '된장의 아미노산과 당분이 마이야르 반응을 일으켜 깊은 감칠맛을 내는 라멘.',
-      'Ramen where amino acids and sugars in miso undergo Maillard reaction for deep umami flavor.'
-    ),
+    description: '된장의 아미노산과 당분이 마이야르 반응을 일으켜 깊은 감칠맛을 내는 라멘.',
+    description_en: 'Ramen where amino acids and sugars in miso undergo Maillard reaction for deep umami flavor.',
     cuisine: 'Japanese',
     difficulty: 'Medium',
-    health_note: _t('된장의 이소플라본과 프로바이오틱스가 장 건강에 도움을 줍니다.', 'Isoflavones and probiotics in miso support gut health.'),
+    health_note: '된장의 이소플라본과 프로바이오틱스가 장 건강에 도움을 줍니다.',
+    health_note_en: 'Isoflavones and probiotics in miso support gut health.',
     allergens: ['Soy', 'Wheat', 'Egg'],
     ingredients: [
       { name: 'Ramen Noodles', grams: 120 },
@@ -193,7 +192,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 620, protein: 32, fat: 28, carbs: 58, fiber: 4 },
     flavor_snapshot: { umami: 0.95, salt: 0.6, sweet: 0.2, sour: 0.1, bitter: 0.0 },
     collection_id: 'demo-col-fav',
-    notes: _t('된장을 직접 불에 살짝 구우면 마이야르 반응이 극대화됩니다.', 'Lightly charring miso over direct flame maximizes Maillard reaction.'),
+    notes: '된장을 직접 불에 살짝 구우면 마이야르 반응이 극대화됩니다.',
+    notes_en: 'Lightly charring miso over direct flame maximizes Maillard reaction.',
     rating: 5,
     tags: ['maillard', 'umami', 'fermented', 'japanese'],
     is_favorite: true,
@@ -207,13 +207,12 @@ const _demoRecipes = [
     id: 'demo-6',
     name: '유화 기법 카르보나라',
     name_en: 'Emulsion Technique Carbonara',
-    description: _t(
-      '달걀 노른자와 치즈의 정밀한 유화 기법으로 크림 없이 실키한 소스를 만드는 정통 카르보나라.',
-      'Authentic carbonara using precise emulsion of egg yolk and cheese for a silky sauce without cream.'
-    ),
+    description: '달걀 노른자와 치즈의 정밀한 유화 기법으로 크림 없이 실키한 소스를 만드는 정통 카르보나라.',
+    description_en: 'Authentic carbonara using precise emulsion of egg yolk and cheese for a silky sauce without cream.',
     cuisine: 'Italian',
     difficulty: 'Medium',
-    health_note: _t('크림을 사용하지 않아 칼로리가 낮으면서도 풍부한 맛을 냅니다.', 'No cream used, resulting in lower calories while maintaining rich flavor.'),
+    health_note: '크림을 사용하지 않아 칼로리가 낮으면서도 풍부한 맛을 냅니다.',
+    health_note_en: 'No cream used, resulting in lower calories while maintaining rich flavor.',
     allergens: ['Egg', 'Dairy', 'Wheat'],
     ingredients: [
       { name: 'Spaghetti', grams: 160 },
@@ -229,7 +228,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 580, protein: 28, fat: 26, carbs: 56, fiber: 3 },
     flavor_snapshot: { umami: 0.85, salt: 0.5, sweet: 0.1, sour: 0.0, bitter: 0.0 },
     collection_id: 'demo-col-fav',
-    notes: _t('소스 온도가 70°C를 넘으면 달걀이 응고되므로 주의하세요.', 'Be careful not to exceed 70°C or the egg will curdle.'),
+    notes: '소스 온도가 70°C를 넘으면 달걀이 응고되므로 주의하세요.',
+    notes_en: 'Be careful not to exceed 70°C or the egg will curdle.',
     rating: 4,
     tags: ['emulsion', 'italian', 'pasta', 'technique'],
     is_favorite: true,
@@ -243,13 +243,12 @@ const _demoRecipes = [
     id: 'demo-7',
     name: '구형화 망고 캐비어',
     name_en: 'Spherification Mango Caviar',
-    description: _t(
-      '알긴산나트륨과 염화칼슘을 이용한 구형화 기법으로 만든 망고 캐비어. 분자 요리의 대표적인 기법입니다.',
-      'Mango caviar made using spherification with sodium alginate and calcium chloride. A signature molecular gastronomy technique.'
-    ),
+    description: '알긴산나트륨과 염화칼슘을 이용한 구형화 기법으로 만든 망고 캐비어. 분자 요리의 대표적인 기법입니다.',
+    description_en: 'Mango caviar made using spherification with sodium alginate and calcium chloride. A signature molecular gastronomy technique.',
     cuisine: 'Molecular',
     difficulty: 'Hard',
-    health_note: _t('망고의 비타민 A와 C가 풍부하며, 알긴산은 수용성 식이섬유입니다.', 'Rich in mango vitamins A and C; alginate is a soluble dietary fiber.'),
+    health_note: '망고의 비타민 A와 C가 풍부하며, 알긴산은 수용성 식이섬유입니다.',
+    health_note_en: 'Rich in mango vitamins A and C; alginate is a soluble dietary fiber.',
     allergens: [],
     ingredients: [
       { name: 'Mango Puree', grams: 200 },
@@ -264,7 +263,8 @@ const _demoRecipes = [
     nutrition_snapshot: { calories: 145, protein: 1, fat: 0, carbs: 36, fiber: 3 },
     flavor_snapshot: { umami: 0.0, salt: 0.1, sweet: 0.9, sour: 0.3, bitter: 0.0 },
     collection_id: 'demo-col-mol',
-    notes: _t('알긴산 용액은 냉장고에서 12시간 숙성 후 사용하면 기포가 줄어듭니다.', 'Resting alginate solution in fridge for 12 hours reduces air bubbles.'),
+    notes: '알긴산 용액은 냉장고에서 12시간 숙성 후 사용하면 기포가 줄어듭니다.',
+    notes_en: 'Resting alginate solution in fridge for 12 hours reduces air bubbles.',
     rating: 5,
     tags: ['spherification', 'molecular', 'dessert', 'technique'],
     is_favorite: false,
@@ -622,8 +622,7 @@ async function openRecipeDetail(id) {
       <button class="rb-modal-close" onclick="_closeDetailModal()">✕</button>
       ${recipe.image_url ? `<div style="width:100%;height:160px;border-radius:12px;margin-bottom:14px;background:url('${recipe.image_url}') center/cover no-repeat rgba(255,255,255,0.04);"></div>` : ''}
       <div class="rb-det-header">
-        <h2 class="rb-det-name">${recipe.name}</h2>
-        <div class="rb-det-name-en">${recipe.name_en || ''}</div>
+        <h2 class="rb-det-name">${_t(recipe.name, recipe.name_en || recipe.name)}</h2>
         <div class="rb-det-tags">
           ${recipe.cuisine ? `<span class="recipe-tag cuisine">${recipe.cuisine}</span>` : ''}
           ${recipe.difficulty ? `<span class="recipe-tag diff-${recipe.difficulty}">${recipe.difficulty}</span>` : ''}
@@ -631,8 +630,8 @@ async function openRecipeDetail(id) {
         </div>
       </div>
 
-      ${recipe.description ? `<div class="rb-det-desc">${recipe.description}</div>` : ''}
-      ${recipe.health_note ? `<div class="rb-det-health"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💚'"> ${recipe.health_note}</div>` : ''}
+      ${recipe.description ? `<div class="rb-det-desc">${_t(recipe.description, recipe.description_en || recipe.description)}</div>` : ''}
+      ${recipe.health_note ? `<div class="rb-det-health"><img src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=14&h=14&fit=crop" style="width:14px;height:14px;border-radius:3px;vertical-align:middle;object-fit:cover" onerror="this.outerHTML='💚'"> ${_t(recipe.health_note, recipe.health_note_en || recipe.health_note)}</div>` : ''}
 
       ${ings ? `<div class="rb-det-section"><strong>${_t('재료', 'Ingredients')}</strong><div class="rb-det-ings">${ings}</div></div>` : ''}
 
@@ -656,7 +655,7 @@ async function openRecipeDetail(id) {
         <strong>${_t('메모', 'Notes')}</strong>
         <textarea class="rb-notes-input" id="rbNotesInput"
                   placeholder="${_t('메모를 입력하세요...', 'Add notes...')}"
-                  ${isDemo ? 'readonly' : `oninput="_debounceSaveNotes('${recipe.id}')"`}>${recipe.notes || ''}</textarea>
+                  ${isDemo ? 'readonly' : `oninput="_debounceSaveNotes('${recipe.id}')"`}>${_t(recipe.notes, recipe.notes_en || recipe.notes) || ''}</textarea>
       </div>
 
       ${recipe.allergens?.length ? `
